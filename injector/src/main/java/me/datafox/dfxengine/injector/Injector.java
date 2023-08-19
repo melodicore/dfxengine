@@ -167,7 +167,7 @@ public class Injector {
     public <T,R> T getSingletonComponent(Class<T> type, Class<R> requestingClass) {
         logger.info(InjectorStrings.fetchingSingleton(type));
 
-        if(!hasComponents(type)) {
+        if(!containsComponents(type)) {
             throw LogUtils.logExceptionAndGet(logger, InjectorStrings.unknownComponent(type),
                     UnknownComponentException::new);
         }
@@ -194,7 +194,7 @@ public class Injector {
      * @param type component class to check
      * @return true if one or more components are present that match with the provided class
      */
-    public <T> boolean hasComponents(Class<T> type) {
+    public <T> boolean containsComponents(Class<T> type) {
         return instantiatedComponents.contains(type) || perInstanceComponents.contains(type);
     }
 
