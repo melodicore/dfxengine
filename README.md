@@ -8,6 +8,10 @@ development or not started or even thought of at all. I build this project prima
 for my own usage, but decided to share the code in case others might find it useful
 as well. Maven releases will come later when the project is more mature.
 
+The project is written at the JDK 11 language level, but only uses the JDK 8+ features
+that are supported by Android's 
+[core library desugaring](https://developer.android.com/studio/write/java8-support).
+
 ## Modules
 
 Here are the currently existing and planned modules:
