@@ -15,6 +15,8 @@ import me.datafox.dfxengine.injector.collection.FunctionClassMap;
 import me.datafox.dfxengine.injector.exception.CyclicDependencyException;
 import me.datafox.dfxengine.injector.exception.MultipleValidComponentsException;
 import me.datafox.dfxengine.injector.exception.UnknownComponentException;
+import me.datafox.dfxengine.injector.utils.InjectorStrings;
+import me.datafox.dfxengine.injector.utils.InjectorUtils;
 import me.datafox.dfxengine.utils.ClassUtils;
 import me.datafox.dfxengine.utils.LogUtils;
 import me.datafox.dfxengine.utils.MapUtils;
@@ -505,7 +507,7 @@ public class InjectorBuilder {
 
     @Data
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    static class MethodReference<T,R> {
+    public static class MethodReference<T,R> {
         private final Class<T> owner;
 
         private final Class<R> returnType;

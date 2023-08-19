@@ -33,6 +33,8 @@ import me.datafox.dfxengine.injector.test.injector.pass.method.NonComponentClass
 import me.datafox.dfxengine.injector.test.injector.pass.package_blacklist.BlacklistComponentInterface;
 import me.datafox.dfxengine.injector.test.injector.pass.package_blacklist.subpackage.InaccessibleComponent;
 import me.datafox.dfxengine.injector.test.injector.pass.per_instance.RequestingComponent;
+import me.datafox.dfxengine.injector.test.injector.warn.parameterized.ParameterizedInterface;
+import me.datafox.dfxengine.injector.utils.InjectorStrings;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
@@ -301,7 +303,6 @@ public class InjectorTest {
 
         ILoggingEvent event = list.get(0);
 
-        assertEquals("ParameterizedInterface.class has a parameterized type, this is not supported and " +
-                "may cause runtime exceptions or other unexpected behavior", event.getMessage());
+        assertEquals(InjectorStrings.parameterizedType(ParameterizedInterface.class), event.getMessage());
     }
 }

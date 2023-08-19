@@ -1,5 +1,7 @@
-package me.datafox.dfxengine.injector;
+package me.datafox.dfxengine.injector.utils;
 
+import me.datafox.dfxengine.injector.Injector;
+import me.datafox.dfxengine.injector.InjectorBuilder;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.injector.exception.MultipleInjectConstructorsException;
 import me.datafox.dfxengine.injector.exception.NoValidConstructorException;
@@ -17,8 +19,8 @@ import java.util.List;
  *
  * @author datafox
  */
-class InjectorUtils {
-    static Class<?> getListType(Type type, Logger logger) {
+public class InjectorUtils {
+    public static Class<?> getListType(Type type, Logger logger) {
         if(type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type;
 
@@ -52,7 +54,7 @@ class InjectorUtils {
         return Object.class;
     }
 
-    static <T> Constructor<T> getConstructor(Class<T> type, Logger logger) {
+    public static <T> Constructor<T> getConstructor(Class<T> type, Logger logger) {
         logger.debug(InjectorStrings.validConstructors(type));
 
         List<Constructor<T>> constructors = ClassUtils.getConstructorsWithAnnotation(type, Inject.class);

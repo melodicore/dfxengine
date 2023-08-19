@@ -10,6 +10,8 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.injector.collection.FunctionClassMap;
 import me.datafox.dfxengine.injector.collection.ObjectClassMap;
 import me.datafox.dfxengine.injector.exception.*;
+import me.datafox.dfxengine.injector.utils.InjectorStrings;
+import me.datafox.dfxengine.injector.utils.InjectorUtils;
 import me.datafox.dfxengine.utils.ClassUtils;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
@@ -399,7 +401,7 @@ public class Injector {
 
     @Data
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    static class PerInstanceReference<T,O> {
+    public static class PerInstanceReference<T,O> {
         private final Class<T> type;
 
         private final Class<O> owner;

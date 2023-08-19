@@ -1,5 +1,8 @@
-package me.datafox.dfxengine.injector;
+package me.datafox.dfxengine.injector.utils;
 
+import me.datafox.dfxengine.injector.Injector;
+import me.datafox.dfxengine.injector.InjectorBuilder;
+import me.datafox.dfxengine.injector.InstantiationDetails;
 import me.datafox.dfxengine.utils.StringUtils;
 
 import java.lang.reflect.Constructor;
@@ -14,18 +17,18 @@ import java.util.Collection;
  * @author datafox
  */
 public class InjectorStrings {
-    static final String BUILD_STARTED = "Building injector";
-    static final String SCANNING_CLASSPATH = "Scanning classpath";
-    static final String RESOLVING_DEPENDENCIES = "Resolving dependencies";
-    static final String CHECKING_CYCLIC = "Checking for cyclic dependencies";
-    static final String DETERMINING_ORDER = "Determining dependency instantiation order";
-    static final String INITIALIZING_INJECTOR = "Initializing injector";
-    static final String INSTANTIATING_COMPONENTS = "Instantiating components";
-    static final String FINALIZING_INJECTOR = "Finalizing injector";
-    static final String BUILD_FINISHED = "Build finished successfully";
-    static final String DEFAULT_CONSTRUCTOR = "Default constructor found";
-    static final String RUNNING_INITIALIZERS = "Running initializers";
-    static final String ODD_LIST_TYPE =
+    public static final String BUILD_STARTED = "Building injector";
+    public static final String SCANNING_CLASSPATH = "Scanning classpath";
+    public static final String RESOLVING_DEPENDENCIES = "Resolving dependencies";
+    public static final String CHECKING_CYCLIC = "Checking for cyclic dependencies";
+    public static final String DETERMINING_ORDER = "Determining dependency instantiation order";
+    public static final String INITIALIZING_INJECTOR = "Initializing injector";
+    public static final String INSTANTIATING_COMPONENTS = "Instantiating components";
+    public static final String FINALIZING_INJECTOR = "Finalizing injector";
+    public static final String BUILD_FINISHED = "Build finished successfully";
+    public static final String DEFAULT_CONSTRUCTOR = "Default constructor found";
+    public static final String RUNNING_INITIALIZERS = "Running initializers";
+    public static final String ODD_LIST_TYPE =
             "List's parameterized type could not be determined, defaulting to Object.class";
 
     private static final String PACKAGE_WHITELIST_PRESENT = "Package whitelist present with values: %s";
@@ -83,135 +86,135 @@ public class InjectorStrings {
     private static final String PARAMETERIZED_LIST_TYPE = "List's parameterized type %s is also parameterized, " +
             "the type parameter will be ignored which may cause runtime exceptions or unexpected behavior";
 
-    static String packageWhitelistPresent(Collection<String> packages) {
+    public static String packageWhitelistPresent(Collection<String> packages) {
         return forCollection(PACKAGE_WHITELIST_PRESENT, packages);
     }
 
-    static String packageBlacklistPresent(Collection<String> packages) {
+    public static String packageBlacklistPresent(Collection<String> packages) {
         return forCollection(PACKAGE_BLACKLIST_PRESENT, packages);
     }
 
-    static String classWhitelistPresent(Collection<String> classes) {
+    public static String classWhitelistPresent(Collection<String> classes) {
         return forCollection(CLASS_WHITELIST_PRESENT, classes);
     }
 
-    static String classBlacklistPresent(Collection<String> classes) {
+    public static String classBlacklistPresent(Collection<String> classes) {
         return forCollection(CLASS_BLACKLIST_PRESENT, classes);
     }
 
-    static String checkingParameterized(Class<?> type) {
+    public static String checkingParameterized(Class<?> type) {
         return forType(CHECKING_PARAMETERIZED, type);
     }
 
-    static String parameterizedType(Class<?> type) {
+    public static String parameterizedType(Class<?> type) {
         return forType(PARAMETERIZED_TYPE, type);
     }
 
-    static String componentClassFound(Class<?> type) {
+    public static String componentClassFound(Class<?> type) {
         return forType(COMPONENT_CLASS_FOUND, type);
     }
 
-    static String componentMethodFound(InjectorBuilder.MethodReference<?,?> reference) {
+    public static String componentMethodFound(InjectorBuilder.MethodReference<?,?> reference) {
         return forMethodAndType(COMPONENT_METHOD_FOUND, reference.getMethod(), reference.getOwner());
     }
 
-    static String resolvingComponentDependencies(Class<?> type) {
+    public static String resolvingComponentDependencies(Class<?> type) {
         return forType(RESOLVING_COMPONENT_DEPENDENCIES, type);
     }
 
-    static String resolvingMethodDependencies(InjectorBuilder.MethodReference<?,?> reference) {
+    public static String resolvingMethodDependencies(InjectorBuilder.MethodReference<?,?> reference) {
         return forMethodAndType(RESOLVING_METHOD_DEPENDENCIES, reference.getMethod(), reference.getOwner());
     }
 
-    static String methodNotStatic(Class<?> type) {
+    public static String methodNotStatic(Class<?> type) {
         return forType(METHOD_NOT_STATIC, type);
     }
 
-    static String checkingCyclicFor(Class<?> dependency, Class<?> visited) {
+    public static String checkingCyclicFor(Class<?> dependency, Class<?> visited) {
         return forTwoTypes(CHECKING_CYCLIC_FOR, dependency, visited);
     }
 
-    static String cyclicDetected(Class<?> dependency, Class<?> visited) {
+    public static String cyclicDetected(Class<?> dependency, Class<?> visited) {
         return forTwoTypes(CYCLIC_DETECTED, dependency, visited);
     }
 
-    static String noDependenciesOrder(Class<?> type) {
+    public static String noDependenciesOrder(Class<?> type) {
         return forType(NO_DEPENDENCIES_ORDER, type);
     }
 
-    static String allDependenciesOrder(Class<?> type, int priority) {
+    public static String allDependenciesOrder(Class<?> type, int priority) {
         return forTypeAndInt(ALL_DEPENDENCIES_ORDER, type, priority);
     }
 
-    static String registeringPerInstanceClass(Class<?> type) {
+    public static String registeringPerInstanceClass(Class<?> type) {
         return forType(REGISTERING_PER_INSTANCE_CLASS, type);
     }
 
-    static String registeringPerInstanceMethod(InjectorBuilder.MethodReference<?,?> reference) {
+    public static String registeringPerInstanceMethod(InjectorBuilder.MethodReference<?,?> reference) {
         return forMethodAndType(REGISTERING_PER_INSTANCE_METHOD, reference.getMethod(), reference.getOwner());
     }
 
-    static String instantiatingComponent(Class<?> type) {
+    public static String instantiatingComponent(Class<?> type) {
         return forType(INSTANTIATING_COMPONENT, type);
     }
 
-    static String instantiatedByConstructor(Class<?> type) {
+    public static String instantiatedByConstructor(Class<?> type) {
         return forType(INSTANTIATED_BY_CONSTRUCTOR, type);
     }
 
-    static String instantiatedByMethod(Class<?> type, InjectorBuilder.MethodReference<?,?> reference) {
+    public static String instantiatedByMethod(Class<?> type, InjectorBuilder.MethodReference<?,?> reference) {
         return forTypeAndMethodAndType(INSTANTIATED_BY_METHOD, type, reference.getMethod(), reference.getOwner());
     }
 
-    static String validConstructors(Class<?> type) {
+    public static String validConstructors(Class<?> type) {
         return forType(VALID_CONSTRUCTORS, type);
     }
 
-    static String noValidConstructor(Class<?> type) {
+    public static String noValidConstructor(Class<?> type) {
         return forType(NO_VALID_CONSTRUCTOR, type);
     }
 
-    static String multipleInjectConstructors(Class<?> type) {
+    public static String multipleInjectConstructors(Class<?> type) {
         return forType(MULTIPLE_INJECT_CONSTRUCTORS, type);
     }
 
-    static String validConstructorFound(Constructor<?> constructor) {
+    public static String validConstructorFound(Constructor<?> constructor) {
         return forConstructor(VALID_CONSTRUCTOR_FOUND, constructor);
     }
 
-    static String registeringDependency(Class<?> dependency, Class<?> dependent) {
+    public static String registeringDependency(Class<?> dependency, Class<?> dependent) {
         return forTwoTypes(REGISTERING_DEPENDENCY, dependency, dependent);
     }
 
-    static String fetchingComponents(Class<?> type) {
+    public static String fetchingComponents(Class<?> type) {
         return forType(FETCHING_COMPONENTS, type);
     }
 
-    static String fetchingSingleton(Class<?> type) {
+    public static String fetchingSingleton(Class<?> type) {
         return forType(FETCHING_SINGLETON, type);
     }
 
-    static String unknownComponent(Class<?> type) {
+    public static String unknownComponent(Class<?> type) {
         return forType(UNKNOWN_COMPONENT, type);
     }
 
-    static String multipleValidComponents(Class<?> type) {
+    public static String multipleValidComponents(Class<?> type) {
         return forType(MULTIPLE_VALID_COMPONENTS, type);
     }
 
-    static String registeringComponent(Class<?> type) {
+    public static String registeringComponent(Class<?> type) {
         return forType(REGISTERING_COMPONENT, type);
     }
 
-    static String instantiatingConstructor(Constructor<?> constructor) {
+    public static String instantiatingConstructor(Constructor<?> constructor) {
         return forConstructor(INSTANTIATING_CONSTRUCTOR, constructor);
     }
 
-    static String couldNotInstantiateConstructor(Constructor<?> constructor) {
+    public static String couldNotInstantiateConstructor(Constructor<?> constructor) {
         return forConstructor(COULD_NOT_INSTANTIATE_CONSTRUCTOR, constructor);
     }
 
-    static String instantiatingPerInstance(InstantiationDetails<?,?> instantiationDetails) {
+    public static String instantiatingPerInstance(InstantiationDetails<?,?> instantiationDetails) {
         if(instantiationDetails.getRequestingType() == null) {
             return forTypeAndString(INSTANTIATING_PER_INSTANCE, instantiationDetails.getType(), "null");
         }
@@ -219,63 +222,63 @@ public class InjectorStrings {
                 instantiationDetails.getRequestingType());
     }
 
-    static String executableNotConstructorOrMethod(Injector.PerInstanceReference<?,?> reference) {
+    public static String executableNotConstructorOrMethod(Injector.PerInstanceReference<?,?> reference) {
         return forExecutableAndType(EXECUTABLE_NOT_CONSTRUCTOR_OR_METHOD, reference.getExecutable(), reference.getOwner());
     }
 
-    static String invokingMethod(Method method, Class<?> type) {
+    public static String invokingMethod(Method method, Class<?> type) {
         return forExecutableAndType(INVOKING_METHOD, method, type);
     }
 
-    static String invokingStaticMethod(Method method) {
+    public static String invokingStaticMethod(Method method) {
         return forMethod(INVOKING_STATIC_METHOD, method);
     }
 
-    static String couldNotInvokeMethod(Method method, Class<?> type) {
+    public static String couldNotInvokeMethod(Method method, Class<?> type) {
         return forMethodAndType(COULD_NOT_INVOKE_METHOD, method, type);
     }
 
-    static String fetchingMethodDependencies(Method method, Class<?> type) {
+    public static String fetchingMethodDependencies(Method method, Class<?> type) {
         return forMethodAndType(FETCHING_METHOD_DEPENDENCIES, method, type);
     }
 
-    static String fetchingConstructorDependencies(Constructor<?> constructor) {
+    public static String fetchingConstructorDependencies(Constructor<?> constructor) {
         return forConstructor(FETCHING_CONSTRUCTOR_DEPENDENCIES, constructor);
     }
 
-    static String initializingFields(Class<?> type) {
+    public static String initializingFields(Class<?> type) {
         return forType(INITIALIZING_FIELDS, type);
     }
 
-    static String initializingField(Field field, Class<?> type) {
+    public static String initializingField(Field field, Class<?> type) {
         return forFieldAndType(INITIALIZING_FIELD, field, type);
     }
 
-    static String fieldInaccessible(Field field, Class<?> type) {
+    public static String fieldInaccessible(Field field, Class<?> type) {
         return forFieldAndType(FIELD_INACCESSIBLE, field, type);
     }
 
-    static String registeringMethods(Class<?> type) {
+    public static String registeringMethods(Class<?> type) {
         return forType(REGISTERING_METHODS, type);
     }
 
-    static String methodRegistered(Method method, Class<?> type) {
+    public static String methodRegistered(Method method, Class<?> type) {
         return forExecutableAndType(METHOD_REGISTERED, method, type);
     }
 
-    static String fetchingDependency(Class<?> type, Class<?> requesting) {
+    public static String fetchingDependency(Class<?> type, Class<?> requesting) {
         return forTwoTypes(FETCHING_DEPENDENCY, type, requesting);
     }
 
-    static String listDependency(Class<?> type) {
+    public static String listDependency(Class<?> type) {
         return forType(LIST_DEPENDENCY, type);
     }
 
-    static String maybeOddListType(Class<?> type) {
+    public static String maybeOddListType(Class<?> type) {
         return forType(MAYBE_ODD_LIST_TYPE, type);
     }
 
-    static String parameterizedListType(Class<?> type) {
+    public static String parameterizedListType(Class<?> type) {
         return forType(PARAMETERIZED_LIST_TYPE, type);
     }
 
