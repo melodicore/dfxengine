@@ -1,0 +1,32 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+    id "signing"
+    id "io.freefair.lombok" version "${lombokPluginVersion}"
+}
+
+version = "$utilsVersion"
+
+dependencies {
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name = "DFXEngine Utils"
+                description = "Various utility classes used by other modules of the DFXEngine project"
+            }
+        }
+    }
+}

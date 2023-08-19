@@ -1,6 +1,69 @@
-group = 'me.datafox.dfxengine'
-version = '0.0.1'
+group = "$dfxengineGroup"
 
-repositories {
-    mavenCentral()
+subprojects {
+    apply plugin: "java-library"
+    apply plugin: "maven-publish"
+    apply plugin: "signing"
+
+    group = "$dfxengineGroup"
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+        withJavadocJar()
+        withSourcesJar()
+    }
+
+    repositories {
+        mavenCentral()
+        maven {
+            name = "local"
+            url = rootProject.layout.projectDirectory.dir("repo")
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+
+                versionMapping {
+                    usage("java-api") {
+                        fromResolutionOf("runtimeClasspath")
+                    }
+                    usage("java-runtime") {
+                        fromResolutionResult()
+                    }
+                }
+                pom {
+                    url = "https://engine.datafox.me"
+                    licenses {
+                        license {
+                            name = "The Apache License, Version 2.0"
+                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "datafox"
+                            name = "Lauri \"datafox\" Heino"
+                            email = "datafox@datafox.me"
+                        }
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = "local"
+                url = rootProject.layout.projectDirectory.dir("repo")
+            }
+        }
+    }
+
+    signing {
+        useGpgCmd()
+        sign publishing.publications.mavenJava
+    }
 }
