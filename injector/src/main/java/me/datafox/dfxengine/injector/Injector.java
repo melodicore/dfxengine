@@ -262,11 +262,13 @@ public class Injector {
         }
 
         if(reference.getExecutable() instanceof Method) {
-            return invokeMethod(reference.getType(),
-                    (Method) reference.getExecutable(),
-                    getSingletonComponent(
-                            reference.getOwner(),
-                            reference.getType()),
+            Method method = (Method) reference.getExecutable();
+
+            return invokeMethod(reference.getType(), method,
+                    Modifier.isStatic(method.getModifiers()) ? null :
+                            getSingletonComponent(
+                                    reference.getOwner(),
+                                    reference.getType()),
                     instantiationDetails);
         }
 

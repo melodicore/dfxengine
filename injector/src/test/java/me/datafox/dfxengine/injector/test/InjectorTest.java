@@ -223,6 +223,14 @@ public class InjectorTest {
     }
 
     @Test
+    public void presetLogger_pass() {
+        var injector = InjectorBuilder.create().blacklistPackage("me.datafox.dfxengine.injector.test").build();
+
+        assertEquals(NonComponentClass.class.getName(),
+                injector.getSingletonComponent(org.slf4j.Logger.class, NonComponentClass.class).getName());
+    }
+
+    @Test
     public void cyclicDependency_fail() {
         assertThrows(CyclicDependencyException.class,
                 () -> buildInjector(CyclicDependencyComponent1.class));
