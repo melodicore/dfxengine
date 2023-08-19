@@ -14,7 +14,7 @@ Here are the currently existing and planned modules:
 
 | Module                       | Status             | Description                                  |
 |------------------------------|--------------------|----------------------------------------------|
-| [Injector](injector)         | Done (v1.0.0)      | A dependency injector                        |
+| [Injector](injector)         | Done (v1.0.1)      | A dependency injector                        |
 | [Injector API](injector-api) | Done (v1.0.0)      | Annotations for the dependency injector      |
 | [Handles](handles)           | Under construction | Dynamic enum-like structures for map keys    |
 | Dependencies                 | Not yet started    | Data structure dependencies and invalidation |
