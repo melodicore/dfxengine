@@ -1,0 +1,19 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+    id "signing"
+    id "io.freefair.lombok" version "${lombokPluginVersion}"
+}
+
+version = "$injectorApiVersion"
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name = "DFXEngine Injector API"
+                description = "API for the DFXEngine dependency injector"
+            }
+        }
+    }
+}

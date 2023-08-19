@@ -1,0 +1,35 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+    id "signing"
+    id "io.freefair.lombok" version "${lombokPluginVersion}"
+}
+
+version = "$injectorVersion"
+
+dependencies {
+    implementation "me.datafox.dfxengine:injector-api:$injectorApiVersion"
+    implementation "me.datafox.dfxengine:utils:$utilsVersion"
+    implementation "io.github.classgraph:classgraph:$classgraphVersion"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name = "DFXEngine Injector"
+                description = "A dependency injection module for the DFXEngine"
+            }
+        }
+    }
+}
