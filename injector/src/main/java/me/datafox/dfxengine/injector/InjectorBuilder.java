@@ -239,13 +239,13 @@ public class InjectorBuilder {
 
         logger.info(InjectorStrings.RESOLVING_DEPENDENCIES);
 
-        classDefinitions.entrySet().stream().forEach(this::resolveClassDependencies);
-        methodDefinitions.entrySet().stream().forEach(this::resolveMethodDependencies);
+        classDefinitions.forEach(this::resolveClassDependencies);
+        methodDefinitions.forEach(this::resolveMethodDependencies);
 
         logger.info(InjectorStrings.CHECKING_CYCLIC);
 
-        classDefinitions.values().stream().forEach(dependency -> checkCyclicDependencies(dependency, dependency));
-        methodDefinitions.values().stream().forEach(dependency -> checkCyclicDependencies(dependency, dependency));
+        classDefinitions.values().forEach(dependency -> checkCyclicDependencies(dependency, dependency));
+        methodDefinitions.values().forEach(dependency -> checkCyclicDependencies(dependency, dependency));
 
         logger.info(InjectorStrings.DETERMINING_ORDER);
 
@@ -324,20 +324,15 @@ public class InjectorBuilder {
         return Dependency.of(reference.getReturnType(), isPerInstance(reference.getMethod().getAnnotations()));
     }
 
-    private void resolveClassDependencies(Map.Entry<Class<?>,Dependency<?>> entry) {
-        Class<?> type = entry.getKey();
-        Dependency<?> dependency = entry.getValue();
-
+    private void resolveClassDependencies(Class<?> type, Dependency<?> dependency) {
         logger.info(InjectorStrings.resolvingComponentDependencies(type));
         registerDependenciesFromExecutable(dependency, InjectorUtils.getConstructor(type, logger));
         registerDependenciesFromFields(dependency, ClassUtils.getFieldsWithAnnotation(type, Inject.class));
     }
 
-    private void resolveMethodDependencies(Map.Entry<MethodReference<?,?>,Dependency<?>> entry) {
-        MethodReference<?,?> reference = entry.getKey();
+    private void resolveMethodDependencies(MethodReference<?,?> reference, Dependency<?> dependency) {
         Class<?> type = reference.getOwner();
         Method method = reference.getMethod();
-        Dependency<?> dependency = entry.getValue();
 
         logger.info(InjectorStrings.resolvingMethodDependencies(reference));
 
@@ -493,7 +488,7 @@ public class InjectorBuilder {
     }
 
     private void registerDependenciesFromFields(Dependency<?> dependency, List<Field> fields) {
-        fields.stream().forEach(field ->
+        fields.forEach(field ->
                 registerDependency(dependency,
                         field.getType(),
                         field.getGenericType()));

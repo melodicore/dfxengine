@@ -2,5 +2,5 @@ rootProject.name = 'dfxengine'
 include 'utils'
 include 'injector-api'
 include 'injector'
+include 'handles-api'
 include 'handles'
-

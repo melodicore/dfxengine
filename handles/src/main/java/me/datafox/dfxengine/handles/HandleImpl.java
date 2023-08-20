@@ -1,10 +1,13 @@
 package me.datafox.dfxengine.handles;
 
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
+import me.datafox.dfxengine.handles.api.Handle;
+import me.datafox.dfxengine.handles.api.Space;
+import me.datafox.dfxengine.handles.api.collection.HandleSet;
+import me.datafox.dfxengine.handles.collection.TreeHandleSet;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -19,37 +22,88 @@ public final class HandleImpl implements Handle {
     @NonNull
     private final String id;
 
-    private final Set<String> tags = new HashSet<>();
+    @NonNull
+    private final long index;
 
+    @Getter(AccessLevel.NONE)
+    private final HandleSet tags;
+
+    @Builder
+    private HandleImpl(@NonNull Space space, @NonNull String id, @NonNull long index, @Singular Collection<Handle> tags) {
+        super();
+        this.space = space;
+        this.id = id;
+        this.index = index;
+        this.tags = new TreeHandleSet(HandleConstants.TAGS, tags);
+    }
+
+    @Override
     public boolean isId(String id) {
         return this.id.equals(id);
     }
 
-    public boolean addTag(String tag) {
+    @Override
+    public Set<Handle> getTags() {
+        return Collections.unmodifiableSet(tags);
+    }
+
+    @Override
+    public boolean addTag(Handle tag) {
         return tags.add(tag);
     }
 
-    public boolean addTags(Collection<String> tags) {
+    @Override
+    public boolean addTags(Collection<Handle> tags) {
         return this.tags.addAll(tags);
     }
 
-    public boolean containsTag(String tag) {
+    @Override
+    public boolean containsTag(Handle tag) {
         return tags.contains(tag);
     }
 
-    public boolean containsTags(Collection<String> tags) {
+    @Override
+    public boolean containsTagById(String id) {
+        return tags.containsById(id);
+    }
+
+    @Override
+    public boolean containsTags(Collection<Handle> tags) {
         return this.tags.containsAll(tags);
     }
 
-    public boolean removeTag(String tag) {
+    @Override
+    public boolean containsTagsById(Collection<String> ids) {
+        return tags.containsAllById(ids);
+    }
+
+    @Override
+    public boolean removeTag(Handle tag) {
         return tags.remove(tag);
     }
 
-    public boolean removeTags(Collection<String> tags) {
+    @Override
+    public boolean removeTagById(String id) {
+        return tags.removeById(id);
+    }
+
+    @Override
+    public boolean removeTags(Collection<Handle> tags) {
         return this.tags.removeAll(tags);
     }
 
-    public Stream<String> tagStream() {
-        return tags.stream();
+    @Override
+    public boolean removeTagsById(Collection<String> ids) {
+        return tags.removeAllById(ids);
+    }
+
+    @Override
+    public Stream<Handle> tagStream() {
+        return getTags().stream();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s:%s", space.getSpaceHandle().getId(), getId());
     }
 }

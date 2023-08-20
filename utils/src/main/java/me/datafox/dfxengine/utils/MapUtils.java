@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
  */
 public class MapUtils {
     /**
-     * Reverses a map
+     * Reverses a map.
      *
      * @param map map to be reversed
      * @return map with all keys and values reversed

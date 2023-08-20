@@ -1,0 +1,18 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+    id "signing"
+}
+
+version = "$handlesApiVersion"
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name = "DFXEngine Handles API"
+                description = "API for DFXEngine Handles"
+            }
+        }
+    }
+}

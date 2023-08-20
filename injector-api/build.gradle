@@ -12,7 +12,7 @@ publishing {
         mavenJava(MavenPublication) {
             pom {
                 name = "DFXEngine Injector API"
-                description = "API for the DFXEngine dependency injector"
+                description = "API for DFXEngine Injector"
             }
         }
     }
