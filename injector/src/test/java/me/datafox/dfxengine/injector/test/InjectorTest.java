@@ -33,6 +33,7 @@ import me.datafox.dfxengine.injector.test.injector.pass.method.NonComponentClass
 import me.datafox.dfxengine.injector.test.injector.pass.package_blacklist.BlacklistComponentInterface;
 import me.datafox.dfxengine.injector.test.injector.pass.package_blacklist.subpackage.InaccessibleComponent;
 import me.datafox.dfxengine.injector.test.injector.pass.per_instance.RequestingComponent;
+import me.datafox.dfxengine.injector.test.injector.pass.multiple_equals.EqualsClass;
 import me.datafox.dfxengine.injector.test.injector.warn.parameterized.ParameterizedInterface;
 import me.datafox.dfxengine.injector.utils.InjectorStrings;
 import org.junit.jupiter.api.Test;
@@ -230,6 +231,17 @@ public class InjectorTest {
 
         assertEquals(NonComponentClass.class.getName(),
                 injector.getSingletonComponent(org.slf4j.Logger.class, NonComponentClass.class).getName());
+    }
+
+    @Test
+    public void multipleEquals_pass() {
+        var injector = buildInjector(EqualsClass.class);
+
+        var list = injector.getComponents(EqualsClass.class);
+
+        assertEquals(2, list.size());
+
+        assertEquals(list.get(0), list.get(1));
     }
 
     @Test
