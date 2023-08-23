@@ -7,6 +7,8 @@ import java.util.stream.Stream;
  * @author datafox
  */
 public interface Space extends Comparable<Space> {
+    HandleManager getHandleManager();
+
     Handle getHandle();
 
     boolean isHandle(Handle handle);
@@ -34,6 +36,8 @@ public interface Space extends Comparable<Space> {
     boolean removeHandlesById(Collection<String> ids);
 
     Stream<Handle> handleStream();
+
+    void clear();
 
     @Override
     default int compareTo(Space o) {

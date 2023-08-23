@@ -13,6 +13,10 @@ public interface HandleManager {
 
     Collection<Space> getSpaces();
 
+    Space getSpaceSpace();
+
+    Space getTagSpace();
+
     Space createSpace(String id);
 
     Space getOrCreateSpace(String id);
@@ -36,4 +40,6 @@ public interface HandleManager {
     boolean removeSpacesById(Collection<String> ids);
 
     Stream<Space> spaceStream();
+
+    void clear();
 }

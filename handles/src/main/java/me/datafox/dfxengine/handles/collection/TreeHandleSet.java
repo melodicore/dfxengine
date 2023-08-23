@@ -84,6 +84,12 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
         return changed;
     }
 
+    @Override
+    public void clear() {
+        idMap.clear();
+        super.clear();
+    }
+
     private void checkSpace(Handle handle) {
         if(!space.equals(handle.getSpace())) {
             throw LogUtils.logExceptionAndGet(logger,

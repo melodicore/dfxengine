@@ -1,5 +1,8 @@
 package me.datafox.dfxengine.handles;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleManager;
 import me.datafox.dfxengine.handles.api.Space;
@@ -19,19 +22,32 @@ import java.util.stream.Stream;
  * @author datafox
  */
 @Component
+@EqualsAndHashCode
+@ToString
 public class HandleManagerImpl implements HandleManager {
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private final Logger logger;
 
     private final HandleMap<Space> spaces;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @Getter
+    private final Space spaceSpace;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @Getter
+    private final Space tagSpace;
+
     @Inject
     public HandleManagerImpl(Logger logger) {
         this.logger = logger;
-        spaces = new TreeHandleMap<>(HandleConstants.SPACES,
-                HandleConstants.SPACES_SET.stream()
-                .collect(Collectors.toMap(
-                        Space::getHandle,
-                        space -> space)));
+        spaceSpace = SpaceImpl.bootstrap(this, HandleConstants.SPACES_ID);
+        spaces = new TreeHandleMap<>(spaceSpace);
+        tagSpace = createSpace(HandleConstants.TAGS_ID);
+        clear();
     }
 
     @Override
@@ -51,7 +67,7 @@ public class HandleManagerImpl implements HandleManager {
 
     @Override
     public Space createSpace(String id) {
-        Handle handle = HandleConstants.SPACES.getOrCreateHandle(id);
+        Handle handle = spaceSpace.getOrCreateHandle(id);
 
         if(spaces.containsById(id)) {
             throw LogUtils.logExceptionAndGet(logger,
@@ -61,6 +77,7 @@ public class HandleManagerImpl implements HandleManager {
 
         Space space = SpaceImpl
                 .builder()
+                .handleManager(this)
                 .handle(handle)
                 .build();
 
@@ -95,21 +112,21 @@ public class HandleManagerImpl implements HandleManager {
 
     @Override
     public boolean removeSpace(Space space) {
-        HandleConstants.SPACES.removeHandle(space.getHandle());
+        spaceSpace.removeHandle(space.getHandle());
 
         return spaces.remove(space.getHandle(), space);
     }
 
     @Override
     public Space removeSpaceByHandle(Handle handle) {
-        HandleConstants.SPACES.removeHandle(handle);
+        spaceSpace.removeHandle(handle);
 
         return spaces.remove(handle);
     }
 
     @Override
     public Space removeSpaceById(String id) {
-        HandleConstants.SPACES.removeHandleById(id);
+        spaceSpace.removeHandleById(id);
 
         return spaces.removeById(id);
     }
@@ -124,14 +141,14 @@ public class HandleManagerImpl implements HandleManager {
 
     @Override
     public boolean removeSpacesByHandle(Collection<Handle> handles) {
-        HandleConstants.SPACES.removeHandles(handles);
+        spaceSpace.removeHandles(handles);
 
         return spaces.removeAll(handles);
     }
 
     @Override
     public boolean removeSpacesById(Collection<String> ids) {
-        HandleConstants.SPACES.removeHandlesById(ids);
+        spaceSpace.removeHandlesById(ids);
 
         return spaces.removeAllById(ids);
     }
@@ -139,5 +156,12 @@ public class HandleManagerImpl implements HandleManager {
     @Override
     public Stream<Space> spaceStream() {
         return spaces.stream();
+    }
+
+    @Override
+    public void clear() {
+        spaces.clear();
+        spaces.put(spaceSpace.getHandle(), spaceSpace);
+        spaces.put(tagSpace.getHandle(), tagSpace);
     }
 }

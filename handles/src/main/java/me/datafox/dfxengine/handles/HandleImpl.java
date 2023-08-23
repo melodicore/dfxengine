@@ -2,6 +2,7 @@ package me.datafox.dfxengine.handles;
 
 import lombok.*;
 import me.datafox.dfxengine.handles.api.Handle;
+import me.datafox.dfxengine.handles.api.HandleManager;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleSet;
 import me.datafox.dfxengine.handles.collection.TreeHandleSet;
@@ -18,24 +19,28 @@ import java.util.stream.Stream;
 @Data
 public final class HandleImpl implements Handle {
     @NonNull
+    private final HandleManager handleManager;
+
+    @NonNull
     private final Space space;
 
     @NonNull
     private final String id;
 
-    @NonNull
     private final long index;
 
     @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
     private final HandleSet tags;
 
     @Builder
-    private HandleImpl(@NonNull Space space, @NonNull String id, @NonNull long index, @Singular Collection<Handle> tags) {
+    private HandleImpl(@NonNull Space space, @NonNull String id, long index, @Singular Collection<Handle> tags) {
         super();
+        handleManager = space.getHandleManager();
         this.space = space;
         this.id = id;
         this.index = index;
-        this.tags = new TreeHandleSet(HandleConstants.TAGS, tags);
+        this.tags = new TreeHandleSet(handleManager.getTagSpace(), tags);
     }
 
     @Override
@@ -55,7 +60,7 @@ public final class HandleImpl implements Handle {
 
     @Override
     public boolean addTagById(String id) {
-        return addTag(HandleConstants.TAGS.getOrCreateHandle(id));
+        return addTag(handleManager.getTagSpace().getOrCreateHandle(id));
     }
 
     @Override
@@ -66,7 +71,7 @@ public final class HandleImpl implements Handle {
     @Override
     public boolean addTagsById(Collection<String> ids) {
         return addTags(ids.stream()
-                .map(HandleConstants.TAGS::getOrCreateHandle)
+                .map(handleManager.getTagSpace()::getOrCreateHandle)
                 .collect(Collectors.toSet()));
     }
 
@@ -112,7 +117,12 @@ public final class HandleImpl implements Handle {
 
     @Override
     public Stream<Handle> tagStream() {
-        return getTags().stream();
+        return tags.stream();
+    }
+
+    @Override
+    public void clearTags() {
+        tags.clear();
     }
 
     @Override

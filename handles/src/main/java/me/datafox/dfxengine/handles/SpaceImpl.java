@@ -2,6 +2,7 @@ package me.datafox.dfxengine.handles;
 
 import lombok.*;
 import me.datafox.dfxengine.handles.api.Handle;
+import me.datafox.dfxengine.handles.api.HandleManager;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleSet;
 import me.datafox.dfxengine.handles.collection.TreeHandleSet;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -18,28 +20,42 @@ import java.util.stream.Stream;
  */
 @Data
 public final class SpaceImpl implements Space {
+    @NonNull
     @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
     private final Logger logger;
 
     @NonNull
+    @EqualsAndHashCode.Exclude
+    private final HandleManager handleManager;
+
+    @NonNull
+    @EqualsAndHashCode.Exclude
     private final Handle handle;
+
+    @Getter(AccessLevel.NONE)
+    private final String handleId;
 
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     private final HandleSet handles;
 
     @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
     private long counter = 0;
 
     @Builder
-    private SpaceImpl(@NonNull Handle handle, @Singular Collection<String> initialHandles) {
+    private SpaceImpl(@NonNull Handle handle, @Singular Collection<String> initialHandles, @NonNull HandleManager handleManager) {
+        this.handleManager = handleManager;
         logger = LoggerFactory.getLogger(getClass());
         this.handle = handle;
+        handleId = handle.getId();
         handles = new TreeHandleSet(this);
         initialHandles.forEach(this::createHandle);
     }
 
-    private SpaceImpl(String spacesId) {
+    private SpaceImpl(@NonNull HandleManager handleManager, String spacesId) {
+        this.handleManager = handleManager;
         logger = LoggerFactory.getLogger(getClass());
         handle = HandleImpl
                 .builder()
@@ -47,6 +63,7 @@ public final class SpaceImpl implements Space {
                 .space(this)
                 .index(counter++)
                 .build();
+        handleId = handle.getId();
 
         handles = new TreeHandleSet(this);
         handles.add(handle);
@@ -135,7 +152,17 @@ public final class SpaceImpl implements Space {
         return getHandles().stream();
     }
 
-    static Space bootstrap(String spacesId) {
-        return new SpaceImpl(spacesId);
+    @Override
+    public void clear() {
+        handles.clear();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(%s)", handleId, handles.stream().map(Handle::toString).collect(Collectors.joining(", ")));
+    }
+
+    static Space bootstrap(HandleManager handleManager, String spacesId) {
+        return new SpaceImpl(handleManager, spacesId);
     }
 }

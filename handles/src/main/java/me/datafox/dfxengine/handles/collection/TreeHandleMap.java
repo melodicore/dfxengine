@@ -116,6 +116,12 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
         return changed;
     }
 
+    @Override
+    public void clear() {
+        idMap.clear();
+        super.clear();
+    }
+
     private void checkSpace(Handle handle) {
         if(!space.equals(handle.getSpace())) {
             throw LogUtils.logExceptionAndGet(logger,
