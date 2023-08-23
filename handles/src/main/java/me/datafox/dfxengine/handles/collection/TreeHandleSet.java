@@ -67,7 +67,9 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
 
     @Override
     public boolean removeById(String id) {
-        return removeAll(stream().filter(handle -> handle.getId().equals(id)).collect(Collectors.toSet()));
+        return removeAll(stream()
+                .filter(handle -> handle.getId().equals(id))
+                .collect(Collectors.toSet()));
     }
 
     @Override
@@ -84,7 +86,8 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
 
     private void checkSpace(Handle handle) {
         if(!space.equals(handle.getSpace())) {
-            throw LogUtils.logExceptionAndGet(logger, HandleStrings.spaceMismatchHandleSet(handle, space),
+            throw LogUtils.logExceptionAndGet(logger,
+                    HandleStrings.spaceMismatchHandleSet(handle, space),
                     IllegalArgumentException::new);
         }
     }

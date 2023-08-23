@@ -7,9 +7,9 @@ import java.util.stream.Stream;
  * @author datafox
  */
 public interface Space extends Comparable<Space> {
-    Handle getSpaceHandle();
+    Handle getHandle();
 
-    boolean isSpaceHandle(Handle handle);
+    boolean isHandle(Handle handle);
 
     boolean isId(String id);
 
@@ -18,6 +18,8 @@ public interface Space extends Comparable<Space> {
     Collection<Handle> getHandles();
 
     Handle createHandle(String id);
+
+    Handle getOrCreateHandle(String id);
 
     boolean containsHandle(Handle handle);
 
@@ -35,6 +37,6 @@ public interface Space extends Comparable<Space> {
 
     @Override
     default int compareTo(Space o) {
-        return getSpaceHandle().compareTo(o.getSpaceHandle());
+        return getHandle().compareTo(o.getHandle());
     }
 }

@@ -9,6 +9,7 @@ import me.datafox.dfxengine.handles.collection.TreeHandleSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -53,8 +54,20 @@ public final class HandleImpl implements Handle {
     }
 
     @Override
+    public boolean addTagById(String id) {
+        return addTag(HandleConstants.TAGS.getOrCreateHandle(id));
+    }
+
+    @Override
     public boolean addTags(Collection<Handle> tags) {
         return this.tags.addAll(tags);
+    }
+
+    @Override
+    public boolean addTagsById(Collection<String> ids) {
+        return addTags(ids.stream()
+                .map(HandleConstants.TAGS::getOrCreateHandle)
+                .collect(Collectors.toSet()));
     }
 
     @Override
@@ -104,6 +117,6 @@ public final class HandleImpl implements Handle {
 
     @Override
     public String toString() {
-        return String.format("%s:%s", space.getSpaceHandle().getId(), getId());
+        return String.format("%s:%s", space.getHandle().getId(), getId());
     }
 }

@@ -10,6 +10,7 @@ public class HandleStrings {
     private static final String SPACE_WITH_ID_ALREADY_PRESENT = "HandleManager already contains a space with id %s";
     private static final String HANDLE_WITH_ID_ALREADY_PRESENT = "Space %s already contains a handle with id %s";
     private static final String SPACE_MISMATCH_HANDLE_SET = "Tried to add handle %s to HandleSet with space %s";
+    private static final String SPACE_MISMATCH_HANDLE_MAP = "Tried to add handle %s to HandleMap with space %s";
 
     public static String spaceWithIdAlreadyPresent(String spaceId) {
         return forString(SPACE_WITH_ID_ALREADY_PRESENT, spaceId);
@@ -21,6 +22,10 @@ public class HandleStrings {
 
     public static String spaceMismatchHandleSet(Handle handle, Space space) {
         return forHandleAndSpace(SPACE_MISMATCH_HANDLE_SET, handle, space);
+    }
+
+    public static String spaceMismatchHandleMap(Handle handle, Space space) {
+        return forHandleAndSpace(SPACE_MISMATCH_HANDLE_MAP, handle, space);
     }
 
     private static String forString(String str, String string) {

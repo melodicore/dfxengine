@@ -22,7 +22,7 @@ public final class SpaceImpl implements Space {
     private final Logger logger;
 
     @NonNull
-    private final Handle spaceHandle;
+    private final Handle handle;
 
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
@@ -32,16 +32,16 @@ public final class SpaceImpl implements Space {
     private long counter = 0;
 
     @Builder
-    private SpaceImpl(@NonNull Handle spaceHandle, @Singular Collection<String> handleIds) {
+    private SpaceImpl(@NonNull Handle handle, @Singular Collection<String> initialHandles) {
         logger = LoggerFactory.getLogger(getClass());
-        this.spaceHandle = spaceHandle;
+        this.handle = handle;
         handles = new TreeHandleSet(this);
-        handleIds.forEach(this::createHandle);
+        initialHandles.forEach(this::createHandle);
     }
 
     private SpaceImpl(String spacesId) {
         logger = LoggerFactory.getLogger(getClass());
-        spaceHandle = HandleImpl
+        handle = HandleImpl
                 .builder()
                 .id(spacesId)
                 .space(this)
@@ -49,17 +49,17 @@ public final class SpaceImpl implements Space {
                 .build();
 
         handles = new TreeHandleSet(this);
-        handles.add(spaceHandle);
+        handles.add(handle);
     }
 
     @Override
-    public boolean isSpaceHandle(Handle handle) {
-        return getSpaceHandle().equals(handle);
+    public boolean isHandle(Handle handle) {
+        return this.handle.equals(handle);
     }
 
     @Override
     public boolean isId(String id) {
-        return spaceHandle.isId(id);
+        return handle.isId(id);
     }
 
     @Override
@@ -84,11 +84,20 @@ public final class SpaceImpl implements Space {
                 .builder()
                 .id(id)
                 .space(this)
+                .index(counter++)
                 .build();
 
         handles.add(handle);
 
         return handle;
+    }
+
+    @Override
+    public Handle getOrCreateHandle(String id) {
+        if(containsHandleById(id)) {
+            return getHandle(id);
+        }
+        return createHandle(id);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class HandleConstants {
         TAGS_HANDLE = SPACES.createHandle(TAGS_ID);
         TAGS = SpaceImpl
                 .builder()
-                .spaceHandle(TAGS_HANDLE)
+                .handle(TAGS_HANDLE)
                 .build();
         SPACES_SET = Set.of(SPACES, TAGS);
     }

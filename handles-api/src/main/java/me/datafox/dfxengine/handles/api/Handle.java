@@ -20,7 +20,11 @@ public interface Handle extends Comparable<Handle> {
 
     boolean addTag(Handle tag);
 
+    boolean addTagById(String id);
+
     boolean addTags(Collection<Handle> tags);
+
+    boolean addTagsById(Collection<String> ids);
 
     boolean containsTag(Handle tag);
 

@@ -15,6 +15,8 @@ public interface HandleManager {
 
     Space createSpace(String id);
 
+    Space getOrCreateSpace(String id);
+
     boolean containsSpace(Space space);
 
     boolean containsSpaceByHandle(Handle handle);

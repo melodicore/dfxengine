@@ -5,8 +5,10 @@ import me.datafox.dfxengine.handles.api.HandleManager;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
 import me.datafox.dfxengine.handles.collection.TreeHandleMap;
+import me.datafox.dfxengine.handles.utils.HandleStrings;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
+import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 
 import java.util.Collection;
@@ -28,7 +30,7 @@ public class HandleManagerImpl implements HandleManager {
         spaces = new TreeHandleMap<>(HandleConstants.SPACES,
                 HandleConstants.SPACES_SET.stream()
                 .collect(Collectors.toMap(
-                        Space::getSpaceHandle,
+                        Space::getHandle,
                         space -> space)));
     }
 
@@ -49,17 +51,31 @@ public class HandleManagerImpl implements HandleManager {
 
     @Override
     public Space createSpace(String id) {
-        Handle handle = HandleConstants.SPACES
-                .createHandle(id);
+        Handle handle = HandleConstants.SPACES.getOrCreateHandle(id);
+
+        if(spaces.containsById(id)) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    HandleStrings.spaceWithIdAlreadyPresent(id),
+                    IllegalArgumentException::new);
+        }
 
         Space space = SpaceImpl
                 .builder()
-                .spaceHandle(handle)
+                .handle(handle)
                 .build();
 
         spaces.put(handle, space);
 
         return space;
+    }
+
+    @Override
+    public Space getOrCreateSpace(String id) {
+        if(containsSpaceById(id)) {
+            return getSpaceById(id);
+        }
+
+        return createSpace(id);
     }
 
     @Override
@@ -79,9 +95,9 @@ public class HandleManagerImpl implements HandleManager {
 
     @Override
     public boolean removeSpace(Space space) {
-        HandleConstants.SPACES.removeHandle(space.getSpaceHandle());
+        HandleConstants.SPACES.removeHandle(space.getHandle());
 
-        return spaces.remove(space.getSpaceHandle(), space);
+        return spaces.remove(space.getHandle(), space);
     }
 
     @Override
@@ -102,7 +118,7 @@ public class HandleManagerImpl implements HandleManager {
     public boolean removeSpaces(Collection<Space> spaces) {
         return removeSpacesByHandle(spaces
                 .stream()
-                .map(Space::getSpaceHandle)
+                .map(Space::getHandle)
                 .collect(Collectors.toSet()));
     }
 

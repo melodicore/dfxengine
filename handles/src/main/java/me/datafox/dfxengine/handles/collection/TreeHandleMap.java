@@ -118,7 +118,8 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
 
     private void checkSpace(Handle handle) {
         if(!space.equals(handle.getSpace())) {
-            throw LogUtils.logExceptionAndGet(logger, HandleStrings.spaceMismatchHandleSet(handle, space),
+            throw LogUtils.logExceptionAndGet(logger,
+                    HandleStrings.spaceMismatchHandleMap(handle, space),
                     IllegalArgumentException::new);
         }
     }
