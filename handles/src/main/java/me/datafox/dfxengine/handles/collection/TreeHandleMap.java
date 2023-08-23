@@ -66,7 +66,13 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
 
     @Override
     public T getById(String id) {
-        return get(idMap.get(id));
+        Handle handle = idMap.get(id);
+
+        if(handle == null) {
+            return null;
+        }
+
+        return get(handle);
     }
 
     @Override

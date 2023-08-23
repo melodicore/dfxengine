@@ -70,6 +70,11 @@ public final class SpaceImpl implements Space {
     }
 
     @Override
+    public String getId() {
+        return handleId;
+    }
+
+    @Override
     public boolean isHandle(Handle handle) {
         return this.handle.equals(handle);
     }
@@ -87,6 +92,34 @@ public final class SpaceImpl implements Space {
     @Override
     public Collection<Handle> getHandles() {
         return Collections.unmodifiableSet(handles);
+    }
+
+    @Override
+    public Collection<Handle> getHandlesByTag(Handle tag) {
+        return handleStream()
+                .filter(handle -> handle.containsTag(tag))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Collection<Handle> getHandlesByTagId(String id) {
+        return handleStream()
+                .filter(handle -> handle.containsTagById(id))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Collection<Handle> getHandlesByTags(Collection<Handle> tags) {
+        return handleStream()
+                .filter(handle -> handle.containsTags(tags))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Collection<Handle> getHandlesByTagIds(Collection<String> ids) {
+        return handleStream()
+                .filter(handle -> handle.containsTagsById(ids))
+                .collect(Collectors.toSet());
     }
 
     @Override

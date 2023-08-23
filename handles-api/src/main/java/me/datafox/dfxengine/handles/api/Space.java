@@ -11,6 +11,8 @@ public interface Space extends Comparable<Space> {
 
     Handle getHandle();
 
+    String getId();
+
     boolean isHandle(Handle handle);
 
     boolean isId(String id);
@@ -18,6 +20,14 @@ public interface Space extends Comparable<Space> {
     Handle getHandle(String id);
 
     Collection<Handle> getHandles();
+
+    Collection<Handle> getHandlesByTag(Handle tag);
+
+    Collection<Handle> getHandlesByTagId(String id);
+
+    Collection<Handle> getHandlesByTags(Collection<Handle> tags);
+
+    Collection<Handle> getHandlesByTagIds(Collection<String> ids);
 
     Handle createHandle(String id);
 

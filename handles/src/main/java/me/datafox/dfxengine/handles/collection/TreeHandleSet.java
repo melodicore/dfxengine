@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 /**
  * @author datafox
@@ -57,7 +56,7 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
 
     @Override
     public boolean containsAllById(Collection<String> ids) {
-        return false;
+        return ids.stream().allMatch(idMap::containsKey);
     }
 
     @Override
@@ -67,9 +66,15 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
 
     @Override
     public boolean removeById(String id) {
-        return removeAll(stream()
-                .filter(handle -> handle.getId().equals(id))
-                .collect(Collectors.toSet()));
+        Handle handle = idMap.remove(id);
+
+        if(handle != null) {
+            this.remove(handle);
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
