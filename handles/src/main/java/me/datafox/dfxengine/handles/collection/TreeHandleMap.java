@@ -50,6 +50,34 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
     }
 
     @Override
+    public T remove(Object key) {
+        T previous = super.remove(key);
+
+        if(key instanceof Handle) {
+            idMap.remove(((Handle) key).getId(), key);
+        }
+
+        return previous;
+    }
+
+    @Override
+    public boolean remove(Object key, Object value) {
+        boolean removed = super.remove(key, value);
+
+        if(removed && key instanceof Handle) {
+            idMap.remove(((Handle) key).getId(), key);
+        }
+
+        return removed;
+    }
+
+    @Override
+    public void clear() {
+        idMap.clear();
+        super.clear();
+    }
+
+    @Override
     public boolean containsById(String id) {
         return idMap.containsKey(id);
     }
@@ -73,17 +101,6 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
         }
 
         return get(handle);
-    }
-
-    @Override
-    public T remove(Object key) {
-        T previous = super.remove(key);
-
-        if(key instanceof Handle) {
-            idMap.remove(((Handle) key).getId(), key);
-        }
-
-        return previous;
     }
 
     @Override
@@ -120,12 +137,6 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
             }
         }
         return changed;
-    }
-
-    @Override
-    public void clear() {
-        idMap.clear();
-        super.clear();
     }
 
     private void checkSpace(Handle handle) {

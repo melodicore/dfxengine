@@ -1,7 +1,6 @@
 package me.datafox.dfxengine.handles.api;
 
 import java.util.Collection;
-import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -18,7 +17,7 @@ public interface Handle extends Comparable<Handle> {
 
     boolean isId(String id);
 
-    Set<Handle> getTags();
+    Collection<Handle> getTags();
 
     boolean addTag(Handle tag);
 

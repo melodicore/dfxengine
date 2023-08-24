@@ -37,9 +37,9 @@ public interface HandleManager {
 
     boolean removeSpace(Space space);
 
-    Space removeSpaceByHandle(Handle handle);
+    boolean removeSpaceByHandle(Handle handle);
 
-    Space removeSpaceById(String id);
+    boolean removeSpaceById(String id);
 
     boolean removeSpaces(Collection<Space> spaces);
 

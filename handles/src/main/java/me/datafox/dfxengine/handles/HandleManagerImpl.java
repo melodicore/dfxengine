@@ -156,17 +156,17 @@ public class HandleManagerImpl implements HandleManager {
     }
 
     @Override
-    public Space removeSpaceByHandle(Handle handle) {
+    public boolean removeSpaceByHandle(Handle handle) {
         spaceSpace.removeHandle(handle);
 
-        return spaces.remove(handle);
+        return spaces.remove(handle) != null;
     }
 
     @Override
-    public Space removeSpaceById(String id) {
+    public boolean removeSpaceById(String id) {
         spaceSpace.removeHandleById(id);
 
-        return spaces.removeById(id);
+        return spaces.removeById(id) != null;
     }
 
     @Override

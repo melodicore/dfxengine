@@ -45,10 +45,34 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
     }
 
     @Override
+    public boolean remove(Object o) {
+        boolean returned = super.remove(o);
+
+        if(returned && o instanceof Handle) {
+            idMap.remove(((Handle) o).getId(), o);
+        }
+
+        return super.remove(o);
+    }
+
+    @Override
     public boolean addAll(Collection<? extends Handle> c) {
         c.forEach(this::checkSpace);
 
         return super.addAll(c);
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        boolean changed = false;
+
+        for(Object o : c) {
+            if(remove(o)) {
+                changed = true;
+            }
+        }
+
+        return changed;
     }
 
     @Override
