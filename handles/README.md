@@ -1,5 +1,5 @@
 DFXEngine Handles contains Handles, a data type meant for identification, containing a String
-id and zero or more tags to identify each Handle. 
+id and zero or more tags to identify each Handle. Tags themselves are also Handles. 
 
 The module also contains Spaces, which work as namespaces for Handle ids, and the HandleManager,
 a singleton class for manipulating Handles and Spaces. 
