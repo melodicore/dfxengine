@@ -37,6 +37,10 @@ public interface Space extends Comparable<Space> {
 
     boolean containsHandleById(String id);
 
+    boolean containsHandles(Collection<Handle> handles);
+
+    boolean containsHandlesById(Collection<String> ids);
+
     boolean removeHandle(Handle handle);
 
     boolean removeHandleById(String id);

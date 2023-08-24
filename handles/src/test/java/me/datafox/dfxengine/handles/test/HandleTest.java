@@ -1,14 +1,18 @@
 package me.datafox.dfxengine.handles.test;
 
 import me.datafox.dfxengine.handles.HandleManagerImpl;
+import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleManager;
+import me.datafox.dfxengine.handles.api.Space;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import static me.datafox.dfxengine.handles.test.TestStrings.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -22,97 +26,187 @@ public class HandleTest {
         handleManager = new HandleManagerImpl(LoggerFactory.getLogger(HandleManager.class));
     }
 
+    private Space testSpace;
+
+    private Handle testHandle;
+
+    private Handle testTag;
+
+    private Handle otherTestTag;
+
     @BeforeEach
     public void beforeEach() {
         handleManager.clear();
 
-        var space1 = handleManager.createSpace("testSpace1");
+        testSpace = handleManager.createSpace(TEST_SPACE);
+        testHandle = testSpace.createHandle(TEST_HANDLE);
 
-        space1.createHandle("testHandle1").addTagsById(Set.of("allTag", "oneTag"));
-        space1.createHandle("testHandle2").addTagsById(Set.of("allTag", "twoTag"));
-        space1.createHandle("testHandle3").addTagsById(Set.of("allTag", "threeTag"));
+        testTag = handleManager.createTag(TEST_TAG);
+        otherTestTag = handleManager.createTag(OTHER_TEST_TAG);
 
-        var space2 = handleManager.createSpace("testSpace2");
-
-        space2.createHandle("testHandle1");
-        space2.createHandle("testHandle2");
-        space2.createHandle("testHandle3");
+        testHandle.addTag(testTag);
+        testHandle.addTag(otherTestTag);
     }
 
     @Test
-    public void getSpace_pass() {
-        var testSpace1 = handleManager.getSpaceById("testSpace1");
-
-        assertEquals("testSpace1", testSpace1.getId());
+    public void getHandleManagerTest() {
+        assertEquals(handleManager, testHandle.getHandleManager());
     }
 
     @Test
-    public void createSpace_pass() {
-        var createdSpace = handleManager.createSpace("createdSpace");
-
-        assertEquals("createdSpace", createdSpace.getId());
+    public void getSpaceTest() {
+        assertEquals(testSpace, testHandle.getSpace());
     }
 
     @Test
-    public void removeSpace_pass() {
-        handleManager.removeSpaceById("testSpace1");
-
-        assertNull(handleManager.getSpaceById("testSpace1"));
+    public void getIdTest() {
+        assertEquals(TEST_HANDLE, testHandle.getId());
     }
 
     @Test
-    public void getHandle_pass() {
-        var testHandle1 = handleManager.getSpaceById("testSpace1").getHandle("testHandle1");
-
-        assertEquals("testHandle1", testHandle1.getId());
-
-        assertEquals(testHandle1, handleManager.getSpaceById("testSpace1").getHandles().iterator().next());
+    public void getIndexTest() {
+        assertEquals(0, testHandle.getIndex());
     }
 
     @Test
-    public void createHandle_pass() {
-        var createdHandle = handleManager.getSpaceById("testSpace1").createHandle("createdHandle");
+    public void isIdTest() {
+        assertTrue(testHandle.isId(TEST_HANDLE));
 
-        assertEquals("createdHandle", createdHandle.getId());
-
-        assertEquals("testSpace1", createdHandle.getSpace().getId());
+        assertFalse(testHandle.isId(TEST_SPACE));
     }
 
     @Test
-    public void removeHandle_pass() {
-        var testSpace1 = handleManager.getSpaceById("testSpace1");
-
-        testSpace1.removeHandleById("testHandle1");
-
-        assertNull(testSpace1.getHandle("testHandle1"));
+    public void getTagsTest() {
+        assertEquals(Set.of(testTag, otherTestTag), testHandle.getTags());
     }
 
     @Test
-    public void sameIdNotEquals_pass() {
-        var testHandle11 = handleManager.getSpaceById("testSpace1").getHandle("testHandle1");
+    public void addTagTest() {
+        var otherTag = handleManager.createTag(OTHER_TAG);
 
-        var testHandle12 = handleManager.getSpaceById("testSpace2").getHandle("testHandle1");
+        assertTrue(testHandle.addTag(otherTag));
 
-        assertEquals(testHandle11.getId(), testHandle12.getId());
+        assertFalse(testHandle.addTag(otherTag));
 
-        assertNotEquals(testHandle11, testHandle12);
+        assertEquals(Set.of(testTag, otherTestTag, otherTag), testHandle.getTags());
     }
 
     @Test
-    public void getByTag_pass() {
-        var handles = handleManager.getSpaceById("testSpace1").getHandlesByTagId("allTag");
+    public void addTagByIdTest() {
+        assertTrue(testHandle.addTagById(TAG_ID));
 
-        assertEquals(3, handles.size());
+        assertFalse(testHandle.addTagById(TAG_ID));
 
-        assertEquals("testHandle1", handleManager.getSpaceById("testSpace1").getHandles().iterator().next().getId());
+        var tag = handleManager.getTag(TAG_ID);
+
+        assertEquals(Set.of(testTag, otherTestTag, tag), testHandle.getTags());
     }
 
     @Test
-    public void getByTags_pass() {
-        var handles = handleManager.getSpaceById("testSpace1").getHandlesByTagIds(Set.of("allTag", "oneTag"));
+    public void addTagsTest() {
+        var otherTag = handleManager.createTag(OTHER_TAG);
 
-        assertEquals(1, handles.size());
+        var anotherTag = handleManager.createTag(ANOTHER_TAG);
 
-        assertEquals("testHandle1", handleManager.getSpaceById("testSpace1").getHandles().iterator().next().getId());
+        assertTrue(testHandle.addTags(Set.of(testTag, otherTag, anotherTag)));
+
+        assertFalse(testHandle.addTags(Set.of(testTag, otherTag, anotherTag)));
+
+        assertEquals(Set.of(testTag, otherTestTag, otherTag, anotherTag), testHandle.getTags());
+    }
+
+    @Test
+    public void addTagsByIdTest() {
+        assertTrue(testHandle.addTagsById(Set.of(TAG_ID, OTHER_TAG_ID)));
+
+        assertFalse(testHandle.addTagsById(Set.of(TAG_ID, OTHER_TAG_ID)));
+
+        assertEquals(TAG_ID, handleManager.getTag(TAG_ID).getId());
+
+        assertEquals(OTHER_TAG_ID, handleManager.getTag(OTHER_TAG_ID).getId());
+    }
+
+    @Test
+    public void containsTagTest() {
+        assertTrue(testHandle.containsTag(testTag));
+
+        assertFalse(testHandle.containsTag(handleManager.createTag(TAG_ID)));
+    }
+
+    @Test
+    public void containsTagByIdTest() {
+        assertTrue(testHandle.containsTagById(TEST_TAG));
+
+        assertFalse(testHandle.containsTagById(TAG_ID));
+    }
+
+    @Test
+    public void containsTagsTest() {
+        assertTrue(testHandle.containsTags(Set.of(testTag, otherTestTag)));
+
+        assertTrue(testHandle.containsTags(Set.of(testTag)));
+
+        assertFalse(testHandle.containsTags(Set.of(handleManager.createTag(TAG_ID))));
+
+        assertFalse(testHandle.containsTags(Set.of(testTag, handleManager.getTag(TAG_ID))));
+    }
+
+    @Test
+    public void containsTagsByIdTest() {
+        assertTrue(testHandle.containsTagsById(Set.of(TEST_TAG, OTHER_TEST_TAG)));
+
+        assertTrue(testHandle.containsTagsById(Set.of(TEST_TAG)));
+
+        assertFalse(testHandle.containsTagsById(Set.of(TAG_ID)));
+
+        assertFalse(testHandle.containsTagsById(Set.of(TEST_TAG, TAG_ID)));
+    }
+
+    @Test
+    public void removeTagTest() {
+        assertTrue(testHandle.removeTag(testTag));
+
+        assertFalse(testHandle.removeTag(testTag));
+
+        assertEquals(Set.of(otherTestTag), testHandle.getTags());
+    }
+
+    @Test
+    public void removeTagByIdTest() {
+        assertTrue(testHandle.removeTagById(TEST_TAG));
+
+        assertFalse(testHandle.removeTagById(TEST_TAG));
+
+        assertEquals(Set.of(otherTestTag), testHandle.getTags());
+    }
+
+    @Test
+    public void removeTagsTest() {
+        assertTrue(testHandle.removeTags(Set.of(testTag, otherTestTag)));
+
+        assertFalse(testHandle.removeTags(Set.of(testTag, otherTestTag)));
+
+        assertEquals(Set.of(), testHandle.getTags());
+    }
+
+    @Test
+    public void removeTagsByIdTest() {
+        assertTrue(testHandle.removeTagsById(Set.of(TEST_TAG, OTHER_TEST_TAG)));
+
+        assertFalse(testHandle.removeTagsById(Set.of(TEST_TAG, OTHER_TEST_TAG)));
+
+        assertEquals(Set.of(), testHandle.getTags());
+    }
+
+    @Test
+    public void tagStreamTest() {
+        assertEquals(Set.of(testTag, otherTestTag), testHandle.tagStream().collect(Collectors.toSet()));
+    }
+
+    @Test
+    public void clearTagsTest() {
+        testHandle.clearTags();
+
+        assertEquals(Set.of(), testHandle.getTags());
     }
 }

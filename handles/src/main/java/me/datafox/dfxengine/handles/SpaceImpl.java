@@ -54,19 +54,12 @@ public final class SpaceImpl implements Space {
         initialHandles.forEach(this::createHandle);
     }
 
-    private SpaceImpl(@NonNull HandleManager handleManager, String spacesId) {
+    private SpaceImpl(@NonNull HandleManager handleManager, String id) {
         this.handleManager = handleManager;
         logger = LoggerFactory.getLogger(getClass());
-        handle = HandleImpl
-                .builder()
-                .id(spacesId)
-                .space(this)
-                .index(counter++)
-                .build();
-        handleId = handle.getId();
-
+        handleId = id;
         handles = new TreeHandleSet(this);
-        handles.add(handle);
+        handle = bootstrapHandle(id);
     }
 
     @Override
@@ -161,6 +154,16 @@ public final class SpaceImpl implements Space {
     }
 
     @Override
+    public boolean containsHandles(Collection<Handle> handles) {
+        return this.handles.containsAll(handles);
+    }
+
+    @Override
+    public boolean containsHandlesById(Collection<String> ids) {
+        return handles.containsAllById(ids);
+    }
+
+    @Override
     public boolean removeHandle(Handle handle) {
         return handles.remove(handle);
     }
@@ -195,7 +198,25 @@ public final class SpaceImpl implements Space {
         return String.format("%s(%s)", handleId, handles.stream().map(Handle::toString).collect(Collectors.joining(", ")));
     }
 
-    static Space bootstrap(HandleManager handleManager, String spacesId) {
-        return new SpaceImpl(handleManager, spacesId);
+    static Space bootstrap(HandleManager handleManager, String id) {
+        return new SpaceImpl(handleManager, id);
+    }
+
+    void addInternal(Handle handle) {
+        handles.add(handle);
+    }
+
+    Handle bootstrapHandle(String id) {
+        if(handles.containsById(id)) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    HandleStrings.handleWithIdAlreadyPresent(this, id),
+                    IllegalArgumentException::new);
+        }
+
+        Handle handle = new HandleImpl(this, id, counter++);
+
+        handles.add(handle);
+
+        return handle;
     }
 }

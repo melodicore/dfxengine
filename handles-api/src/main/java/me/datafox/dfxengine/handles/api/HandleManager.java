@@ -11,11 +11,13 @@ public interface HandleManager {
 
     Space getSpaceById(String id);
 
+    Handle getSpaceHandle(String id);
+
     Collection<Space> getSpaces();
 
-    Space getSpaceSpace();
+    Collection<Handle> getSpaceHandles();
 
-    Space getTagSpace();
+    Collection<Handle> getTags();
 
     Space createSpace(String id);
 
@@ -26,6 +28,12 @@ public interface HandleManager {
     boolean containsSpaceByHandle(Handle handle);
 
     boolean containsSpaceById(String id);
+
+    boolean containsSpaces(Collection<Space> spaces);
+
+    boolean containsSpacesByHandle(Collection<Handle> handles);
+
+    boolean containsSpacesById(Collection<String> ids);
 
     boolean removeSpace(Space space);
 
@@ -40,6 +48,30 @@ public interface HandleManager {
     boolean removeSpacesById(Collection<String> ids);
 
     Stream<Space> spaceStream();
+
+    Handle getTag(String id);
+
+    Handle createTag(String id);
+
+    Handle getOrCreateTag(String id);
+
+    boolean containsTag(Handle tag);
+
+    boolean containsTagById(String id);
+
+    boolean containsTags(Collection<Handle> tags);
+
+    boolean containsTagsById(Collection<String> ids);
+
+    boolean removeTag(Handle tag);
+
+    boolean removeTagById(String id);
+
+    boolean removeTags(Collection<Handle> tags);
+
+    boolean removeTagsById(Collection<String> ids);
+
+    Stream<Handle> tagStream();
 
     void clear();
 }

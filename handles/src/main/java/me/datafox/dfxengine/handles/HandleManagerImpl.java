@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.handles;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,6 +19,9 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static me.datafox.dfxengine.handles.HandleConstants.SPACES_ID;
+import static me.datafox.dfxengine.handles.HandleConstants.TAGS_ID;
+
 /**
  * @author datafox
  */
@@ -33,20 +37,24 @@ public class HandleManagerImpl implements HandleManager {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @Getter
     private final Space spaceSpace;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @Getter
+    @Getter(AccessLevel.PACKAGE)
     private final Space tagSpace;
 
     @Inject
     public HandleManagerImpl(Logger logger) {
         this.logger = logger;
-        spaceSpace = SpaceImpl.bootstrap(this, HandleConstants.SPACES_ID);
+        spaceSpace = SpaceImpl.bootstrap(this, SPACES_ID);
         spaces = new TreeHandleMap<>(spaceSpace);
-        tagSpace = createSpace(HandleConstants.TAGS_ID);
+        tagSpace = SpaceImpl.builder()
+                .handle(((SpaceImpl) spaceSpace).bootstrapHandle(TAGS_ID))
+                .handleManager(this)
+                .build();
+        ((HandleImpl) spaceSpace.getHandle()).bootstrap(tagSpace);
+        ((HandleImpl) tagSpace.getHandle()).bootstrap(tagSpace);
         clear();
     }
 
@@ -61,8 +69,23 @@ public class HandleManagerImpl implements HandleManager {
     }
 
     @Override
+    public Handle getSpaceHandle(String id) {
+        return spaceSpace.getHandle(id);
+    }
+
+    @Override
     public Collection<Space> getSpaces() {
         return spaces.values();
+    }
+
+    @Override
+    public Collection<Handle> getSpaceHandles() {
+        return spaceSpace.getHandles();
+    }
+
+    @Override
+    public Collection<Handle> getTags() {
+        return tagSpace.getHandles();
     }
 
     @Override
@@ -108,6 +131,21 @@ public class HandleManagerImpl implements HandleManager {
     @Override
     public boolean containsSpaceById(String id) {
         return spaces.containsById(id);
+    }
+
+    @Override
+    public boolean containsSpaces(Collection<Space> spaces) {
+        return spaces.stream().allMatch(this.spaces::containsValue);
+    }
+
+    @Override
+    public boolean containsSpacesByHandle(Collection<Handle> handles) {
+        return spaces.containsAll(handles);
+    }
+
+    @Override
+    public boolean containsSpacesById(Collection<String> ids) {
+        return spaces.containsAllById(ids);
     }
 
     @Override
@@ -159,7 +197,71 @@ public class HandleManagerImpl implements HandleManager {
     }
 
     @Override
+    public Handle getTag(String id) {
+        return tagSpace.getHandle(id);
+    }
+
+    @Override
+    public Handle createTag(String id) {
+        return tagSpace.createHandle(id);
+    }
+
+    @Override
+    public Handle getOrCreateTag(String id) {
+        return tagSpace.getOrCreateHandle(id);
+    }
+
+    @Override
+    public boolean containsTag(Handle tag) {
+        return tagSpace.containsHandle(tag);
+    }
+
+    @Override
+    public boolean containsTagById(String id) {
+        return tagSpace.containsHandleById(id);
+    }
+
+    @Override
+    public boolean containsTags(Collection<Handle> tags) {
+        return tagSpace.containsHandles(tags);
+    }
+
+    @Override
+    public boolean containsTagsById(Collection<String> ids) {
+        return tagSpace.containsHandlesById(ids);
+    }
+
+    @Override
+    public boolean removeTag(Handle tag) {
+        return tagSpace.removeHandle(tag);
+    }
+
+    @Override
+    public boolean removeTagById(String id) {
+        return tagSpace.removeHandleById(id);
+    }
+
+    @Override
+    public boolean removeTags(Collection<Handle> tags) {
+        return tagSpace.removeHandles(tags);
+    }
+
+    @Override
+    public boolean removeTagsById(Collection<String> ids) {
+        return tagSpace.removeHandlesById(ids);
+    }
+
+    @Override
+    public Stream<Handle> tagStream() {
+        return tagSpace.handleStream();
+    }
+
+    @Override
     public void clear() {
+        tagSpace.clear();
+        spaceSpace.clear();
+        ((SpaceImpl) spaceSpace).addInternal(spaceSpace.getHandle());
+        ((SpaceImpl) spaceSpace).addInternal(tagSpace.getHandle());
         spaces.clear();
         spaces.put(spaceSpace.getHandle(), spaceSpace);
         spaces.put(tagSpace.getHandle(), tagSpace);

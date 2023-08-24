@@ -7,6 +7,7 @@ import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleSet;
 import me.datafox.dfxengine.handles.collection.TreeHandleSet;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -40,7 +41,15 @@ public final class HandleImpl implements Handle {
         this.space = space;
         this.id = id;
         this.index = index;
-        this.tags = new TreeHandleSet(handleManager.getTagSpace(), tags);
+        this.tags = new TreeHandleSet(((HandleManagerImpl) handleManager).getTagSpace(), tags);
+    }
+
+    HandleImpl(@NonNull Space space, @NonNull String id, long index) {
+        handleManager = space.getHandleManager();
+        this.space = space;
+        this.id = id;
+        this.index = index;
+        tags = null;
     }
 
     @Override
@@ -60,7 +69,7 @@ public final class HandleImpl implements Handle {
 
     @Override
     public boolean addTagById(String id) {
-        return addTag(handleManager.getTagSpace().getOrCreateHandle(id));
+        return addTag(tags.getSpace().getOrCreateHandle(id));
     }
 
     @Override
@@ -71,7 +80,7 @@ public final class HandleImpl implements Handle {
     @Override
     public boolean addTagsById(Collection<String> ids) {
         return addTags(ids.stream()
-                .map(handleManager.getTagSpace()::getOrCreateHandle)
+                .map(tags.getSpace()::getOrCreateHandle)
                 .collect(Collectors.toSet()));
     }
 
@@ -128,5 +137,15 @@ public final class HandleImpl implements Handle {
     @Override
     public String toString() {
         return String.format("%s:%s", space.getHandle().getId(), getId());
+    }
+
+    void bootstrap(Space tagSpace) {
+        try {
+            Field f = HandleImpl.class.getDeclaredField("tags");
+            f.trySetAccessible();
+            f.set(this, new TreeHandleSet(tagSpace));
+        } catch(NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
