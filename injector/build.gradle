@@ -8,7 +8,7 @@ plugins {
 version = "$injectorVersion"
 
 dependencies {
-    implementation "me.datafox.dfxengine:injector-api:$injectorApiVersion"
+    api "me.datafox.dfxengine:injector-api:$injectorApiVersion"
     implementation "me.datafox.dfxengine:utils:$utilsVersion"
     implementation "io.github.classgraph:classgraph:$classgraphVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
