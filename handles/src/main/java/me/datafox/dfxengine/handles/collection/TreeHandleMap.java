@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.handles.collection;
 
+import lombok.Getter;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
@@ -18,6 +19,7 @@ import java.util.TreeMap;
 public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> {
     private final Logger logger;
 
+    @Getter
     private final Space space;
 
     private final Map<String,Handle> idMap;

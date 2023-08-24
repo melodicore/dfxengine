@@ -21,7 +21,7 @@ Here are the currently existing and planned modules:
 | [Injector](injector)         | Done (v1.0.3)      | A dependency injector                        |
 | [Injector API](injector-api) | Done (v1.0.0)      | Annotations for the dependency injector      |
 | [Handles](handles)           | Functional         | Dynamic enum-like structures for map keys    |
-| [Handles API](handles-api)   | Functional         | Interfaces for the Handles module            |
+| [Handles API](handles-api)   | Done (v1.0.0)      | Interfaces for the Handles module            |
 | Dependencies                 | Not yet started    | Data structure dependencies and invalidation |
 | Math                         | Not yet started    | Number manipulation and presentation         |
 | Entities                     | Not yet started    | Data-oriented entity system                  |
