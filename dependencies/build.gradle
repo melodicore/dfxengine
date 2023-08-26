@@ -9,8 +9,8 @@ version = "$dependenciesVersion"
 
 dependencies {
     implementation "me.datafox.dfxengine:utils:$utilsVersion"
-    //implementation "me.datafox.dfxengine:handles:$handlesVersion"
-    implementation project(":handles")
+    //api "me.datafox.dfxengine:handles:$handlesVersion"
+    api project(":handles")
     implementation "me.datafox.dfxengine:injector-api:$injectorApiVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
