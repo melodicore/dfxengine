@@ -16,16 +16,17 @@ that are supported by Android's
 
 Here are the currently existing and planned modules:
 
-| Module                       | Status             | Description                                  |
-|------------------------------|--------------------|----------------------------------------------|
-| [Injector](injector)         | Done (v1.0.3)      | A dependency injector                        |
-| [Injector API](injector-api) | Done (v1.0.0)      | Annotations for the dependency injector      |
-| [Handles](handles)           | Functional         | Dynamic enum-like structures for map keys    |
-| [Handles API](handles-api)   | Done (v1.0.1)      | Interfaces for the Handles module            |
-| Dependencies                 | Not yet started    | Data structure dependencies and invalidation |
-| Math                         | Not yet started    | Number manipulation and presentation         |
-| Entities                     | Not yet started    | Data-oriented entity system                  |
-| [Utils](utils)               | Under construction | Utilities used by other modules              |
+| Module                               | Status             | Description                                  |
+|--------------------------------------|--------------------|----------------------------------------------|
+| [Injector API](injector-api)         | Done (v1.0.0)      | Annotations for the Injector module          |
+| [Injector](injector)                 | Done (v1.0.3)      | A dependency injector                        |
+| [Handles API](handles-api)           | Done (v1.0.1)      | Interfaces for the Handles module            |
+| [Handles](handles)                   | Functional         | Dynamic enum-like structures for map keys    |
+| [Dependencies API](dependencies-api) | Under construction | Interfaces for the Dependencies module       |
+| [Dependencies](dependencies)         | Under construction | Data structure dependencies and invalidation |
+| Math                                 | Not yet started    | Number manipulation and presentation         |
+| Entities                             | Not yet started    | Data-oriented entity system                  |
+| [Utils](utils)                       | Under construction | Utilities used by other modules              |
 
 There are four possible statuses for modules.
 
