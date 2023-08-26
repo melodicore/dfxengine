@@ -4,14 +4,14 @@ import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;
 
 import java.util.Collection;
-import java.util.SortedSet;
+import java.util.Set;
 
 /**
- * An extension of {@link SortedSet} that can only contain {@link Handle}s of a given {@link Space}.
+ * An extension of {@link Set} that can only contain {@link Handle}s of a given {@link Space}.
  *
  * @author datafox
  */
-public interface HandleSet extends SortedSet<Handle> {
+public interface HandleSet extends Set<Handle> {
     /**
      * @return {@link Space} associated with this set
      */

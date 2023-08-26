@@ -9,15 +9,12 @@ import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author datafox
  */
-public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
+public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     private final Logger logger;
 
     @Getter
@@ -25,14 +22,14 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
 
     private final Map<String,Handle> idMap;
 
-    public TreeHandleSet(Space space) {
+    public HashHandleSet(Space space) {
         super();
         this.logger = LoggerFactory.getLogger(getClass());
         this.space = space;
         idMap = new HashMap<>();
     }
 
-    public TreeHandleSet(Space space, Collection<Handle> handles) {
+    public HashHandleSet(Space space, Collection<Handle> handles) {
         this(space);
         addAll(handles);
     }

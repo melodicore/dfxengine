@@ -12,12 +12,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @author datafox
  */
-public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> {
+public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> {
     private final Logger logger;
 
     @Getter
@@ -25,14 +24,14 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
 
     private final Map<String,Handle> idMap;
 
-    public TreeHandleMap(Space space) {
+    public HashHandleMap(Space space) {
         super();
         this.logger = LoggerFactory.getLogger(getClass());
         this.space = space;
         idMap = new HashMap<>();
     }
 
-    public TreeHandleMap(Space space, Map<Handle,T> handles) {
+    public HashHandleMap(Space space, Map<Handle,T> handles) {
         this(space);
 
         putAll(handles);

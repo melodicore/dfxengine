@@ -4,15 +4,15 @@ import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;
 
 import java.util.Collection;
-import java.util.SortedMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * An extension of {@link SortedMap} that can only use {@link Handle}s of a given {@link Space} as keys.
+ * An extension of {@link Map} that can only use {@link Handle}s of a given {@link Space} as keys.
  *
  * @author datafox
  */
-public interface HandleMap<T> extends SortedMap<Handle,T> {
+public interface HandleMap<T> extends Map<Handle,T> {
     /**
      * @return {@link Space} associated with this map
      */
