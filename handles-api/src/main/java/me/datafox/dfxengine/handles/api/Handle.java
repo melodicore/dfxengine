@@ -143,6 +143,10 @@ public interface Handle extends Comparable<Handle> {
 
     @Override
     default int compareTo(Handle o) {
-        return Long.compare(getIndex(), o.getIndex());
+        if(getSpace().equals(o.getSpace())) {
+            return Long.compare(getIndex(), o.getIndex());
+        }
+        return Long.compare(getSpace().getHandle().getIndex(),
+                o.getSpace().getHandle().getIndex());
     }
 }

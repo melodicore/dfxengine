@@ -195,7 +195,7 @@ public final class SpaceImpl implements Space {
 
     @Override
     public String toString() {
-        return String.format("%s(%s)", handleId, handles.stream().map(Handle::toString).collect(Collectors.joining(", ")));
+        return String.format("%s[%s]", handleId, handles.stream().map(Handle::getId).collect(Collectors.joining(", ")));
     }
 
     static Space bootstrap(HandleManager handleManager, String id) {

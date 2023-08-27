@@ -32,7 +32,7 @@ public class HandleTest {
 
     private Handle testTag;
 
-    private Handle otherTestTag;
+    private Handle otherTag;
 
     @BeforeEach
     public void beforeEach() {
@@ -42,10 +42,10 @@ public class HandleTest {
         testHandle = testSpace.createHandle(TEST_HANDLE);
 
         testTag = handleManager.createTag(TEST_TAG);
-        otherTestTag = handleManager.createTag(OTHER_TEST_TAG);
+        otherTag = handleManager.createTag(OTHER_TAG);
 
         testHandle.addTag(testTag);
-        testHandle.addTag(otherTestTag);
+        testHandle.addTag(otherTag);
     }
 
     @Test
@@ -77,53 +77,53 @@ public class HandleTest {
 
     @Test
     public void getTagsTest() {
-        assertEquals(Set.of(testTag, otherTestTag), testHandle.getTags());
+        assertEquals(Set.of(testTag, otherTag), testHandle.getTags());
     }
 
     @Test
     public void addTagTest() {
-        var otherTag = handleManager.createTag(OTHER_TAG);
+        var createdTag = handleManager.createTag(TAG_ID);
 
-        assertTrue(testHandle.addTag(otherTag));
+        assertTrue(testHandle.addTag(createdTag));
 
-        assertFalse(testHandle.addTag(otherTag));
+        assertEquals(Set.of(testTag, otherTag, createdTag), testHandle.getTags());
 
-        assertEquals(Set.of(testTag, otherTestTag, otherTag), testHandle.getTags());
+        assertFalse(testHandle.addTag(createdTag));
     }
 
     @Test
     public void addTagByIdTest() {
         assertTrue(testHandle.addTagById(TAG_ID));
 
-        assertFalse(testHandle.addTagById(TAG_ID));
-
         var tag = handleManager.getTag(TAG_ID);
 
-        assertEquals(Set.of(testTag, otherTestTag, tag), testHandle.getTags());
+        assertEquals(Set.of(testTag, otherTag, tag), testHandle.getTags());
+
+        assertFalse(testHandle.addTagById(TAG_ID));
     }
 
     @Test
     public void addTagsTest() {
-        var otherTag = handleManager.createTag(OTHER_TAG);
+        var createdTag = handleManager.createTag(TAG_ID);
 
         var anotherTag = handleManager.createTag(ANOTHER_TAG);
 
-        assertTrue(testHandle.addTags(Set.of(testTag, otherTag, anotherTag)));
+        assertTrue(testHandle.addTags(Set.of(testTag, createdTag, anotherTag)));
 
-        assertFalse(testHandle.addTags(Set.of(testTag, otherTag, anotherTag)));
+        assertEquals(Set.of(testTag, otherTag, createdTag, anotherTag), testHandle.getTags());
 
-        assertEquals(Set.of(testTag, otherTestTag, otherTag, anotherTag), testHandle.getTags());
+        assertFalse(testHandle.addTags(Set.of(testTag, createdTag, anotherTag)));
     }
 
     @Test
     public void addTagsByIdTest() {
         assertTrue(testHandle.addTagsById(Set.of(TAG_ID, OTHER_TAG_ID)));
 
-        assertFalse(testHandle.addTagsById(Set.of(TAG_ID, OTHER_TAG_ID)));
-
         assertEquals(TAG_ID, handleManager.getTag(TAG_ID).getId());
 
         assertEquals(OTHER_TAG_ID, handleManager.getTag(OTHER_TAG_ID).getId());
+
+        assertFalse(testHandle.addTagsById(Set.of(TAG_ID, OTHER_TAG_ID)));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class HandleTest {
 
     @Test
     public void containsTagsTest() {
-        assertTrue(testHandle.containsTags(Set.of(testTag, otherTestTag)));
+        assertTrue(testHandle.containsTags(Set.of(testTag, otherTag)));
 
         assertTrue(testHandle.containsTags(Set.of(testTag)));
 
@@ -153,7 +153,7 @@ public class HandleTest {
 
     @Test
     public void containsTagsByIdTest() {
-        assertTrue(testHandle.containsTagsById(Set.of(TEST_TAG, OTHER_TEST_TAG)));
+        assertTrue(testHandle.containsTagsById(Set.of(TEST_TAG, OTHER_TAG)));
 
         assertTrue(testHandle.containsTagsById(Set.of(TEST_TAG)));
 
@@ -166,41 +166,49 @@ public class HandleTest {
     public void removeTagTest() {
         assertTrue(testHandle.removeTag(testTag));
 
-        assertFalse(testHandle.removeTag(testTag));
+        assertEquals(Set.of(otherTag), testHandle.getTags());
 
-        assertEquals(Set.of(otherTestTag), testHandle.getTags());
+        assertFalse(testHandle.removeTag(testTag));
     }
 
     @Test
     public void removeTagByIdTest() {
         assertTrue(testHandle.removeTagById(TEST_TAG));
 
-        assertFalse(testHandle.removeTagById(TEST_TAG));
+        assertEquals(Set.of(otherTag), testHandle.getTags());
 
-        assertEquals(Set.of(otherTestTag), testHandle.getTags());
+        assertFalse(testHandle.removeTagById(TEST_TAG));
     }
 
     @Test
     public void removeTagsTest() {
-        assertTrue(testHandle.removeTags(Set.of(testTag, otherTestTag)));
+        assertTrue(testHandle.removeTags(Set.of(testTag, testHandle)));
 
-        assertFalse(testHandle.removeTags(Set.of(testTag, otherTestTag)));
+        assertEquals(Set.of(otherTag), testHandle.getTags());
+
+        assertTrue(testHandle.removeTags(Set.of(testTag, otherTag)));
 
         assertEquals(Set.of(), testHandle.getTags());
+
+        assertFalse(testHandle.removeTags(Set.of(testTag, otherTag)));
     }
 
     @Test
     public void removeTagsByIdTest() {
-        assertTrue(testHandle.removeTagsById(Set.of(TEST_TAG, OTHER_TEST_TAG)));
+        assertTrue(testHandle.removeTagsById(Set.of(TEST_TAG, TAG_ID)));
 
-        assertFalse(testHandle.removeTagsById(Set.of(TEST_TAG, OTHER_TEST_TAG)));
+        assertEquals(Set.of(otherTag), testHandle.getTags());
+
+        assertTrue(testHandle.removeTagsById(Set.of(TEST_TAG, OTHER_TAG)));
 
         assertEquals(Set.of(), testHandle.getTags());
+
+        assertFalse(testHandle.removeTagsById(Set.of(TEST_TAG, OTHER_TAG)));
     }
 
     @Test
     public void tagStreamTest() {
-        assertEquals(Set.of(testTag, otherTestTag), testHandle.tagStream().collect(Collectors.toSet()));
+        assertEquals(Set.of(testTag, otherTag), testHandle.tagStream().collect(Collectors.toSet()));
     }
 
     @Test

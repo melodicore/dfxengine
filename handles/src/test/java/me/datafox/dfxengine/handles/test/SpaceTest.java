@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static me.datafox.dfxengine.handles.test.TestStrings.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -119,6 +120,8 @@ public class SpaceTest {
     public void createHandleTest() {
         assertEquals(HANDLE_ID, testSpace.createHandle(HANDLE_ID).getId());
 
+        assertTrue(testSpace.containsHandleById(HANDLE_ID));
+
         assertThrows(IllegalArgumentException.class, () -> testSpace.createHandle(HANDLE_ID));
     }
 
@@ -126,6 +129,92 @@ public class SpaceTest {
     public void getOrCreateHandleTest() {
         assertEquals(HANDLE_ID, testSpace.getOrCreateHandle(HANDLE_ID).getId());
 
+        assertTrue(testSpace.containsHandleById(HANDLE_ID));
+
         assertEquals(HANDLE_ID, testSpace.getOrCreateHandle(HANDLE_ID).getId());
+    }
+
+    @Test
+    public void containsHandleTest() {
+        assertTrue(testSpace.containsHandle(testHandle));
+
+        assertFalse(testSpace.containsHandle(testTag));
+    }
+
+    @Test
+    public void containsHandleByIdTest() {
+        assertTrue(testSpace.containsHandleById(TEST_HANDLE));
+
+        assertFalse(testSpace.containsHandleById(HANDLE_ID));
+    }
+
+    @Test
+    public void containsHandlesTest() {
+        assertTrue(testSpace.containsHandles(Set.of(testHandle, otherHandle)));
+
+        assertFalse(testSpace.containsHandles(Set.of(testHandle, testTag)));
+    }
+
+    @Test
+    public void containsHandlesByIdTest() {
+        assertTrue(testSpace.containsHandlesById(Set.of(TEST_HANDLE, OTHER_HANDLE)));
+
+        assertFalse(testSpace.containsHandlesById(Set.of(TEST_HANDLE, TEST_TAG)));
+    }
+
+    @Test
+    public void removeHandleTest() {
+        assertTrue(testSpace.removeHandle(testHandle));
+
+        assertEquals(Set.of(otherHandle), testSpace.getHandles());
+
+        assertFalse(testSpace.removeHandle(testHandle));
+    }
+
+    @Test
+    public void removeHandleByIdTest() {
+        assertTrue(testSpace.removeHandleById(TEST_HANDLE));
+
+        assertEquals(Set.of(otherHandle), testSpace.getHandles());
+
+        assertFalse(testSpace.removeHandleById(TEST_HANDLE));
+    }
+
+    @Test
+    public void removeHandlesTest() {
+        assertTrue(testSpace.removeHandles(Set.of(testHandle, testTag)));
+
+        assertEquals(Set.of(otherHandle), testSpace.getHandles());
+
+        assertTrue(testSpace.removeHandles(Set.of(testHandle, otherHandle)));
+
+        assertEquals(Set.of(), testSpace.getHandles());
+
+        assertFalse(testSpace.removeHandles(Set.of(otherHandle, testTag)));
+    }
+
+    @Test
+    public void removeHandlesByIdTest() {
+        assertTrue(testSpace.removeHandlesById(Set.of(TEST_HANDLE, HANDLE_ID)));
+
+        assertEquals(Set.of(otherHandle), testSpace.getHandles());
+
+        assertTrue(testSpace.removeHandlesById(Set.of(TEST_HANDLE, OTHER_HANDLE)));
+
+        assertEquals(Set.of(), testSpace.getHandles());
+
+        assertFalse(testSpace.removeHandlesById(Set.of(OTHER_HANDLE, HANDLE_ID)));
+    }
+
+    @Test
+    public void handleStreamTest() {
+        assertEquals(Set.of(testHandle, otherHandle), testSpace.handleStream().collect(Collectors.toSet()));
+    }
+
+    @Test
+    public void clearTest() {
+        testSpace.clear();
+
+        assertEquals(Set.of(), testSpace.getHandles());
     }
 }

@@ -52,7 +52,7 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
             idMap.remove(((Handle) o).getId(), o);
         }
 
-        return super.remove(o);
+        return returned;
     }
 
     @Override
@@ -73,6 +73,12 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
         }
 
         return changed;
+    }
+
+    @Override
+    public void clear() {
+        idMap.clear();
+        super.clear();
     }
 
     @Override
@@ -113,12 +119,6 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
             }
         }
         return changed;
-    }
-
-    @Override
-    public void clear() {
-        idMap.clear();
-        super.clear();
     }
 
     private void checkSpace(Handle handle) {

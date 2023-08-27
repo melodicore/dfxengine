@@ -93,4 +93,14 @@ public class ClassUtils {
                 classes.stream().flatMap(ClassUtils::getSuperclassesRecursive)
         );
     }
+
+    /**
+     * @param input object to be checked
+     * @param aClass {@link Class}
+     * @return {@link Stream} of the object cast to the given Class, or an empty Stream if the object cannot be cast to
+     * the given Class.
+     */
+    public static <T,C> Stream<C> filterInstanceAndCast(T input, Class<C> aClass) {
+        return aClass.isInstance(input) ? Stream.of(aClass.cast(input)) : Stream.empty();
+    }
 }

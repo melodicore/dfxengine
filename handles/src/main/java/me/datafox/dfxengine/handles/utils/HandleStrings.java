@@ -7,10 +7,11 @@ import me.datafox.dfxengine.handles.api.Space;
  * @author datafox
  */
 public class HandleStrings {
-    private static final String SPACE_WITH_ID_ALREADY_PRESENT = "HandleManager already contains a space with id %s";
-    private static final String HANDLE_WITH_ID_ALREADY_PRESENT = "Space %s already contains a handle with id %s";
-    private static final String SPACE_MISMATCH_HANDLE_SET = "Tried to add handle %s to HandleSet with space %s";
-    private static final String SPACE_MISMATCH_HANDLE_MAP = "Tried to add handle %s to HandleMap with space %s";
+    private static final String SPACE_WITH_ID_ALREADY_PRESENT = "HandleManager already contains a Space with id %s";
+    private static final String HANDLE_WITH_ID_ALREADY_PRESENT = "Space %s already contains a Handle with id %s";
+    private static final String SPACE_MISMATCH_HANDLE_SET = "Tried to add Handle %s to HandleSet with Space %s";
+    private static final String SPACE_MISMATCH_HANDLE_MAP = "Tried to add Handle %s to HandleMap with Space %s";
+    private static final String REMOVE_HARDCODED_SPACE = "Tried to remove hardcoded Space %s";
 
     public static String spaceWithIdAlreadyPresent(String spaceId) {
         return forString(SPACE_WITH_ID_ALREADY_PRESENT, spaceId);
@@ -28,6 +29,10 @@ public class HandleStrings {
         return forHandleAndSpace(SPACE_MISMATCH_HANDLE_MAP, handle, space);
     }
 
+    public static String removeHardcodedSpace(Space space) {
+        return forSpace(REMOVE_HARDCODED_SPACE, space);
+    }
+
     private static String forString(String str, String string) {
         return String.format(str, string);
     }
@@ -38,5 +43,9 @@ public class HandleStrings {
 
     private static String forHandleAndSpace(String str, Handle handle, Space space) {
         return String.format(str, handle, space);
+    }
+
+    private static String forSpace(String str, Space space) {
+        return String.format(str, space);
     }
 }

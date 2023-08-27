@@ -150,6 +150,8 @@ public class HandleManagerImpl implements HandleManager {
 
     @Override
     public boolean removeSpace(Space space) {
+        checkHardcoded(space);
+
         spaceSpace.removeHandle(space.getHandle());
 
         return spaces.remove(space.getHandle(), space);
@@ -157,6 +159,8 @@ public class HandleManagerImpl implements HandleManager {
 
     @Override
     public boolean removeSpaceByHandle(Handle handle) {
+        checkHardcoded(handle);
+
         spaceSpace.removeHandle(handle);
 
         return spaces.remove(handle) != null;
@@ -164,6 +168,8 @@ public class HandleManagerImpl implements HandleManager {
 
     @Override
     public boolean removeSpaceById(String id) {
+        checkHardcoded(id);
+
         spaceSpace.removeHandleById(id);
 
         return spaces.removeById(id) != null;
@@ -171,6 +177,8 @@ public class HandleManagerImpl implements HandleManager {
 
     @Override
     public boolean removeSpaces(Collection<Space> spaces) {
+        spaces.forEach(this::checkHardcoded);
+
         return removeSpacesByHandle(spaces
                 .stream()
                 .map(Space::getHandle)
@@ -179,6 +187,8 @@ public class HandleManagerImpl implements HandleManager {
 
     @Override
     public boolean removeSpacesByHandle(Collection<Handle> handles) {
+        handles.forEach(this::checkHardcoded);
+
         spaceSpace.removeHandles(handles);
 
         return spaces.removeAll(handles);
@@ -186,6 +196,8 @@ public class HandleManagerImpl implements HandleManager {
 
     @Override
     public boolean removeSpacesById(Collection<String> ids) {
+        ids.forEach(this::checkHardcoded);
+
         spaceSpace.removeHandlesById(ids);
 
         return spaces.removeAllById(ids);
@@ -265,5 +277,29 @@ public class HandleManagerImpl implements HandleManager {
         spaces.clear();
         spaces.put(spaceSpace.getHandle(), spaceSpace);
         spaces.put(tagSpace.getHandle(), tagSpace);
+    }
+
+    private void checkHardcoded(Space space) {
+        if(space.equals(spaceSpace) || space.equals(tagSpace)) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    HandleStrings.removeHardcodedSpace(space),
+                    IllegalArgumentException::new);
+        }
+    }
+
+    private void checkHardcoded(Handle handle) {
+        if(spaceSpace.isHandle(handle) || tagSpace.isHandle(handle)) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    HandleStrings.removeHardcodedSpace(getSpace(handle)),
+                    IllegalArgumentException::new);
+        }
+    }
+
+    private void checkHardcoded(String id) {
+        if(spaceSpace.isId(id) || tagSpace.isId(id)) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    HandleStrings.removeHardcodedSpace(getSpaceById(id)),
+                    IllegalArgumentException::new);
+        }
     }
 }
