@@ -2,18 +2,12 @@ plugins {
     id "java-library"
     id "maven-publish"
     id "signing"
-    id "io.freefair.lombok" version "${lombokPluginVersion}"
 }
 
 version = "$dependenciesVersion"
 
 dependencies {
     implementation "me.datafox.dfxengine:utils:$utilsVersion"
-    //api "me.datafox.dfxengine:dependencies-api:$dependenciesApiVersion"
-    api project(":dependencies-api")
-    //api "me.datafox.dfxengine:handles:$handlesVersion"
-    api project(":handles")
-    implementation "me.datafox.dfxengine:injector-api:$injectorApiVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
