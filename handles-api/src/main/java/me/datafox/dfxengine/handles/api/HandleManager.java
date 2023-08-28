@@ -13,29 +13,29 @@ import java.util.stream.Stream;
 public interface HandleManager {
     /**
      * @param id id of the requested {@link Handle}
-     * @return {@link Space} identification Handle matching the given id, or null if none are present
+     * @return {@link Space} identification Handle matching the specified id, or null if none are present
      */
     Handle getSpaceHandle(String id);
 
     /**
-     * @return identifying {@link Handle}s of the {@link Space}s present in this HandleManager
+     * @return all identifying {@link Handle}s of the {@link Space}s present in this HandleManager
      */
     Collection<Handle> getSpaceHandles();
 
     /**
      * @param handle {@link Handle} of the requested Space
-     * @return contained Space matching the given Handle, or null if none are present
+     * @return contained Space matching the specified Handle, or null if none are present
      */
     Space getSpace(Handle handle);
 
     /**
      * @param id id of the requested {@link Space}
-     * @return contained Space matching the given id, or null if none are present
+     * @return contained Space matching the specified id, or null if none are present
      */
     Space getSpaceById(String id);
 
     /**
-     * @return {@link Space}s present in this HandleManager
+     * @return all {@link Space}s present in this HandleManager
      */
     Collection<Space> getSpaces();
 
@@ -43,13 +43,13 @@ public interface HandleManager {
      * @param id id of the {@link Space} to be created
      * @return created Space
      *
-     * @throws IllegalArgumentException if a Space with given id is already present
+     * @throws IllegalArgumentException if a Space with the specified id is already present
      */
     Space createSpace(String id);
 
     /**
-     * Checks if a {@link Space} is present with the given id. If one is present, that Space is returned. If none are
-     * present, a new Space with the given id is created and returned.
+     * Checks if a {@link Space} is present with the specified id. If one is present, that Space is returned. If none are
+     * present, a new Space with the specified id is created and returned.
      *
      * @param id id of the requested Space
      * @return requested Space
@@ -58,37 +58,37 @@ public interface HandleManager {
 
     /**
      * @param space {@link Space} to be checked for
-     * @return true if this HandleManager contains given Space
+     * @return true if this HandleManager contains the specified Space
      */
     boolean containsSpace(Space space);
 
     /**
      * @param handle identifying {@link Handle} of the {@link Space} to be checked for
-     * @return true if this HandleManager contains a Space with given Handle
+     * @return true if this HandleManager contains a Space with the specified Handle
      */
     boolean containsSpaceByHandle(Handle handle);
 
     /**
      * @param id id of the {@link Space} to be checked for
-     * @return true if this HandleManager contains a Space with given id
+     * @return true if this HandleManager contains a Space with the specified id
      */
     boolean containsSpaceById(String id);
 
     /**
      * @param spaces {@link Space}s to be checked for
-     * @return true if this HandleManager contains all given Spaces
+     * @return true if this HandleManager contains all the specified Spaces
      */
     boolean containsSpaces(Collection<Space> spaces);
 
     /**
      * @param handles identifying {@link Handle}s of the {@link Space}s to be checked for
-     * @return true if this HandleManager contains Spaces with all given Handles
+     * @return true if this HandleManager contains Spaces with all the specified Handles
      */
     boolean containsSpacesByHandle(Collection<Handle> handles);
 
     /**
      * @param ids ids of the {@link Space}s to be checked for
-     * @return true if this HandleManager contains Spaces with all given ids
+     * @return true if this HandleManager contains Spaces with all the specified ids
      */
     boolean containsSpacesById(Collection<String> ids);
 
@@ -135,12 +135,12 @@ public interface HandleManager {
 
     /**
      * @param id id of the requested tag {@link Handle}
-     * @return tag Handle matching the given id, or null if none are present
+     * @return tag Handle matching the specified id, or null if none are present
      */
     Handle getTag(String id);
 
     /**
-     * @return tag {@link Handle}s present in this HandleManager
+     * @return all tag {@link Handle}s present in this HandleManager
      */
     Collection<Handle> getTags();
 
@@ -148,13 +148,13 @@ public interface HandleManager {
      * @param id id of the tag {@link Handle} to be created
      * @return created Handle
      *
-     * @throws IllegalArgumentException if a tag Handle with given id is already present
+     * @throws IllegalArgumentException if a tag Handle with the specified id is already present
      */
     Handle createTag(String id);
 
     /**
-     * Checks if a tag {@link Handle} is present with the given id. If one is present, that tag Handle is returned. If
-     * none are present, a new tag Handle with the given id is created and returned.
+     * Checks if a tag {@link Handle} is present with the specified id. If one is present, that tag Handle is returned. If
+     * none are present, a new tag Handle with the specified id is created and returned.
      *
      * @param id id of the requested tag Handle
      * @return requested tag Handle
@@ -163,25 +163,25 @@ public interface HandleManager {
 
     /**
      * @param tag tag {@link Handle} to be checked for
-     * @return true if this HandleManager contains given tag Handle
+     * @return true if this HandleManager contains the specified tag Handle
      */
     boolean containsTag(Handle tag);
 
     /**
      * @param id id of the tag {@link Handle} to be checked for
-     * @return true if this HandleManager contains a tag Handle with given id
+     * @return true if this HandleManager contains a tag Handle with the specified id
      */
     boolean containsTagById(String id);
 
     /**
      * @param tags tag {@link Handle}s to be checked for
-     * @return true if this HandleManager contains all given tag Handles
+     * @return true if this HandleManager contains all the specified tag Handles
      */
     boolean containsTags(Collection<Handle> tags);
 
     /**
      * @param ids tag {@link Handle} ids to be checked for
-     * @return true if this HandleManager contains tag Handles with all given ids
+     * @return true if this HandleManager contains tag Handles with all the specified ids
      */
     boolean containsTagsById(Collection<String> ids);
 

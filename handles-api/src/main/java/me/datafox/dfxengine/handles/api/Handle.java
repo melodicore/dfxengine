@@ -37,12 +37,12 @@ public interface Handle extends Comparable<Handle> {
 
     /**
      * @param id id to be checked for
-     * @return true if the given id matches the id of this Handle
+     * @return true if the specified id matches the id of this Handle
      */
     boolean isId(String id);
 
     /**
-     * @return tags associated with this Handle
+     * @return all tags associated with this Handle
      */
     Collection<Handle> getTags();
 
@@ -50,13 +50,13 @@ public interface Handle extends Comparable<Handle> {
      * @param tag Handle to be added as a tag
      * @return true if the tags of this Handle changed as a result of this action
      *
-     * @throws IllegalArgumentException when the given Handle is not a part of the tags {@link Space} (details for
+     * @throws IllegalArgumentException when the specified Handle is not a part of the tags {@link Space} (details for
      * hardcoded Spaces are documented in {@link HandleManager})
      */
     boolean addTag(Handle tag);
 
     /**
-     * Adds a tag based on a given id for the tag. If a tag with a given id does not exist in the tags {@link Space},
+     * Adds a tag based on the specified id for the tag. If a tag with the specified id does not exist in the tags {@link Space},
      * one is automatically created. Details for hardcoded Spaces are documented in {@link HandleManager}.
      *
      * @param id id of the Handle to be added as a tag
@@ -69,13 +69,13 @@ public interface Handle extends Comparable<Handle> {
      * @param tags Handles to be added as a tags
      * @return true if the tags of this Handle changed as a result of this action
      *
-     * @throws IllegalArgumentException when any of the given Handles are not a part of the tags {@link Space} (details
+     * @throws IllegalArgumentException when any of the specified Handles are not a part of the tags {@link Space} (details
      * for hardcoded Spaces are documented in {@link HandleManager})
      */
     boolean addTags(Collection<Handle> tags);
 
     /**
-     * Adds tags based on given ids for the tags. If a tag with a given id does not exist in the tags {@link Space}, one
+     * Adds tags based on the specified ids for the tags. If a tag with the specified id does not exist in the tags {@link Space}, one
      * is automatically created. Details for hardcoded Spaces are documented in {@link HandleManager}.
      *
      * @param ids ids for the Handles to be added as a tags
@@ -85,25 +85,25 @@ public interface Handle extends Comparable<Handle> {
 
     /**
      * @param tag tag to be checked for
-     * @return true if this Handle contains given tag
+     * @return true if this Handle contains the specified tag
      */
     boolean containsTag(Handle tag);
 
     /**
      * @param id id of a tag to be checked for
-     * @return true if this Handle contains a tag with given id
+     * @return true if this Handle contains a tag with the specified id
      */
     boolean containsTagById(String id);
 
     /**
      * @param tags tags to be checked for
-     * @return true if this Handle contains all given tags
+     * @return true if this Handle contains all the specified tags
      */
     boolean containsTags(Collection<Handle> tags);
 
     /**
      * @param ids ids for the tags to be checked for
-     * @return true if this Handle contains tags with all given ids
+     * @return true if this Handle contains tags with all the specified ids
      */
     boolean containsTagsById(Collection<String> ids);
 

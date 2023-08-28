@@ -76,6 +76,16 @@ public class ClassUtils {
                 .findFirst();
     }
 
+    /**
+     * @param input object to be checked
+     * @param aClass {@link Class}
+     * @return {@link Stream} of the object cast to the specified Class, or an empty Stream if the object cannot be cast
+     * to the specified Class
+     */
+    public static <T,C> Stream<C> filterInstanceAndCast(T input, Class<C> aClass) {
+        return aClass.isInstance(input) ? Stream.of(aClass.cast(input)) : Stream.empty();
+    }
+
     @SuppressWarnings("unchecked")
     private static <T> Stream<Class<? super T>> getSuperclassesRecursive(Class<? super T> aClass) {
         Set<Class<? super T>> classes = new HashSet<>();
@@ -92,15 +102,5 @@ public class ClassUtils {
                 classes.stream(),
                 classes.stream().flatMap(ClassUtils::getSuperclassesRecursive)
         );
-    }
-
-    /**
-     * @param input object to be checked
-     * @param aClass {@link Class}
-     * @return {@link Stream} of the object cast to the given Class, or an empty Stream if the object cannot be cast to
-     * the given Class.
-     */
-    public static <T,C> Stream<C> filterInstanceAndCast(T input, Class<C> aClass) {
-        return aClass.isInstance(input) ? Stream.of(aClass.cast(input)) : Stream.empty();
     }
 }

@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 /**
  * A namespace for {@link Handle}s. Contains an identifying Handle and an ordered collection of Handles. The identifying
  * Handle is contained within a special hardcoded Space, details of which are documented in {@link HandleManager}.
- * Additionally, contains a reference to the managing HandleManager.
+ * Additionally, contains a reference to the associated HandleManager.
  *
  * @author datafox
  */
@@ -31,49 +31,49 @@ public interface Space extends Comparable<Space> {
 
     /**
      * @param handle {@link Handle} to be checked
-     * @return true if the given Handle matches the identifying Handle of this Space
+     * @return true if the specified Handle matches the identifying Handle of this Space
      */
     boolean isHandle(Handle handle);
 
     /**
      * @param id id to be checked
-     * @return true if the given id matches the id of this Space
+     * @return true if the specified id matches the id of this Space
      */
     boolean isId(String id);
 
     /**
      * @param id id of the requested {@link Handle}
-     * @return contained Handle matching the given id, or null if none are present
+     * @return contained Handle matching the specified id, or null if none are present
      */
     Handle getHandle(String id);
 
     /**
-     * @return {@link Handle}s present in this Space
+     * @return all {@link Handle}s present in this Space
      */
     Collection<Handle> getHandles();
 
     /**
      * @param tag tag to be checked for
-     * @return {@link Handle}s present in this Space that have given tag
+     * @return all {@link Handle}s present in this Space that contain the specified tag
      */
     Collection<Handle> getHandlesByTag(Handle tag);
 
 
     /**
      * @param id id of a tag to be checked for
-     * @return {@link Handle}s present in this Space that have given tag
+     * @return all {@link Handle}s present in this Space that contain the specified tag
      */
     Collection<Handle> getHandlesByTagId(String id);
 
     /**
      * @param tags tags to be checked for
-     * @return {@link Handle}s present in this Space that have all given tags
+     * @return all {@link Handle}s present in this Space that contain all the specified tags
      */
     Collection<Handle> getHandlesByTags(Collection<Handle> tags);
 
     /**
      * @param ids tags to be checked for
-     * @return {@link Handle}s present in this Space that have tags with all given ids
+     * @return all {@link Handle}s present in this Space that contain tags with all the specified ids
      */
     Collection<Handle> getHandlesByTagIds(Collection<String> ids);
 
@@ -81,13 +81,13 @@ public interface Space extends Comparable<Space> {
      * @param id id of the {@link Handle} to be created
      * @return created Handle
      *
-     * @throws IllegalArgumentException if a Handle with the given id is already present
+     * @throws IllegalArgumentException if a Handle with the specified id is already present
      */
     Handle createHandle(String id);
 
     /**
-     * Checks if a {@link Handle} is present with the given id. If one is present, that Handle is returned. If none are
-     * present, a new Handle with the given id is created and returned.
+     * Checks if a {@link Handle} is present with the specified id. If one is present, that Handle is returned. If none
+     * are present, a new Handle with the specified id is created and returned.
      *
      * @param id id of the requested Handle
      * @return requested Handle
@@ -96,25 +96,25 @@ public interface Space extends Comparable<Space> {
 
     /**
      * @param handle {@link Handle} to be checked for
-     * @return true if this Space contains given Handle
+     * @return true if this Space contains the specified Handle
      */
     boolean containsHandle(Handle handle);
 
     /**
      * @param id id of the {@link Handle} to be checked for
-     * @return true if this Space contains a Handle with given id
+     * @return true if this Space contains a Handle with the specified id
      */
     boolean containsHandleById(String id);
 
     /**
      * @param handles {@link Handle}s to be checked for
-     * @return true if this Space contains all given Handles
+     * @return true if this Space contains all the specified Handles
      */
     boolean containsHandles(Collection<Handle> handles);
 
     /**
      * @param ids {@link Handle} ids to be checked for
-     * @return true if this Space contains Handles with all given ids
+     * @return true if this Space contains Handles with all the specified ids
      */
     boolean containsHandlesById(Collection<String> ids);
 

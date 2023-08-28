@@ -39,6 +39,15 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
         putAll(handles);
     }
 
+    /**
+     * In addition to what is documented in {@link HashMap#put(Object, Object)}, a {@link Handle} used as the key must
+     * be contained within the {@link Space} associated with this map.
+     *
+     * @param handle Handle with which the specified value is to be associated
+     * @param value value to be associated with the specified Handle
+     * @return the previous value associated with the specified Handle, or null if there was no mapping for key. (A null
+     * return can also indicate that the map previously associated null with key.)
+     */
     @Override
     public T put(Handle handle, T value) {
         checkSpace(handle);
@@ -46,6 +55,12 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
         return putInternal(handle, value);
     }
 
+    /**
+     * In addition to what is documented in {@link HashMap#putAll(Map)}, all {@link Handle}s used as the keys must be
+     * contained within the {@link Space} associated with this map.
+     *
+     * @param map mappings to be stored in this map
+     */
     @Override
     public void putAll(Map<? extends Handle,? extends T> map) {
         map.keySet().forEach(this::checkSpace);

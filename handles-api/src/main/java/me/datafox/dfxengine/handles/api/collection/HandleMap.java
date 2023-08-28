@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * An extension of {@link Map} that can only use {@link Handle}s of a given {@link Space} as keys.
+ * An extension of {@link Map} that can only use {@link Handle}s of the {@link Space} associated with this map as its
+ * keys.
  *
  * @author datafox
  */
@@ -20,31 +21,31 @@ public interface HandleMap<T> extends Map<Handle,T> {
 
     /**
      * @param id id of the {@link Handle} to be checked for
-     * @return true if this map contains a Handle with given id
+     * @return true if this map contains a Handle with the specified id
      */
     boolean containsById(String id);
 
     /**
      * @param handles {@link Handle}s to be checked for
-     * @return true if this map contains all given Handles
+     * @return true if this map contains all the specified Handles
      */
     boolean containsAll(Collection<Handle> handles);
 
     /**
      * @param ids ids of the {@link Handle}s to be checked for
-     * @return true if this map contains all Handles with given ids
+     * @return true if this map contains all Handles with the specified ids
      */
     boolean containsAllById(Collection<String> ids);
 
     /**
      * @param id id of the requested {@link Handle}
-     * @return value matching the Handle with given id, or null if none are present
+     * @return value matching the Handle with the specified id, or null if none are present
      */
     T getById(String id);
 
     /**
      * @param id id of the {@link Handle} to be removed
-     * @return the value associated with the Handle with given id, or null if none were present
+     * @return the value associated with the Handle with the specified id, or null if none were present
      */
     T removeById(String id);
 

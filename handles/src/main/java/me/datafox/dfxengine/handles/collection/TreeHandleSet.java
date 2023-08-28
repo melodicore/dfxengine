@@ -36,6 +36,13 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
         addAll(handles);
     }
 
+    /**
+     * In addition to what is documented in {@link TreeSet#add(Object)}, the specified {@link Handle} must be contained
+     * within the {@link Space} associated with this set.
+     *
+     * @param handle element whose presence in this collection is to be ensured
+     * @return true if this set did not already contain the specified element
+     */
     @Override
     public boolean add(Handle handle) {
         checkSpace(handle);
@@ -54,6 +61,13 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
         return returned;
     }
 
+    /**
+     * In addition to what is documented in {@link TreeSet#addAll(Collection)}, all {@link Handle}s specified must be
+     * contained within the {@link Space} associated with this set.
+     *
+     * @param c collection containing Handles to be added to this set
+     * @return true if this set changed as a result of the call
+     */
     @Override
     public boolean addAll(Collection<? extends Handle> c) {
         c.forEach(this::checkSpace);

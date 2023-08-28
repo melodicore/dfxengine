@@ -38,12 +38,12 @@ import java.util.stream.Collectors;
  * dependencies.
  * </p>
  * <p>
- * Components are referenced by {@link Class}es, and all superclasses and superinterfaces of any given component are
- * also associated with that component. Multiple components of a given type can exist simultaneously, and a class that
- * is only associated with a single component is called a singleton. When an injectable constructor parameter or field
- * references a component, that component must be a singleton. You can use a {@link List} (or a superclass/interface
- * like {@link AbstractList} or {@link Collection}) with the component's type as the type parameter to inject multiple
- * components of the same type.
+ * Components are referenced by {@link Class}es, and all superclasses and superinterfaces of the specified component are
+ * also associated with that component. Multiple components of a specified type can exist simultaneously, and a class
+ * that is only associated with a single component is called a singleton. When an injectable constructor parameter or
+ * field references a component, that component must be a singleton. You can use a {@link List} (or a
+ * superclass/interface like {@link AbstractList} or {@link Collection}) with the component's type as the type parameter
+ * to inject multiple components of the same type.
  * </p>
  * <p>
  * <b>Parameterized components are not supported</b>. A component may extend or implement a parameterized
