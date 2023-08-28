@@ -78,6 +78,36 @@ public class DependenciesTest {
     }
 
     @Test
+    public void addDependenciesTest() {
+        assertTrue(root.addDependencies(Set.of(rootDependency, combinedCombined)));
+
+        root.invalidateDependencies();
+
+        assertEquals(1, rootDependency.i());
+        assertEquals(1, rootCombined.i());
+        assertEquals(1, combinedDependency.i());
+        assertEquals(2, combinedCombined.i());
+
+        assertTrue(root.addDependencies(Set.of(rootDependency, combinedDependency)));
+
+        root.invalidateDependencies();
+
+        assertEquals(2, rootDependency.i());
+        assertEquals(2, rootCombined.i());
+        assertEquals(3, combinedDependency.i());
+        assertEquals(4, combinedCombined.i());
+
+        assertFalse(root.addDependencies(Set.of(rootDependency, combinedDependency)));
+
+        root.invalidateDependencies();
+
+        assertEquals(3, rootDependency.i());
+        assertEquals(3, rootCombined.i());
+        assertEquals(5, combinedDependency.i());
+        assertEquals(6, combinedCombined.i());
+    }
+
+    @Test
     public void removeDependencyTest() {
         assertTrue(rootCombined.removeDependency(combinedDependency));
 
@@ -92,6 +122,36 @@ public class DependenciesTest {
     }
 
     @Test
+    public void removeDependenciesTest() {
+        assertTrue(rootCombined.removeDependencies(Set.of(rootDependency, combinedDependency)));
+
+        root.invalidateDependencies();
+
+        assertEquals(1, rootDependency.i());
+        assertEquals(1, rootCombined.i());
+        assertEquals(0, combinedDependency.i());
+        assertEquals(1, combinedCombined.i());
+
+        assertTrue(rootCombined.removeDependencies(Set.of(rootDependency, combinedCombined)));
+
+        root.invalidateDependencies();
+
+        assertEquals(2, rootDependency.i());
+        assertEquals(2, rootCombined.i());
+        assertEquals(0, combinedDependency.i());
+        assertEquals(1, combinedCombined.i());
+
+        assertFalse(rootCombined.removeDependencies(Set.of(rootDependency, combinedCombined)));
+
+        root.invalidateDependencies();
+
+        assertEquals(3, rootDependency.i());
+        assertEquals(3, rootCombined.i());
+        assertEquals(0, combinedDependency.i());
+        assertEquals(1, combinedCombined.i());
+    }
+
+    @Test
     public void containsDependencyTest() {
         assertTrue(root.containsDependency(rootDependency));
         assertTrue(root.containsDependency(rootCombined));
@@ -100,11 +160,23 @@ public class DependenciesTest {
     }
 
     @Test
+    public void containsDependenciesTest() {
+        assertTrue(root.containsDependencies(Set.of(rootDependency, rootCombined)));
+        assertFalse(root.containsDependencies(Set.of(rootDependency, combinedDependency)));
+    }
+
+    @Test
     public void containsDependencyRecursive() {
         assertTrue(root.containsDependencyRecursive(rootDependency));
         assertTrue(root.containsDependencyRecursive(rootCombined));
         assertTrue(root.containsDependencyRecursive(combinedDependency));
         assertTrue(root.containsDependencyRecursive(combinedCombined));
+    }
+
+    @Test
+    public void containsDependenciesRecursiveTest() {
+        assertTrue(root.containsDependenciesRecursive(Set.of(rootDependency, rootCombined)));
+        assertTrue(root.containsDependenciesRecursive(Set.of(rootDependency, combinedDependency)));
     }
 
     @Test

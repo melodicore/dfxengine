@@ -42,7 +42,8 @@ public abstract class AbstractDependent implements Dependent {
 
     @Override
     public boolean addDependency(Dependency dependency) {
-        if(DependencyUtils.checkCyclicDependencies(this, dependency)) {throw LogUtils.logExceptionAndGet(logger,
+        if(DependencyUtils.checkCyclicDependencies(this, dependency)) {
+            throw LogUtils.logExceptionAndGet(logger,
                 DependencyStrings.cyclicDetected(dependency, this),
                 IllegalArgumentException::new);
         }
@@ -51,8 +52,26 @@ public abstract class AbstractDependent implements Dependent {
     }
 
     @Override
+    public boolean addDependencies(Collection<Dependency> dependencies) {
+        for(Dependency dependency : dependencies) {
+            if(DependencyUtils.checkCyclicDependencies(this, dependency)) {
+                throw LogUtils.logExceptionAndGet(logger,
+                        DependencyStrings.cyclicDetected(dependency, this),
+                        IllegalArgumentException::new);
+            }
+        }
+
+        return this.dependencies.addAll(dependencies);
+    }
+
+    @Override
     public boolean removeDependency(Dependency dependency) {
         return dependencies.remove(dependency);
+    }
+
+    @Override
+    public boolean removeDependencies(Collection<Dependency> dependencies) {
+        return this.dependencies.removeAll(dependencies);
     }
 
     @Override
@@ -61,8 +80,18 @@ public abstract class AbstractDependent implements Dependent {
     }
 
     @Override
+    public boolean containsDependencies(Collection<Dependency> dependencies) {
+        return this.dependencies.containsAll(dependencies);
+    }
+
+    @Override
     public boolean containsDependencyRecursive(Dependency dependency) {
         return DependencyUtils.containsDependencyRecursive(dependency, this);
+    }
+
+    @Override
+    public boolean containsDependenciesRecursive(Collection<Dependency> dependencies) {
+        return dependencies.stream().allMatch(dependency -> DependencyUtils.containsDependencyRecursive(dependency, this));
     }
 
     @Override

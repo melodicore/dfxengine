@@ -13,11 +13,19 @@ public interface Dependent {
 
     boolean addDependency(Dependency dependency);
 
+    boolean addDependencies(Collection<Dependency> dependencies);
+
     boolean removeDependency(Dependency dependency);
+
+    boolean removeDependencies(Collection<Dependency> dependencies);
 
     boolean containsDependency(Dependency dependency);
 
+    boolean containsDependencies(Collection<Dependency> dependencies);
+
     boolean containsDependencyRecursive(Dependency dependency);
+
+    boolean containsDependenciesRecursive(Collection<Dependency> dependencies);
 
     Stream<Dependency> dependencyStream();
 
