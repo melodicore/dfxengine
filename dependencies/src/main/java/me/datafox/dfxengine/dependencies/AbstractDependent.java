@@ -36,14 +36,18 @@ public abstract class AbstractDependent implements Dependent {
     }
 
     @Override
-    public boolean addDependency(Dependency dependency) {
-        if(DependencyUtils.checkCyclicDependencies(this, dependency)) {
-            return dependencies.add(dependency);
-        }
+    public void invalidateDependencies() {
+        dependencies.forEach(Dependency::invalidate);
+    }
 
-        throw LogUtils.logExceptionAndGet(logger,
+    @Override
+    public boolean addDependency(Dependency dependency) {
+        if(DependencyUtils.checkCyclicDependencies(this, dependency)) {throw LogUtils.logExceptionAndGet(logger,
                 DependencyStrings.cyclicDetected(dependency, this),
                 IllegalArgumentException::new);
+        }
+
+        return dependencies.add(dependency);
     }
 
     @Override
@@ -57,7 +61,17 @@ public abstract class AbstractDependent implements Dependent {
     }
 
     @Override
+    public boolean containsDependencyRecursive(Dependency dependency) {
+        return DependencyUtils.containsDependencyRecursive(dependency, this);
+    }
+
+    @Override
     public Stream<Dependency> dependencyStream() {
         return dependencies.stream();
+    }
+
+    @Override
+    public Stream<Dependency> recursiveDependencyStream() {
+        return dependencies.stream().flatMap(DependencyUtils::flatMapDependencies);
     }
 }

@@ -4,25 +4,33 @@ import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.dependencies.Dependent;
 import me.datafox.dfxengine.utils.ClassUtils;
 
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 /**
  * @author datafox
  */
 public class DependencyUtils {
     public static boolean checkCyclicDependencies(Dependent parent, Dependency child) {
         if(!(parent instanceof Dependency && child instanceof Dependent)) {
-            return true;
-        }
-
-        return checkCyclicDependenciesRecursive((Dependency) parent, (Dependent) child);
-    }
-
-    private static boolean checkCyclicDependenciesRecursive(Dependency original, Dependent current) {
-        if(current.containsDependency(original)) {
             return false;
         }
+
+        return containsDependencyRecursive((Dependency) parent, (Dependent) child);
+    }
+
+    public static boolean containsDependencyRecursive(Dependency dependency, Dependent current) {
+        if(current.containsDependency(dependency)) {
+            return true;
+        }
         return current.dependencyStream()
-                .flatMap(dependency ->
-                        ClassUtils.filterInstanceAndCast(dependency, Dependent.class))
-                .allMatch(dependent -> checkCyclicDependenciesRecursive(original, dependent));
+                .flatMap(DependencyUtils::flatMapDependencies)
+                .anyMatch(Predicate.isEqual(dependency));
+    }
+
+    public static Stream<Dependency> flatMapDependencies(Dependency dependency) {
+        return Stream.concat(Stream.of(dependency),
+                ClassUtils.filterInstanceAndCast(dependency, Dependent.class)
+                        .flatMap(Dependent::dependencyStream));
     }
 }
