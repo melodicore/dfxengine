@@ -23,6 +23,8 @@ import static me.datafox.dfxengine.handles.HandleConstants.SPACES_ID;
 import static me.datafox.dfxengine.handles.HandleConstants.TAGS_ID;
 
 /**
+ * Implementation of {@link HandleManager}.
+ *
  * @author datafox
  */
 @Component

@@ -9,4 +9,7 @@ module dfxengine.handles {
     requires dfxengine.utils;
     requires dfxengine.injector.api;
     requires dfxengine.handles.api;
+
+    exports me.datafox.dfxengine.handles;
+    exports me.datafox.dfxengine.handles.collection;
 }

@@ -9,9 +9,14 @@ import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
+ * Implementation of {@link HandleSet} backed with a {@link HashSet}.
+ *
  * @author datafox
  */
 public class HashHandleSet extends HashSet<Handle> implements HandleSet {

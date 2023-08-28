@@ -1,53 +1,17 @@
 package me.datafox.dfxengine.handles.test;
 
-import me.datafox.dfxengine.handles.HandleManagerImpl;
-import me.datafox.dfxengine.handles.api.Handle;
-import me.datafox.dfxengine.handles.api.HandleManager;
-import me.datafox.dfxengine.handles.api.Space;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static me.datafox.dfxengine.handles.test.TestStrings.*;
+import static me.datafox.dfxengine.handles.test.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author datafox
  */
-public class HandleTest {
-    private static HandleManager handleManager;
-
-    @BeforeAll
-    public static void beforeAll() {
-        handleManager = new HandleManagerImpl(LoggerFactory.getLogger(HandleManager.class));
-    }
-
-    private Space testSpace;
-
-    private Handle testHandle;
-
-    private Handle testTag;
-
-    private Handle otherTag;
-
-    @BeforeEach
-    public void beforeEach() {
-        handleManager.clear();
-
-        testSpace = handleManager.createSpace(TEST_SPACE);
-        testHandle = testSpace.createHandle(TEST_HANDLE);
-
-        testTag = handleManager.createTag(TEST_TAG);
-        otherTag = handleManager.createTag(OTHER_TAG);
-
-        testHandle.addTag(testTag);
-        testHandle.addTag(otherTag);
-    }
-
+public class HandleTest extends AbstractTest {
     @Test
     public void getHandleManagerTest() {
         assertEquals(handleManager, testHandle.getHandleManager());

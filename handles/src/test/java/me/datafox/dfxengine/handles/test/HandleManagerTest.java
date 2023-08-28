@@ -1,57 +1,18 @@
 package me.datafox.dfxengine.handles.test;
 
 import me.datafox.dfxengine.handles.HandleConstants;
-import me.datafox.dfxengine.handles.HandleManagerImpl;
-import me.datafox.dfxengine.handles.api.Handle;
-import me.datafox.dfxengine.handles.api.HandleManager;
-import me.datafox.dfxengine.handles.api.Space;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static me.datafox.dfxengine.handles.test.TestStrings.*;
+import static me.datafox.dfxengine.handles.test.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author datafox
  */
-public class HandleManagerTest {
-    private static HandleManager handleManager;
-
-    @BeforeAll
-    public static void beforeAll() {
-        handleManager = new HandleManagerImpl(LoggerFactory.getLogger(HandleManager.class));
-    }
-
-    private Space testSpace;
-
-    private Space otherSpace;
-
-    private Handle testHandle;
-
-    private Handle testTag;
-
-    private Handle otherTag;
-
-    @BeforeEach
-    public void beforeEach() {
-        handleManager.clear();
-
-        testSpace = handleManager.createSpace(TEST_SPACE);
-        otherSpace = handleManager.createSpace(OTHER_SPACE);
-        testHandle = testSpace.createHandle(TEST_HANDLE);
-
-        testTag = handleManager.createTag(TEST_TAG);
-        otherTag = handleManager.createTag(OTHER_TAG);
-
-        testHandle.addTag(testTag);
-        testHandle.addTag(otherTag);
-    }
-
+public class HandleManagerTest extends AbstractTest {
     @Test
     public void getSpaceHandleTest() {
         assertEquals(testSpace.getHandle(), handleManager.getSpaceHandle(TEST_SPACE));
@@ -65,11 +26,15 @@ public class HandleManagerTest {
     @Test
     public void getSpaceTest() {
         assertEquals(testSpace, handleManager.getSpace(testSpace.getHandle()));
+
+        assertNull(handleManager.getSpace(testHandle));
     }
 
     @Test
     public void getSpaceByIdTest() {
         assertEquals(testSpace, handleManager.getSpaceById(TEST_SPACE));
+
+        assertNull(handleManager.getSpaceById(HANDLE_ID));
     }
 
     @Test
@@ -213,6 +178,8 @@ public class HandleManagerTest {
     @Test
     public void getTagTest() {
         assertEquals(testTag, handleManager.getTag(TEST_TAG));
+
+        assertNull(handleManager.getTag(HANDLE_ID));
     }
 
     @Test

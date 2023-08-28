@@ -1,6 +1,11 @@
 package me.datafox.dfxengine.handles;
 
+import me.datafox.dfxengine.handles.api.HandleManager;
+import me.datafox.dfxengine.handles.api.Space;
+
 /**
+ * Contains ids for the hardcoded {@link Space}s in the {@link HandleManager}.
+ *
  * @author datafox
  */
 public class HandleConstants {

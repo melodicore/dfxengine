@@ -9,12 +9,11 @@ import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
+ * Implementation of {@link HandleSet} backed with a {@link TreeSet}.
+ *
  * @author datafox
  */
 public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {

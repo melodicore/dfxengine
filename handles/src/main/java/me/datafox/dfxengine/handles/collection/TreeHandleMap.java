@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
+ * Implementation of {@link HandleMap} backed with a {@link TreeMap}.
+ *
  * @author datafox
  */
 public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> {

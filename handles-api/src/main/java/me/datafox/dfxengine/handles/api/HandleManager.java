@@ -12,13 +12,13 @@ import java.util.stream.Stream;
  */
 public interface HandleManager {
     /**
-     * @param id id of the requested {@link Handle)
+     * @param id id of the requested {@link Handle}
      * @return {@link Space} identification Handle matching the given id, or null if none are present
      */
     Handle getSpaceHandle(String id);
 
     /**
-     * @return identifying {@link Handle)s of the {@link Space}s present in this HandleManager
+     * @return identifying {@link Handle}s of the {@link Space}s present in this HandleManager
      */
     Collection<Handle> getSpaceHandles();
 

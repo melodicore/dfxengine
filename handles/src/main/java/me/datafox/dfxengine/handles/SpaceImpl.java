@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * Implementation of {@link Space}.
+ *
  * @author datafox
  */
 @Data

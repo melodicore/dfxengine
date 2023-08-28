@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Implementation of {@link HandleMap} backed with a {@link HashMap}.
+ *
  * @author datafox
  */
 public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> {
