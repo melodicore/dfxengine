@@ -17,8 +17,11 @@ subprojects {
     repositories {
         mavenCentral()
         maven {
-            name = "local"
-            url = rootProject.layout.projectDirectory.dir("repo")
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = new File(rootDir.path + "/secrets/username").text
+                password = new File(rootDir.path + "/secrets/password").text
+            }
         }
     }
 
@@ -37,6 +40,11 @@ subprojects {
                 }
                 pom {
                     url = "https://engine.datafox.me"
+                    scm {
+                        connection = "scm:git:git://github.com/melodicore/dfxengine.git"
+                        developerConnection = "scm:git:ssh://github.com/melodicore/dfxengine.git"
+                        url = "https://github.com/melodicore/dfxengine"
+                    }
                     licenses {
                         license {
                             name = "The Apache License, Version 2.0"
@@ -56,8 +64,11 @@ subprojects {
 
         repositories {
             maven {
-                name = "local"
-                url = rootProject.layout.projectDirectory.dir("repo")
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = new File(rootDir.path + "/secrets/username").text
+                    password = new File(rootDir.path + "/secrets/password").text
+                }
             }
         }
     }

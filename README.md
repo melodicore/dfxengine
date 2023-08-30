@@ -3,10 +3,11 @@ development, but with features other kinds of developers might also appreciate. 
 consists of multiple modules, each with a single purpose. Despite its name, it is not
 a game engine, but it does provide many features that a game engine would also provide.
 
-The project is currently in very early development. Most modules are under initial
-development or not started or even thought of at all. I build this project primarily
-for my own usage, but decided to share the code in case others might find it useful
-as well. Maven releases will come later when the project is more mature.
+The project is currently in early development. Some modules are finished, while others
+are under development, and more may be introduced. I build this project primarily for 
+my own usage, but decided to share the code in case others might find it useful as well.
+Maven releases exist in namespace 
+[me.datafox.dfxengine](https://central.sonatype.com/namespace/me.datafox.dfxengine)
 
 The project is written at the JDK 11 language level, but only uses the JDK 8+ features
 that are supported by Android's 
@@ -18,11 +19,11 @@ Here are the currently existing and planned modules:
 
 | Module                               | Status             | Description                                  |
 |--------------------------------------|--------------------|----------------------------------------------|
-| [Injector API](injector-api)         | Done (v1.0.0)      | Annotations for the Injector module          |
-| [Injector](injector)                 | Done (v1.0.3)      | A dependency injector                        |
-| [Handles API](handles-api)           | Done (v1.0.2)      | Interfaces for the Handles module            |
-| [Handles](handles)                   | Done (v1.0.0)      | Dynamic enum-like structures for map keys    |
-| [Dependencies](dependencies)         | Functional         | Data structure dependencies and invalidation |
+| [Injector API](injector-api)         | Done (v1.0.1)      | Annotations for the Injector module          |
+| [Injector](injector)                 | Done (v1.0.4)      | A dependency injector                        |
+| [Handles API](handles-api)           | Done (v1.0.3)      | Interfaces for the Handles module            |
+| [Handles](handles)                   | Done (v1.0.2)      | Dynamic enum-like structures for map keys    |
+| [Dependencies](dependencies)         | Done (v1.0.0)      | Data structure dependencies and invalidation |
 | Math                                 | Not yet started    | Number manipulation and presentation         |
 | Entities                             | Not yet started    | Data-oriented entity system                  |
 | [Utils](utils)                       | Under construction | Utilities used by other modules              |
