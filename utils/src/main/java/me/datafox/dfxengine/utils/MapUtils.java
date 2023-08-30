@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * Utilities for manipulating maps.
+ *
  * @author datafox
  */
 public class MapUtils {
