@@ -14,9 +14,8 @@ public class TestCombined extends DependencyDependent {
     }
 
     @Override
-    public void invalidate() {
+    protected void onInvalidate() {
         i++;
-        super.invalidate();
     }
 
     public int i() {
