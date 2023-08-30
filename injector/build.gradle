@@ -28,7 +28,7 @@ publishing {
         mavenJava(MavenPublication) {
             pom {
                 name = "DFXEngine Injector"
-                description = "A dependency injection module for the DFXEngine"
+                description = "A dependency injection module for DFXEngine"
             }
         }
     }
