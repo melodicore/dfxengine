@@ -1,7 +1,5 @@
 package me.datafox.dfxengine.injector.utils;
 
-import me.datafox.dfxengine.injector.Injector;
-import me.datafox.dfxengine.injector.InjectorBuilder;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.injector.exception.MultipleInjectConstructorsException;
 import me.datafox.dfxengine.injector.exception.NoValidConstructorException;
@@ -15,7 +13,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- * Utilities used internally by {@link InjectorBuilder} and {@link Injector}.
+ * Utilities used internally in this module.
  *
  * @author datafox
  */

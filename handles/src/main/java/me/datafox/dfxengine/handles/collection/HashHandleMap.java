@@ -59,8 +59,8 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
     }
 
     /**
-     * In addition to what is documented in {@link HashMap#putAll(Map)}, all {@link Handle}s used as the keys must be
-     * contained within the {@link Space} associated with this map.
+     * In addition to what is documented in {@link HashMap#putAll(Map)}, all {@link Handle Handles} used as the keys
+     * must be contained within the {@link Space} associated with this map.
      *
      * @param map mappings to be stored in this map
      *

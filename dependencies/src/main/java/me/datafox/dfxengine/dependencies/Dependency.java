@@ -4,14 +4,14 @@ package me.datafox.dfxengine.dependencies;
  * <p>
  * A simple dependency that can be invalidated. Invalidation should generally be only called by
  * {@link Dependent#invalidateDependencies()}. If a class that implements this interface also implements
- * {@link Dependent}, {@link Dependency#invalidate()} must call {@link Dependent#invalidateDependencies()} on itself.
+ * {@link Dependent}, {@link #invalidate()} must call {@link Dependent#invalidateDependencies()} on itself.
  * </p>
  * <p>
  * In general a Dependency is implemented on any class that has a return value which is dependent on values of other
  * classes. These other classes should implement {@link Dependent}, and the dependency should be added to them with
  * {@link Dependent#addDependency(Dependency)}. The dependency can then cache the return value, and invalidate that
- * cache whenever {@link Dependency#invalidate()} is called, and the {@link Dependent}s should call it whenever
- * something in them changes, usually by calling {@link Dependent#invalidateDependencies()}.
+ * cache whenever {@link #invalidate()} is called, and the {@link Dependent}s should call it whenever something in them
+ * changes, usually by calling {@link Dependent#invalidateDependencies()}.
  * </p>
  * @author datafox
  */

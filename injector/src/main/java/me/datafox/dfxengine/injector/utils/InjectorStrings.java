@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 
 /**
- * Contains all string literals used for logging in {@link InjectorBuilder} and {@link Injector}
+ * Contains all string literals used for logging in this module.
  *
  * @author datafox
  */

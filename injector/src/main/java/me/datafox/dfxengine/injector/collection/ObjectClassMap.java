@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
  * This ensures that all values in a list represented by a type are assignable to that type.
  * </p>
  * <p>
- * A new method, {@link ObjectClassMap#getAndCast(Class)}, is also defined, which casts all the objects in the list to
- * the type the list was retrieved with.
+ * A new method, {@link #getAndCast(Class)}, is also defined, which casts all the objects in the list to the type the
+ * list was retrieved with.
  * </p>
  *
  * @author datafox

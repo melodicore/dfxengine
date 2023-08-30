@@ -6,13 +6,11 @@ import lombok.RequiredArgsConstructor;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 
 /**
- * Contains instantiation details of an object when using the {@link Injector}.
- * It contains a reference to the class the component was requested with, as well
- * as the class depending on said component. Because of this, it is only useful for
- * components that have {@link InstantiationPolicy#PER_INSTANCE}. For components
- * that have {@link InstantiationPolicy#ONCE}, {@link InstantiationDetails#type}
- * will always be the declaring class of the component, and
- * {@link InstantiationDetails#requestingType} will always be null.
+ * Contains instantiation details of an object when using the {@link Injector}. It contains a reference to the class the
+ * component was requested with, as well as the class depending on said component. Because of this, it is only useful
+ * for components that have {@link InstantiationPolicy#PER_INSTANCE}. For components that have
+ * {@link InstantiationPolicy#ONCE}, {@link #getType()} will always be the declaring class of the component, and
+ * {@link #getRequestingType()} will always be null.
  *
  * @author datafox
  */

@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * An extension of {@link Map} that can only use {@link Handle}s of the {@link Space} associated with this map as its
- * keys.
+ * An extension of {@link Map} that can only use {@link Handle Handles} of the {@link Space} associated with this map as
+ * its keys.
  *
  * @author datafox
  */
@@ -40,13 +40,13 @@ public interface HandleMap<T> extends Map<Handle,T> {
     boolean containsById(String id);
 
     /**
-     * @param handles {@link Handle}s to be checked for
+     * @param handles {@link Handle Handles} to be checked for
      * @return true if this map contains all the specified Handles
      */
     boolean containsAll(Collection<Handle> handles);
 
     /**
-     * @param ids ids of the {@link Handle}s to be checked for
+     * @param ids ids of the {@link Handle Handles} to be checked for
      * @return true if this map contains all Handles with the specified ids
      */
     boolean containsAllById(Collection<String> ids);
@@ -64,13 +64,13 @@ public interface HandleMap<T> extends Map<Handle,T> {
     T removeById(String id);
 
     /**
-     * @param handles {@link Handle}s to be removed
+     * @param handles {@link Handle Handles} to be removed
      * @return true if the contents of this map changed as a result of this action
      */
     boolean removeAll(Collection<Handle> handles);
 
     /**
-     * @param ids ids of the {@link Handle}s to be removed
+     * @param ids ids of the {@link Handle Handles} to be removed
      * @return true if the contents of this map changed as a result of this action
      */
     boolean removeAllById(Collection<String> ids);

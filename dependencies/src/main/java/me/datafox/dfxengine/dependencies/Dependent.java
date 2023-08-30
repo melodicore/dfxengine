@@ -6,9 +6,8 @@ import java.util.stream.Stream;
 /**
  * A class with values that values of other classes depend on. A class with values depending on the implementing class
  * should implement {@link Dependency}, and all Dependencies should be added to the class implementing this interface
- * with {@link Dependent#addDependency(Dependency)} or {@link Dependent#addDependencies(Collection)}. The implementation
- * of these methods must check for cyclic dependencies and throw {@link IllegalArgumentException} if one would be caused
- * by the operation.
+ * with {@link #addDependency(Dependency)} or {@link #addDependencies(Collection)}. The implementation of these methods
+ * must check for cyclic dependencies and throw {@link IllegalArgumentException} if one would be caused by the operation.
  *
  * @author datafox
  */

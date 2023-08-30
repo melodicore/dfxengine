@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 /**
- * A namespace for {@link Handle}s. Contains an identifying Handle and an ordered collection of Handles. The identifying
- * Handle is contained within a special hardcoded Space, details of which are documented in {@link HandleManager}.
- * Additionally, contains a reference to the associated HandleManager.
+ * A namespace for {@link Handle Handles}. Contains an identifying Handle and an ordered collection of Handles. The
+ * identifying Handle is contained within a special hardcoded Space, details of which are documented in
+ * {@link HandleManager}. Additionally, contains a reference to the associated HandleManager.
  *
  * @author datafox
  */
@@ -48,32 +48,32 @@ public interface Space extends Comparable<Space> {
     Handle getHandle(String id);
 
     /**
-     * @return all {@link Handle}s present in this Space
+     * @return all {@link Handle Handles} present in this Space
      */
     Collection<Handle> getHandles();
 
     /**
      * @param tag tag to be checked for
-     * @return all {@link Handle}s present in this Space that contain the specified tag
+     * @return all {@link Handle Handles} present in this Space that contain the specified tag
      */
     Collection<Handle> getHandlesByTag(Handle tag);
 
 
     /**
      * @param id id of a tag to be checked for
-     * @return all {@link Handle}s present in this Space that contain the specified tag
+     * @return all {@link Handle Handles} present in this Space that contain the specified tag
      */
     Collection<Handle> getHandlesByTagId(String id);
 
     /**
      * @param tags tags to be checked for
-     * @return all {@link Handle}s present in this Space that contain all the specified tags
+     * @return all {@link Handle Handles} present in this Space that contain all the specified tags
      */
     Collection<Handle> getHandlesByTags(Collection<Handle> tags);
 
     /**
      * @param ids tags to be checked for
-     * @return all {@link Handle}s present in this Space that contain tags with all the specified ids
+     * @return all {@link Handle Handles} present in this Space that contain tags with all the specified ids
      */
     Collection<Handle> getHandlesByTagIds(Collection<String> ids);
 
@@ -107,7 +107,7 @@ public interface Space extends Comparable<Space> {
     boolean containsHandleById(String id);
 
     /**
-     * @param handles {@link Handle}s to be checked for
+     * @param handles {@link Handle Handles} to be checked for
      * @return true if this Space contains all the specified Handles
      */
     boolean containsHandles(Collection<Handle> handles);
@@ -131,7 +131,7 @@ public interface Space extends Comparable<Space> {
     boolean removeHandleById(String id);
 
     /**
-     * @param handles {@link Handle}s to be removed
+     * @param handles {@link Handle Handles} to be removed
      * @return true if the Handles of this Space changed as a result of this action
      */
     boolean removeHandles(Collection<Handle> handles);
@@ -143,12 +143,12 @@ public interface Space extends Comparable<Space> {
     boolean removeHandlesById(Collection<String> ids);
 
     /**
-     * @return {@link Stream} of the {@link Handle}s present in this Space
+     * @return {@link Stream} of the {@link Handle Handles} present in this Space
      */
     Stream<Handle> handleStream();
 
     /**
-     * Clears all {@link Handle}s from this Space.
+     * Clears all {@link Handle Handles} from this Space.
      */
     void clear();
 

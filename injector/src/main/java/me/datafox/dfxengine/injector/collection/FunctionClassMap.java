@@ -20,8 +20,8 @@ import java.util.function.Function;
  * resolved recursively and the original value is also added to the lists of values represented by those types.
  * </p>
  * <p>
- * This data structure ensures that whenever {@link FunctionClassMap#get(Class)} is called, the retrieved list contains
- * all values which are represented by the type or a descendant of the type the method was called with.
+ * This data structure ensures that whenever {@link #get(Class)} is called, the retrieved list contains all values which
+ * are represented by the type or a descendant of the type the method was called with.
  * </p>
  *
  * @author datafox

@@ -9,10 +9,7 @@ import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Implementation of {@link HandleSet} backed with a {@link HashSet}.
@@ -68,8 +65,8 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     }
 
     /**
-     * In addition to what is documented in {@link HashSet#addAll(Collection)}, all {@link Handle}s specified must be
-     * contained within the {@link Space} associated with this set.
+     * In addition to what is documented in {@link TreeSet#addAll(Collection)}, all {@link Handle Handles} specified
+     * must be contained within the {@link Space} associated with this set.
      *
      * @param c collection containing Handles to be added to this set
      * @return true if this set changed as a result of the call

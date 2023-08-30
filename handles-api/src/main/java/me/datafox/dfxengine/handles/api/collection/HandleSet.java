@@ -7,7 +7,8 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * An extension of {@link Set} that can only contain {@link Handle}s of the {@link Space} associated with this set.
+ * An extension of {@link Set} that can only contain {@link Handle Handles} of the {@link Space} associated with this
+ * set.
  *
  * @author datafox
  */
@@ -24,7 +25,7 @@ public interface HandleSet extends Set<Handle> {
     boolean containsById(String id);
 
     /**
-     * @param ids ids of the {@link Handle}s to be checked for
+     * @param ids ids of the {@link Handle Handles} to be checked for
      * @return true if this set contains all Handles with the specified ids
      */
     boolean containsAllById(Collection<String> ids);
@@ -42,7 +43,7 @@ public interface HandleSet extends Set<Handle> {
     boolean removeById(String id);
 
     /**
-     * @param ids ids of the {@link Handle}s to be removed
+     * @param ids ids of the {@link Handle Handles} to be removed
      * @return true if the Handles of this set changed as a result of this action
      */
     boolean removeAllById(Collection<String> ids);

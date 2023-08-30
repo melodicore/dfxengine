@@ -3,7 +3,7 @@ package me.datafox.dfxengine.injector.exception;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 
 /**
- * An exception that is thrown when a cyclic dependency is present while {@link Component}s are being loaded.
+ * An exception that is thrown when a cyclic dependency is present while {@link Component Components} are being loaded.
  *
  * @author datafox
  */

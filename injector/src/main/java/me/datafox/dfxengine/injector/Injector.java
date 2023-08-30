@@ -151,15 +151,15 @@ public class Injector {
     }
 
     /**
-     * Calls {@link Injector#getComponents(Class, Class)} with a null requesting class.
+     * Calls {@link #getComponents(Class, Class)} with a null requesting class.
      */
     public <T> List<T> getComponents(Class<T> type) {
         return getComponents(type, null);
     }
 
     /**
-     * Checks if only one component matches with the provided class and then calls
-     * {@link Injector#getComponents(Class, Class)} and returns the first and only entry in the returned list.
+     * Checks if only one component matches with the provided class and then calls {@link #getComponents(Class, Class)}
+     * and returns the first and only entry in the returned list.
      *
      * @throws UnknownComponentException if no components match the provided class
      * @throws MultipleValidComponentsException if multiple components match the provided class
@@ -182,7 +182,7 @@ public class Injector {
 
 
     /**
-     * Calls {@link Injector#getSingletonComponent(Class, Class)} with a null requesting class.
+     * Calls {@link #getSingletonComponent(Class, Class)} with a null requesting class.
      */
     public <T> T getSingletonComponent(Class<T> type) {
         return getSingletonComponent(type, null);
@@ -209,8 +209,8 @@ public class Injector {
     }
 
     /**
-     * Registers a singleton component to be used with dependency injection. Normally only
-     * used by the {@link InjectorBuilder}.
+     * Registers a singleton component to be used with dependency injection. Normally only used by the
+     * {@link InjectorBuilder}.
      *
      * @param instance component instance
      */
