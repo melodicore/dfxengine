@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.handles.test;
 
+import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,13 +44,13 @@ public abstract class AbstractHandleMapTest extends AbstractTest {
         testMap.putAll(Map.of(testHandle, TEST_BOOLEAN, otherHandle, TEST_CHARACTER));
 
         assertEquals(Map.of(testHandle, TEST_BOOLEAN, otherHandle, TEST_CHARACTER), testMap);
+
+        assertTrue(testMap.containsAllById(Set.of(TEST_HANDLE, OTHER_HANDLE)));
     }
 
     @Test
     public void removeTest() {
-        Object o = testMap.remove(testHandle);
-
-        assertEquals(TEST_STRING, o);
+        assertEquals(TEST_STRING, testMap.remove(testHandle));
 
         assertEquals(Map.of(otherHandle, TEST_INTEGER), testMap);
     }
@@ -59,6 +60,19 @@ public abstract class AbstractHandleMapTest extends AbstractTest {
         testMap.clear();
 
         assertEquals(Map.of(), testMap);
+    }
+
+    @Test
+    public void putHandledTest() {
+        Handled handled = () -> testHandle;
+
+        assertEquals(TEST_STRING, testMap.putHandled(handled));
+
+        assertEquals(handled, testMap.get(testHandle));
+
+        assertThrows(IllegalArgumentException.class, () -> testMap.putHandled(TEST_STRING));
+
+        assertEquals(handled, testMap.get(testHandle));
     }
 
     @Test

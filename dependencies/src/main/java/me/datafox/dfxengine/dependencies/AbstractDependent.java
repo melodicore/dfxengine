@@ -13,6 +13,10 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
+ * Abstract implementation of {@link Dependent}. Please note that the cyclic dependency detection in this class will
+ * only detect dependent dependencies that implement both {@link Dependent} and {@link Dependency}. It is recommended
+ * to extend {@link DependencyDependent} where possible for all cases where both interfaces would be implemented.
+ *
  * @author datafox
  */
 public abstract class AbstractDependent implements Dependent {

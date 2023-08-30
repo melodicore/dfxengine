@@ -45,6 +45,9 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
      *
      * @param handle element whose presence in this collection is to be ensured
      * @return true if this set did not already contain the specified element
+     *
+     * @throws IllegalArgumentException if the specified Handle is not contained within the Space associated with this
+     * set
      */
     @Override
     public boolean add(Handle handle) {
@@ -70,12 +73,23 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
      *
      * @param c collection containing Handles to be added to this set
      * @return true if this set changed as a result of the call
+     *
+     * @throws IllegalArgumentException if any the specified Handles are not contained within the Space associated with
+     * this set
      */
     @Override
     public boolean addAll(Collection<? extends Handle> c) {
         c.forEach(this::checkSpace);
 
-        return super.addAll(c);
+        boolean changed = false;
+
+        for(Handle handle : c) {
+            if(addInternal(handle)) {
+                changed = true;
+            }
+        }
+
+        return changed;
     }
 
     @Override

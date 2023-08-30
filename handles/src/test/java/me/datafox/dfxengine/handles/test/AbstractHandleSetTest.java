@@ -58,6 +58,8 @@ public abstract class AbstractHandleSetTest extends AbstractTest {
 
         assertEquals(Set.of(testHandle, otherHandle, createdHandle), testSet);
 
+        assertTrue(testSet.containsAllById(Set.of(TEST_HANDLE, OTHER_HANDLE, HANDLE_ID)));
+
         assertFalse(testSet.addAll(Set.of(testHandle, createdHandle)));
     }
 

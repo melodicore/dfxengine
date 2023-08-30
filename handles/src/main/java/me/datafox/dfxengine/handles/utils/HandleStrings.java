@@ -4,6 +4,8 @@ import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;
 
 /**
+ * Contains all string literals used for logging in this module.
+ *
  * @author datafox
  */
 public class HandleStrings {
@@ -12,6 +14,8 @@ public class HandleStrings {
     private static final String SPACE_MISMATCH_HANDLE_SET = "Tried to add Handle %s to HandleSet with Space %s";
     private static final String SPACE_MISMATCH_HANDLE_MAP = "Tried to add Handle %s to HandleMap with Space %s";
     private static final String REMOVE_HARDCODED_SPACE = "Tried to remove hardcoded Space %s";
+    private static final String NOT_HANDLED_TYPE = "Tried to add Object %s to HandleMap with putHandled() but it " +
+            "does not implement me.datafox.dfxengine.handles.api.Handled";
 
     public static String spaceWithIdAlreadyPresent(String spaceId) {
         return forString(SPACE_WITH_ID_ALREADY_PRESENT, spaceId);
@@ -33,8 +37,16 @@ public class HandleStrings {
         return forSpace(REMOVE_HARDCODED_SPACE, space);
     }
 
+    public static <T> String notHandledType(T value) {
+        return forObject(NOT_HANDLED_TYPE, value);
+    }
+
     private static String forString(String str, String string) {
         return String.format(str, string);
+    }
+
+    private static String forObject(String str, Object object) {
+        return String.format(str, object);
     }
 
     private static String forSpaceAndString(String str, Space space, String string) {

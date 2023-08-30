@@ -2,6 +2,7 @@ package me.datafox.dfxengine.handles.collection;
 
 import lombok.Getter;
 import me.datafox.dfxengine.handles.api.Handle;
+import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
 import me.datafox.dfxengine.handles.utils.HandleStrings;
@@ -46,8 +47,10 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      *
      * @param handle Handle with which the specified value is to be associated
      * @param value value to be associated with the specified Handle
-     * @return the previous value associated with the specified Handle, or null if there was no mapping for key. (A null
-     * return can also indicate that the map previously associated null with key.)
+     * @return the previous value associated with the specified Handle, or null if there was no mapping for key
+     *
+     * @throws IllegalArgumentException if the specified Handle is not contained within the Space associated with this
+     * map
      */
     @Override
     public T put(Handle handle, T value) {
@@ -61,12 +64,15 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      * contained within the {@link Space} associated with this map.
      *
      * @param map mappings to be stored in this map
+     *
+     * @throws IllegalArgumentException if any of the specified Handles are not contained within the Space associated
+     * with this map
      */
     @Override
     public void putAll(Map<? extends Handle,? extends T> map) {
         map.keySet().forEach(this::checkSpace);
 
-        super.putAll(map);
+        map.forEach(this::putInternal);
     }
 
     @Override
@@ -95,6 +101,17 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
     public void clear() {
         idMap.clear();
         super.clear();
+    }
+
+    @Override
+    public T putHandled(T value) {
+        if(!(value instanceof Handled)) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    HandleStrings.notHandledType(value),
+                    IllegalArgumentException::new);
+        }
+
+        return put(((Handled) value).getHandle(), value);
     }
 
     @Override

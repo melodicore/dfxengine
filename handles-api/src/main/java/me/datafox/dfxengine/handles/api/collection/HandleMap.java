@@ -1,6 +1,7 @@
 package me.datafox.dfxengine.handles.api.collection;
 
 import me.datafox.dfxengine.handles.api.Handle;
+import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.handles.api.Space;
 
 import java.util.Collection;
@@ -18,6 +19,19 @@ public interface HandleMap<T> extends Map<Handle,T> {
      * @return {@link Space} associated with this map
      */
     Space getSpace();
+
+    /**
+     * Associates the specified value with its associated {@link Handle} in this map. If the map previously contained a
+     * mapping for the key, the old value is replaced. Because Java does not support union types, the specified value
+     * must implement {@link Handled}, and an exception is thrown otherwise.
+     *
+     * @param value value implementing Handled to be associated in this map with its associated Handle as a key
+     * @return the previously associated value in this map, or null if there was no previous association
+     *
+     * @throws IllegalArgumentException if the specified value does not implement Handled, or if the associated Handle
+     * is not contained within the {@link Space} associated with this map
+     */
+     T putHandled(T value);
 
     /**
      * @param id id of the {@link Handle} to be checked for
