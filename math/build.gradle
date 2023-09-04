@@ -1,0 +1,38 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+    id "signing"
+    id "io.freefair.lombok" version "${lombokPluginVersion}"
+}
+
+version = "$mathVersion"
+
+dependencies {
+    //api "me.datafox.dfxengine:math-api:$mathApiVersion"
+    api project(":math-api")
+    implementation project(path: ':handles')
+    implementation "me.datafox.dfxengine:utils:$utilsVersion"
+    implementation "me.datafox.dfxengine:injector-api:$injectorApiVersion"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation "ch.obermuhlner:big-math:$bigMathVersion"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name = "DFXEngine Math"
+                description = "Systems for number manipulation and presentation"
+            }
+        }
+    }
+}
