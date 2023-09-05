@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.math.MathContext;
 
 import static me.datafox.dfxengine.math.api.NumeralType.BIG_DEC;
+import static me.datafox.dfxengine.math.utils.Conversion.toNumeral;
 import static me.datafox.dfxengine.math.utils.Range.*;
 
 /**
@@ -47,7 +48,7 @@ public class Operations {
             case BIG_DEC:
                 return add(augend.bigDecValue(), addend.bigDecValue());
         }
-        throw new RuntimeException("this should never happen");
+        throw new IllegalArgumentException("unknown type");
     }
 
     public static Numeral subtract(Numeral minuend, Numeral subtrahend) {
@@ -68,7 +69,7 @@ public class Operations {
             case BIG_DEC:
                 return subtract(minuend.bigDecValue(), subtrahend.bigDecValue());
         }
-        throw new RuntimeException("this should never happen");
+        throw new IllegalArgumentException("unknown type");
     }
 
     public static Numeral multiply(Numeral multiplicand, Numeral multiplier) {
@@ -95,7 +96,7 @@ public class Operations {
             case BIG_DEC:
                 return multiply(multiplicand.bigDecValue(), multiplier.bigDecValue());
         }
-        throw new RuntimeException("this should never happen");
+        throw new IllegalArgumentException("unknown type");
     }
 
     public static Numeral divide(Numeral dividend, Numeral divisor) {
@@ -120,7 +121,7 @@ public class Operations {
             case BIG_DEC:
                 return divide(dividend.bigDecValue(), divisor.bigDecValue());
         }
-        throw new RuntimeException("this should never happen");
+        throw new IllegalArgumentException("unknown type");
     }
 
     public static Numeral power(Numeral base, Numeral exponent) {
@@ -147,7 +148,94 @@ public class Operations {
             case BIG_DEC:
                 return power(base.bigDecValue(), exponent.bigDecValue());
         }
-        throw new RuntimeException("this should never happen");
+        throw new IllegalArgumentException("unknown type");
+    }
+
+    public static Numeral log(Numeral numeral) {
+        if(isZero(numeral) || compare(numeral, toNumeral(0)) < 0) {
+            throw new ArithmeticException("logarithm of 0 or smaller");
+        }
+        switch(numeral.getType()) {
+            case INT:
+                return(log(numeral.intValue()));
+            case LONG:
+                return(log(numeral.longValue()));
+            case BIG_INT:
+                return(log(numeral.bigIntValue()));
+            case FLOAT:
+                return(log(numeral.floatValue()));
+            case DOUBLE:
+                return(log(numeral.doubleValue()));
+            case BIG_DEC:
+                return(log(numeral.bigDecValue()));
+        }
+        throw new IllegalArgumentException("unknown type");
+    }
+
+    public static Numeral log2(Numeral numeral) {
+        if(isZero(numeral) || compare(numeral, toNumeral(0)) < 0) {
+            throw new ArithmeticException("logarithm of 0 or smaller");
+        }
+        switch(numeral.getType()) {
+            case INT:
+                return(log2(numeral.intValue()));
+            case LONG:
+                return(log2(numeral.longValue()));
+            case BIG_INT:
+                return(log2(numeral.bigIntValue()));
+            case FLOAT:
+                return(log2(numeral.floatValue()));
+            case DOUBLE:
+                return(log2(numeral.doubleValue()));
+            case BIG_DEC:
+                return(log2(numeral.bigDecValue()));
+        }
+        throw new IllegalArgumentException("unknown type");
+    }
+
+    public static Numeral log10(Numeral numeral) {
+        if(isZero(numeral) || compare(numeral, toNumeral(0)) < 0) {
+            throw new ArithmeticException("logarithm of 0 or smaller");
+        }
+        switch(numeral.getType()) {
+            case INT:
+                return(log10(numeral.intValue()));
+            case LONG:
+                return(log10(numeral.longValue()));
+            case BIG_INT:
+                return(log10(numeral.bigIntValue()));
+            case FLOAT:
+                return(log10(numeral.floatValue()));
+            case DOUBLE:
+                return(log10(numeral.doubleValue()));
+            case BIG_DEC:
+                return(log10(numeral.bigDecValue()));
+        }
+        throw new IllegalArgumentException("unknown type");
+    }
+
+    public static Numeral logN(Numeral numeral, Numeral base) {
+        if(isZero(numeral) || compare(numeral, toNumeral(0)) < 0) {
+            throw new ArithmeticException("logarithm of 0 or smaller");
+        }
+        if(isZero(base) || compare(base, toNumeral(0)) < 0) {
+            throw new ArithmeticException("logarithm base of 0 or smaller");
+        }
+        switch(numeral.getType()) {
+            case INT:
+                return(logN(numeral.intValue(), base.intValue()));
+            case LONG:
+                return(logN(numeral.longValue(), base.longValue()));
+            case BIG_INT:
+                return(logN(numeral.bigIntValue(), base.bigIntValue()));
+            case FLOAT:
+                return(logN(numeral.floatValue(), base.floatValue()));
+            case DOUBLE:
+                return(logN(numeral.doubleValue(), base.doubleValue()));
+            case BIG_DEC:
+                return(logN(numeral.bigDecValue(), base.bigDecValue()));
+        }
+        throw new IllegalArgumentException("unknown type");
     }
 
     public static int compare(Numeral numeral, Numeral other) {
@@ -165,7 +253,7 @@ public class Operations {
             case BIG_DEC:
                 return numeral.bigDecValue().compareTo(other.bigDecValue());
         }
-        throw new RuntimeException("this should never happen");
+        throw new IllegalArgumentException("unknown type");
     }
 
     public static Numeral add(int augend, int addend) {
@@ -373,6 +461,105 @@ public class Operations {
 
     public static Numeral power(BigDecimal base, BigDecimal exponent) {
         return new BigDecNumeral(BigDecimalMath.pow(base, exponent, CONTEXT));
+    }
+
+    private static Numeral log(int value) {
+        return new IntNumeral((int) Math.log(value));
+    }
+
+    private static Numeral log(long value) {
+        return new LongNumeral((long) Math.log(value));
+    }
+
+    private static Numeral log(BigInteger value) {
+        return new BigIntNumeral(BigDecimalMath.log(new BigDecimal(value), CONTEXT).toBigInteger());
+    }
+
+    private static Numeral log(float value) {
+        return new FloatNumeral((float) Math.log(value));
+    }
+
+    private static Numeral log(double value) {
+        return new DoubleNumeral(Math.log(value));
+    }
+
+    private static Numeral log(BigDecimal value) {
+        return new BigDecNumeral(BigDecimalMath.log(value, CONTEXT));
+    }
+
+    private static Numeral log2(int value) {
+        return new IntNumeral((int) (Math.log(value) / Math.log(2)));
+    }
+
+    private static Numeral log2(long value) {
+        return new LongNumeral((long) (Math.log(value) / Math.log(2)));
+    }
+
+    private static Numeral log2(BigInteger value) {
+        return new BigIntNumeral(BigDecimalMath.log2(new BigDecimal(value), CONTEXT).toBigInteger());
+    }
+    
+    private static Numeral log2(float value) {
+        return new FloatNumeral((float) (Math.log(value) / Math.log(2)));
+    }
+    
+    private static Numeral log2(double value) {
+        return new DoubleNumeral(Math.log(value) / Math.log(2));
+    }
+    
+    private static Numeral log2(BigDecimal value) {
+        return new BigDecNumeral(BigDecimalMath.log2(value, CONTEXT));
+    }
+
+    private static Numeral log10(int value) {
+        return new IntNumeral((int) Math.log10(value));
+    }
+
+    private static Numeral log10(long value) {
+        return new LongNumeral((long) Math.log10(value));
+    }
+
+    private static Numeral log10(BigInteger value) {
+        return new BigIntNumeral(BigDecimalMath.log10(new BigDecimal(value), CONTEXT).toBigInteger());
+    }
+
+    private static Numeral log10(float value) {
+        return new FloatNumeral((float) Math.log10(value));
+    }
+
+    private static Numeral log10(double value) {
+        return new DoubleNumeral(Math.log10(value));
+    }
+
+    private static Numeral log10(BigDecimal value) {
+        return new BigDecNumeral(BigDecimalMath.log10(value, CONTEXT));
+    }
+
+    private static Numeral logN(int value, int base) {
+        return new IntNumeral((int) (Math.log(value) / Math.log(base)));
+    }
+
+    private static Numeral logN(long value, long base) {
+        return new LongNumeral((long) (Math.log(value) / Math.log(base)));
+    }
+
+    private static Numeral logN(BigInteger value, BigInteger base) {
+        return new BigIntNumeral(BigDecimalMath.log(new BigDecimal(value), CONTEXT).divide(
+                BigDecimalMath.log(new BigDecimal(base), CONTEXT), CONTEXT)
+                .toBigInteger());
+    }
+
+    private static Numeral logN(float value, float base) {
+        return new FloatNumeral((float) (Math.log(value) / Math.log(base)));
+    }
+
+    private static Numeral logN(double value, double base) {
+        return new DoubleNumeral(Math.log(value) / Math.log(base));
+    }
+
+    private static Numeral logN(BigDecimal value, BigDecimal base) {
+        return new BigDecNumeral(BigDecimalMath.log(value, CONTEXT).divide(
+                BigDecimalMath.log(base, CONTEXT), CONTEXT));
     }
 
     public static NumeralType getSignificantType(Numeral numeral1, Numeral numeral2) {

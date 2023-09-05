@@ -44,6 +44,26 @@ public class Modifiers {
         return new OperationModifier(priority, reverse(Operations::power), base);
     }
 
+    public static OperationModifier log(int priority) {
+        return new OperationModifier(priority, Operations::log);
+    }
+
+    public static OperationModifier log2(int priority) {
+        return new OperationModifier(priority, Operations::log2);
+    }
+
+    public static OperationModifier log10(int priority) {
+        return new OperationModifier(priority, Operations::log10);
+    }
+
+    public static OperationModifier logN(int priority, Value base) {
+        return new OperationModifier(priority, Operations::logN, base);
+    }
+
+    public static OperationModifier logReversed(int priority, Value value) {
+        return new OperationModifier(priority, reverse(Operations::logN), value);
+    }
+
     public static OperationModifier percentMultiply(int priority, Value percentage, Value multiplier) {
         return new OperationModifier(priority, MappingOperationChain.builder()
                 .operation(Operations::multiply)
