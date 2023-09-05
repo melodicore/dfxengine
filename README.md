@@ -25,7 +25,7 @@ Here are the currently existing and planned modules:
 | [Handles](handles)           | Done (v1.0.3)      | Dynamic enum-like structures for map keys    |
 | [Dependencies](dependencies) | Done (v1.0.0)      | Data structure dependencies and invalidation |
 | [Math API](math-api)         | Under construction | Interfaces for the Math module               |
-| [Math](math)                 | Under construction | Number manipulation and presentation         |
+| [Math](math)                 | Under construction | Seamless number wrapping and manipulation    |
 | Entities                     | Not yet started    | Data-oriented entity system                  |
 | Text                         | Not yet started    | Textual presentation for other modules       |
 | Serialization                | Not yet started    | Serialization for other modules              |

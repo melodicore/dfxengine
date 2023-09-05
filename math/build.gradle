@@ -31,7 +31,7 @@ publishing {
         mavenJava(MavenPublication) {
             pom {
                 name = "DFXEngine Math"
-                description = "Systems for number manipulation and presentation"
+                description = "Seamless number wrapping and manipulation"
             }
         }
     }
