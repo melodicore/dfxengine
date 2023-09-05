@@ -10,12 +10,12 @@ import java.math.BigInteger;
 import java.math.MathContext;
 
 import static me.datafox.dfxengine.math.api.NumeralType.BIG_DEC;
-import static me.datafox.dfxengine.math.utils.RangeUtils.*;
+import static me.datafox.dfxengine.math.utils.Range.*;
 
 /**
  * @author datafox
  */
-public class OperationUtils {
+public class Operations {
     private static MathContext CONTEXT = MathContext.DECIMAL128;
 
     public static MathContext getContext() {
@@ -50,32 +50,28 @@ public class OperationUtils {
         throw new RuntimeException("this should never happen");
     }
 
-    public static Numeral sub(Numeral minuend, Numeral subtrahend) {
+    public static Numeral subtract(Numeral minuend, Numeral subtrahend) {
         if(isZero(subtrahend)) {
             return minuend;
         }
         switch(getSignificantType(minuend, subtrahend)) {
             case INT:
-                return sub(minuend.intValue(), subtrahend.intValue());
+                return subtract(minuend.intValue(), subtrahend.intValue());
             case LONG:
-                return sub(minuend.longValue(), subtrahend.longValue());
+                return subtract(minuend.longValue(), subtrahend.longValue());
             case BIG_INT:
-                return sub(minuend.bigIntValue(), subtrahend.bigIntValue());
+                return subtract(minuend.bigIntValue(), subtrahend.bigIntValue());
             case FLOAT:
-                return sub(minuend.floatValue(), subtrahend.floatValue());
+                return subtract(minuend.floatValue(), subtrahend.floatValue());
             case DOUBLE:
-                return sub(minuend.doubleValue(), subtrahend.doubleValue());
+                return subtract(minuend.doubleValue(), subtrahend.doubleValue());
             case BIG_DEC:
-                return sub(minuend.bigDecValue(), subtrahend.bigDecValue());
+                return subtract(minuend.bigDecValue(), subtrahend.bigDecValue());
         }
         throw new RuntimeException("this should never happen");
     }
 
-    public static Numeral subReversed(Numeral subtrahend, Numeral minuend) {
-        return sub(minuend, subtrahend);
-    }
-
-    public static Numeral mul(Numeral multiplicand, Numeral multiplier) {
+    public static Numeral multiply(Numeral multiplicand, Numeral multiplier) {
         if(isZero(multiplicand) || isZero(multiplier)) {
             return new IntNumeral(0);
         }
@@ -87,22 +83,22 @@ public class OperationUtils {
         }
         switch(getSignificantType(multiplicand, multiplier)) {
             case INT:
-                return mul(multiplicand.intValue(), multiplier.intValue());
+                return multiply(multiplicand.intValue(), multiplier.intValue());
             case LONG:
-                return mul(multiplicand.longValue(), multiplier.longValue());
+                return multiply(multiplicand.longValue(), multiplier.longValue());
             case BIG_INT:
-                return mul(multiplicand.bigIntValue(), multiplier.bigIntValue());
+                return multiply(multiplicand.bigIntValue(), multiplier.bigIntValue());
             case FLOAT:
-                return mul(multiplicand.floatValue(), multiplier.floatValue());
+                return multiply(multiplicand.floatValue(), multiplier.floatValue());
             case DOUBLE:
-                return mul(multiplicand.doubleValue(), multiplier.doubleValue());
+                return multiply(multiplicand.doubleValue(), multiplier.doubleValue());
             case BIG_DEC:
-                return mul(multiplicand.bigDecValue(), multiplier.bigDecValue());
+                return multiply(multiplicand.bigDecValue(), multiplier.bigDecValue());
         }
         throw new RuntimeException("this should never happen");
     }
 
-    public static Numeral div(Numeral dividend, Numeral divisor) {
+    public static Numeral divide(Numeral dividend, Numeral divisor) {
         if(isZero(divisor)) {
             throw new ArithmeticException("divisor is zero");
         }
@@ -112,26 +108,22 @@ public class OperationUtils {
         NumeralType significantType = getSignificantType(dividend, divisor);
         switch(getSignificantType(dividend, divisor)) {
             case INT:
-                return div(dividend.intValue(), divisor.intValue());
+                return divide(dividend.intValue(), divisor.intValue());
             case LONG:
-                return div(dividend.longValue(), divisor.longValue());
+                return divide(dividend.longValue(), divisor.longValue());
             case BIG_INT:
-                return div(dividend.bigIntValue(), divisor.bigIntValue());
+                return divide(dividend.bigIntValue(), divisor.bigIntValue());
             case FLOAT:
-                return div(dividend.floatValue(), divisor.floatValue());
+                return divide(dividend.floatValue(), divisor.floatValue());
             case DOUBLE:
-                return div(dividend.doubleValue(), divisor.doubleValue());
+                return divide(dividend.doubleValue(), divisor.doubleValue());
             case BIG_DEC:
-                return div(dividend.bigDecValue(), divisor.bigDecValue());
+                return divide(dividend.bigDecValue(), divisor.bigDecValue());
         }
         throw new RuntimeException("this should never happen");
     }
 
-    public static Numeral divReversed(Numeral divisor, Numeral dividend) {
-        return div(dividend, divisor);
-    }
-
-    public static Numeral pow(Numeral base, Numeral exponent) {
+    public static Numeral power(Numeral base, Numeral exponent) {
         if(isZero(base)) {
             return new IntNumeral(0);
         }
@@ -143,17 +135,17 @@ public class OperationUtils {
         }
         switch(getSignificantType(base, exponent)) {
             case INT:
-                return pow(base.intValue(), exponent.intValue());
+                return power(base.intValue(), exponent.intValue());
             case LONG:
-                return pow(base.longValue(), exponent.longValue());
+                return power(base.longValue(), exponent.longValue());
             case BIG_INT:
-                return pow(base.bigIntValue(), exponent.bigIntValue());
+                return power(base.bigIntValue(), exponent.bigIntValue());
             case FLOAT:
-                return pow(base.floatValue(), exponent.floatValue());
+                return power(base.floatValue(), exponent.floatValue());
             case DOUBLE:
-                return pow(base.doubleValue(), exponent.doubleValue());
+                return power(base.doubleValue(), exponent.doubleValue());
             case BIG_DEC:
-                return pow(base.bigDecValue(), exponent.bigDecValue());
+                return power(base.bigDecValue(), exponent.bigDecValue());
         }
         throw new RuntimeException("this should never happen");
     }
@@ -216,127 +208,127 @@ public class OperationUtils {
         return new BigDecNumeral(augend.add(addend, CONTEXT));
     }
 
-    public static Numeral sub(int minuend, int subtrahend) {
+    public static Numeral subtract(int minuend, int subtrahend) {
         int result = minuend - subtrahend;
         if(((minuend ^ subtrahend) & (minuend ^ result)) < 0) {
-            return sub((long) minuend, subtrahend);
+            return subtract((long) minuend, subtrahend);
         }
         return new IntNumeral(result);
     }
 
-    public static Numeral sub(long minuend, long subtrahend) {
+    public static Numeral subtract(long minuend, long subtrahend) {
         long result = minuend - subtrahend;
         if(((minuend ^ subtrahend) & (minuend ^ result)) < 0) {
-            return sub(BigInteger.valueOf(minuend), BigInteger.valueOf(subtrahend));
+            return subtract(BigInteger.valueOf(minuend), BigInteger.valueOf(subtrahend));
         }
         return new LongNumeral(result);
     }
 
-    public static BigIntNumeral sub(BigInteger minuend, BigInteger subtrahend) {
+    public static BigIntNumeral subtract(BigInteger minuend, BigInteger subtrahend) {
         return new BigIntNumeral(minuend.subtract(subtrahend));
     }
 
-    public static Numeral sub(float minuend, float subtrahend) {
+    public static Numeral subtract(float minuend, float subtrahend) {
         float result = minuend - subtrahend;
         if(isOutOfFloatRange(result)) {
-            return sub((double) minuend, subtrahend);
+            return subtract((double) minuend, subtrahend);
         }
         return new FloatNumeral(result);
     }
 
-    public static Numeral sub(double minuend, double subtrahend) {
+    public static Numeral subtract(double minuend, double subtrahend) {
         double result = minuend - subtrahend;
         if(isOutOfDoubleRange(result)) {
-            return sub(BigDecimal.valueOf(minuend), BigDecimal.valueOf(subtrahend));
+            return subtract(BigDecimal.valueOf(minuend), BigDecimal.valueOf(subtrahend));
         }
         return new DoubleNumeral(result);
     }
 
-    public static BigDecNumeral sub(BigDecimal minuend, BigDecimal subtrahend) {
+    public static BigDecNumeral subtract(BigDecimal minuend, BigDecimal subtrahend) {
         return new BigDecNumeral(minuend.subtract(subtrahend, CONTEXT));
     }
 
-    public static Numeral mul(int multiplicand, int multiplier) {
+    public static Numeral multiply(int multiplicand, int multiplier) {
         long result = (long) multiplicand * multiplier;
         if((int) result != result) {
-            return mul((long) multiplicand, multiplier);
+            return multiply((long) multiplicand, multiplier);
         }
         return new IntNumeral((int) result);
     }
 
-    public static Numeral mul(long multiplicand, long multiplier) {
+    public static Numeral multiply(long multiplicand, long multiplier) {
         long result = multiplicand * multiplier;
         long absMultiplicand = Math.abs(multiplicand);
         long absMultiplier = Math.abs(multiplier);
         if((absMultiplicand | absMultiplier) >>> 31 != 0) {
             if (((multiplier != 0) && (result / multiplier != multiplicand)) ||
                     (multiplicand == Long.MIN_VALUE && multiplier == -1)) {
-                return mul(BigInteger.valueOf(multiplicand), BigInteger.valueOf(multiplier));
+                return multiply(BigInteger.valueOf(multiplicand), BigInteger.valueOf(multiplier));
             }
         }
         return new LongNumeral(result);
     }
 
-    public static BigIntNumeral mul(BigInteger multiplicand, BigInteger multiplier) {
+    public static BigIntNumeral multiply(BigInteger multiplicand, BigInteger multiplier) {
         return new BigIntNumeral(multiplicand.multiply(multiplier));
     }
 
-    public static Numeral mul(float multiplicand, float multiplier) {
+    public static Numeral multiply(float multiplicand, float multiplier) {
         float result = multiplicand * multiplier;
         if(isOutOfFloatRange(result)) {
-            return mul((double) multiplicand, multiplier);
+            return multiply((double) multiplicand, multiplier);
         }
         return new FloatNumeral(result);
     }
 
-    public static Numeral mul(double multiplicand, double multiplier) {
+    public static Numeral multiply(double multiplicand, double multiplier) {
         double result = multiplicand * multiplier;
         if(isOutOfDoubleRange(result)) {
-            return mul(BigDecimal.valueOf(multiplicand), BigDecimal.valueOf(multiplier));
+            return multiply(BigDecimal.valueOf(multiplicand), BigDecimal.valueOf(multiplier));
         }
         return new DoubleNumeral(result);
     }
 
-    public static BigDecNumeral mul(BigDecimal multiplicand, BigDecimal multiplier) {
+    public static BigDecNumeral multiply(BigDecimal multiplicand, BigDecimal multiplier) {
         return new BigDecNumeral(multiplicand.multiply(multiplier, CONTEXT));
     }
 
-    public static Numeral div(int dividend, int divisor) {
+    public static Numeral divide(int dividend, int divisor) {
         return new IntNumeral(dividend / divisor);
     }
 
-    public static Numeral div(long dividend, long divisor) {
+    public static Numeral divide(long dividend, long divisor) {
         return new LongNumeral(dividend / divisor);
     }
 
-    public static BigIntNumeral div(BigInteger dividend, BigInteger divisor) {
+    public static BigIntNumeral divide(BigInteger dividend, BigInteger divisor) {
         return new BigIntNumeral(dividend.divide(divisor));
     }
 
-    public static Numeral div(float dividend, float divisor) {
+    public static Numeral divide(float dividend, float divisor) {
         float result = dividend / divisor;
         if(isOutOfFloatRange(result)) {
-            return div((double) dividend, divisor);
+            return divide((double) dividend, divisor);
         }
         return new FloatNumeral(result);
     }
 
-    public static Numeral div(double dividend, double divisor) {
+    public static Numeral divide(double dividend, double divisor) {
         double result = dividend / divisor;
         if(isOutOfDoubleRange(result)) {
-            return div(BigDecimal.valueOf(dividend), BigDecimal.valueOf(divisor));
+            return divide(BigDecimal.valueOf(dividend), BigDecimal.valueOf(divisor));
         }
         return new DoubleNumeral(result);
     }
 
-    public static BigDecNumeral div(BigDecimal dividend, BigDecimal divisor) {
+    public static BigDecNumeral divide(BigDecimal dividend, BigDecimal divisor) {
         return new BigDecNumeral(dividend.divide(divisor, CONTEXT));
     }
 
-    public static Numeral pow(int base, int exponent) {
+    public static Numeral power(int base, int exponent) {
         double value = Math.pow(base, exponent);
         if(isOutOfDoubleRange(value)) {
-            return pow(BigInteger.valueOf(base), BigInteger.valueOf(exponent));
+            return power(BigInteger.valueOf(base), BigInteger.valueOf(exponent));
         }
         if(isOutOfIntRange(value)) {
             return new LongNumeral((long) value);
@@ -344,26 +336,26 @@ public class OperationUtils {
         return new IntNumeral((int) value);
     }
 
-    public static Numeral pow(long base, long exponent) {
+    public static Numeral power(long base, long exponent) {
         double value = Math.pow(base, exponent);
         if(isOutOfLongRange(value)) {
-            return pow(BigInteger.valueOf(base), BigInteger.valueOf(exponent));
+            return power(BigInteger.valueOf(base), BigInteger.valueOf(exponent));
         }
         return new LongNumeral((long) value);
     }
 
-    public static Numeral pow(BigInteger base, BigInteger exponent) {
+    public static Numeral power(BigInteger base, BigInteger exponent) {
         try {
             return new BigIntNumeral(base.pow(exponent.intValueExact()));
         } catch(ArithmeticException ignored) {
-            return pow(new BigDecimal(base), new BigDecimal(exponent));
+            return power(new BigDecimal(base), new BigDecimal(exponent));
         }
     }
 
-    public static Numeral pow(float base, float exponent) {
+    public static Numeral power(float base, float exponent) {
         double value = Math.pow(base, exponent);
         if(isOutOfDoubleRange(value)) {
-            return pow(BigDecimal.valueOf(base), BigDecimal.valueOf(exponent));
+            return power(BigDecimal.valueOf(base), BigDecimal.valueOf(exponent));
         }
         if(isOutOfFloatRange((float) value)) {
             return new DoubleNumeral(value);
@@ -371,15 +363,15 @@ public class OperationUtils {
         return new FloatNumeral((float) value);
     }
 
-    public static Numeral pow(double base, double exponent) {
+    public static Numeral power(double base, double exponent) {
         double value = Math.pow(base, exponent);
         if(isOutOfDoubleRange(value)) {
-            return pow(BigDecimal.valueOf(base), BigDecimal.valueOf(exponent));
+            return power(BigDecimal.valueOf(base), BigDecimal.valueOf(exponent));
         }
         return new DoubleNumeral(value);
     }
 
-    public static Numeral pow(BigDecimal base, BigDecimal exponent) {
+    public static Numeral power(BigDecimal base, BigDecimal exponent) {
         return new BigDecNumeral(BigDecimalMath.pow(base, exponent, CONTEXT));
     }
 

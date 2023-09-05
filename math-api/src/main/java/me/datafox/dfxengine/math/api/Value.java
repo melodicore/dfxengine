@@ -5,6 +5,7 @@ import me.datafox.dfxengine.dependencies.Dependent;
 import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.math.api.comparison.Comparison;
 import me.datafox.dfxengine.math.api.comparison.ComparisonContext;
+import me.datafox.dfxengine.math.api.modifier.Modifier;
 import me.datafox.dfxengine.math.api.operation.MathContext;
 import me.datafox.dfxengine.math.api.operation.Operation;
 import me.datafox.dfxengine.math.api.operation.SingleParameterOperation;

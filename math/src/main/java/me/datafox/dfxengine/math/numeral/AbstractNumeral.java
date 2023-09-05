@@ -3,9 +3,9 @@ package me.datafox.dfxengine.math.numeral;
 import lombok.Data;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
-import me.datafox.dfxengine.math.utils.ConversionUtils;
-import me.datafox.dfxengine.math.utils.OperationUtils;
-import me.datafox.dfxengine.math.utils.RangeUtils;
+import me.datafox.dfxengine.math.utils.Conversion;
+import me.datafox.dfxengine.math.utils.Operations;
+import me.datafox.dfxengine.math.utils.Range;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -19,7 +19,7 @@ abstract class AbstractNumeral implements Numeral {
 
     @Override
     public Numeral convert(NumeralType type) throws ArithmeticException {
-        return ConversionUtils.toNumeral(this, type);
+        return Conversion.toNumeral(this, type);
     }
 
     @Override
@@ -33,47 +33,47 @@ abstract class AbstractNumeral implements Numeral {
 
     @Override
     public Numeral convertToDecimal() {
-        return ConversionUtils.toDecimal(this);
+        return Conversion.toDecimal(this);
     }
 
     @Override
     public boolean canConvert(NumeralType type) {
-        return RangeUtils.isOutOfRange(this, type);
+        return Range.isOutOfRange(this, type);
     }
 
     @Override
     public Numeral toSmallestType() {
-        return ConversionUtils.toSmallestType(this);
+        return Conversion.toSmallestType(this);
     }
 
     @Override
     public int intValue() throws ArithmeticException {
-        return ConversionUtils.toInt(this);
+        return Conversion.toInt(this);
     }
 
     @Override
     public long longValue() throws ArithmeticException {
-        return ConversionUtils.toLong(this);
+        return Conversion.toLong(this);
     }
 
     @Override
     public BigInteger bigIntValue() {
-        return ConversionUtils.toBigInt(this);
+        return Conversion.toBigInt(this);
     }
 
     @Override
     public float floatValue() throws ArithmeticException {
-        return ConversionUtils.toFloat(this);
+        return Conversion.toFloat(this);
     }
 
     @Override
     public double doubleValue() throws ArithmeticException {
-        return ConversionUtils.toDouble(this);
+        return Conversion.toDouble(this);
     }
 
     @Override
     public BigDecimal bigDecValue() {
-        return ConversionUtils.toBigDec(this);
+        return Conversion.toBigDec(this);
     }
 
     @Override
@@ -85,7 +85,7 @@ abstract class AbstractNumeral implements Numeral {
             return false;
         }
         Numeral numeral = (Numeral) o;
-        return OperationUtils.compare(this, numeral) == 0;
+        return Operations.compare(this, numeral) == 0;
     }
 
     @Override
@@ -97,6 +97,6 @@ abstract class AbstractNumeral implements Numeral {
 
     @Override
     public int compareTo(Numeral o) {
-        return OperationUtils.compare(this, o);
+        return Operations.compare(this, o);
     }
 }

@@ -8,6 +8,7 @@ import me.datafox.dfxengine.math.api.*;
 import me.datafox.dfxengine.math.api.comparison.Comparison;
 import me.datafox.dfxengine.math.api.comparison.ComparisonContext;
 import me.datafox.dfxengine.math.api.comparison.MapComparisonContext;
+import me.datafox.dfxengine.math.api.modifier.Modifier;
 import me.datafox.dfxengine.math.api.operation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

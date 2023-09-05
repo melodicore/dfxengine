@@ -5,6 +5,7 @@ import me.datafox.dfxengine.handles.api.collection.HandleMap;
 import me.datafox.dfxengine.math.api.comparison.Comparison;
 import me.datafox.dfxengine.math.api.comparison.ComparisonContext;
 import me.datafox.dfxengine.math.api.comparison.MapComparisonContext;
+import me.datafox.dfxengine.math.api.modifier.Modifier;
 import me.datafox.dfxengine.math.api.operation.*;
 
 import java.util.Collection;

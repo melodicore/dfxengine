@@ -7,12 +7,12 @@ import me.datafox.dfxengine.math.numeral.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static me.datafox.dfxengine.math.utils.RangeUtils.*;
+import static me.datafox.dfxengine.math.utils.Range.*;
 
 /**
  * @author datafox
  */
-public class ConversionUtils {
+public class Conversion {
     public static int toInt(Numeral numeral) {
         try {
             switch(numeral.getType()) {
