@@ -1,20 +1,24 @@
-package me.datafox.dfxengine.math.value;
+package me.datafox.dfxengine.values;
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import me.datafox.dfxengine.dependencies.DependencyDependent;
 import me.datafox.dfxengine.handles.api.Handle;
-import me.datafox.dfxengine.math.api.*;
+import me.datafox.dfxengine.math.api.Numeral;
+import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.api.comparison.Comparison;
 import me.datafox.dfxengine.math.api.comparison.ComparisonContext;
-import me.datafox.dfxengine.math.api.modifier.Modifier;
 import me.datafox.dfxengine.math.api.operation.MathContext;
 import me.datafox.dfxengine.math.api.operation.Operation;
 import me.datafox.dfxengine.math.api.operation.SingleParameterOperation;
 import me.datafox.dfxengine.math.api.operation.SourceOperation;
+import me.datafox.dfxengine.math.utils.Numerals;
+import me.datafox.dfxengine.values.api.Modifier;
+import me.datafox.dfxengine.values.api.Value;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -26,7 +30,6 @@ import java.util.function.Predicate;
 public class ValueImpl extends DependencyDependent implements Value {
     private final Handle handle;
 
-    @Getter(AccessLevel.NONE)
     private final SortedSet<Modifier> modifiers;
 
     private Numeral base;
@@ -50,6 +53,11 @@ public class ValueImpl extends DependencyDependent implements Value {
         }
 
         return value;
+    }
+
+    @Override
+    public boolean isStatic() {
+        return false;
     }
 
     @Override
@@ -183,7 +191,7 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     private void calculate() {
-        Numeral[] finalValue = { value };
+        Numeral[] finalValue = {value};
         modifiers.forEach(modifier -> finalValue[0] = modifier.apply(finalValue[0]));
         value = finalValue[0];
         invalidated = false;
@@ -198,5 +206,29 @@ public class ValueImpl extends DependencyDependent implements Value {
                 .filter(Predicate.not(Predicate.isEqual(base.getType())))
                 .ifPresent(context.isIgnoreBadConversion() ? this::convertIfAllowed : this::convert);
         invalidate();
+    }
+
+    public static ValueImpl of(Handle handle, int i) {
+        return new ValueImpl(handle, Numerals.valueOf(i));
+    }
+
+    public static ValueImpl of(Handle handle, long l) {
+        return new ValueImpl(handle, Numerals.valueOf(l));
+    }
+
+    public static ValueImpl of(Handle handle, BigInteger bi) {
+        return new ValueImpl(handle, Numerals.valueOf(bi));
+    }
+
+    public static ValueImpl of(Handle handle, float f) {
+        return new ValueImpl(handle, Numerals.valueOf(f));
+    }
+
+    public static ValueImpl of(Handle handle, double d) {
+        return new ValueImpl(handle, Numerals.valueOf(d));
+    }
+
+    public static ValueImpl of(Handle handle, BigDecimal bd) {
+        return new ValueImpl(handle, Numerals.valueOf(bd));
     }
 }

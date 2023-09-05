@@ -1,20 +1,26 @@
-package me.datafox.dfxengine.math.value;
+package me.datafox.dfxengine.values;
 
 import lombok.Getter;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
-import me.datafox.dfxengine.math.api.*;
+import me.datafox.dfxengine.math.api.Numeral;
+import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.api.comparison.Comparison;
 import me.datafox.dfxengine.math.api.comparison.ComparisonContext;
 import me.datafox.dfxengine.math.api.comparison.MapComparisonContext;
-import me.datafox.dfxengine.math.api.modifier.Modifier;
 import me.datafox.dfxengine.math.api.operation.*;
+import me.datafox.dfxengine.values.api.Value;
+import me.datafox.dfxengine.values.api.ValueMap;
+import me.datafox.dfxengine.values.api.Modifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

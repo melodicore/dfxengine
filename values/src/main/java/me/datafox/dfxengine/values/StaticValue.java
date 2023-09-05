@@ -1,24 +1,25 @@
-package me.datafox.dfxengine.math.value;
+package me.datafox.dfxengine.values;
 
 import lombok.Data;
 import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
-import me.datafox.dfxengine.math.api.Value;
 import me.datafox.dfxengine.math.api.comparison.Comparison;
 import me.datafox.dfxengine.math.api.comparison.ComparisonContext;
-import me.datafox.dfxengine.math.api.modifier.Modifier;
 import me.datafox.dfxengine.math.api.operation.MathContext;
 import me.datafox.dfxengine.math.api.operation.Operation;
 import me.datafox.dfxengine.math.api.operation.SingleParameterOperation;
 import me.datafox.dfxengine.math.api.operation.SourceOperation;
-import me.datafox.dfxengine.math.utils.Conversion;
+import me.datafox.dfxengine.math.utils.Numerals;
+import me.datafox.dfxengine.values.api.Value;
+import me.datafox.dfxengine.values.api.Modifier;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -29,32 +30,37 @@ public class StaticValue implements Value {
     private final Numeral value;
 
     public StaticValue(int i) {
-        this.value = Conversion.toNumeral(i);
+        this.value = Numerals.valueOf(i);
     }
 
     public StaticValue(long l) {
-        this.value = Conversion.toNumeral(l);
+        this.value = Numerals.valueOf(l);
     }
 
     public StaticValue(BigInteger bi) {
-        this.value = Conversion.toNumeral(bi);
+        this.value = Numerals.valueOf(bi);
     }
 
     public StaticValue(float f) {
-        this.value = Conversion.toNumeral(f);
+        this.value = Numerals.valueOf(f);
     }
 
     public StaticValue(double d) {
-        this.value = Conversion.toNumeral(d);
+        this.value = Numerals.valueOf(d);
     }
 
     public StaticValue(BigDecimal bd) {
-        this.value = Conversion.toNumeral(bd);
+        this.value = Numerals.valueOf(bd);
     }
 
     @Override
     public Numeral getBase() {
         return value;
+    }
+
+    @Override
+    public boolean isStatic() {
+        return true;
     }
 
     @Override
@@ -86,47 +92,47 @@ public class StaticValue implements Value {
 
     @Override
     public void apply(SourceOperation operation, MathContext context) {
-
+        throw new UnsupportedOperationException("static value cannot be changed");
     }
 
     @Override
     public void apply(SingleParameterOperation operation, Numeral parameter, MathContext context) {
-
+        throw new UnsupportedOperationException("static value cannot be changed");
     }
 
     @Override
     public void apply(Operation operation, List<Numeral> parameters, MathContext context) {
-
+        throw new UnsupportedOperationException("static value cannot be changed");
     }
 
     @Override
     public boolean compare(Comparison comparison, Numeral other, ComparisonContext context) {
-        return false;
+        return comparison.compare(value, other);
     }
 
     @Override
     public Collection<Modifier> getModifiers() {
-        return null;
+        return Set.of();
     }
 
     @Override
     public boolean addModifier(Modifier modifier) {
-        return false;
+        throw new UnsupportedOperationException("static value cannot be modified");
     }
 
     @Override
     public boolean addModifiers(Collection<Modifier> modifiers) {
-        return false;
+        throw new UnsupportedOperationException("static value cannot be modified");
     }
 
     @Override
     public boolean removeModifier(Modifier modifier) {
-        return false;
+        throw new UnsupportedOperationException("static value cannot be modified");
     }
 
     @Override
     public boolean removeModifiers(Collection<Modifier> modifiers) {
-        return false;
+        throw new UnsupportedOperationException("static value cannot be modified");
     }
 
     @Override
@@ -146,7 +152,7 @@ public class StaticValue implements Value {
 
     @Override
     public Collection<Dependency> getDependencies() {
-        return null;
+        return Set.of();
     }
 
     @Override
@@ -156,22 +162,22 @@ public class StaticValue implements Value {
 
     @Override
     public boolean addDependency(Dependency dependency) {
-        return false;
+        throw new UnsupportedOperationException("static value cannot be modified");
     }
 
     @Override
     public boolean addDependencies(Collection<Dependency> dependencies) {
-        return false;
+        throw new UnsupportedOperationException("static value cannot be modified");
     }
 
     @Override
     public boolean removeDependency(Dependency dependency) {
-        return false;
+        throw new UnsupportedOperationException("static value cannot be modified");
     }
 
     @Override
     public boolean removeDependencies(Collection<Dependency> dependencies) {
-        return false;
+        throw new UnsupportedOperationException("static value cannot be modified");
     }
 
     @Override
@@ -196,12 +202,12 @@ public class StaticValue implements Value {
 
     @Override
     public Stream<Dependency> dependencyStream() {
-        return null;
+        return Stream.empty();
     }
 
     @Override
     public Stream<Dependency> recursiveDependencyStream() {
-        return null;
+        return Stream.empty();
     }
 
     @Override

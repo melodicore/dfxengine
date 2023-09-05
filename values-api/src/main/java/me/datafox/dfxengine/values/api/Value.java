@@ -1,11 +1,12 @@
-package me.datafox.dfxengine.math.api;
+package me.datafox.dfxengine.values.api;
 
 import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.dependencies.Dependent;
 import me.datafox.dfxengine.handles.api.Handled;
+import me.datafox.dfxengine.math.api.Numeral;
+import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.api.comparison.Comparison;
 import me.datafox.dfxengine.math.api.comparison.ComparisonContext;
-import me.datafox.dfxengine.math.api.modifier.Modifier;
 import me.datafox.dfxengine.math.api.operation.MathContext;
 import me.datafox.dfxengine.math.api.operation.Operation;
 import me.datafox.dfxengine.math.api.operation.SingleParameterOperation;
@@ -21,6 +22,8 @@ public interface Value extends Dependency, Dependent, Handled {
     Numeral getBase();
 
     Numeral getValue();
+
+    boolean isStatic();
 
     void convert(NumeralType type) throws ArithmeticException;
 

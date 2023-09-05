@@ -5,10 +5,13 @@ plugins {
     id "io.freefair.lombok" version "${lombokPluginVersion}"
 }
 
-version = "$mathVersion"
+version = "$valuesVersion"
 
 dependencies {
-    api project(":math-api")
+    api project(":math")
+    api project(":values-api")
+    api "me.datafox.dfxengine:handles:$handlesVersion"
+    implementation "me.datafox.dfxengine:utils:$utilsVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
     implementation "ch.obermuhlner:big-math:$bigMathVersion"
 
@@ -27,7 +30,7 @@ publishing {
         mavenJava(MavenPublication) {
             pom {
                 name = "DFXEngine Math"
-                description = "Seamless wrapping and manipulation of number types"
+                description = "Mutable number values and a dynamic modifier system"
             }
         }
     }

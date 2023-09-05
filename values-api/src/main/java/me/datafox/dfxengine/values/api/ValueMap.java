@@ -1,11 +1,12 @@
-package me.datafox.dfxengine.math.api;
+package me.datafox.dfxengine.values.api;
 
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
+import me.datafox.dfxengine.math.api.Numeral;
+import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.api.comparison.Comparison;
 import me.datafox.dfxengine.math.api.comparison.ComparisonContext;
 import me.datafox.dfxengine.math.api.comparison.MapComparisonContext;
-import me.datafox.dfxengine.math.api.modifier.Modifier;
 import me.datafox.dfxengine.math.api.operation.*;
 
 import java.util.Collection;

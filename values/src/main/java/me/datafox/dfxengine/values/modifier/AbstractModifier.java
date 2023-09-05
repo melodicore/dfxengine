@@ -1,13 +1,14 @@
-package me.datafox.dfxengine.math.modifier;
+package me.datafox.dfxengine.values.modifier;
 
 import lombok.Getter;
 import me.datafox.dfxengine.dependencies.DependencyDependent;
-import me.datafox.dfxengine.math.api.modifier.Modifier;
-import me.datafox.dfxengine.math.api.Value;
+import me.datafox.dfxengine.values.api.Value;
+import me.datafox.dfxengine.values.api.Modifier;
 import org.slf4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author datafox
@@ -21,7 +22,9 @@ public abstract class AbstractModifier extends DependencyDependent implements Mo
         super(logger);
         this.priority = priority;
         this.parameters = parameters;
-        parameters.forEach(val -> val.addDependency(this));
+        parameters.stream()
+                .filter(Predicate.not(Value::isStatic))
+                .forEach(val -> val.addDependency(this));
     }
 
     @Override

@@ -10,7 +10,6 @@ import java.math.BigInteger;
 import java.math.MathContext;
 
 import static me.datafox.dfxengine.math.api.NumeralType.BIG_DEC;
-import static me.datafox.dfxengine.math.utils.Conversion.toNumeral;
 import static me.datafox.dfxengine.math.utils.Range.*;
 
 /**
@@ -152,7 +151,7 @@ public class Operations {
     }
 
     public static Numeral log(Numeral numeral) {
-        if(isZero(numeral) || compare(numeral, toNumeral(0)) < 0) {
+        if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
             throw new ArithmeticException("logarithm of 0 or smaller");
         }
         switch(numeral.getType()) {
@@ -173,7 +172,7 @@ public class Operations {
     }
 
     public static Numeral log2(Numeral numeral) {
-        if(isZero(numeral) || compare(numeral, toNumeral(0)) < 0) {
+        if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
             throw new ArithmeticException("logarithm of 0 or smaller");
         }
         switch(numeral.getType()) {
@@ -194,7 +193,7 @@ public class Operations {
     }
 
     public static Numeral log10(Numeral numeral) {
-        if(isZero(numeral) || compare(numeral, toNumeral(0)) < 0) {
+        if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
             throw new ArithmeticException("logarithm of 0 or smaller");
         }
         switch(numeral.getType()) {
@@ -215,10 +214,10 @@ public class Operations {
     }
 
     public static Numeral logN(Numeral numeral, Numeral base) {
-        if(isZero(numeral) || compare(numeral, toNumeral(0)) < 0) {
+        if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
             throw new ArithmeticException("logarithm of 0 or smaller");
         }
-        if(isZero(base) || compare(base, toNumeral(0)) < 0) {
+        if(isZero(base) || compare(base, Numerals.valueOf(0)) < 0) {
             throw new ArithmeticException("logarithm base of 0 or smaller");
         }
         switch(numeral.getType()) {

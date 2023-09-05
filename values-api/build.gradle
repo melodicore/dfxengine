@@ -5,14 +5,20 @@ plugins {
     id "io.freefair.lombok" version "${lombokPluginVersion}"
 }
 
-version = "$mathApiVersion"
+version = "$valuesApiVersion"
+
+dependencies {
+    api project(":math-api")
+    api "me.datafox.dfxengine:handles-api:$handlesApiVersion"
+    api "me.datafox.dfxengine:dependencies:$dependenciesVersion"
+}
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
             pom {
                 name = "DFXEngine Math API"
-                description = "API for DFXEngine Math"
+                description = "API for DFXEngine Values"
             }
         }
     }

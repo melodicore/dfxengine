@@ -1,7 +1,7 @@
-package me.datafox.dfxengine.math.modifier;
+package me.datafox.dfxengine.values.modifier;
 
 import me.datafox.dfxengine.math.api.Numeral;
-import me.datafox.dfxengine.math.api.Value;
+import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.math.api.operation.Operation;
 import me.datafox.dfxengine.math.api.operation.SingleParameterOperation;
 import me.datafox.dfxengine.math.api.operation.SourceOperation;

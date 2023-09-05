@@ -212,36 +212,12 @@ public class Conversion {
         throw new IllegalArgumentException("unknown type");
     }
 
-    public static IntNumeral toNumeral(int i) {
-        return new IntNumeral(i);
-    }
-
-    public static LongNumeral toNumeral(long l) {
-        return new LongNumeral(l);
-    }
-
-    public static BigIntNumeral toNumeral(BigInteger bi) {
-        return new BigIntNumeral(bi);
-    }
-
-    public static FloatNumeral toNumeral(float f) {
-        return new FloatNumeral(f);
-    }
-
-    public static DoubleNumeral toNumeral(double d) {
-        return new DoubleNumeral(d);
-    }
-
-    public static BigDecNumeral toNumeral(BigDecimal bd) {
-        return new BigDecNumeral(bd);
-    }
-
     public static IntNumeral toIntNumeral(Numeral numeral) {
         if(numeral instanceof IntNumeral) {
             return (IntNumeral) numeral;
         }
 
-        return toNumeral(toInt(numeral));
+        return Numerals.valueOf(toInt(numeral));
     }
 
     public static LongNumeral toLongNumeral(Numeral numeral) {
@@ -249,7 +225,7 @@ public class Conversion {
             return (LongNumeral) numeral;
         }
 
-        return toNumeral(toLong(numeral));
+        return Numerals.valueOf(toLong(numeral));
     }
 
     public static BigIntNumeral toBigIntNumeral(Numeral numeral) {
@@ -257,7 +233,7 @@ public class Conversion {
             return (BigIntNumeral) numeral;
         }
 
-        return toNumeral(toBigInt(numeral));
+        return Numerals.valueOf(toBigInt(numeral));
     }
 
     public static FloatNumeral toFloatNumeral(Numeral numeral) {
@@ -265,7 +241,7 @@ public class Conversion {
             return (FloatNumeral) numeral;
         }
 
-        return toNumeral(toFloat(numeral));
+        return Numerals.valueOf(toFloat(numeral));
     }
 
     public static DoubleNumeral toDoubleNumeral(Numeral numeral) {
@@ -273,7 +249,7 @@ public class Conversion {
             return (DoubleNumeral) numeral;
         }
 
-        return toNumeral(toDouble(numeral));
+        return Numerals.valueOf(toDouble(numeral));
     }
 
     public static BigDecNumeral toBigDecNumeral(Numeral numeral) {
@@ -281,7 +257,7 @@ public class Conversion {
             return (BigDecNumeral) numeral;
         }
 
-        return toNumeral(toBigDec(numeral));
+        return Numerals.valueOf(toBigDec(numeral));
     }
 
     public static int toIntInRange(float f) {

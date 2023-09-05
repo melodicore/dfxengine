@@ -17,19 +17,21 @@ that are supported by Android's
 
 Here are the currently existing and planned modules:
 
-| Module                       | Status             | Description                                  |
-|------------------------------|--------------------|----------------------------------------------|
-| [Injector API](injector-api) | Done (v1.0.2)      | Annotations for the Injector module          |
-| [Injector](injector)         | Done (v1.0.5)      | A dependency injector                        |
-| [Handles API](handles-api)   | Done (v1.0.4)      | Interfaces for the Handles module            |
-| [Handles](handles)           | Done (v1.0.3)      | Dynamic enum-like structures for map keys    |
-| [Dependencies](dependencies) | Done (v1.0.0)      | Data structure dependencies and invalidation |
-| [Math API](math-api)         | Under construction | Interfaces for the Math module               |
-| [Math](math)                 | Under construction | Seamless number wrapping and manipulation    |
-| Entities                     | Not yet started    | Data-oriented entity system                  |
-| Text                         | Not yet started    | Textual presentation for other modules       |
-| Serialization                | Not yet started    | Serialization for other modules              |
-| [Utils](utils)               | Under construction | Utilities used by other modules              |
+| Module                       | Status             | Description                                         |
+|------------------------------|--------------------|-----------------------------------------------------|
+| [Injector API](injector-api) | Done (v1.0.2)      | Annotations for the Injector module                 |
+| [Injector](injector)         | Done (v1.0.5)      | A dependency injector                               |
+| [Handles API](handles-api)   | Done (v1.0.4)      | Interfaces for the Handles module                   |
+| [Handles](handles)           | Done (v1.0.3)      | Dynamic enum-like structures for map keys           |
+| [Dependencies](dependencies) | Done (v1.0.0)      | Data structure dependencies and invalidation        |
+| [Math API](math-api)         | Under construction | Interfaces for the Math module                      |
+| [Math](math)                 | Under construction | Seamless wrapping and manipulation of number types  |
+| [Values API](values-api)     | Under construction | Interfaces for the Values module                    |
+| [Values](values)             | Under construction | Mutable number values and a dynamic modifier system |
+| Entities                     | Not yet started    | Data-oriented entity system                         |
+| Text                         | Not yet started    | Textual presentation for other modules              |
+| Serialization                | Not yet started    | Serialization for other modules                     |
+| [Utils](utils)               | Under construction | Utilities used by other modules                     |
 
 There are four possible statuses for modules.
 

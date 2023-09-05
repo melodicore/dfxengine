@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.math.api.modifier;
+package me.datafox.dfxengine.values.api;
 
 import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.dependencies.Dependent;
