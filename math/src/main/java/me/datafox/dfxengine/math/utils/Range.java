@@ -147,7 +147,7 @@ public class Range {
     }
 
     public static boolean isOutOfFloatRange(double d) {
-        return d == Float.POSITIVE_INFINITY || d == Float.NEGATIVE_INFINITY;
+        return d > Float.MAX_VALUE || d < -Float.MAX_VALUE;
     }
 
     public static boolean isOutOfFloatRange(BigDecimal bd) {
@@ -180,41 +180,5 @@ public class Range {
 
     public static boolean isOutOfDoubleRange(BigDecimal bd) {
         return bd.compareTo(DEC_MAX_DOUBLE) > 0 || bd.compareTo(DEC_MIN_DOUBLE) < 0;
-    }
-
-    public static boolean isZero(Numeral numeral) {
-        switch(numeral.getType()) {
-            case INT:
-                return numeral.intValue() == 0;
-            case LONG:
-                return numeral.longValue() == 0L;
-            case BIG_INT:
-                return numeral.bigIntValue().equals(BigInteger.ZERO);
-            case FLOAT:
-                return numeral.floatValue() == 0f;
-            case DOUBLE:
-                return numeral.doubleValue() == 0d;
-            case BIG_DEC:
-                return numeral.bigDecValue().equals(BigDecimal.ZERO);
-        }
-        throw new IllegalArgumentException("unknown type");
-    }
-
-    public static boolean isOne(Numeral numeral) {
-        switch(numeral.getType()) {
-            case INT:
-                return numeral.intValue() == 1;
-            case LONG:
-                return numeral.longValue() == 1L;
-            case BIG_INT:
-                return numeral.bigIntValue().equals(BigInteger.ONE);
-            case FLOAT:
-                return numeral.floatValue() == 1f;
-            case DOUBLE:
-                return numeral.doubleValue() == 1d;
-            case BIG_DEC:
-                return numeral.bigDecValue().equals(BigDecimal.ONE);
-        }
-        throw new IllegalArgumentException("unknown type");
     }
 }

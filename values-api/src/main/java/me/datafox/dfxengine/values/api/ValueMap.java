@@ -4,10 +4,10 @@ import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
-import me.datafox.dfxengine.math.api.comparison.Comparison;
-import me.datafox.dfxengine.math.api.comparison.ComparisonContext;
-import me.datafox.dfxengine.math.api.comparison.MapComparisonContext;
-import me.datafox.dfxengine.math.api.operation.*;
+import me.datafox.dfxengine.values.api.comparison.Comparison;
+import me.datafox.dfxengine.values.api.comparison.ComparisonContext;
+import me.datafox.dfxengine.values.api.comparison.MapComparisonContext;
+import me.datafox.dfxengine.values.api.operation.*;
 
 import java.util.Collection;
 import java.util.List;

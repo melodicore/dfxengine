@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.math.api.operation;
+package me.datafox.dfxengine.values.api.operation;
 
 import me.datafox.dfxengine.math.api.Numeral;
 

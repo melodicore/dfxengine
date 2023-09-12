@@ -2,9 +2,9 @@ package me.datafox.dfxengine.values.modifier;
 
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.values.api.Value;
-import me.datafox.dfxengine.math.api.operation.Operation;
-import me.datafox.dfxengine.math.api.operation.SingleParameterOperation;
-import me.datafox.dfxengine.math.api.operation.SourceOperation;
+import me.datafox.dfxengine.values.api.operation.Operation;
+import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
+import me.datafox.dfxengine.values.api.operation.SourceOperation;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * @author datafox
  */
-public final class OperationModifier extends AbstractModifier {
+public class OperationModifier extends AbstractModifier {
     private final Operation operation;
 
     public OperationModifier(int priority, SourceOperation operation) {

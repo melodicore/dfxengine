@@ -4,11 +4,12 @@ import lombok.Data;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.utils.Conversion;
-import me.datafox.dfxengine.math.utils.Operations;
 import me.datafox.dfxengine.math.utils.Range;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import static me.datafox.dfxengine.math.utils.Numerals.compare;
 
 /**
  * @author datafox
@@ -85,7 +86,7 @@ abstract class AbstractNumeral implements Numeral {
             return false;
         }
         Numeral numeral = (Numeral) o;
-        return Operations.compare(this, numeral) == 0;
+        return compare(this, numeral) == 0;
     }
 
     @Override
@@ -97,6 +98,6 @@ abstract class AbstractNumeral implements Numeral {
 
     @Override
     public int compareTo(Numeral o) {
-        return Operations.compare(this, o);
+        return compare(this, o);
     }
 }

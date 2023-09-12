@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.math.api.comparison;
+package me.datafox.dfxengine.values.api.comparison;
 
 import me.datafox.dfxengine.math.api.Numeral;
 

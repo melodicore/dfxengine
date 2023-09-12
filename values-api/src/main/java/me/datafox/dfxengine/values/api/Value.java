@@ -5,12 +5,12 @@ import me.datafox.dfxengine.dependencies.Dependent;
 import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
-import me.datafox.dfxengine.math.api.comparison.Comparison;
-import me.datafox.dfxengine.math.api.comparison.ComparisonContext;
-import me.datafox.dfxengine.math.api.operation.MathContext;
-import me.datafox.dfxengine.math.api.operation.Operation;
-import me.datafox.dfxengine.math.api.operation.SingleParameterOperation;
-import me.datafox.dfxengine.math.api.operation.SourceOperation;
+import me.datafox.dfxengine.values.api.comparison.Comparison;
+import me.datafox.dfxengine.values.api.comparison.ComparisonContext;
+import me.datafox.dfxengine.values.api.operation.MathContext;
+import me.datafox.dfxengine.values.api.operation.Operation;
+import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
+import me.datafox.dfxengine.values.api.operation.SourceOperation;
 
 import java.util.Collection;
 import java.util.List;

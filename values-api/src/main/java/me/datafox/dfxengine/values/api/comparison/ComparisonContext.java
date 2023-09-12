@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.math.api.comparison;
+package me.datafox.dfxengine.values.api.comparison;
 
 import lombok.Builder;
 import lombok.Data;

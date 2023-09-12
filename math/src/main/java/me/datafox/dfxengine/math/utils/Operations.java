@@ -3,13 +3,14 @@ package me.datafox.dfxengine.math.utils;
 import ch.obermuhlner.math.big.BigDecimalMath;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
-import me.datafox.dfxengine.math.numeral.*;
+import me.datafox.dfxengine.math.numeral.BigDecNumeral;
+import me.datafox.dfxengine.math.numeral.BigIntNumeral;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 
-import static me.datafox.dfxengine.math.api.NumeralType.BIG_DEC;
+import static me.datafox.dfxengine.math.utils.Numerals.*;
 import static me.datafox.dfxengine.math.utils.Range.*;
 
 /**
@@ -73,7 +74,7 @@ public class Operations {
 
     public static Numeral multiply(Numeral multiplicand, Numeral multiplier) {
         if(isZero(multiplicand) || isZero(multiplier)) {
-            return new IntNumeral(0);
+            return valueOf(0);
         }
         if(isOne(multiplicand)) {
             return multiplier;
@@ -102,6 +103,9 @@ public class Operations {
         if(isZero(divisor)) {
             throw new ArithmeticException("divisor is zero");
         }
+        if(isZero(divisor)) {
+            return Numerals.valueOf(0);
+        }
         if(isOne(divisor)) {
             return dividend;
         }
@@ -125,10 +129,10 @@ public class Operations {
 
     public static Numeral power(Numeral base, Numeral exponent) {
         if(isZero(base)) {
-            return new IntNumeral(0);
+            return valueOf(0);
         }
         if(isOne(base) || isZero(exponent)) {
-            return new IntNumeral(1);
+            return valueOf(1);
         }
         if(isOne(exponent)) {
             return base;
@@ -220,6 +224,9 @@ public class Operations {
         if(isZero(base) || compare(base, Numerals.valueOf(0)) < 0) {
             throw new ArithmeticException("logarithm base of 0 or smaller");
         }
+        if(isOne(base)) {
+            throw new ArithmeticException("logarithm base of 1");
+        }
         switch(numeral.getType()) {
             case INT:
                 return(logN(numeral.intValue(), base.intValue()));
@@ -237,30 +244,14 @@ public class Operations {
         throw new IllegalArgumentException("unknown type");
     }
 
-    public static int compare(Numeral numeral, Numeral other) {
-        switch(getSignificantType(numeral, other)) {
-            case INT:
-                return Integer.compare(numeral.intValue(), other.intValue());
-            case LONG:
-                return Long.compare(numeral.longValue(), other.longValue());
-            case BIG_INT:
-                return numeral.bigIntValue().compareTo(other.bigIntValue());
-            case FLOAT:
-                return Float.compare(numeral.floatValue(), other.floatValue());
-            case DOUBLE:
-                return Double.compare(numeral.doubleValue(), other.doubleValue());
-            case BIG_DEC:
-                return numeral.bigDecValue().compareTo(other.bigDecValue());
-        }
-        throw new IllegalArgumentException("unknown type");
-    }
+    
 
     public static Numeral add(int augend, int addend) {
         int result = augend + addend;
         if(((augend ^ result) & (addend ^ result)) < 0) {
             return add((long) augend, addend);
         }
-        return new IntNumeral(result);
+        return valueOf(result);
     }
 
     public static Numeral add(long augend, long addend) {
@@ -268,11 +259,11 @@ public class Operations {
         if(((augend ^ result) & (addend ^ result)) < 0) {
             return add(BigInteger.valueOf(augend), BigInteger.valueOf(addend));
         }
-        return new LongNumeral(result);
+        return valueOf(result);
     }
 
     public static BigIntNumeral add(BigInteger augend, BigInteger addend) {
-        return new BigIntNumeral(augend.add(addend));
+        return valueOf(augend.add(addend));
     }
 
     public static Numeral add(float augend, float addend) {
@@ -280,7 +271,7 @@ public class Operations {
         if(isOutOfFloatRange(result)) {
             return add((double) augend, addend);
         }
-        return new FloatNumeral(result);
+        return valueOf(result);
     }
 
     public static Numeral add(double augend, double addend) {
@@ -288,11 +279,11 @@ public class Operations {
         if(isOutOfDoubleRange(result)) {
             return add(BigDecimal.valueOf(augend), BigDecimal.valueOf(addend));
         }
-        return new DoubleNumeral(result);
+        return valueOf(result);
     }
 
     public static BigDecNumeral add(BigDecimal augend, BigDecimal addend) {
-        return new BigDecNumeral(augend.add(addend, CONTEXT));
+        return valueOf(augend.add(addend, CONTEXT));
     }
 
     public static Numeral subtract(int minuend, int subtrahend) {
@@ -300,7 +291,7 @@ public class Operations {
         if(((minuend ^ subtrahend) & (minuend ^ result)) < 0) {
             return subtract((long) minuend, subtrahend);
         }
-        return new IntNumeral(result);
+        return valueOf(result);
     }
 
     public static Numeral subtract(long minuend, long subtrahend) {
@@ -308,11 +299,11 @@ public class Operations {
         if(((minuend ^ subtrahend) & (minuend ^ result)) < 0) {
             return subtract(BigInteger.valueOf(minuend), BigInteger.valueOf(subtrahend));
         }
-        return new LongNumeral(result);
+        return valueOf(result);
     }
 
     public static BigIntNumeral subtract(BigInteger minuend, BigInteger subtrahend) {
-        return new BigIntNumeral(minuend.subtract(subtrahend));
+        return valueOf(minuend.subtract(subtrahend));
     }
 
     public static Numeral subtract(float minuend, float subtrahend) {
@@ -320,7 +311,7 @@ public class Operations {
         if(isOutOfFloatRange(result)) {
             return subtract((double) minuend, subtrahend);
         }
-        return new FloatNumeral(result);
+        return valueOf(result);
     }
 
     public static Numeral subtract(double minuend, double subtrahend) {
@@ -328,11 +319,11 @@ public class Operations {
         if(isOutOfDoubleRange(result)) {
             return subtract(BigDecimal.valueOf(minuend), BigDecimal.valueOf(subtrahend));
         }
-        return new DoubleNumeral(result);
+        return valueOf(result);
     }
 
     public static BigDecNumeral subtract(BigDecimal minuend, BigDecimal subtrahend) {
-        return new BigDecNumeral(minuend.subtract(subtrahend, CONTEXT));
+        return valueOf(minuend.subtract(subtrahend, CONTEXT));
     }
 
     public static Numeral multiply(int multiplicand, int multiplier) {
@@ -340,7 +331,7 @@ public class Operations {
         if((int) result != result) {
             return multiply((long) multiplicand, multiplier);
         }
-        return new IntNumeral((int) result);
+        return valueOf((int) result);
     }
 
     public static Numeral multiply(long multiplicand, long multiplier) {
@@ -353,11 +344,11 @@ public class Operations {
                 return multiply(BigInteger.valueOf(multiplicand), BigInteger.valueOf(multiplier));
             }
         }
-        return new LongNumeral(result);
+        return valueOf(result);
     }
 
     public static BigIntNumeral multiply(BigInteger multiplicand, BigInteger multiplier) {
-        return new BigIntNumeral(multiplicand.multiply(multiplier));
+        return valueOf(multiplicand.multiply(multiplier));
     }
 
     public static Numeral multiply(float multiplicand, float multiplier) {
@@ -365,7 +356,7 @@ public class Operations {
         if(isOutOfFloatRange(result)) {
             return multiply((double) multiplicand, multiplier);
         }
-        return new FloatNumeral(result);
+        return valueOf(result);
     }
 
     public static Numeral multiply(double multiplicand, double multiplier) {
@@ -373,23 +364,23 @@ public class Operations {
         if(isOutOfDoubleRange(result)) {
             return multiply(BigDecimal.valueOf(multiplicand), BigDecimal.valueOf(multiplier));
         }
-        return new DoubleNumeral(result);
+        return valueOf(result);
     }
 
     public static BigDecNumeral multiply(BigDecimal multiplicand, BigDecimal multiplier) {
-        return new BigDecNumeral(multiplicand.multiply(multiplier, CONTEXT));
+        return valueOf(multiplicand.multiply(multiplier, CONTEXT));
     }
 
     public static Numeral divide(int dividend, int divisor) {
-        return new IntNumeral(dividend / divisor);
+        return valueOf(dividend / divisor);
     }
 
     public static Numeral divide(long dividend, long divisor) {
-        return new LongNumeral(dividend / divisor);
+        return valueOf(dividend / divisor);
     }
 
     public static BigIntNumeral divide(BigInteger dividend, BigInteger divisor) {
-        return new BigIntNumeral(dividend.divide(divisor));
+        return valueOf(dividend.divide(divisor));
     }
 
     public static Numeral divide(float dividend, float divisor) {
@@ -397,7 +388,7 @@ public class Operations {
         if(isOutOfFloatRange(result)) {
             return divide((double) dividend, divisor);
         }
-        return new FloatNumeral(result);
+        return valueOf(result);
     }
 
     public static Numeral divide(double dividend, double divisor) {
@@ -405,22 +396,22 @@ public class Operations {
         if(isOutOfDoubleRange(result)) {
             return divide(BigDecimal.valueOf(dividend), BigDecimal.valueOf(divisor));
         }
-        return new DoubleNumeral(result);
+        return valueOf(result);
     }
 
     public static BigDecNumeral divide(BigDecimal dividend, BigDecimal divisor) {
-        return new BigDecNumeral(dividend.divide(divisor, CONTEXT));
+        return valueOf(dividend.divide(divisor, CONTEXT));
     }
 
     public static Numeral power(int base, int exponent) {
         double value = Math.pow(base, exponent);
-        if(isOutOfDoubleRange(value)) {
+        if(isOutOfLongRange(value)) {
             return power(BigInteger.valueOf(base), BigInteger.valueOf(exponent));
         }
         if(isOutOfIntRange(value)) {
-            return new LongNumeral((long) value);
+            return valueOf((long) value);
         }
-        return new IntNumeral((int) value);
+        return valueOf((int) value);
     }
 
     public static Numeral power(long base, long exponent) {
@@ -428,15 +419,14 @@ public class Operations {
         if(isOutOfLongRange(value)) {
             return power(BigInteger.valueOf(base), BigInteger.valueOf(exponent));
         }
-        return new LongNumeral((long) value);
+        return valueOf((long) value);
     }
 
     public static Numeral power(BigInteger base, BigInteger exponent) {
-        try {
-            return new BigIntNumeral(base.pow(exponent.intValueExact()));
-        } catch(ArithmeticException ignored) {
-            return power(new BigDecimal(base), new BigDecimal(exponent));
+        if(isOutOfIntRange(exponent)) {
+            return valueOf(BigDecimalMath.pow(new BigDecimal(base), new BigDecimal(exponent), CONTEXT).toBigInteger());
         }
+        return valueOf(base.pow(exponent.intValue()));
     }
 
     public static Numeral power(float base, float exponent) {
@@ -444,10 +434,10 @@ public class Operations {
         if(isOutOfDoubleRange(value)) {
             return power(BigDecimal.valueOf(base), BigDecimal.valueOf(exponent));
         }
-        if(isOutOfFloatRange((float) value)) {
-            return new DoubleNumeral(value);
+        if(isOutOfFloatRange(value)) {
+            return valueOf(value);
         }
-        return new FloatNumeral((float) value);
+        return valueOf((float) value);
     }
 
     public static Numeral power(double base, double exponent) {
@@ -455,177 +445,120 @@ public class Operations {
         if(isOutOfDoubleRange(value)) {
             return power(BigDecimal.valueOf(base), BigDecimal.valueOf(exponent));
         }
-        return new DoubleNumeral(value);
+        return valueOf(value);
     }
 
     public static Numeral power(BigDecimal base, BigDecimal exponent) {
-        return new BigDecNumeral(BigDecimalMath.pow(base, exponent, CONTEXT));
+        return valueOf(BigDecimalMath.pow(base, exponent, CONTEXT));
     }
 
-    private static Numeral log(int value) {
-        return new IntNumeral((int) Math.log(value));
+    public static Numeral log(int value) {
+        return valueOf((int) Math.log(value));
     }
 
-    private static Numeral log(long value) {
-        return new LongNumeral((long) Math.log(value));
+    public static Numeral log(long value) {
+        return valueOf((long) Math.log(value));
     }
 
-    private static Numeral log(BigInteger value) {
-        return new BigIntNumeral(BigDecimalMath.log(new BigDecimal(value), CONTEXT).toBigInteger());
+    public static Numeral log(BigInteger value) {
+        return valueOf(BigDecimalMath.log(new BigDecimal(value), CONTEXT).toBigInteger());
     }
 
-    private static Numeral log(float value) {
-        return new FloatNumeral((float) Math.log(value));
+    public static Numeral log(float value) {
+        return valueOf((float) Math.log(value));
     }
 
-    private static Numeral log(double value) {
-        return new DoubleNumeral(Math.log(value));
+    public static Numeral log(double value) {
+        return valueOf(Math.log(value));
     }
 
-    private static Numeral log(BigDecimal value) {
-        return new BigDecNumeral(BigDecimalMath.log(value, CONTEXT));
+    public static Numeral log(BigDecimal value) {
+        return valueOf(BigDecimalMath.log(value, CONTEXT));
     }
 
-    private static Numeral log2(int value) {
-        return new IntNumeral((int) (Math.log(value) / Math.log(2)));
+    public static Numeral log2(int value) {
+        return valueOf((int) (Math.log(value) / Math.log(2)));
     }
 
-    private static Numeral log2(long value) {
-        return new LongNumeral((long) (Math.log(value) / Math.log(2)));
+    public static Numeral log2(long value) {
+        return valueOf((long) (Math.log(value) / Math.log(2)));
     }
 
-    private static Numeral log2(BigInteger value) {
-        return new BigIntNumeral(BigDecimalMath.log2(new BigDecimal(value), CONTEXT).toBigInteger());
+    public static Numeral log2(BigInteger value) {
+        return valueOf(BigDecimalMath.log2(new BigDecimal(value), CONTEXT).toBigInteger());
     }
     
-    private static Numeral log2(float value) {
-        return new FloatNumeral((float) (Math.log(value) / Math.log(2)));
+    public static Numeral log2(float value) {
+        return valueOf((float) (Math.log(value) / Math.log(2)));
     }
     
-    private static Numeral log2(double value) {
-        return new DoubleNumeral(Math.log(value) / Math.log(2));
+    public static Numeral log2(double value) {
+        return valueOf(Math.log(value) / Math.log(2));
     }
     
-    private static Numeral log2(BigDecimal value) {
-        return new BigDecNumeral(BigDecimalMath.log2(value, CONTEXT));
+    public static Numeral log2(BigDecimal value) {
+        return valueOf(BigDecimalMath.log2(value, CONTEXT));
     }
 
-    private static Numeral log10(int value) {
-        return new IntNumeral((int) Math.log10(value));
+    public static Numeral log10(int value) {
+        return valueOf((int) Math.log10(value));
     }
 
-    private static Numeral log10(long value) {
-        return new LongNumeral((long) Math.log10(value));
+    public static Numeral log10(long value) {
+        return valueOf((long) Math.log10(value));
     }
 
-    private static Numeral log10(BigInteger value) {
-        return new BigIntNumeral(BigDecimalMath.log10(new BigDecimal(value), CONTEXT).toBigInteger());
+    public static Numeral log10(BigInteger value) {
+        return valueOf(BigDecimalMath.log10(new BigDecimal(value), CONTEXT).toBigInteger());
     }
 
-    private static Numeral log10(float value) {
-        return new FloatNumeral((float) Math.log10(value));
+    public static Numeral log10(float value) {
+        return valueOf((float) Math.log10(value));
     }
 
-    private static Numeral log10(double value) {
-        return new DoubleNumeral(Math.log10(value));
+    public static Numeral log10(double value) {
+        return valueOf(Math.log10(value));
     }
 
-    private static Numeral log10(BigDecimal value) {
-        return new BigDecNumeral(BigDecimalMath.log10(value, CONTEXT));
+    public static Numeral log10(BigDecimal value) {
+        return valueOf(BigDecimalMath.log10(value, CONTEXT));
     }
 
-    private static Numeral logN(int value, int base) {
-        return new IntNumeral((int) (Math.log(value) / Math.log(base)));
+    public static Numeral logN(int value, int base) {
+        return valueOf((int) (Math.log(value) / Math.log(base)));
     }
 
-    private static Numeral logN(long value, long base) {
-        return new LongNumeral((long) (Math.log(value) / Math.log(base)));
+    public static Numeral logN(long value, long base) {
+        return valueOf((long) (Math.log(value) / Math.log(base)));
     }
 
-    private static Numeral logN(BigInteger value, BigInteger base) {
-        return new BigIntNumeral(BigDecimalMath.log(new BigDecimal(value), CONTEXT).divide(
+    public static Numeral logN(BigInteger value, BigInteger base) {
+        return valueOf(BigDecimalMath.log(new BigDecimal(value), CONTEXT).divide(
                 BigDecimalMath.log(new BigDecimal(base), CONTEXT), CONTEXT)
                 .toBigInteger());
     }
 
-    private static Numeral logN(float value, float base) {
-        return new FloatNumeral((float) (Math.log(value) / Math.log(base)));
+    public static Numeral logN(float value, float base) {
+        double result = (Math.log(value) / Math.log(base));
+        if(isOutOfDoubleRange(result)) {
+            return logN(BigDecimal.valueOf(value), BigDecimal.valueOf(base));
+        }
+        if(isOutOfFloatRange(result)) {
+            return valueOf(result);
+        }
+        return valueOf((float) result);
     }
 
-    private static Numeral logN(double value, double base) {
-        return new DoubleNumeral(Math.log(value) / Math.log(base));
+    public static Numeral logN(double value, double base) {
+        double result = (Math.log(value) / Math.log(base));
+        if(isOutOfDoubleRange(result)) {
+            return logN(BigDecimal.valueOf(value), BigDecimal.valueOf(base));
+        }
+        return valueOf(result);
     }
 
-    private static Numeral logN(BigDecimal value, BigDecimal base) {
-        return new BigDecNumeral(BigDecimalMath.log(value, CONTEXT).divide(
+    public static Numeral logN(BigDecimal value, BigDecimal base) {
+        return valueOf(BigDecimalMath.log(value, CONTEXT).divide(
                 BigDecimalMath.log(base, CONTEXT), CONTEXT));
-    }
-
-    public static NumeralType getSignificantType(Numeral numeral1, Numeral numeral2) {
-        if(numeral1.getType().equals(numeral2.getType())) {
-            return numeral1.getType();
-        }
-
-        return getSignificantType(new Numeral[] { numeral1, numeral2 });
-    }
-
-    public static NumeralType getSignificantType(Numeral ... numerals) {
-        if(numerals.length == 0) {
-            throw new IllegalArgumentException("empty array");
-        }
-
-        NumeralType significantType = numerals[0].getType();
-
-        boolean first = true;
-
-        for(Numeral numeral : numerals) {
-            if(first) {
-                first = false;
-                continue;
-            }
-
-            switch(numeral.getType()) {
-                case LONG:
-                    if(significantType.equals(NumeralType.INT)) {
-                        significantType = NumeralType.LONG;
-                    }
-                    break;
-                case BIG_INT:
-                    switch(significantType) {
-                        case INT:
-                        case LONG:
-                            significantType = NumeralType.BIG_INT;
-                            break;
-                        case FLOAT:
-                        case DOUBLE:
-                            return BIG_DEC;
-                    }
-                    break;
-                case FLOAT:
-                    switch(significantType) {
-                        case INT:
-                        case LONG:
-                            significantType = NumeralType.FLOAT;
-                            break;
-                        case BIG_INT:
-                            return BIG_DEC;
-                    }
-                    break;
-                case DOUBLE:
-                    switch(significantType) {
-                        case INT:
-                        case LONG:
-                        case FLOAT:
-                            significantType = NumeralType.DOUBLE;
-                            break;
-                        case BIG_INT:
-                            return BIG_DEC;
-                    }
-                    break;
-                case BIG_DEC:
-                    return BIG_DEC;
-            }
-        }
-        return significantType;
     }
 }

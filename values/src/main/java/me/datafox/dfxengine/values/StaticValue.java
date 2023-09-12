@@ -5,12 +5,12 @@ import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
-import me.datafox.dfxengine.math.api.comparison.Comparison;
-import me.datafox.dfxengine.math.api.comparison.ComparisonContext;
-import me.datafox.dfxengine.math.api.operation.MathContext;
-import me.datafox.dfxengine.math.api.operation.Operation;
-import me.datafox.dfxengine.math.api.operation.SingleParameterOperation;
-import me.datafox.dfxengine.math.api.operation.SourceOperation;
+import me.datafox.dfxengine.values.api.comparison.Comparison;
+import me.datafox.dfxengine.values.api.comparison.ComparisonContext;
+import me.datafox.dfxengine.values.api.operation.MathContext;
+import me.datafox.dfxengine.values.api.operation.Operation;
+import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
+import me.datafox.dfxengine.values.api.operation.SourceOperation;
 import me.datafox.dfxengine.math.utils.Numerals;
 import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.api.Modifier;
@@ -29,28 +29,32 @@ import java.util.stream.Stream;
 public class StaticValue implements Value {
     private final Numeral value;
 
+    protected StaticValue(Numeral value) {
+        this.value = value;
+    }
+
     public StaticValue(int i) {
-        this.value = Numerals.valueOf(i);
+        this(Numerals.valueOf(i));
     }
 
     public StaticValue(long l) {
-        this.value = Numerals.valueOf(l);
+        this(Numerals.valueOf(l));
     }
 
     public StaticValue(BigInteger bi) {
-        this.value = Numerals.valueOf(bi);
+        this(Numerals.valueOf(bi));
     }
 
     public StaticValue(float f) {
-        this.value = Numerals.valueOf(f);
+        this(Numerals.valueOf(f));
     }
 
     public StaticValue(double d) {
-        this.value = Numerals.valueOf(d);
+        this(Numerals.valueOf(d));
     }
 
     public StaticValue(BigDecimal bd) {
-        this.value = Numerals.valueOf(bd);
+        this(Numerals.valueOf(bd));
     }
 
     @Override
@@ -78,12 +82,11 @@ public class StaticValue implements Value {
 
     @Override
     public boolean canConvert(NumeralType type) {
-        throw new UnsupportedOperationException("static value cannot be changed");
+        return false;
     }
 
     @Override
-    public void toSmallestType() {
-        throw new UnsupportedOperationException("static value cannot be changed");}
+    public void toSmallestType() {}
 
     @Override
     public void set(Numeral value, MathContext context) {

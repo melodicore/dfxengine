@@ -1,10 +1,10 @@
-package me.datafox.dfxengine.math.operation;
+package me.datafox.dfxengine.values.operation;
 
 import lombok.Getter;
 import me.datafox.dfxengine.math.api.Numeral;
-import me.datafox.dfxengine.math.api.operation.Operation;
-import me.datafox.dfxengine.math.api.operation.SingleParameterOperation;
-import me.datafox.dfxengine.math.api.operation.SourceOperation;
+import me.datafox.dfxengine.values.api.operation.Operation;
+import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
+import me.datafox.dfxengine.values.api.operation.SourceOperation;
 
 import java.util.ArrayList;
 import java.util.Collection;
