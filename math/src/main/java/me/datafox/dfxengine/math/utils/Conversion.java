@@ -17,15 +17,15 @@ public class Conversion {
         try {
             switch(numeral.getType()) {
                 case INT:
-                    return (int) numeral.getNumber();
+                    return numeral.getNumber().intValue();
                 case LONG:
-                    return Math.toIntExact((long) numeral.getNumber());
+                    return Math.toIntExact(numeral.getNumber().longValue());
                 case BIG_INT:
                     return ((BigInteger) numeral.getNumber()).intValueExact();
                 case FLOAT:
-                    return toIntInRange((float) numeral.getNumber());
+                    return toIntInRange(numeral.getNumber().floatValue());
                 case DOUBLE:
-                    return toIntInRange((double) numeral.getNumber());
+                    return toIntInRange(numeral.getNumber().doubleValue());
                 case BIG_DEC:
                     return toIntInRange((BigDecimal) numeral.getNumber());
             }
@@ -40,13 +40,13 @@ public class Conversion {
             switch(numeral.getType()) {
                 case INT:
                 case LONG:
-                    return (long) numeral.getNumber();
+                    return numeral.getNumber().longValue();
                 case BIG_INT:
                     return ((BigInteger) numeral.getNumber()).longValueExact();
                 case FLOAT:
-                    return toLongInRange((float) numeral.getNumber());
+                    return toLongInRange(numeral.getNumber().floatValue());
                 case DOUBLE:
-                    return toLongInRange((double) numeral.getNumber());
+                    return toLongInRange(numeral.getNumber().doubleValue());
                 case BIG_DEC:
                     return toLongInRange((BigDecimal) numeral.getNumber());
             }
@@ -60,15 +60,15 @@ public class Conversion {
         try {
             switch(numeral.getType()) {
                 case INT:
-                    return BigInteger.valueOf((int) numeral.getNumber());
+                    return BigInteger.valueOf(numeral.getNumber().intValue());
                 case LONG:
-                    return BigInteger.valueOf((long) numeral.getNumber());
+                    return BigInteger.valueOf(numeral.getNumber().longValue());
                 case BIG_INT:
                     return (BigInteger) numeral.getNumber();
                 case FLOAT:
-                    return BigDecimal.valueOf((float) numeral.getNumber()).toBigInteger();
+                    return BigDecimal.valueOf(numeral.getNumber().floatValue()).toBigInteger();
                 case DOUBLE:
-                    return BigDecimal.valueOf((double) numeral.getNumber()).toBigInteger();
+                    return BigDecimal.valueOf(numeral.getNumber().doubleValue()).toBigInteger();
                 case BIG_DEC:
                     return ((BigDecimal) numeral.getNumber()).toBigInteger();
             }
@@ -84,11 +84,11 @@ public class Conversion {
                 case INT:
                 case LONG:
                 case FLOAT:
-                    return (float) numeral.getNumber();
+                    return numeral.getNumber().floatValue();
                 case BIG_INT:
                     return toFloatInRange((BigInteger) numeral.getNumber());
                 case DOUBLE:
-                    return toFloatInRange((double) numeral.getNumber());
+                    return toFloatInRange(numeral.getNumber().doubleValue());
                 case BIG_DEC:
                     return toFloatInRange((BigDecimal) numeral.getNumber());
             }
@@ -105,7 +105,7 @@ public class Conversion {
                 case LONG:
                 case FLOAT:
                 case DOUBLE:
-                    return (double) numeral.getNumber();
+                    return numeral.getNumber().doubleValue();
                 case BIG_INT:
                     return toDoubleInRange((BigInteger) numeral.getNumber());
                 case BIG_DEC:
@@ -121,15 +121,13 @@ public class Conversion {
         try {
             switch(numeral.getType()) {
                 case INT:
-                    return BigDecimal.valueOf((int) numeral.getNumber());
                 case LONG:
-                    return BigDecimal.valueOf((long) numeral.getNumber());
-                case FLOAT:
-                    return BigDecimal.valueOf((float) numeral.getNumber());
-                case DOUBLE:
-                    return BigDecimal.valueOf((double) numeral.getNumber());
+                    return BigDecimal.valueOf(numeral.getNumber().longValue());
                 case BIG_INT:
                     return new BigDecimal((BigInteger) numeral.getNumber());
+                case FLOAT:
+                case DOUBLE:
+                    return BigDecimal.valueOf(numeral.getNumber().doubleValue());
                 case BIG_DEC:
                     return (BigDecimal) numeral.getNumber();
             }
@@ -320,7 +318,7 @@ public class Conversion {
         throw new ArithmeticException("floating point overflow");
     }
 
-    private static float toFloatInRange(BigDecimal bd) {
+    public static float toFloatInRange(BigDecimal bd) {
         if(!isOutOfFloatRange(bd)) {
             return bd.floatValue();
         }
@@ -332,7 +330,7 @@ public class Conversion {
         return toDoubleInRange(new BigDecimal(bi));
     }
 
-    private static double toDoubleInRange(BigDecimal bd) {
+    public static double toDoubleInRange(BigDecimal bd) {
         if(!isOutOfDoubleRange(bd)) {
             return bd.doubleValue();
         }

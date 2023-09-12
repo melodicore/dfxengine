@@ -37,6 +37,14 @@ public class Numerals {
         return new BigDecNumeral(bd);
     }
 
+    public static Numeral valueOf(String str) {
+        BigDecimal bd = new BigDecimal(str);
+        if(bd.scale() <= 0 || bd.remainder(BigDecimal.ONE).compareTo(BigDecimal.ZERO) == 0) {
+            return new BigIntNumeral(bd.toBigInteger());
+        }
+        return new BigDecNumeral(bd);
+    }
+
     public static boolean isZero(Numeral numeral) {
         switch(numeral.getType()) {
             case INT:
@@ -50,7 +58,7 @@ public class Numerals {
             case DOUBLE:
                 return numeral.doubleValue() == 0d;
             case BIG_DEC:
-                return numeral.bigDecValue().equals(BigDecimal.ZERO);
+                return numeral.bigDecValue().compareTo(BigDecimal.ZERO) == 0;
         }
         throw new IllegalArgumentException("unknown type");
     }
@@ -68,7 +76,7 @@ public class Numerals {
             case DOUBLE:
                 return numeral.doubleValue() == 1d;
             case BIG_DEC:
-                return numeral.bigDecValue().equals(BigDecimal.ONE);
+                return numeral.bigDecValue().compareTo(BigDecimal.ONE) == 0;
         }
         throw new IllegalArgumentException("unknown type");
     }

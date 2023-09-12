@@ -10,9 +10,9 @@ import java.math.BigInteger;
  * @author datafox
  */
 public class Range {
-    public static final BigInteger INT_MIN_INT = BigInteger.valueOf(Integer.MAX_VALUE);
+    public static final BigInteger INT_MIN_INT = BigInteger.valueOf(Integer.MIN_VALUE);
     public static final BigInteger INT_MAX_INT = BigInteger.valueOf(Integer.MAX_VALUE);
-    public static final BigInteger INT_MIN_LONG = BigInteger.valueOf(Long.MAX_VALUE);
+    public static final BigInteger INT_MIN_LONG = BigInteger.valueOf(Long.MIN_VALUE);
     public static final BigInteger INT_MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE);
 
     public static final BigDecimal DEC_MIN_INT = new BigDecimal(INT_MIN_INT);

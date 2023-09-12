@@ -39,7 +39,7 @@ abstract class AbstractNumeral implements Numeral {
 
     @Override
     public boolean canConvert(NumeralType type) {
-        return Range.isOutOfRange(this, type);
+        return !Range.isOutOfRange(this, type);
     }
 
     @Override
@@ -75,18 +75,6 @@ abstract class AbstractNumeral implements Numeral {
     @Override
     public BigDecimal bigDecValue() {
         return Conversion.toBigDec(this);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if(this == o) {
-            return true;
-        }
-        if(!(o instanceof Numeral)) {
-            return false;
-        }
-        Numeral numeral = (Numeral) o;
-        return compare(this, numeral) == 0;
     }
 
     @Override
