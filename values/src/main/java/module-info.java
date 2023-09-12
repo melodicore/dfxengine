@@ -12,5 +12,6 @@ module dfxengine.values {
 
     exports me.datafox.dfxengine.values;
     exports me.datafox.dfxengine.values.modifier;
+    exports me.datafox.dfxengine.values.operation;
     exports me.datafox.dfxengine.values.utils;
 }
