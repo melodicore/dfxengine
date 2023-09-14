@@ -18,7 +18,7 @@ public interface SingleParameterOperation extends Operation {
     @Override
     default Numeral apply(Numeral source, List<Numeral> parameters) {
         if(parameters == null || parameters.size() != getParameterCount()) {
-            throw new IllegalArgumentException("A SingleParameterOperation must be called with an List of one parameter");
+            throw new IllegalArgumentException("A SingleParameterOperation must be called with a List of one parameter");
         }
         return apply(source, parameters.get(1));
     }

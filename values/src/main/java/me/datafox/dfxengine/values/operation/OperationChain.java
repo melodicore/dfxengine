@@ -25,6 +25,9 @@ public final class OperationChain implements Operation {
 
     @Override
     public Numeral apply(Numeral source, List<Numeral> parameters) throws IllegalArgumentException {
+        if(parameters.size() != parameterCount) {
+            throw new IllegalArgumentException("invalid parameter count");
+        }
         int nextIndex = 0;
         for(Operation operation : operations) {
             source = operation.apply(source, parameters.subList(nextIndex, operation.getParameterCount() - 1));

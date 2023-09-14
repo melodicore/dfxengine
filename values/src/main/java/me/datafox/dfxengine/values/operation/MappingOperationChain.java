@@ -35,6 +35,9 @@ public final class MappingOperationChain implements Operation {
 
     @Override
     public Numeral apply(Numeral source, List<Numeral> parameters) throws IllegalArgumentException {
+        if(parameters.size() != parameterCount) {
+            throw new IllegalArgumentException("invalid parameter count");
+        }
         parameters = parameters.stream()
                 .map(numeral -> replaceSpecial(numeral, source, SOURCE_ID))
                 .collect(Collectors.toList());

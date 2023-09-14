@@ -41,12 +41,36 @@ public class Modifiers {
         return new OperationModifier(priority, reverse(Operations::divide), dividend);
     }
 
+    public static OperationModifier inverse(int priority) {
+        return new OperationModifier(priority, Operations::inverse);
+    }
+
     public static OperationModifier power(int priority, Value exponent) {
         return new OperationModifier(priority, Operations::power, exponent);
     }
 
     public static OperationModifier powerReversed(int priority, Value base) {
         return new OperationModifier(priority, reverse(Operations::power), base);
+    }
+
+    public static OperationModifier exp(int priority) {
+        return new OperationModifier(priority, Operations::exp);
+    }
+
+    public static OperationModifier sqrt(int priority) {
+        return new OperationModifier(priority, Operations::sqrt);
+    }
+
+    public static OperationModifier cbrt(int priority) {
+        return new OperationModifier(priority, Operations::cbrt);
+    }
+
+    public static OperationModifier root(int priority, Value root) {
+        return new OperationModifier(priority, Operations::root, root);
+    }
+
+    public static OperationModifier rootReversed(int priority, Value value) {
+        return new OperationModifier(priority, reverse(Operations::root), value);
     }
 
     public static OperationModifier log(int priority) {
@@ -96,7 +120,7 @@ public class Modifiers {
                         SOURCE_VALUE, RESULT_VALUE));
     }
 
-    private static SingleParameterOperation reverse(SingleParameterOperation operation) {
+    public static SingleParameterOperation reverse(SingleParameterOperation operation) {
         return (source, parameter) -> operation.apply(parameter, source);
     }
 
