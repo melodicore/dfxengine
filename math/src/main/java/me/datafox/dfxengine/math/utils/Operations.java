@@ -276,6 +276,9 @@ public class Operations {
         if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
             throw new ArithmeticException("logarithm of 0 or smaller");
         }
+        if(isOne(numeral)) {
+            return valueOf(0);
+        }
         switch(numeral.getType()) {
             case INT:
                 return(log(numeral.intValue()));
@@ -297,6 +300,9 @@ public class Operations {
         if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
             throw new ArithmeticException("logarithm of 0 or smaller");
         }
+        if(isOne(numeral)) {
+            return valueOf(0);
+        }
         switch(numeral.getType()) {
             case INT:
                 return(log2(numeral.intValue()));
@@ -317,6 +323,9 @@ public class Operations {
     public static Numeral log10(Numeral numeral) {
         if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
             throw new ArithmeticException("logarithm of 0 or smaller");
+        }
+        if(isOne(numeral)) {
+            return valueOf(0);
         }
         switch(numeral.getType()) {
             case INT:
@@ -344,6 +353,9 @@ public class Operations {
         }
         if(isOne(base)) {
             throw new ArithmeticException("logarithm base of 1");
+        }
+        if(isOne(numeral)) {
+            return valueOf(0);
         }
         switch(numeral.getType()) {
             case INT:
@@ -571,11 +583,22 @@ public class Operations {
     }
 
     public static Numeral exp(int value) {
-        return valueOf((int) Math.exp(value));
+        double result = Math.exp(value);
+        if(isOutOfLongRange(result)) {
+            return exp(BigInteger.valueOf(value));
+        }
+        if(isOutOfIntRange(result)) {
+            return valueOf((long) result);
+        }
+        return valueOf((int) result);
     }
 
     public static Numeral exp(long value) {
-        return valueOf((long) Math.exp(value));
+        double result = Math.exp(value);
+        if(isOutOfLongRange(result)) {
+            return exp(BigInteger.valueOf(value));
+        }
+        return valueOf((long) result);
     }
 
     public static Numeral exp(BigInteger value) {
@@ -583,11 +606,22 @@ public class Operations {
     }
 
     public static Numeral exp(float value) {
-        return valueOf((float) Math.exp(value));
+        double result = Math.exp(value);
+        if(!Double.isFinite(result)) {
+            return exp(BigDecimal.valueOf(value));
+        }
+        if(isOutOfFloatRange(result)) {
+            return valueOf(result);
+        }
+        return valueOf((float) result);
     }
 
     public static Numeral exp(double value) {
-        return valueOf(Math.exp(value));
+        double result = Math.exp(value);
+        if(!Double.isFinite(result)) {
+            return exp(BigDecimal.valueOf(value));
+        }
+        return valueOf(result);
     }
 
     public static Numeral exp(BigDecimal value) {

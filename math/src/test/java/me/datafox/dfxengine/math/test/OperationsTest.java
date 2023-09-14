@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.math.test;
 
+import ch.obermuhlner.math.big.BigDecimalMath;
 import me.datafox.dfxengine.math.numeral.*;
 import org.junit.jupiter.api.Test;
 
@@ -132,6 +133,29 @@ public class OperationsTest {
     }
 
     @Test
+    public void expTest() {
+        assertEquals(one, exp(zero));
+
+        assertEquals(new IntNumeral(2), exp(one));
+        assertEquals(new LongNumeral(2L), exp(new LongNumeral(1L)));
+        assertEquals(new BigIntNumeral("2"), exp(new BigIntNumeral("1")));
+        assertEquals(new FloatNumeral((float) Math.E), exp(new FloatNumeral(1f)));
+        assertEquals(new DoubleNumeral(Math.E), exp(new DoubleNumeral(1d)));
+        assertEquals(new BigDecNumeral(BigDecimalMath.e(MathContext.DECIMAL128)), exp(new BigDecNumeral("1")));
+
+        assertEquals(new IntNumeral(148), exp(intNumeral));
+        assertEquals(new FloatNumeral(96.54413f), exp(floatNumeral));
+
+        assertEquals(new LongNumeral(72004899337L), exp(new IntNumeral(25)));
+        assertEquals(new BigIntNumeral("925378172558778760024239791668"), exp(new IntNumeral(69)));
+        assertEquals(new BigIntNumeral("6837671229762743866755892826677"), exp(new LongNumeral(71L)));
+
+        assertEquals(new DoubleNumeral(4.675374784632515e61d), exp(new FloatNumeral(142f)));
+        assertEquals(new BigDecNumeral("1.215154812383808373661025865384586e+3909"), exp(new FloatNumeral(9001f)));
+        assertEquals(new BigDecNumeral("5.876586597607484336548221293800598e+76875"), exp(new DoubleNumeral(177013d)));
+    }
+
+    @Test
     public void sqrtTest() {
         assertEquals(zero, sqrt(zero));
         assertEquals(one, sqrt(one));
@@ -180,5 +204,68 @@ public class OperationsTest {
         assertEquals(new DoubleNumeral(9.808963383654187e65d), root(floatNumeral, smallFloatNumeral));
         assertEquals(new BigDecNumeral("4.057703555403599985284286405572210e+3848"), root(largeFloatNumeral, smallFloatNumeral));
         assertEquals(new BigDecNumeral("2.279186996101751382324694711909063e+154127"), root(bigDecNumeral, smallFloatNumeral));
+    }
+
+    @Test
+    public void logTest() {
+        assertThrows(ArithmeticException.class, () -> log(zero));
+        assertThrows(ArithmeticException.class, () -> log(negativeIntNumeral));
+        assertEquals(zero, log(one));
+
+        assertEquals(new IntNumeral(21), log(largeIntNumeral));
+        assertEquals(new LongNumeral(43L), log(longNumeral));
+        assertEquals(new BigIntNumeral("218"), log(bigIntNumeral));
+
+        assertEquals(new FloatNumeral(88.61748f), log(largeFloatNumeral));
+        assertEquals(new DoubleNumeral(709.6773523777262d), log(doubleNumeral));
+        assertEquals(new BigDecNumeral("3548.913564466919983638462153583503"), log(bigDecNumeral));
+    }
+
+    @Test
+    public void log2Test() {
+        assertThrows(ArithmeticException.class, () -> log2(zero));
+        assertThrows(ArithmeticException.class, () -> log2(negativeIntNumeral));
+        assertEquals(zero, log2(one));
+
+        assertEquals(new IntNumeral(30), log2(largeIntNumeral));
+        assertEquals(new LongNumeral(63L), log2(longNumeral));
+        assertEquals(new BigIntNumeral("314"), log2(bigIntNumeral));
+
+        assertEquals(new FloatNumeral(127.848f), log2(largeFloatNumeral));
+        assertEquals(new DoubleNumeral(1023.847996906555d), log2(doubleNumeral));
+        assertEquals(new BigDecNumeral("5119.999999999999999166459412248313"), log2(bigDecNumeral));
+    }
+
+    @Test
+    public void log10Test() {
+        assertThrows(ArithmeticException.class, () -> log10(zero));
+        assertThrows(ArithmeticException.class, () -> log10(negativeIntNumeral));
+        assertEquals(zero, log10(one));
+
+        assertEquals(new IntNumeral(9), log10(largeIntNumeral));
+        assertEquals(new LongNumeral(18L), log10(longNumeral));
+        assertEquals(new BigIntNumeral("94"), log10(bigIntNumeral));
+
+        assertEquals(new FloatNumeral(38.48608f), log10(largeFloatNumeral));
+        assertEquals(new DoubleNumeral(308.2089580693561d), log10(doubleNumeral));
+        assertEquals(new BigDecNumeral("1541.273577799583719243422421472762"), log10(bigDecNumeral));
+    }
+
+    @Test
+    public void logNTest() {
+        assertThrows(ArithmeticException.class, () -> logN(zero, intNumeral));
+        assertThrows(ArithmeticException.class, () -> logN(negativeIntNumeral, intNumeral));
+        assertThrows(ArithmeticException.class, () -> logN(intNumeral, zero));
+        assertThrows(ArithmeticException.class, () -> logN(intNumeral, negativeIntNumeral));
+        assertThrows(ArithmeticException.class, () -> logN(intNumeral, one));
+        assertEquals(zero, logN(one, intNumeral));
+
+        assertEquals(new IntNumeral(13), logN(largeIntNumeral, intNumeral));
+        assertEquals(new LongNumeral(27L), logN(longNumeral, intNumeral));
+        assertEquals(new BigIntNumeral("135"), logN(bigIntNumeral, intNumeral));
+
+        assertEquals(new FloatNumeral(58.31965f), logN(largeFloatNumeral, floatNumeral));
+        assertEquals(new DoubleNumeral(467.04257000621146d), logN(doubleNumeral, floatNumeral));
+        assertEquals(new BigDecNumeral("2335.559541706120210316557758576560"), logN(bigDecNumeral, floatNumeral));
     }
 }
