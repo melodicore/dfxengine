@@ -55,6 +55,9 @@ public class Operations {
         if(isZero(subtrahend)) {
             return minuend;
         }
+        if(compare(minuend, subtrahend) == 0) {
+            return valueOf(0);
+        }
         switch(getSignificantType(minuend, subtrahend)) {
             case INT:
                 return subtract(minuend.intValue(), subtrahend.intValue());
@@ -103,11 +106,14 @@ public class Operations {
         if(isZero(divisor)) {
             throw new ArithmeticException("divisor is zero");
         }
-        if(isZero(divisor)) {
+        if(isZero(dividend)) {
             return Numerals.valueOf(0);
         }
         if(isOne(divisor)) {
             return dividend;
+        }
+        if(compare(dividend, divisor) == 0) {
+            return valueOf(1);
         }
         NumeralType significantType = getSignificantType(dividend, divisor);
         switch(getSignificantType(dividend, divisor)) {
@@ -127,12 +133,16 @@ public class Operations {
         throw new IllegalArgumentException("unknown type");
     }
 
+    public static Numeral inverse(Numeral numeral) {
+        return divide(valueOf(1), numeral);
+    }
+
     public static Numeral power(Numeral base, Numeral exponent) {
-        if(isZero(base)) {
-            return valueOf(0);
-        }
         if(isOne(base) || isZero(exponent)) {
             return valueOf(1);
+        }
+        if(isZero(base)) {
+            return valueOf(0);
         }
         if(isOne(exponent)) {
             return base;
@@ -150,6 +160,114 @@ public class Operations {
                 return power(base.doubleValue(), exponent.doubleValue());
             case BIG_DEC:
                 return power(base.bigDecValue(), exponent.bigDecValue());
+        }
+        throw new IllegalArgumentException("unknown type");
+    }
+
+    public static Numeral exp(Numeral numeral) {
+        if(isZero(numeral)) {
+            return valueOf(1);
+        }
+        switch(numeral.getType()) {
+            case INT:
+                return exp(numeral.intValue());
+            case LONG:
+                return exp(numeral.longValue());
+            case BIG_INT:
+                return exp(numeral.bigIntValue());
+            case FLOAT:
+                return exp(numeral.floatValue());
+            case DOUBLE:
+                return exp(numeral.doubleValue());
+            case BIG_DEC:
+                return exp(numeral.bigDecValue());
+        }
+        throw new IllegalArgumentException("unknown type");
+    }
+
+    public static Numeral sqrt(Numeral numeral) {
+        if(isZero(numeral)) {
+            return valueOf(0);
+        }
+        if(isOne(numeral)) {
+            return valueOf(1);
+        }
+        if(compare(numeral, valueOf(0)) < 0) {
+            throw new ArithmeticException("root of negative number");
+        }
+        switch(numeral.getType()) {
+            case INT:
+                return sqrt(numeral.intValue());
+            case LONG:
+                return sqrt(numeral.longValue());
+            case BIG_INT:
+                return sqrt(numeral.bigIntValue());
+            case FLOAT:
+                return sqrt(numeral.floatValue());
+            case DOUBLE:
+                return sqrt(numeral.doubleValue());
+            case BIG_DEC:
+                return sqrt(numeral.bigDecValue());
+        }
+        throw new IllegalArgumentException("unknown type");
+    }
+
+    public static Numeral cbrt(Numeral numeral) {
+        if(isZero(numeral)) {
+            return valueOf(0);
+        }
+        if(isOne(numeral)) {
+            return valueOf(1);
+        }
+        if(compare(numeral, valueOf(0)) < 0) {
+            throw new ArithmeticException("root of negative number");
+        }
+        switch(numeral.getType()) {
+            case INT:
+                return cbrt(numeral.intValue());
+            case LONG:
+                return cbrt(numeral.longValue());
+            case BIG_INT:
+                return cbrt(numeral.bigIntValue());
+            case FLOAT:
+                return cbrt(numeral.floatValue());
+            case DOUBLE:
+                return cbrt(numeral.doubleValue());
+            case BIG_DEC:
+                return cbrt(numeral.bigDecValue());
+        }
+        throw new IllegalArgumentException("unknown type");
+    }
+
+    public static Numeral root(Numeral numeral, Numeral root) {
+        if(isZero(root)) {
+            throw new ArithmeticException("zeroth root");
+        }
+        if(isZero(numeral)) {
+            return valueOf(0);
+        }
+        if(isOne(numeral)) {
+            return valueOf(1);
+        }
+        if(isOne(root)) {
+            return numeral;
+        }
+        if(compare(numeral, valueOf(0)) < 0) {
+            throw new ArithmeticException("root of negative number");
+        }
+        switch(getSignificantType(numeral, root)) {
+            case INT:
+                return root(numeral.intValue(), root.intValue());
+            case LONG:
+                return root(numeral.longValue(), root.longValue());
+            case BIG_INT:
+                return root(numeral.bigIntValue(), root.bigIntValue());
+            case FLOAT:
+                return root(numeral.floatValue(), root.floatValue());
+            case DOUBLE:
+                return root(numeral.doubleValue(), root.doubleValue());
+            case BIG_DEC:
+                return root(numeral.bigDecValue(), root.bigDecValue());
         }
         throw new IllegalArgumentException("unknown type");
     }
@@ -268,7 +386,7 @@ public class Operations {
 
     public static Numeral add(float augend, float addend) {
         float result = augend + addend;
-        if(isOutOfFloatRange(result)) {
+        if(!Float.isFinite(result)) {
             return add((double) augend, addend);
         }
         return valueOf(result);
@@ -276,7 +394,7 @@ public class Operations {
 
     public static Numeral add(double augend, double addend) {
         double result = augend + addend;
-        if(isOutOfDoubleRange(result)) {
+        if(!Double.isFinite(result)) {
             return add(BigDecimal.valueOf(augend), BigDecimal.valueOf(addend));
         }
         return valueOf(result);
@@ -308,7 +426,7 @@ public class Operations {
 
     public static Numeral subtract(float minuend, float subtrahend) {
         float result = minuend - subtrahend;
-        if(isOutOfFloatRange(result)) {
+        if(!Float.isFinite(result)) {
             return subtract((double) minuend, subtrahend);
         }
         return valueOf(result);
@@ -316,7 +434,7 @@ public class Operations {
 
     public static Numeral subtract(double minuend, double subtrahend) {
         double result = minuend - subtrahend;
-        if(isOutOfDoubleRange(result)) {
+        if(!Double.isFinite(result)) {
             return subtract(BigDecimal.valueOf(minuend), BigDecimal.valueOf(subtrahend));
         }
         return valueOf(result);
@@ -353,7 +471,7 @@ public class Operations {
 
     public static Numeral multiply(float multiplicand, float multiplier) {
         float result = multiplicand * multiplier;
-        if(isOutOfFloatRange(result)) {
+        if(!Float.isFinite(result)) {
             return multiply((double) multiplicand, multiplier);
         }
         return valueOf(result);
@@ -361,7 +479,7 @@ public class Operations {
 
     public static Numeral multiply(double multiplicand, double multiplier) {
         double result = multiplicand * multiplier;
-        if(isOutOfDoubleRange(result)) {
+        if(!Double.isFinite(result)) {
             return multiply(BigDecimal.valueOf(multiplicand), BigDecimal.valueOf(multiplier));
         }
         return valueOf(result);
@@ -385,7 +503,7 @@ public class Operations {
 
     public static Numeral divide(float dividend, float divisor) {
         float result = dividend / divisor;
-        if(isOutOfFloatRange(result)) {
+        if(!Float.isFinite(result)) {
             return divide((double) dividend, divisor);
         }
         return valueOf(result);
@@ -393,7 +511,7 @@ public class Operations {
 
     public static Numeral divide(double dividend, double divisor) {
         double result = dividend / divisor;
-        if(isOutOfDoubleRange(result)) {
+        if(!Double.isFinite(result)) {
             return divide(BigDecimal.valueOf(dividend), BigDecimal.valueOf(divisor));
         }
         return valueOf(result);
@@ -431,7 +549,7 @@ public class Operations {
 
     public static Numeral power(float base, float exponent) {
         double value = Math.pow(base, exponent);
-        if(isOutOfDoubleRange(value)) {
+        if(!Double.isFinite(value)) {
             return power(BigDecimal.valueOf(base), BigDecimal.valueOf(exponent));
         }
         if(isOutOfFloatRange(value)) {
@@ -442,7 +560,7 @@ public class Operations {
 
     public static Numeral power(double base, double exponent) {
         double value = Math.pow(base, exponent);
-        if(isOutOfDoubleRange(value)) {
+        if(!Double.isFinite(value)) {
             return power(BigDecimal.valueOf(base), BigDecimal.valueOf(exponent));
         }
         return valueOf(value);
@@ -450,6 +568,113 @@ public class Operations {
 
     public static Numeral power(BigDecimal base, BigDecimal exponent) {
         return valueOf(BigDecimalMath.pow(base, exponent, CONTEXT));
+    }
+
+    public static Numeral exp(int value) {
+        return valueOf((int) Math.exp(value));
+    }
+
+    public static Numeral exp(long value) {
+        return valueOf((long) Math.exp(value));
+    }
+
+    public static Numeral exp(BigInteger value) {
+        return valueOf(BigDecimalMath.exp(new BigDecimal(value), CONTEXT).toBigInteger());
+    }
+
+    public static Numeral exp(float value) {
+        return valueOf((float) Math.exp(value));
+    }
+
+    public static Numeral exp(double value) {
+        return valueOf(Math.exp(value));
+    }
+
+    public static Numeral exp(BigDecimal value) {
+        return valueOf(BigDecimalMath.exp(value, CONTEXT));
+    }
+
+    public static Numeral sqrt(int value) {
+        return valueOf((int) Math.sqrt(value));
+    }
+
+    public static Numeral sqrt(long value) {
+        return valueOf((long) Math.sqrt(value));
+    }
+
+    public static Numeral sqrt(BigInteger value) {
+        return valueOf(value.sqrt());
+    }
+
+    public static Numeral sqrt(float value) {
+        return valueOf((float) Math.sqrt(value));
+    }
+
+    public static Numeral sqrt(double value) {
+        return valueOf(Math.sqrt(value));
+    }
+
+    public static Numeral sqrt(BigDecimal value) {
+        return valueOf(value.sqrt(CONTEXT));
+    }
+
+    public static Numeral cbrt(int value) {
+        return valueOf((int) Math.cbrt(value));
+    }
+
+    public static Numeral cbrt(long value) {
+        return valueOf((long) Math.cbrt(value));
+    }
+
+    public static Numeral cbrt(BigInteger value) {
+        return root(value, BigInteger.valueOf(3));
+    }
+
+    public static Numeral cbrt(float value) {
+        return valueOf((float) Math.cbrt(value));
+    }
+
+    public static Numeral cbrt(double value) {
+        return valueOf(Math.cbrt(value));
+    }
+
+    public static Numeral cbrt(BigDecimal value) {
+        return root(value, BigDecimal.valueOf(3));
+    }
+
+    public static Numeral root(int value, int root) {
+        return valueOf((int) Math.pow(value, 1d/root));
+    }
+
+    public static Numeral root(long value, long root) {
+        return valueOf((long) Math.pow(value, 1d/root));
+    }
+
+    public static Numeral root(BigInteger value, BigInteger exponent) {
+        return valueOf(BigDecimalMath.root(new BigDecimal(value), new BigDecimal(exponent), CONTEXT).toBigInteger());
+    }
+
+    public static Numeral root(float value, float root) {
+        double result = Math.pow(value, 1d/root);
+        if(!Double.isFinite(result)) {
+            return root(BigDecimal.valueOf(value), BigDecimal.valueOf(root));
+        }
+        if(isOutOfFloatRange(result)) {
+            return valueOf(result);
+        }
+        return valueOf((float) result);
+    }
+
+    public static Numeral root(double value, double root) {
+        double result = Math.pow(value, 1d/root);
+        if(!Double.isFinite(result)) {
+            return root(BigDecimal.valueOf(value), BigDecimal.valueOf(root));
+        }
+        return valueOf(result);
+    }
+
+    public static Numeral root(BigDecimal value, BigDecimal root) {
+        return valueOf(BigDecimalMath.root(value, root, CONTEXT));
     }
 
     public static Numeral log(int value) {
@@ -540,7 +765,7 @@ public class Operations {
 
     public static Numeral logN(float value, float base) {
         double result = (Math.log(value) / Math.log(base));
-        if(isOutOfDoubleRange(result)) {
+        if(!Double.isFinite(result)) {
             return logN(BigDecimal.valueOf(value), BigDecimal.valueOf(base));
         }
         if(isOutOfFloatRange(result)) {
@@ -551,7 +776,7 @@ public class Operations {
 
     public static Numeral logN(double value, double base) {
         double result = (Math.log(value) / Math.log(base));
-        if(isOutOfDoubleRange(result)) {
+        if(!Double.isFinite(result)) {
             return logN(BigDecimal.valueOf(value), BigDecimal.valueOf(base));
         }
         return valueOf(result);

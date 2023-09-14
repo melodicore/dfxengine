@@ -142,10 +142,6 @@ public class Range {
         return bi.compareTo(INT_MAX_FLOAT) > 0 || bi.compareTo(INT_MIN_FLOAT) < 0;
     }
 
-    public static boolean isOutOfFloatRange(float f) {
-        return f == Float.POSITIVE_INFINITY || f == Float.NEGATIVE_INFINITY;
-    }
-
     public static boolean isOutOfFloatRange(double d) {
         return d > Float.MAX_VALUE || d < -Float.MAX_VALUE;
     }
@@ -172,10 +168,6 @@ public class Range {
 
     public static boolean isOutOfDoubleRange(BigInteger bi) {
         return bi.compareTo(INT_MAX_DOUBLE) > 0 || bi.compareTo(INT_MIN_DOUBLE) < 0;
-    }
-
-    public static boolean isOutOfDoubleRange(double d) {
-        return d == Double.POSITIVE_INFINITY || d == Double.NEGATIVE_INFINITY;
     }
 
     public static boolean isOutOfDoubleRange(BigDecimal bd) {

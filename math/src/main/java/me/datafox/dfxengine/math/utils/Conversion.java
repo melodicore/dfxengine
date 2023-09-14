@@ -14,6 +14,10 @@ import static me.datafox.dfxengine.math.utils.Range.*;
  */
 public class Conversion {
     public static int toInt(Numeral numeral) {
+        if(numeral instanceof IntNumeral) {
+            return numeral.intValue();
+        }
+
         try {
             switch(numeral.getType()) {
                 case INT:
@@ -36,6 +40,10 @@ public class Conversion {
     }
 
     public static long toLong(Numeral numeral) {
+        if(numeral instanceof LongNumeral) {
+            return numeral.longValue();
+        }
+
         try {
             switch(numeral.getType()) {
                 case INT:
@@ -57,6 +65,10 @@ public class Conversion {
     }
 
     public static BigInteger toBigInt(Numeral numeral) {
+        if(numeral instanceof BigIntNumeral || numeral instanceof FloatNumeral) {
+            return numeral.bigIntValue();
+        }
+
         try {
             switch(numeral.getType()) {
                 case INT:
@@ -79,6 +91,10 @@ public class Conversion {
     }
 
     public static float toFloat(Numeral numeral) {
+        if(numeral instanceof FloatNumeral) {
+            return numeral.floatValue();
+        }
+
         try {
             switch(numeral.getType()) {
                 case INT:
@@ -99,6 +115,10 @@ public class Conversion {
     }
 
     public static double toDouble(Numeral numeral) {
+        if(numeral instanceof DoubleNumeral || numeral instanceof FloatNumeral) {
+            return numeral.doubleValue();
+        }
+
         try {
             switch(numeral.getType()) {
                 case INT:
@@ -118,6 +138,10 @@ public class Conversion {
     }
 
     public static BigDecimal toBigDec(Numeral numeral) {
+        if(numeral instanceof BigDecNumeral || numeral instanceof FloatNumeral) {
+            return numeral.bigDecValue();
+        }
+
         try {
             switch(numeral.getType()) {
                 case INT:
@@ -172,40 +196,40 @@ public class Conversion {
         throw new IllegalArgumentException("unknown type");
     }
 
-    public static Numeral toDecimal(Numeral source) {
-        switch(source.getType()) {
+    public static Numeral toDecimal(Numeral numeral) {
+        switch(numeral.getType()) {
             case INT:
             case LONG:
-                return toFloatNumeral(source);
+                return toFloatNumeral(numeral);
             case BIG_INT:
-                if(!isOutOfFloatRange(source)) {
-                    return toFloatNumeral(source);
+                if(!isOutOfFloatRange(numeral)) {
+                    return toFloatNumeral(numeral);
                 }
 
-                if(!isOutOfDoubleRange(source)) {
-                    return toDoubleNumeral(source);
+                if(!isOutOfDoubleRange(numeral)) {
+                    return toDoubleNumeral(numeral);
                 }
 
-                return toBigDecNumeral(source);
+                return toBigDecNumeral(numeral);
         }
 
-        return source;
+        return numeral;
     }
 
-    public static Numeral toNumeral(Numeral source, NumeralType type) {
+    public static Numeral toNumeral(Numeral numeral, NumeralType type) {
         switch(type) {
             case INT:
-                return toIntNumeral(source);
+                return toIntNumeral(numeral);
             case LONG:
-                return toLongNumeral(source);
+                return toLongNumeral(numeral);
             case BIG_INT:
-                return toBigIntNumeral(source);
+                return toBigIntNumeral(numeral);
             case FLOAT:
-                return toFloatNumeral(source);
+                return toFloatNumeral(numeral);
             case DOUBLE:
-                return toDoubleNumeral(source);
+                return toDoubleNumeral(numeral);
             case BIG_DEC:
-                return toBigDecNumeral(source);
+                return toBigDecNumeral(numeral);
         }
         throw new IllegalArgumentException("unknown type");
     }
@@ -258,83 +282,83 @@ public class Conversion {
         return Numerals.valueOf(toBigDec(numeral));
     }
 
-    public static int toIntInRange(float f) {
-        if(!isOutOfIntRange(f)) {
-            return (int) f;
+    private static int toIntInRange(float f) {
+        if(isOutOfIntRange(f)) {
+            throw new ArithmeticException("integer overflow");
         }
 
-        throw new ArithmeticException("integer overflow");
+        return (int) f;
     }
 
-    public static int toIntInRange(double d) {
-        if(!isOutOfIntRange(d)) {
-            return (int) d;
+    private static int toIntInRange(double d) {
+        if(isOutOfIntRange(d)) {
+            throw new ArithmeticException("integer overflow");
         }
 
-        throw new ArithmeticException("integer overflow");
+        return (int) d;
     }
 
-    public static int toIntInRange(BigDecimal bd) {
-        if(!isOutOfIntRange(bd)) {
-            return bd.intValue();
+    private static int toIntInRange(BigDecimal bd) {
+        if(isOutOfIntRange(bd)) {
+            throw new ArithmeticException("integer overflow");
         }
 
-        throw new ArithmeticException("integer overflow");
+        return bd.intValue();
     }
 
-    public static long toLongInRange(float f) {
-        if(!isOutOfLongRange(f)) {
-            return (long) f;
+    private static long toLongInRange(float f) {
+        if(isOutOfLongRange(f)) {
+            throw new ArithmeticException("integer overflow");
         }
 
-        throw new ArithmeticException("integer overflow");
+        return (long) f;
     }
 
-    public static long toLongInRange(double d) {
-        if(!isOutOfLongRange(d)) {
-            return (long) d;
+    private static long toLongInRange(double d) {
+        if(isOutOfLongRange(d)) {
+            throw new ArithmeticException("integer overflow");
         }
 
-        throw new ArithmeticException("integer overflow");
+        return (long) d;
     }
 
-    public static long toLongInRange(BigDecimal bd) {
-        if(!isOutOfLongRange(bd)) {
-            return bd.longValue();
+    private static long toLongInRange(BigDecimal bd) {
+        if(isOutOfLongRange(bd)) {
+            throw new ArithmeticException("integer overflow");
         }
 
-        throw new ArithmeticException("integer overflow");
+        return bd.longValue();
     }
 
-    public static float toFloatInRange(BigInteger bi) {
+    private static float toFloatInRange(BigInteger bi) {
         return toFloatInRange(new BigDecimal(bi));
     }
 
-    public static float toFloatInRange(double d) {
-        if(!isOutOfFloatRange(d)) {
-            return (float) d;
+    private static float toFloatInRange(double d) {
+        if(isOutOfFloatRange(d)) {
+            throw new ArithmeticException("floating point overflow");
         }
 
-        throw new ArithmeticException("floating point overflow");
+        return (float) d;
     }
 
-    public static float toFloatInRange(BigDecimal bd) {
-        if(!isOutOfFloatRange(bd)) {
-            return bd.floatValue();
+    private static float toFloatInRange(BigDecimal bd) {
+        if(isOutOfFloatRange(bd)) {
+            throw new ArithmeticException("floating point overflow");
         }
 
-        throw new ArithmeticException("floating point overflow");
+        return bd.floatValue();
     }
 
-    public static double toDoubleInRange(BigInteger bi) {
+    private static double toDoubleInRange(BigInteger bi) {
         return toDoubleInRange(new BigDecimal(bi));
     }
 
-    public static double toDoubleInRange(BigDecimal bd) {
-        if(!isOutOfDoubleRange(bd)) {
-            return bd.doubleValue();
+    private static double toDoubleInRange(BigDecimal bd) {
+        if(isOutOfDoubleRange(bd)) {
+            throw new ArithmeticException("floating point overflow");
         }
 
-        throw new ArithmeticException("floating point overflow");
+        return bd.doubleValue();
     }
 }

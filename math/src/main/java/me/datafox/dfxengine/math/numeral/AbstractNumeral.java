@@ -1,6 +1,5 @@
 package me.datafox.dfxengine.math.numeral;
 
-import lombok.Data;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.utils.Conversion;
@@ -14,10 +13,7 @@ import static me.datafox.dfxengine.math.utils.Numerals.compare;
 /**
  * @author datafox
  */
-@Data
 abstract class AbstractNumeral implements Numeral {
-    protected final Number number;
-
     @Override
     public Numeral convert(NumeralType type) throws ArithmeticException {
         return Conversion.toNumeral(this, type);
@@ -81,7 +77,7 @@ abstract class AbstractNumeral implements Numeral {
     public String toString() {
         return String.format("%s(%s)",
                 getClass().getSimpleName().replace("Numeral", ""),
-                number);
+                getNumber());
     }
 
     @Override

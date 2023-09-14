@@ -1,7 +1,6 @@
 package me.datafox.dfxengine.math.test;
 
 import me.datafox.dfxengine.math.numeral.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -16,42 +15,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author datafox
  */
 public class ConversionTest {
-    private static IntNumeral intNumeral;
-    private static LongNumeral longNumeral;
-    private static LongNumeral smallLongNumeral;
-    private static LongNumeral negativeLongNumeral;
-    private static BigIntNumeral bigIntNumeral;
-    private static BigIntNumeral smallBigIntNumeral;
-    private static BigIntNumeral negativeBigIntNumeral;
-    private static FloatNumeral floatNumeral;
-    private static FloatNumeral smallFloatNumeral;
-    private static FloatNumeral negativeFloatNumeral;
-    private static DoubleNumeral doubleNumeral;
-    private static DoubleNumeral smallDoubleNumeral;
-    private static DoubleNumeral negativeDoubleNumeral;
-    private static BigDecNumeral bigDecNumeral;
-    private static BigDecNumeral smallBigDecNumeral;
-    private static BigDecNumeral negativeBigDecNumeral;
-
-    @BeforeAll
-    public static void beforeAll() {
-        intNumeral = new IntNumeral(666);
-        longNumeral = new LongNumeral(9988776655L);
-        smallLongNumeral = new LongNumeral(838L);
-        negativeLongNumeral = new LongNumeral(-9988776655L);
-        bigIntNumeral = new BigIntNumeral(new BigInteger("734273427342734273427342"));
-        smallBigIntNumeral = new BigIntNumeral(BigInteger.valueOf(2473658642L));
-        negativeBigIntNumeral = new BigIntNumeral(new BigInteger("-734273427342734273427342"));
-        floatNumeral = new FloatNumeral(3.3333e33f);
-        smallFloatNumeral = new FloatNumeral(961.34f);
-        negativeFloatNumeral = new FloatNumeral(-3.3333e33f);
-        doubleNumeral = new DoubleNumeral(5.2e77d);
-        smallDoubleNumeral = new DoubleNumeral(1.512153152e32d);
-        negativeDoubleNumeral = new DoubleNumeral(-5.2e77d);
-        bigDecNumeral = new BigDecNumeral(new BigDecimal("9.88765432102468e+420"));
-        smallBigDecNumeral  = new BigDecNumeral(BigDecimal.valueOf(1.111111e111d));
-        negativeBigDecNumeral  = new BigDecNumeral(new BigDecimal("-9.88765432102468e+420"));
-    }
+    private static final IntNumeral intNumeral = new IntNumeral(666);
+    private static final LongNumeral longNumeral = new LongNumeral(9988776655L);
+    private static final LongNumeral smallLongNumeral = new LongNumeral(838L);
+    private static final LongNumeral negativeLongNumeral = new LongNumeral(-9988776655L);
+    private static final BigIntNumeral bigIntNumeral = new BigIntNumeral("734273427342734273427342");
+    private static final BigIntNumeral smallBigIntNumeral = new BigIntNumeral(BigInteger.valueOf(2473658642L));
+    private static final BigIntNumeral negativeBigIntNumeral = new BigIntNumeral("-734273427342734273427342");
+    private static final FloatNumeral floatNumeral = new FloatNumeral(3.3333e33f);
+    private static final FloatNumeral smallFloatNumeral = new FloatNumeral(961.34f);
+    private static final FloatNumeral negativeFloatNumeral = new FloatNumeral(-3.3333e33f);
+    private static final DoubleNumeral doubleNumeral = new DoubleNumeral(5.2e77d);
+    private static final DoubleNumeral smallDoubleNumeral = new DoubleNumeral(1.512153152e32d);
+    private static final DoubleNumeral negativeDoubleNumeral = new DoubleNumeral(-5.2e77d);
+    private static final BigDecNumeral bigDecNumeral = new BigDecNumeral("9.88765432102468e+420");
+    private static final BigDecNumeral smallBigDecNumeral = new BigDecNumeral(BigDecimal.valueOf(1.111111e111d));
+    private static final BigDecNumeral negativeBigDecNumeral = new BigDecNumeral("-9.88765432102468e+420");
 
     @Test
     public void toIntTest() {
@@ -91,7 +70,7 @@ public class ConversionTest {
         assertEquals(new BigInteger("666"), toBigInt(intNumeral));
         assertEquals(new BigInteger("9988776655"), toBigInt(longNumeral));
         assertEquals(new BigInteger("734273427342734273427342"), toBigInt(bigIntNumeral));
-        assertEquals(new BigInteger("3333299942185532000000000000000000"), toBigInt(floatNumeral));
+        assertEquals(new BigInteger("3333300000000000000000000000000000"), toBigInt(floatNumeral));
         assertEquals(new BigInteger("520000000000000000000000000000000000000000000000000000000000000000000000000000"), toBigInt(doubleNumeral));
         assertEquals(new BigInteger("9887654321024680000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"), toBigInt(bigDecNumeral));
     }
@@ -114,7 +93,7 @@ public class ConversionTest {
         assertEquals(666d, toDouble(intNumeral));
         assertEquals(9.988776655e9d, toDouble(longNumeral));
         assertEquals(7.342734273427342e23d, toDouble(bigIntNumeral));
-        assertEquals(3.333299942185532e33d, toDouble(floatNumeral));
+        assertEquals(3.3333e33d, toDouble(floatNumeral));
         assertEquals(5.2e77d, toDouble(doubleNumeral));
         assertThrows(ArithmeticException.class, () -> toDouble(bigDecNumeral));
         assertEquals(1.111111e111d, toDouble(smallBigDecNumeral));
@@ -126,7 +105,7 @@ public class ConversionTest {
         assertEquals(new BigDecimal("666"), toBigDec(intNumeral));
         assertEquals(new BigDecimal("9988776655"), toBigDec(longNumeral));
         assertEquals(new BigDecimal("734273427342734273427342"), toBigDec(bigIntNumeral));
-        assertEquals(new BigDecimal("3.333299942185532e+33"), toBigDec(floatNumeral));
+        assertEquals(new BigDecimal("3.3333e+33"), toBigDec(floatNumeral));
         assertEquals(new BigDecimal("5.2e+77"), toBigDec(doubleNumeral));
         assertEquals(new BigDecimal("9.88765432102468e+420"), toBigDec(bigDecNumeral));
     }
@@ -154,11 +133,11 @@ public class ConversionTest {
     @Test
     public void toNumeralTest() {
         assertEquals(new LongNumeral(666L), toNumeral(intNumeral, LONG));
-        assertEquals(new BigDecNumeral(new BigDecimal("9988776655")), toNumeral(longNumeral, BIG_DEC));
+        assertEquals(new BigDecNumeral("9988776655"), toNumeral(longNumeral, BIG_DEC));
         assertEquals(new FloatNumeral(7.3427344e23f), toNumeral(bigIntNumeral, FLOAT));
-        assertEquals(new DoubleNumeral(3.333299942185532e33d), toNumeral(floatNumeral, DOUBLE));
-        assertEquals(new BigDecNumeral(new BigDecimal("5.2e+77")), toNumeral(doubleNumeral, BIG_DEC));
-        assertEquals(new BigIntNumeral(new BigInteger("9887654321024680000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000")), toNumeral(bigDecNumeral, BIG_INT));
+        assertEquals(new DoubleNumeral(3.3333e33d), toNumeral(floatNumeral, DOUBLE));
+        assertEquals(new BigDecNumeral("5.2e+77"), toNumeral(doubleNumeral, BIG_DEC));
+        assertEquals(new BigIntNumeral("9887654321024680000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"), toNumeral(bigDecNumeral, BIG_INT));
 
         assertThrows(ArithmeticException.class, () -> toNumeral(longNumeral, INT));
         assertThrows(ArithmeticException.class, () -> toNumeral(bigIntNumeral, LONG));

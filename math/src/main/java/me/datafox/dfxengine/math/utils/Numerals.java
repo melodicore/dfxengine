@@ -97,7 +97,9 @@ public class Numerals {
                 return numeral.bigDecValue().compareTo(other.bigDecValue());
         }
         throw new IllegalArgumentException("unknown type");
-    }public static NumeralType getSignificantType(Numeral numeral1, Numeral numeral2) {
+    }
+
+    public static NumeralType getSignificantType(Numeral numeral1, Numeral numeral2) {
         if(numeral1.getType().equals(numeral2.getType())) {
             return numeral1.getType();
         }

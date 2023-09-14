@@ -98,10 +98,10 @@ public class NumeralTest {
 
         assertThrows(ArithmeticException.class, numeral::intValue);
         assertThrows(ArithmeticException.class, numeral::longValue);
-        assertEquals(new BigInteger("400000008016350940000"), numeral.bigIntValue());
+        assertEquals(new BigInteger("400000000000000000000"), numeral.bigIntValue());
         assertEquals(4.0e20f, numeral.floatValue());
-        assertEquals(4.0000000801635094e20d, numeral.doubleValue());
-        assertEquals(new BigDecimal("4.0000000801635094e+20"), numeral.bigDecValue());
+        assertEquals(4.0e20d, numeral.doubleValue());
+        assertEquals(new BigDecimal("4.0e+20"), numeral.bigDecValue());
     }
 
     @Test

@@ -1,22 +1,28 @@
 package me.datafox.dfxengine.math.numeral;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import me.datafox.dfxengine.math.api.NumeralType;
 
 /**
  * @author datafox
  */
+
+@Getter
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public final class IntNumeral extends AbstractNumeral {
-    public IntNumeral(int number) {
-        super(number);
+    private final int number;
+    private final NumeralType type = NumeralType.INT;
+
+    @Override
+    public Number getNumber() {
+        return number;
     }
 
     @Override
-    public NumeralType getType() {
-        return NumeralType.INT;
-    }
-
-    @Override
-    public int intValue() throws ArithmeticException {
-        return (int) number;
+    public int intValue() {
+        return number;
     }
 }
