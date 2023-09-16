@@ -8,6 +8,8 @@ import me.datafox.dfxengine.injector.Injector;
 import me.datafox.dfxengine.injector.InjectorBuilder;
 import me.datafox.dfxengine.injector.exception.*;
 import me.datafox.dfxengine.injector.test.injector.fail.cyclic_dependency.CyclicDependencyComponent1;
+import me.datafox.dfxengine.injector.test.injector.fail.default_for.component.InvalidDefaultComponent;
+import me.datafox.dfxengine.injector.test.injector.fail.default_for.method.InvalidDefaultNonComponent;
 import me.datafox.dfxengine.injector.test.injector.fail.multiple_components.MultipleComponentClass;
 import me.datafox.dfxengine.injector.test.injector.fail.multiple_constructors.MultipleConstructorsComponent;
 import me.datafox.dfxengine.injector.test.injector.fail.no_constructor.NoValidConstructorComponent;
@@ -19,6 +21,7 @@ import me.datafox.dfxengine.injector.test.injector.pass.class_whitelist.Whitelis
 import me.datafox.dfxengine.injector.test.injector.pass.combined.CombinedComponent;
 import me.datafox.dfxengine.injector.test.injector.pass.constructor.ConstructorComponent;
 import me.datafox.dfxengine.injector.test.injector.pass.cyclic_initialization.InitializableDependencyComponent;
+import me.datafox.dfxengine.injector.test.injector.pass.default_for.*;
 import me.datafox.dfxengine.injector.test.injector.pass.field.FieldComponent;
 import me.datafox.dfxengine.injector.test.injector.pass.inheritance.ComponentInterface;
 import me.datafox.dfxengine.injector.test.injector.pass.inheritance.ComponentSuperclass;
@@ -30,10 +33,10 @@ import me.datafox.dfxengine.injector.test.injector.pass.instantiation_details.Pe
 import me.datafox.dfxengine.injector.test.injector.pass.list.ListDependencyComponent;
 import me.datafox.dfxengine.injector.test.injector.pass.list.MultipleComponentInterface;
 import me.datafox.dfxengine.injector.test.injector.pass.method.NonComponentClass;
+import me.datafox.dfxengine.injector.test.injector.pass.multiple_equals.EqualsClass;
 import me.datafox.dfxengine.injector.test.injector.pass.package_blacklist.BlacklistComponentInterface;
 import me.datafox.dfxengine.injector.test.injector.pass.package_blacklist.subpackage.InaccessibleComponent;
 import me.datafox.dfxengine.injector.test.injector.pass.per_instance.RequestingComponent;
-import me.datafox.dfxengine.injector.test.injector.pass.multiple_equals.EqualsClass;
 import me.datafox.dfxengine.injector.test.injector.warn.parameterized.ParameterizedInterface;
 import me.datafox.dfxengine.injector.utils.InjectorStrings;
 import org.junit.jupiter.api.Test;
@@ -245,6 +248,23 @@ public class InjectorTest {
     }
 
     @Test
+    public void override_pass() {
+        var injector = buildInjector(DefaultComponent.class);
+
+        var component = injector.getSingletonComponent(OverrodeComponentInterface.class);
+
+        assertInstanceOf(OverrodeComponent.class, component);
+
+        var methodComponent = injector.getSingletonComponent(OverrodeNonComponentInterface.class);
+
+        assertInstanceOf(OverrodeNonComponent.class, methodComponent);
+
+        var otherComponent = injector.getSingletonComponent(OtherOverrodeComponentInterface.class);
+
+        assertInstanceOf(OtherDefaultComponent.class, otherComponent);
+    }
+
+    @Test
     public void cyclicDependency_fail() {
         assertThrows(CyclicDependencyException.class,
                 () -> buildInjector(CyclicDependencyComponent1.class));
@@ -296,6 +316,15 @@ public class InjectorTest {
 
         assertThrows(MultipleValidComponentsException.class,
                 () -> injector.newInstance(MultipleComponentClass.class));
+    }
+
+    @Test
+    public void defaultFor_fail() {
+        assertThrows(InvalidDefaultTypeException.class,
+                () -> buildInjector((InvalidDefaultComponent.class)));
+
+        assertThrows(InvalidDefaultTypeException.class,
+                () -> buildInjector((InvalidDefaultNonComponent.class)));
     }
 
     @Test
