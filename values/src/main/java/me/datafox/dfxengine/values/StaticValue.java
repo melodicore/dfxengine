@@ -57,6 +57,10 @@ public class StaticValue implements Value {
         this(Numerals.valueOf(bd));
     }
 
+    public StaticValue(String val) {
+        this(Numerals.valueOf(val));
+    }
+
     @Override
     public Numeral getBase() {
         return value;
@@ -120,22 +124,22 @@ public class StaticValue implements Value {
 
     @Override
     public boolean addModifier(Modifier modifier) {
-        throw new UnsupportedOperationException("static value cannot be modified");
+        return false;
     }
 
     @Override
     public boolean addModifiers(Collection<Modifier> modifiers) {
-        throw new UnsupportedOperationException("static value cannot be modified");
+        return false;
     }
 
     @Override
     public boolean removeModifier(Modifier modifier) {
-        throw new UnsupportedOperationException("static value cannot be modified");
+        return false;
     }
 
     @Override
     public boolean removeModifiers(Collection<Modifier> modifiers) {
-        throw new UnsupportedOperationException("static value cannot be modified");
+        return false;
     }
 
     @Override
