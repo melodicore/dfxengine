@@ -20,6 +20,10 @@ import java.lang.annotation.Target;
  * singleton instance of the component class at build time, while {@link InstantiationPolicy#PER_INSTANCE} instantiates
  * a new instance of the component class every time it is injected.
  * </p>
+ * <p>
+ * If {@link #defaultFor()} is set to true, introducing any component in the same scope that has defaultFor set to false
+ * will remove this component from the injectable dependencies.
+ * </p>
  *
  * @author datafox
  */
@@ -31,4 +35,12 @@ public @interface Component {
      * @return the associated {@link InstantiationPolicy}
      */
     InstantiationPolicy value() default InstantiationPolicy.ONCE;
+
+    /**
+     * If set to other than {@link Object Object.class},
+     *
+     * @return the class of components that should override this component, or Object.class if this component should not
+     * be overridden
+     */
+    Class<?> defaultFor() default Object.class;
 }

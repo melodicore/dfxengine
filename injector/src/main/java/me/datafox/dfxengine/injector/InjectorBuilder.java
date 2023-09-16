@@ -13,6 +13,7 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.injector.collection.FunctionClassMap;
 import me.datafox.dfxengine.injector.exception.CyclicDependencyException;
+import me.datafox.dfxengine.injector.exception.InvalidDefaultTypeException;
 import me.datafox.dfxengine.injector.exception.MultipleValidComponentsException;
 import me.datafox.dfxengine.injector.exception.UnknownComponentException;
 import me.datafox.dfxengine.injector.utils.InjectorStrings;
@@ -260,6 +261,7 @@ public class InjectorBuilder {
                 Stream.concat(
                                 classDefinitions.entrySet().stream().flatMap(this::getPerInstanceConstructorReference),
                                 methodDefinitions.entrySet().stream().flatMap(this::getPerInstanceMethodReference))
+                        .filter(Predicate.not(this::isOverrodePerInstanceReference))
                         .collect(Collectors.toList()));
 
         logger.info(InjectorStrings.INSTANTIATING_COMPONENTS);
@@ -270,6 +272,7 @@ public class InjectorBuilder {
         orderMap.keySet()
                 .stream()
                 .filter(Predicate.not(Dependency::isPerInstance))
+                .filter(Predicate.not(this::isOverrodeComponent))
                 .sorted(Comparator.comparingInt(orderMap::get))
                 .forEach(dependency -> instantiateComponents(dependency, injector));
 
@@ -287,11 +290,34 @@ public class InjectorBuilder {
     private <T> void checkClass(Class<T> type) {
         logger.debug(InjectorStrings.componentClassFound(type));
 
+        ClassUtils.getAnnotationFromArray(type.getAnnotations(), Component.class)
+                .filter(component -> !component.defaultFor().equals(Object.class))
+                .ifPresent(component -> {
+                    if(ClassUtils.getSuperclassesFor(type)
+                            .noneMatch(t -> t.equals(component.defaultFor()))) {
+                        throw LogUtils.logExceptionAndGet(logger,
+                                InjectorStrings.invalidOverrideType(type, component.defaultFor()),
+                                InvalidDefaultTypeException::new);
+                    }
+                });
+
         checkParameterized(type);
     }
 
     private <T,R> void checkMethod(MethodReference<T,R> reference) {
         logger.debug(InjectorStrings.componentMethodFound(reference));
+
+        ClassUtils.getAnnotationFromArray(reference.getMethod().getAnnotations(), Component.class)
+                .filter(component -> !component.defaultFor().equals(Object.class))
+                .ifPresent(component -> {
+                    if(ClassUtils.getSuperclassesFor(reference.getReturnType())
+                            .noneMatch(t -> t.equals(component.defaultFor()))) {
+                        throw LogUtils.logExceptionAndGet(logger,
+                                InjectorStrings.invalidMethodOverrideType(reference,
+                                        component.defaultFor()),
+                                InvalidDefaultTypeException::new);
+                    }
+                });
 
         if(!Modifier.isStatic(reference.getMethod().getModifiers())) {
             checkParameterized(reference.getOwner());
@@ -317,11 +343,19 @@ public class InjectorBuilder {
     }
 
     private <T> Dependency<T> createClassDependency(Class<T> type) {
-        return Dependency.of(type, isPerInstance(type.getAnnotations()));
+        return Dependency.of(type,
+                ClassUtils
+                        .getAnnotationFromArray(type.getAnnotations(), Component.class)
+                        .orElse(null),
+                isPerInstance(type.getAnnotations()));
     }
 
     private <T> Dependency<T> createMethodDependency(MethodReference<?,T> reference) {
-        return Dependency.of(reference.getReturnType(), isPerInstance(reference.getMethod().getAnnotations()));
+        return Dependency.of(reference.getReturnType(),
+                ClassUtils
+                        .getAnnotationFromArray(reference.getMethod().getAnnotations(), Component.class)
+                        .orElse(null),
+                isPerInstance(reference.getMethod().getAnnotations()));
     }
 
     private void resolveClassDependencies(Class<?> type, Dependency<?> dependency) {
@@ -426,7 +460,10 @@ public class InjectorBuilder {
         if(reverseClassDefinitions.containsKey(dependency)) {
             logger.debug(InjectorStrings.instantiatedByConstructor(dependency.getType()));
 
-            injector.addComponent(injector.newInstance(reverseClassDefinitions.get(dependency)));
+            Class<?> type = reverseClassDefinitions.get(dependency);
+
+            injector.addComponent(injector.newInstance(type));
+
             return;
         }
         if(reverseMethodDefinitions.containsKey(dependency)) {
@@ -500,6 +537,58 @@ public class InjectorBuilder {
                 .map(method -> MethodReference.of(type, method.getReturnType(), method));
     }
 
+    private boolean isOverrodeComponent(Dependency<?> dependency) {
+        if(dependency.getAnnotation() == null) {
+            return false;
+        }
+        if(dependency.getAnnotation().defaultFor().equals(Object.class)) {
+            return false;
+        }
+        return ClassUtils.getSuperclassesFor(dependency.getAnnotation().defaultFor())
+                .map(dependencyMap::get)
+                .flatMap(List::stream)
+                .anyMatch(Predicate.not(this::isOverride));
+    }
+
+    private boolean isOverrodePerInstanceReference(Injector.PerInstanceReference<?,?> reference) {
+        return getComponentAnnotation(reference).map(component ->
+                isOverrodePerInstanceReference(reference, component.defaultFor()))
+                .orElse(false);
+    }
+
+    private boolean isOverrodePerInstanceReference(Injector.PerInstanceReference<?,?> reference, Class<?> override) {
+        if(override.equals(Object.class)) {
+            return false;
+        }
+        return ClassUtils.getSuperclassesFor(override)
+                .map(dependencyMap::get)
+                .flatMap(List::stream)
+                .anyMatch(Predicate.not(this::isOverride));
+    }
+
+    private boolean isOverride(Dependency<?> dependency) {
+        if(dependency.annotation == null) {
+            return false;
+        }
+        return !dependency.annotation.defaultFor().equals(Object.class);
+    }
+
+    private Optional<Component> getComponentAnnotation(Injector.PerInstanceReference<?,?> reference) {
+        Optional<Component> annotation;
+        if(reference.getExecutable() instanceof Method) {
+            Method method = (Method) reference.getExecutable();
+            annotation = ClassUtils.getAnnotationFromArray(
+                    method.getAnnotations(), Component.class);
+        } else if(reference.getExecutable() instanceof Constructor<?>) {
+            Constructor<?> constructor = (Constructor<?>) reference.getExecutable();
+            annotation = ClassUtils.getAnnotationFromArray(
+                    reference.getType().getAnnotations(), Component.class);
+        } else {
+            return Optional.empty();
+        }
+        return annotation;
+    }
+
     @Data
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public static class MethodReference<T,R> {
@@ -526,14 +615,17 @@ public class InjectorBuilder {
 
         private final Class<T> type;
 
+        private final Component annotation;
+
         private final boolean perInstance;
 
         @EqualsAndHashCode.Exclude
         private final Set<Dependency<?>> dependencies;
 
-        private Dependency(Class<T> type, boolean perInstance) {
+        private Dependency(Class<T> type, Component annotation, boolean perInstance) {
             id = runningId++;
             this.type = type;
+            this.annotation = annotation;
             this.perInstance = perInstance;
             dependencies = new HashSet<>();
         }
@@ -558,8 +650,8 @@ public class InjectorBuilder {
             return dependencies.isEmpty();
         }
 
-        public static <T> Dependency<T> of(Class<T> type, boolean perInstance) {
-            return new Dependency<>(type, perInstance);
+        public static <T> Dependency<T> of(Class<T> type, Component annotation, boolean perInstance) {
+            return new Dependency<>(type, annotation, perInstance);
         }
     }
 }

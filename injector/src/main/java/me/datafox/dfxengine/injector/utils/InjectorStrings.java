@@ -39,7 +39,11 @@ public class InjectorStrings {
     private static final String PARAMETERIZED_TYPE = "%s has a parameterized type, this is " +
             "not supported and may cause runtime exceptions or other unexpected behavior";
     private static final String COMPONENT_CLASS_FOUND = "Found component %s";
+    private static final String INVALID_OVERRIDE_TYPE =
+            "Component %s has an override type %s which is not the component's superclass or -interface";
     private static final String COMPONENT_METHOD_FOUND = "Found component method %s in %s";
+    private static final String INVALID_OVERRIDE_TYPE_METHOD =
+            "Component %s in method %s has an override type %s which is not the component's superclass or -interface";
     private static final String RESOLVING_COMPONENT_DEPENDENCIES = "Resolving dependencies for %s";
     private static final String RESOLVING_METHOD_DEPENDENCIES = "Resolving dependencies for method %s in %s";
     private static final String METHOD_NOT_STATIC = "Method is not static, registering declaring %s as a dependency";
@@ -114,8 +118,16 @@ public class InjectorStrings {
         return forType(COMPONENT_CLASS_FOUND, type);
     }
 
+    public static String invalidOverrideType(Class<?> type, Class<?> overrideType) {
+        return forTwoTypes(INVALID_OVERRIDE_TYPE, type, overrideType);
+    }
+
     public static String componentMethodFound(InjectorBuilder.MethodReference<?,?> reference) {
         return forMethodAndType(COMPONENT_METHOD_FOUND, reference.getMethod(), reference.getOwner());
+    }
+
+    public static String invalidMethodOverrideType(InjectorBuilder.MethodReference<?,?> reference, Class<?> overrideType) {
+        return forTypeAndMethodAndType(INVALID_OVERRIDE_TYPE_METHOD, reference.getReturnType(), reference.getMethod(), overrideType);
     }
 
     public static String resolvingComponentDependencies(Class<?> type) {
