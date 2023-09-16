@@ -67,6 +67,57 @@ public class Range {
         throw new IllegalArgumentException("unknown type");
     }
 
+    public static boolean isOutOfLongRange(Numeral numeral) {
+        switch(numeral.getType()) {
+            case INT:
+            case LONG:
+                return false;
+            case BIG_INT:
+                return isOutOfLongRange(numeral.bigIntValue());
+            case FLOAT:
+                return isOutOfLongRange(numeral.floatValue());
+            case DOUBLE:
+                return isOutOfLongRange(numeral.doubleValue());
+            case BIG_DEC:
+                return isOutOfLongRange(numeral.bigDecValue());
+        }
+
+        throw new IllegalArgumentException("unknown type");
+    }
+
+    public static boolean isOutOfFloatRange(Numeral numeral) {
+        switch(numeral.getType()) {
+            case INT:
+            case LONG:
+            case FLOAT:
+                return false;
+            case BIG_INT:
+                return isOutOfFloatRange(numeral.bigIntValue());
+            case DOUBLE:
+                return isOutOfFloatRange(numeral.doubleValue());
+            case BIG_DEC:
+                return isOutOfFloatRange(numeral.bigDecValue());
+        }
+
+        throw new IllegalArgumentException("unknown type");
+    }
+
+    public static boolean isOutOfDoubleRange(Numeral numeral) {
+        switch(numeral.getType()) {
+            case INT:
+            case LONG:
+            case FLOAT:
+            case DOUBLE:
+                return false;
+            case BIG_INT:
+                return isOutOfDoubleRange(numeral.bigIntValue());
+            case BIG_DEC:
+                return isOutOfDoubleRange(numeral.bigDecValue());
+        }
+
+        throw new IllegalArgumentException("unknown type");
+    }
+
     public static boolean isOutOfIntRange(long l) {
         return l > Integer.MAX_VALUE || l < Integer.MIN_VALUE;
     }
@@ -87,24 +138,6 @@ public class Range {
         return bd.compareTo(DEC_MAX_INT) > 0 || bd.compareTo(DEC_MIN_INT) < 0;
     }
 
-    public static boolean isOutOfLongRange(Numeral numeral) {
-        switch(numeral.getType()) {
-            case INT:
-            case LONG:
-                return false;
-            case BIG_INT:
-                return isOutOfLongRange(numeral.bigIntValue());
-            case FLOAT:
-                return isOutOfLongRange(numeral.floatValue());
-            case DOUBLE:
-                return isOutOfLongRange(numeral.doubleValue());
-            case BIG_DEC:
-                return isOutOfLongRange(numeral.bigDecValue());
-        }
-
-        throw new IllegalArgumentException("unknown type");
-    }
-
     public static boolean isOutOfLongRange(BigInteger bi) {
         return bi.compareTo(INT_MAX_LONG) > 0 || bi.compareTo(INT_MIN_LONG) < 0;
     }
@@ -121,23 +154,6 @@ public class Range {
         return bd.compareTo(DEC_MAX_LONG) > 0 || bd.compareTo(DEC_MIN_LONG) < 0;
     }
 
-    public static boolean isOutOfFloatRange(Numeral numeral) {
-        switch(numeral.getType()) {
-            case INT:
-            case LONG:
-            case FLOAT:
-                return false;
-            case BIG_INT:
-                return isOutOfFloatRange(numeral.bigIntValue());
-            case DOUBLE:
-                return isOutOfFloatRange(numeral.doubleValue());
-            case BIG_DEC:
-                return isOutOfFloatRange(numeral.bigDecValue());
-        }
-
-        throw new IllegalArgumentException("unknown type");
-    }
-
     public static boolean isOutOfFloatRange(BigInteger bi) {
         return bi.compareTo(INT_MAX_FLOAT) > 0 || bi.compareTo(INT_MIN_FLOAT) < 0;
     }
@@ -148,22 +164,6 @@ public class Range {
 
     public static boolean isOutOfFloatRange(BigDecimal bd) {
         return bd.compareTo(DEC_MAX_FLOAT) > 0 || bd.compareTo(DEC_MIN_FLOAT) < 0;
-    }
-
-    public static boolean isOutOfDoubleRange(Numeral numeral) {
-        switch(numeral.getType()) {
-            case INT:
-            case LONG:
-            case FLOAT:
-            case DOUBLE:
-                return false;
-            case BIG_INT:
-                return isOutOfDoubleRange(numeral.bigIntValue());
-            case BIG_DEC:
-                return isOutOfDoubleRange(numeral.bigDecValue());
-        }
-
-        throw new IllegalArgumentException("unknown type");
     }
 
     public static boolean isOutOfDoubleRange(BigInteger bi) {
