@@ -8,8 +8,7 @@ import java.math.BigInteger;
 
 import static me.datafox.dfxengine.math.api.NumeralType.*;
 import static me.datafox.dfxengine.math.utils.Conversion.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author datafox
@@ -20,6 +19,8 @@ public class ConversionTest {
     private static final LongNumeral smallLongNumeral = new LongNumeral(838L);
     private static final LongNumeral negativeLongNumeral = new LongNumeral(-9988776655L);
     private static final BigIntNumeral bigIntNumeral = new BigIntNumeral("734273427342734273427342");
+    private static final BigIntNumeral largeBigIntNumeral = new BigIntNumeral("5247833239524783323952478332395247833239");
+    private static final BigIntNumeral hugeBigIntNumeral = new BigIntNumeral("5247833239524783323952478332395247833239524783323952478332395247833239524783323952478332395247833239524783323952478332395247833239524783323952478332395247833239524783323952478332395247833239524783323952478332395247833239524783323952478332395247833239524783323952478332395247833239524783323952478332395247833239524783323952478332395247833239524783323952478332395247833239524783323952478332395247833239");
     private static final BigIntNumeral smallBigIntNumeral = new BigIntNumeral(2473658642L);
     private static final BigIntNumeral negativeBigIntNumeral = new BigIntNumeral("-734273427342734273427342");
     private static final FloatNumeral floatNumeral = new FloatNumeral(3.3333e33f);
@@ -27,6 +28,7 @@ public class ConversionTest {
     private static final FloatNumeral negativeFloatNumeral = new FloatNumeral(-3.3333e33f);
     private static final DoubleNumeral doubleNumeral = new DoubleNumeral(5.2e77d);
     private static final DoubleNumeral smallDoubleNumeral = new DoubleNumeral(1.512153152e32d);
+    private static final DoubleNumeral tinyDoubleNumeral = new DoubleNumeral(1.434543454e12d);
     private static final DoubleNumeral negativeDoubleNumeral = new DoubleNumeral(-5.2e77d);
     private static final BigDecNumeral bigDecNumeral = new BigDecNumeral("9.88765432102468e+420");
     private static final BigDecNumeral smallBigDecNumeral = new BigDecNumeral(1.111111e111d);
@@ -121,13 +123,24 @@ public class ConversionTest {
     }
 
     @Test
+    public void toIntegerTest() {
+        assertEquals(new IntNumeral(961), toInteger(smallFloatNumeral));
+        assertEquals(new LongNumeral(1434543454000L), toInteger(tinyDoubleNumeral));
+        assertEquals(new BigIntNumeral("9887654321024680000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"), toInteger(bigDecNumeral));
+        assertSame(intNumeral, toInteger(intNumeral));
+        assertSame(longNumeral, toInteger(longNumeral));
+        assertSame(bigIntNumeral, toInteger(bigIntNumeral));
+    }
+
+    @Test
     public void toDecimalTest() {
         assertEquals(new FloatNumeral(666f), toDecimal(intNumeral));
         assertEquals(new FloatNumeral(9.988777e9f), toDecimal(longNumeral));
-        assertEquals(new FloatNumeral(7.3427344e23f), toDecimal(bigIntNumeral));
-        assertEquals(floatNumeral, toDecimal(floatNumeral));
-        assertEquals(doubleNumeral, toDecimal(doubleNumeral));
-        assertEquals(bigDecNumeral, toDecimal(bigDecNumeral));
+        assertEquals(new DoubleNumeral(5.2478332395247835e39), toDecimal(largeBigIntNumeral));
+        assertEquals(new BigDecNumeral("5.247833239524783323952478332395248e+399"), toDecimal(hugeBigIntNumeral));
+        assertSame(floatNumeral, toDecimal(floatNumeral));
+        assertSame(doubleNumeral, toDecimal(doubleNumeral));
+        assertSame(bigDecNumeral, toDecimal(bigDecNumeral));
     }
 
     @Test
