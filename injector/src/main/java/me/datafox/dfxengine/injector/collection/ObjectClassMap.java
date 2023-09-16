@@ -27,7 +27,6 @@ public class ObjectClassMap extends FunctionClassMap<Object> {
     /**
      * @param type the type to be retrieved
      * @return the retrieved values cast to the type
-     * @param <T> the type
      *
      * @see ObjectClassMap
      */

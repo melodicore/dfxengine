@@ -2,8 +2,8 @@ package me.datafox.dfxengine.injector.collection;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import me.datafox.dfxengine.injector.InjectorBuilder;
 import me.datafox.dfxengine.injector.Injector;
+import me.datafox.dfxengine.injector.InjectorBuilder;
 import me.datafox.dfxengine.utils.ClassUtils;
 
 import java.util.*;
@@ -35,8 +35,6 @@ public class FunctionClassMap<T> {
 
     /**
      * @param function the function that resolves types from values
-     *
-     * @see FunctionClassMap
      */
     public FunctionClassMap(Function<T,Class<?>> function) {
         this.function = function;
@@ -45,8 +43,6 @@ public class FunctionClassMap<T> {
 
     /**
      * @param value the value to be added
-     *
-     * @see FunctionClassMap
      */
     public void put(T value) {
         ClassUtils
@@ -56,8 +52,6 @@ public class FunctionClassMap<T> {
 
     /**
      * @param values the values to be added
-     *
-     * @see FunctionClassMap
      */
     public void putAll(Collection<T> values) {
         for(T value : values) {
@@ -68,7 +62,6 @@ public class FunctionClassMap<T> {
     /**
      * @param type the type to be retrieved
      * @return list of values associated with the type
-     * @param <R> the type
      *
      * @see FunctionClassMap
      */
@@ -85,7 +78,6 @@ public class FunctionClassMap<T> {
     /**
      * @param type the type to be checked
      * @return true if values are present for the type, false otherwise
-     * @param <R> the type
      *
      * @see FunctionClassMap
      */
@@ -96,9 +88,6 @@ public class FunctionClassMap<T> {
     /**
      * @param type the type to be checked
      * @return true if a single value is present for the type, false otherwise
-     * @param <R> the type
-     *
-     * @see FunctionClassMap
      */
     public <R> boolean isSingleton(Class<R> type) {
         List<T> list = delegate.get(type);
