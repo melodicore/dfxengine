@@ -32,50 +32,50 @@ public class NumeralsTest {
     public void isZeroTest() {
         Assertions.assertTrue(Numerals.isZero(new IntNumeral(0)));
         Assertions.assertTrue(Numerals.isZero(new LongNumeral(0L)));
-        Assertions.assertTrue(Numerals.isZero(new BigIntNumeral(new BigInteger("0"))));
+        Assertions.assertTrue(Numerals.isZero(new BigIntNumeral("0")));
         Assertions.assertTrue(Numerals.isZero(new FloatNumeral(0.0f)));
         Assertions.assertTrue(Numerals.isZero(new FloatNumeral(-0.0f)));
         Assertions.assertTrue(Numerals.isZero(new DoubleNumeral(0.0d)));
         Assertions.assertTrue(Numerals.isZero(new DoubleNumeral(-0.0d)));
-        Assertions.assertTrue(Numerals.isZero(new BigDecNumeral(new BigDecimal("0"))));
-        Assertions.assertTrue(Numerals.isZero(new BigDecNumeral(new BigDecimal("0.0"))));
+        Assertions.assertTrue(Numerals.isZero(new BigDecNumeral(0)));
+        Assertions.assertTrue(Numerals.isZero(new BigDecNumeral("0.0")));
 
         Assertions.assertFalse(Numerals.isZero(new IntNumeral(7)));
         Assertions.assertFalse(Numerals.isZero(new LongNumeral(-345345345345345L)));
-        Assertions.assertFalse(Numerals.isZero(new BigIntNumeral(new BigInteger("37"))));
+        Assertions.assertFalse(Numerals.isZero(new BigIntNumeral(37)));
         Assertions.assertFalse(Numerals.isZero(new FloatNumeral(0.1f)));
         Assertions.assertFalse(Numerals.isZero(new FloatNumeral(-Float.MIN_VALUE)));
         Assertions.assertFalse(Numerals.isZero(new DoubleNumeral(94.7d)));
-        Assertions.assertFalse(Numerals.isZero(new BigDecNumeral(new BigDecimal("-2.5147"))));
-        Assertions.assertFalse(Numerals.isZero(new BigDecNumeral(new BigDecimal("1e-734"))));
+        Assertions.assertFalse(Numerals.isZero(new BigDecNumeral("-2.5147")));
+        Assertions.assertFalse(Numerals.isZero(new BigDecNumeral("1e-734")));
     }
 
     @Test
     public void isOneTest() {
         Assertions.assertTrue(Numerals.isOne(new IntNumeral(1)));
         Assertions.assertTrue(Numerals.isOne(new LongNumeral(1L)));
-        Assertions.assertTrue(Numerals.isOne(new BigIntNumeral(new BigInteger("1"))));
+        Assertions.assertTrue(Numerals.isOne(new BigIntNumeral(1)));
         Assertions.assertTrue(Numerals.isOne(new FloatNumeral(1.0f)));
         Assertions.assertTrue(Numerals.isOne(new DoubleNumeral(1.0d)));
-        Assertions.assertTrue(Numerals.isOne(new BigDecNumeral(new BigDecimal("1"))));
-        Assertions.assertTrue(Numerals.isOne(new BigDecNumeral(new BigDecimal("1.0"))));
+        Assertions.assertTrue(Numerals.isOne(new BigDecNumeral(1)));
+        Assertions.assertTrue(Numerals.isOne(new BigDecNumeral("1.0")));
 
         Assertions.assertFalse(Numerals.isOne(new IntNumeral(7)));
         Assertions.assertFalse(Numerals.isOne(new LongNumeral(-345345345345345L)));
-        Assertions.assertFalse(Numerals.isOne(new BigIntNumeral(new BigInteger("37"))));
+        Assertions.assertFalse(Numerals.isOne(new BigIntNumeral(37)));
         Assertions.assertFalse(Numerals.isOne(new FloatNumeral(0.1f)));
         Assertions.assertFalse(Numerals.isOne(new FloatNumeral(-Float.MIN_VALUE)));
         Assertions.assertFalse(Numerals.isOne(new DoubleNumeral(94.7d)));
-        Assertions.assertFalse(Numerals.isOne(new BigDecNumeral(new BigDecimal("-2.5147"))));
-        Assertions.assertFalse(Numerals.isOne(new BigDecNumeral(new BigDecimal("1e-734"))));
+        Assertions.assertFalse(Numerals.isOne(new BigDecNumeral("-2.5147")));
+        Assertions.assertFalse(Numerals.isOne(new BigDecNumeral("1e-734")));
     }
 
     @Test
     public void compareTest() {
-        Assertions.assertEquals(0, Numerals.compare(new IntNumeral(72), new BigIntNumeral(new BigInteger("72"))));
+        Assertions.assertEquals(0, Numerals.compare(new IntNumeral(72), new BigIntNumeral(72)));
         Assertions.assertEquals(0, Numerals.compare(new FloatNumeral(0.4f), new DoubleNumeral(0.4d)));
-        Assertions.assertEquals(0, Numerals.compare(new FloatNumeral(9372.561f), new BigDecNumeral(new BigDecimal("9372.561"))));
-        Assertions.assertEquals(1, Numerals.compare(new BigDecNumeral(new BigDecimal("69247.0000000000001")), new IntNumeral(69247)));
+        Assertions.assertEquals(0, Numerals.compare(new FloatNumeral(9372.561f), new BigDecNumeral("9372.561")));
+        Assertions.assertEquals(1, Numerals.compare(new BigDecNumeral("69247.0000000000001"), new IntNumeral(69247)));
         Assertions.assertEquals(-1, Numerals.compare(new DoubleNumeral(-0.0), new DoubleNumeral(0.0)));
     }
 

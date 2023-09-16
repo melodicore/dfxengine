@@ -20,7 +20,7 @@ public class ConversionTest {
     private static final LongNumeral smallLongNumeral = new LongNumeral(838L);
     private static final LongNumeral negativeLongNumeral = new LongNumeral(-9988776655L);
     private static final BigIntNumeral bigIntNumeral = new BigIntNumeral("734273427342734273427342");
-    private static final BigIntNumeral smallBigIntNumeral = new BigIntNumeral(BigInteger.valueOf(2473658642L));
+    private static final BigIntNumeral smallBigIntNumeral = new BigIntNumeral(2473658642L);
     private static final BigIntNumeral negativeBigIntNumeral = new BigIntNumeral("-734273427342734273427342");
     private static final FloatNumeral floatNumeral = new FloatNumeral(3.3333e33f);
     private static final FloatNumeral smallFloatNumeral = new FloatNumeral(961.34f);
@@ -29,7 +29,7 @@ public class ConversionTest {
     private static final DoubleNumeral smallDoubleNumeral = new DoubleNumeral(1.512153152e32d);
     private static final DoubleNumeral negativeDoubleNumeral = new DoubleNumeral(-5.2e77d);
     private static final BigDecNumeral bigDecNumeral = new BigDecNumeral("9.88765432102468e+420");
-    private static final BigDecNumeral smallBigDecNumeral = new BigDecNumeral(BigDecimal.valueOf(1.111111e111d));
+    private static final BigDecNumeral smallBigDecNumeral = new BigDecNumeral(1.111111e111d);
     private static final BigDecNumeral negativeBigDecNumeral = new BigDecNumeral("-9.88765432102468e+420");
 
     @Test

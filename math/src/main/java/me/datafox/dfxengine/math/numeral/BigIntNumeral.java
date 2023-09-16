@@ -22,6 +22,10 @@ public final class BigIntNumeral extends AbstractNumeral {
         this.number = new BigInteger(val);
     }
 
+    public BigIntNumeral(long val) {
+        this.number = BigInteger.valueOf(val);
+    }
+
     @Override
     public BigInteger bigIntValue() {
         return number;

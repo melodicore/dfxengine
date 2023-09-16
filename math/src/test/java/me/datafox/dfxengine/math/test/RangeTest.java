@@ -20,10 +20,10 @@ public class RangeTest {
     private static final LongNumeral longOutsideInt = new LongNumeral(Integer.MAX_VALUE + 1L);
     private static final LongNumeral negativeLongOutsideInt = new LongNumeral(Integer.MIN_VALUE - 1L);
 
-    private static final BigIntNumeral bigIntWithinInt = new BigIntNumeral(BigInteger.valueOf(Integer.MAX_VALUE));
-    private static final BigIntNumeral negativeBigIntWithinInt = new BigIntNumeral(BigInteger.valueOf(Integer.MIN_VALUE));
-    private static final BigIntNumeral bigIntWithinLong = new BigIntNumeral(BigInteger.valueOf(Long.MAX_VALUE));
-    private static final BigIntNumeral negativeBigIntWithinLong = new BigIntNumeral(BigInteger.valueOf(Long.MIN_VALUE));
+    private static final BigIntNumeral bigIntWithinInt = new BigIntNumeral(Integer.MAX_VALUE);
+    private static final BigIntNumeral negativeBigIntWithinInt = new BigIntNumeral(Integer.MIN_VALUE);
+    private static final BigIntNumeral bigIntWithinLong = new BigIntNumeral(Long.MAX_VALUE);
+    private static final BigIntNumeral negativeBigIntWithinLong = new BigIntNumeral(Long.MIN_VALUE);
     private static final BigIntNumeral bigIntWithinFloat = new BigIntNumeral(BigDecimal.valueOf(Float.MAX_VALUE).toBigInteger());
     private static final BigIntNumeral negativeBigIntWithinFloat = new BigIntNumeral(BigDecimal.valueOf(-Float.MAX_VALUE).toBigInteger());
     private static final BigIntNumeral bigIntWithinDouble = new BigIntNumeral(BigDecimal.valueOf(Double.MAX_VALUE).toBigInteger());
@@ -47,14 +47,14 @@ public class RangeTest {
     private static final DoubleNumeral doubleOutsideFloat = new DoubleNumeral(Float.MAX_VALUE + 3.777893186295716e22d);
     private static final DoubleNumeral negativeDoubleOutsideFloat = new DoubleNumeral(-Float.MAX_VALUE - 3.777893186295716e22d);
 
-    private static final BigDecNumeral bigDecWithinInt = new BigDecNumeral(BigDecimal.valueOf(Integer.MAX_VALUE));
-    private static final BigDecNumeral negativeBigDecWithinInt = new BigDecNumeral(BigDecimal.valueOf(Integer.MIN_VALUE));
-    private static final BigDecNumeral bigDecWithinLong = new BigDecNumeral(BigDecimal.valueOf(Long.MAX_VALUE));
-    private static final BigDecNumeral negativeBigDecWithinLong = new BigDecNumeral(BigDecimal.valueOf(Long.MIN_VALUE));
-    private static final BigDecNumeral bigDecWithinFloat = new BigDecNumeral(BigDecimal.valueOf(Float.MAX_VALUE));
-    private static final BigDecNumeral negativeBigDecWithinFloat = new BigDecNumeral(BigDecimal.valueOf(-Float.MAX_VALUE));
-    private static final BigDecNumeral bigDecWithinDouble = new BigDecNumeral(BigDecimal.valueOf(Double.MAX_VALUE));
-    private static final BigDecNumeral negativeBigDecWithinDouble = new BigDecNumeral(BigDecimal.valueOf(-Double.MAX_VALUE));
+    private static final BigDecNumeral bigDecWithinInt = new BigDecNumeral(Integer.MAX_VALUE);
+    private static final BigDecNumeral negativeBigDecWithinInt = new BigDecNumeral(Integer.MIN_VALUE);
+    private static final BigDecNumeral bigDecWithinLong = new BigDecNumeral(Long.MAX_VALUE);
+    private static final BigDecNumeral negativeBigDecWithinLong = new BigDecNumeral(Long.MIN_VALUE);
+    private static final BigDecNumeral bigDecWithinFloat = new BigDecNumeral(Float.MAX_VALUE);
+    private static final BigDecNumeral negativeBigDecWithinFloat = new BigDecNumeral(-Float.MAX_VALUE);
+    private static final BigDecNumeral bigDecWithinDouble = new BigDecNumeral(Double.MAX_VALUE);
+    private static final BigDecNumeral negativeBigDecWithinDouble = new BigDecNumeral(-Double.MAX_VALUE);
     private static final BigDecNumeral bigDecOutsideDouble = new BigDecNumeral("1.7976931348623158e+308");
     private static final BigDecNumeral negativeBigDecOutsideDouble = new BigDecNumeral("-1.7976931348623158e+308");
 

@@ -22,6 +22,13 @@ public final class BigDecNumeral extends AbstractNumeral {
         this.number = new BigDecimal(val);
     }
 
+    public BigDecNumeral(long val) {
+        this.number = BigDecimal.valueOf(val);
+    }
+    public BigDecNumeral(double val) {
+        this.number = BigDecimal.valueOf(val);
+    }
+
     @Override
     public BigDecimal bigDecValue() {
         return number;
