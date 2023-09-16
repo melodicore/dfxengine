@@ -3,11 +3,14 @@ package me.datafox.dfxengine.math.numeral;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 
 import java.math.BigDecimal;
 
 /**
+ * Implementation of {@link Numeral} backed with {@link BigDecimal}.
+ *
  * @author datafox
  */
 
@@ -25,6 +28,7 @@ public final class BigDecNumeral extends AbstractNumeral {
     public BigDecNumeral(long val) {
         this.number = BigDecimal.valueOf(val);
     }
+
     public BigDecNumeral(double val) {
         this.number = BigDecimal.valueOf(val);
     }

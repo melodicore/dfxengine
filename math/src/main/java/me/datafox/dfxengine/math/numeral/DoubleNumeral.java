@@ -2,9 +2,12 @@ package me.datafox.dfxengine.math.numeral;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 
 /**
+ * Implementation of {@link Numeral} backed with a double.
+ *
  * @author datafox
  */
 

@@ -11,11 +11,13 @@ import java.math.BigInteger;
 import static me.datafox.dfxengine.math.utils.Numerals.compare;
 
 /**
+ * Abstract implementation of {@link Numeral}.
+ *
  * @author datafox
  */
 abstract class AbstractNumeral implements Numeral {
     @Override
-    public Numeral convert(NumeralType type) throws ArithmeticException {
+    public Numeral convert(NumeralType type) {
         return Conversion.toNumeral(this, type);
     }
 
@@ -26,6 +28,11 @@ abstract class AbstractNumeral implements Numeral {
         }
 
         return this;
+    }
+
+    @Override
+    public Numeral convertToInteger() {
+        return Conversion.toInteger(this);
     }
 
     @Override

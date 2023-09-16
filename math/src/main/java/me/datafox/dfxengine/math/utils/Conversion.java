@@ -10,9 +10,18 @@ import java.math.BigInteger;
 import static me.datafox.dfxengine.math.utils.Range.*;
 
 /**
+ * Various conversion methods for {@link Numeral Numerals}.
+ *
  * @author datafox
  */
 public class Conversion {
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return int representation of the specified value
+     *
+     * @throws ArithmeticException if the value of the specified Numeral is smaller than {@link Integer#MIN_VALUE} or
+     * greater than {@link Integer#MAX_VALUE}
+     */
     public static int toInt(Numeral numeral) {
         if(numeral instanceof IntNumeral) {
             return numeral.intValue();
@@ -39,6 +48,13 @@ public class Conversion {
         }
     }
 
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return long representation of the specified value
+     *
+     * @throws ArithmeticException if the value of the specified Numeral is smaller than {@link Long#MIN_VALUE} or
+     * greater than {@link Long#MAX_VALUE}
+     */
     public static long toLong(Numeral numeral) {
         if(numeral instanceof LongNumeral) {
             return numeral.longValue();
@@ -64,6 +80,10 @@ public class Conversion {
         }
     }
 
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return {@link BigInteger} representation of the specified value
+     */
     public static BigInteger toBigInt(Numeral numeral) {
         if(numeral instanceof BigIntNumeral || numeral instanceof FloatNumeral) {
             return numeral.bigIntValue();
@@ -90,6 +110,13 @@ public class Conversion {
         }
     }
 
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return float representation of the specified value
+     *
+     * @throws ArithmeticException if the value of the specified Numeral is smaller than
+     * {@link Float#MAX_VALUE -Float.MAX_VALUE} or greater than {@link Float#MAX_VALUE}
+     */
     public static float toFloat(Numeral numeral) {
         if(numeral instanceof FloatNumeral) {
             return numeral.floatValue();
@@ -114,6 +141,14 @@ public class Conversion {
         }
     }
 
+
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return double representation of the specified value
+     *
+     * @throws ArithmeticException if the value of the specified Numeral is smaller than
+     * {@link Double#MAX_VALUE -Double.MAX_VALUE} or greater than {@link Double#MAX_VALUE}
+     */
     public static double toDouble(Numeral numeral) {
         if(numeral instanceof DoubleNumeral || numeral instanceof FloatNumeral) {
             return numeral.doubleValue();
@@ -137,6 +172,10 @@ public class Conversion {
         }
     }
 
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return {@link BigDecimal} representation of the specified value
+     */
     public static BigDecimal toBigDec(Numeral numeral) {
         if(numeral instanceof BigDecNumeral || numeral instanceof FloatNumeral) {
             return numeral.bigDecValue();
@@ -148,7 +187,7 @@ public class Conversion {
                 case LONG:
                     return BigDecimal.valueOf(numeral.getNumber().longValue());
                 case BIG_INT:
-                    return new BigDecimal((BigInteger) numeral.getNumber());
+                    return new BigDecimal((BigInteger) numeral.getNumber(), Operations.getContext());
                 case FLOAT:
                 case DOUBLE:
                     return BigDecimal.valueOf(numeral.getNumber().doubleValue());
@@ -161,6 +200,11 @@ public class Conversion {
         }
     }
 
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return a Numeral backed with the smallest type that can hold the specified Numeral's value. This method does not
+     * convert between integer and decimal types.
+     */
     public static Numeral toSmallestType(Numeral numeral) {
         switch(numeral.getType()) {
             case INT:
@@ -196,26 +240,49 @@ public class Conversion {
         throw new IllegalArgumentException("unknown type");
     }
 
-    public static Numeral toDecimal(Numeral numeral) {
-        switch(numeral.getType()) {
-            case INT:
-            case LONG:
-                return toFloatNumeral(numeral);
-            case BIG_INT:
-                if(!isOutOfFloatRange(numeral)) {
-                    return toFloatNumeral(numeral);
-                }
-
-                if(!isOutOfDoubleRange(numeral)) {
-                    return toDoubleNumeral(numeral);
-                }
-
-                return toBigDecNumeral(numeral);
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return a Numeral backed with the smallest integer type that can hold the specified Numeral's value, unless the
+     * Numeral is already an integer, in which case the specified Numeral is returned
+     */
+    public static Numeral toInteger(Numeral numeral) {
+        if(numeral.getType().isInteger()) {
+            return numeral;
         }
-
-        return numeral;
+        if(!isOutOfIntRange(numeral)) {
+            return toIntNumeral(numeral);
+        }
+        if(!isOutOfLongRange(numeral)) {
+            return toLongNumeral(numeral);
+        }
+        return toBigIntNumeral(numeral);
     }
 
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return a Numeral backed with the smallest decimal type that can hold the specified Numeral's value, unless the
+     * Numeral is already a decimal, in which case the specified Numeral is returned
+     */
+    public static Numeral toDecimal(Numeral numeral) {
+        if(numeral.getType().isDecimal()) {
+            return numeral;
+        }
+        if(!isOutOfFloatRange(numeral)) {
+            return toFloatNumeral(numeral);
+        }
+        if(!isOutOfDoubleRange(numeral)) {
+            return toDoubleNumeral(numeral);
+        }
+        return toBigDecNumeral(numeral);
+    }
+
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @param type type for the Numeral to be converted to
+     * @return a Numeral backed with the specified type
+     *
+     * @throws ArithmeticException if the value of the specified Numeral is outside the specified type's bounds
+     */
     public static Numeral toNumeral(Numeral numeral, NumeralType type) {
         switch(type) {
             case INT:
@@ -234,6 +301,13 @@ public class Conversion {
         throw new IllegalArgumentException("unknown type");
     }
 
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return Numeral backed by an int with the specified Numeral's value
+     *
+     * @throws ArithmeticException if the value of the specified Numeral is smaller than {@link Integer#MIN_VALUE} or
+     * greater than {@link Integer#MAX_VALUE}
+     */
     public static IntNumeral toIntNumeral(Numeral numeral) {
         if(numeral instanceof IntNumeral) {
             return (IntNumeral) numeral;
@@ -242,6 +316,13 @@ public class Conversion {
         return Numerals.valueOf(toInt(numeral));
     }
 
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return Numeral backed by a long with the specified Numeral's value
+     *
+     * @throws ArithmeticException if the value of the specified Numeral is smaller than {@link Long#MIN_VALUE} or
+     * greater than {@link Long#MAX_VALUE}
+     */
     public static LongNumeral toLongNumeral(Numeral numeral) {
         if(numeral instanceof LongNumeral) {
             return (LongNumeral) numeral;
@@ -250,6 +331,10 @@ public class Conversion {
         return Numerals.valueOf(toLong(numeral));
     }
 
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return Numeral backed by a {@link BigInteger} with the specified Numeral's value
+     */
     public static BigIntNumeral toBigIntNumeral(Numeral numeral) {
         if(numeral instanceof BigIntNumeral) {
             return (BigIntNumeral) numeral;
@@ -258,6 +343,13 @@ public class Conversion {
         return Numerals.valueOf(toBigInt(numeral));
     }
 
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return Numeral backed by a long with the specified Numeral's value
+     *
+     * @throws ArithmeticException if the value of the specified Numeral is smaller than
+     * {@link Float#MAX_VALUE -Float.MAX_VALUE} or greater than {@link Float#MAX_VALUE}
+     */
     public static FloatNumeral toFloatNumeral(Numeral numeral) {
         if(numeral instanceof FloatNumeral) {
             return (FloatNumeral) numeral;
@@ -266,6 +358,14 @@ public class Conversion {
         return Numerals.valueOf(toFloat(numeral));
     }
 
+
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return Numeral backed by a double with the specified Numeral's value
+     *
+     * @throws ArithmeticException if the value of the specified Numeral is smaller than
+     * {@link Double#MAX_VALUE -Double.MAX_VALUE} or greater than {@link Double#MAX_VALUE}
+     */
     public static DoubleNumeral toDoubleNumeral(Numeral numeral) {
         if(numeral instanceof DoubleNumeral) {
             return (DoubleNumeral) numeral;
@@ -274,6 +374,11 @@ public class Conversion {
         return Numerals.valueOf(toDouble(numeral));
     }
 
+
+    /**
+     * @param numeral {@link Numeral} to be converted
+     * @return Numeral backed by a {@link BigDecimal} with the specified Numeral's value
+     */
     public static BigDecNumeral toBigDecNumeral(Numeral numeral) {
         if(numeral instanceof BigDecNumeral) {
             return (BigDecNumeral) numeral;
