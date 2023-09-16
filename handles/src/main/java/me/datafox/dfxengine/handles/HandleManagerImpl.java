@@ -27,7 +27,7 @@ import static me.datafox.dfxengine.handles.HandleConstants.TAGS_ID;
  *
  * @author datafox
  */
-@Component
+@Component(defaultFor = HandleManager.class)
 @EqualsAndHashCode
 @ToString
 public class HandleManagerImpl implements HandleManager {

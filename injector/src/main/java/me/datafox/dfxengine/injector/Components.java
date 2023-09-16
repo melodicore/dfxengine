@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * @author datafox
  */
 public class Components {
-    @Component(InstantiationPolicy.PER_INSTANCE)
+    @Component(value = InstantiationPolicy.PER_INSTANCE, defaultFor = Logger.class)
     private static Logger createLogger(InstantiationDetails<?,?> instantiationDetails) {
         return LoggerFactory.getLogger(instantiationDetails.getRequestingType());
     }
