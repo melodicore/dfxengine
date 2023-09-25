@@ -30,17 +30,17 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractDependent implements Dependent {
     /**
-     * {@link Logger} for this {@link Dependent}
+     * {@link Logger} for this dependent
      */
     protected final Logger logger;
 
     /**
-     * Set of {@link Dependency Dependencies} for this {@link Dependent}
+     * Set of {@link Dependency Dependencies} for this dependent
      */
     protected final Set<Dependency> dependencies;
 
     /**
-     * @param logger {@link Logger} for this {@link Dependent}
+     * @param logger {@link Logger} for this dependent
      */
     protected AbstractDependent(Logger logger) {
         this.logger = logger;
@@ -48,7 +48,7 @@ public abstract class AbstractDependent implements Dependent {
     }
 
     /**
-     * @param logger {@link Logger} for this {@link Dependent}
+     * @param logger {@link Logger} for this dependent
      * @param set {@link Supplier} for a {@link Set} containing {@link Dependency Dependencies} to be used as the
      * backing set
      */

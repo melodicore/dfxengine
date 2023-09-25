@@ -28,14 +28,14 @@ import java.util.function.Supplier;
  */
 public abstract class DependencyDependent extends AbstractDependent implements Dependency {
     /**
-     * @param logger {@link Logger} for this {@link Dependent}
+     * @param logger {@link Logger} for this dependent
      */
     protected DependencyDependent(Logger logger) {
         super(logger);
     }
 
     /**
-     * @param logger {@link Logger} for this {@link Dependent}
+     * @param logger {@link Logger} for this dependent
      * @param set {@link Supplier} for a {@link Set} containing {@link Dependency Dependencies} to be used as the
      * backing set
      */
