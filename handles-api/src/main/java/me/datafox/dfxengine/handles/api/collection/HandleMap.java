@@ -30,7 +30,7 @@ public interface HandleMap<T> extends Map<Handle,T> {
      * @return the previously associated value in this map, or {@code null} if there was no previous association
      *
      * @throws IllegalArgumentException if the specified value does not implement {@link Handled}, or if the associated
-     * {@link Handle} is not contained within the {@link Space} associated with this map
+     * {@link Handle} is not contained in the {@link Space} associated with this map
      */
      T putHandled(T value);
 
