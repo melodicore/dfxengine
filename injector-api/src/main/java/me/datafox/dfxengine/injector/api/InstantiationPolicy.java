@@ -1,20 +1,22 @@
 package me.datafox.dfxengine.injector.api;
 
+import me.datafox.dfxengine.injector.api.annotation.Component;
+
 /**
- * Determines how components are instantiated. A component with {@link #ONCE} is instantiated once as a singleton when
- * the injector is initialized, while a component with {@link #PER_INSTANCE} is instantiated for every component that
- * depends on it.
+ * Determines how {@link Component Components} are instantiated. A Component with {@link #ONCE} is instantiated once as
+ * a singleton when the Injector is initialized, while a Component with {@link #PER_INSTANCE} is instantiated for every
+ * Component that depends on it.
  *
  * @author datafox
  */
 public enum InstantiationPolicy {
     /**
-     * Denotes that a component will be instantiated once as a singleton.
+     * Denotes that a {@link Component} will be instantiated once as a singleton.
      */
     ONCE,
 
     /**
-     * Denotes that a component will be instantiated for every component that depends on it.
+     * Denotes that a {@link Component} will be instantiated for every Component that depends on it.
      */
     PER_INSTANCE
 }

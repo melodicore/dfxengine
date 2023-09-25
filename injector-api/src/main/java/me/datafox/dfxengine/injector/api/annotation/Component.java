@@ -39,8 +39,8 @@ public @interface Component {
     /**
      * If set to other than {@link Object Object.class},
      *
-     * @return the class of components that should override this component, or Object.class if this component should not
-     * be overridden
+     * @return the class of components that should override this component, or {@link Object Object.class} if this
+     * component should not be overridden
      */
     Class<?> defaultFor() default Object.class;
 }
