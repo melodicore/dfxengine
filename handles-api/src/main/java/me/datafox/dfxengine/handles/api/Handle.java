@@ -37,7 +37,7 @@ public interface Handle extends Comparable<Handle> {
 
     /**
      * @param id id to be checked for
-     * @return true if the specified id matches the id of this Handle
+     * @return {@code true} if the specified id matches the id of this Handle
      */
     boolean isId(String id);
 
@@ -48,86 +48,88 @@ public interface Handle extends Comparable<Handle> {
 
     /**
      * @param tag Handle to be added as a tag
-     * @return true if the tags of this Handle changed as a result of this action
+     * @return {@code true} if the tags of this Handle changed as a result of this action
      *
-     * @throws IllegalArgumentException when the specified Handle is not a part of the tags {@link Space} (details for
-     * hardcoded Spaces are documented in {@link HandleManager})
+     * @throws IllegalArgumentException when the specified Handle is not a part of the tags {@link Space}. Details for
+     * hardcoded Spaces are documented in {@link HandleManager}
      */
     boolean addTag(Handle tag);
 
     /**
-     * Adds a tag based on the specified id for the tag. If a tag with the specified id does not exist in the tags {@link Space},
-     * one is automatically created. Details for hardcoded Spaces are documented in {@link HandleManager}.
+     * Adds a tag based on the specified id for the tag. If a tag with the specified id does not exist in the tags
+     * {@link Space}, one is automatically created. Details for hardcoded Spaces are documented in
+     * {@link HandleManager}.
      *
      * @param id id of the Handle to be added as a tag
-     * @return true if the tags of this Handle changed as a result of this action
+     * @return {@code true} if the tags of this Handle changed as a result of this action
      */
     boolean addTagById(String id);
 
 
     /**
      * @param tags Handles to be added as a tags
-     * @return true if the tags of this Handle changed as a result of this action
+     * @return {@code true} if the tags of this Handle changed as a result of this action
      *
-     * @throws IllegalArgumentException when any of the specified Handles are not a part of the tags {@link Space} (details
-     * for hardcoded Spaces are documented in {@link HandleManager})
+     * @throws IllegalArgumentException when any of the specified Handles are not a part of the tags {@link Space}.
+     * Details for hardcoded Spaces are documented in {@link HandleManager}
      */
     boolean addTags(Collection<Handle> tags);
 
     /**
-     * Adds tags based on the specified ids for the tags. If a tag with the specified id does not exist in the tags {@link Space}, one
-     * is automatically created. Details for hardcoded Spaces are documented in {@link HandleManager}.
+     * Adds tags based on the specified ids for the tags. If a tag with the specified id does not exist in the tags
+     * {@link Space}, one is automatically created. Details for hardcoded Spaces are documented in
+     * {@link HandleManager}.
      *
      * @param ids ids for the Handles to be added as a tags
-     * @return true if the tags of this Handle changed as a result of this action
+     * @return {@code true} if the tags of this Handle changed as a result of this action
      */
     boolean addTagsById(Collection<String> ids);
 
     /**
      * @param tag tag to be checked for
-     * @return true if this Handle contains the specified tag
+     * @return {@code true} if this Handle contains the specified tag
      */
     boolean containsTag(Handle tag);
 
     /**
      * @param id id of a tag to be checked for
-     * @return true if this Handle contains a tag with the specified id
+     * @return {@code true} if this Handle contains a tag with the specified id
      */
     boolean containsTagById(String id);
 
     /**
      * @param tags tags to be checked for
-     * @return true if this Handle contains all the specified tags
+     * @return {@code true} if this Handle contains all the specified tags
      */
     boolean containsTags(Collection<Handle> tags);
 
     /**
      * @param ids ids for the tags to be checked for
-     * @return true if this Handle contains tags with all the specified ids
+     * @return {@code true} if this Handle contains tags with all the specified ids
      */
     boolean containsTagsById(Collection<String> ids);
 
     /**
      * @param tag tag to be removed
-     * @return true if the tags of this Handle changed as a result of this action
+     * @return {@code true} if the tags of this Handle changed as a result of this action
      */
     boolean removeTag(Handle tag);
 
     /**
      * @param id id of a tag to be removed
-     * @return true if the tags of this Handle changed as a result of this action
+     * @return {@code true} if the tags of this Handle changed as a result of this action
      */
     boolean removeTagById(String id);
     
     /**
      * @param tags tags to be removed
-     * @return true if the tags of this Handle changed as a result of this action
+     * @return {@code true} if the tags of this Handle changed as a result of this action
      */
     boolean removeTags(Collection<Handle> tags);
 
     /**
      * @param ids ids of the tags to be removed
-     * @return true if the tags of this Handle changed as a result of this action
+     * @return {@code true} if the tags of this Handle changed as a result of this action
      */
     boolean removeTagsById(Collection<String> ids);
 

@@ -13,7 +13,8 @@ import java.util.stream.Stream;
 public interface HandleManager {
     /**
      * @param id id of the requested {@link Handle}
-     * @return {@link Space} identification Handle matching the specified id, or null if none are present
+     * @return {@link Space} identification {@link Handle} matching the specified id, or {@code null} if none are
+     * present
      */
     Handle getSpaceHandle(String id);
 
@@ -23,14 +24,14 @@ public interface HandleManager {
     Collection<Handle> getSpaceHandles();
 
     /**
-     * @param handle {@link Handle} of the requested Space
-     * @return contained Space matching the specified Handle, or null if none are present
+     * @param handle {@link Handle} of the requested {@link Space}
+     * @return contained {@link Space} matching the specified {@link Handle}, or {@code null} if none are present
      */
     Space getSpace(Handle handle);
 
     /**
      * @param id id of the requested {@link Space}
-     * @return contained Space matching the specified id, or null if none are present
+     * @return contained {@link Space} matching the specified id, or {@code null} if none are present
      */
     Space getSpaceById(String id);
 
@@ -41,9 +42,9 @@ public interface HandleManager {
 
     /**
      * @param id id of the {@link Space} to be created
-     * @return created Space
+     * @return created {@link Space}
      *
-     * @throws IllegalArgumentException if a Space with the specified id is already present
+     * @throws IllegalArgumentException if a {@link Space} with the specified id is already present
      */
     Space createSpace(String id);
 
@@ -51,80 +52,81 @@ public interface HandleManager {
      * Checks if a {@link Space} is present with the specified id. If one is present, that Space is returned. If none
      * are present, a new Space with the specified id is created and returned.
      *
-     * @param id id of the requested Space
-     * @return requested Space
+     * @param id id of the requested {@link Space}
+     * @return requested {@link Space}
      */
     Space getOrCreateSpace(String id);
 
     /**
      * @param space {@link Space} to be checked for
-     * @return true if this HandleManager contains the specified Space
+     * @return {@code true} if this HandleManager contains the specified {@link Space}
      */
     boolean containsSpace(Space space);
 
     /**
      * @param handle identifying {@link Handle} of the {@link Space} to be checked for
-     * @return true if this HandleManager contains a Space with the specified Handle
+     * @return {@code true} if this HandleManager contains a {@link Space} with the specified {@link Handle}
      */
     boolean containsSpaceByHandle(Handle handle);
 
     /**
      * @param id id of the {@link Space} to be checked for
-     * @return true if this HandleManager contains a Space with the specified id
+     * @return {@code true} if this HandleManager contains a {@link Space} with the specified id
      */
     boolean containsSpaceById(String id);
 
     /**
      * @param spaces {@link Space Spaces} to be checked for
-     * @return true if this HandleManager contains all the specified Spaces
+     * @return {@code true} if this HandleManager contains all the specified {@link Space Spaces}
      */
     boolean containsSpaces(Collection<Space> spaces);
 
     /**
      * @param handles identifying {@link Handle Handles} of the {@link Space Spaces} to be checked for
-     * @return true if this HandleManager contains Spaces with all the specified Handles
+     * @return {@code true} if this HandleManager contains {@link Space Spaces} with all the specified
+     * {@link Handle Handles}
      */
     boolean containsSpacesByHandle(Collection<Handle> handles);
 
     /**
      * @param ids ids of the {@link Space Spaces} to be checked for
-     * @return true if this HandleManager contains Spaces with all the specified ids
+     * @return {@code true} if this HandleManager contains {@link Space Spaces} with all the specified ids
      */
     boolean containsSpacesById(Collection<String> ids);
 
     /**
      * @param space {@link Space} to be removed
-     * @return true if the Spaces of this HandleManager changed as a result of this action
+     * @return {@code true} if the {@link Space Spaces} of this HandleManager changed as a result of this action
      */
     boolean removeSpace(Space space);
 
     /**
      * @param handle identifying {@link Handle} of the {@link Space} to be removed
-     * @return true if the Spaces of this HandleManager changed as a result of this action
+     * @return {@code true} if the {@link Space Spaces} of this HandleManager changed as a result of this action
      */
     boolean removeSpaceByHandle(Handle handle);
 
     /**
      * @param id id of the {@link Space} to be removed
-     * @return true if the Spaces of this HandleManager changed as a result of this action
+     * @return {@code true} if the {@link Space Spaces} of this HandleManager changed as a result of this action
      */
     boolean removeSpaceById(String id);
 
     /**
      * @param spaces {@link Space Spaces} to be removed
-     * @return true if the Spaces of this HandleManager changed as a result of this action
+     * @return {@code true} if the {@link Space Spaces} of this HandleManager changed as a result of this action
      */
     boolean removeSpaces(Collection<Space> spaces);
 
     /**
      * @param handles {@link Handle Handles} of the {@link Space Spaces} to be removed
-     * @return true if the Spaces of this HandleManager changed as a result of this action
+     * @return {@code true} if the {@link Space Spaces} of this HandleManager changed as a result of this action
      */
     boolean removeSpacesByHandle(Collection<Handle> handles);
 
     /**
      * @param ids ids of the {@link Space Spaces} to be removed
-     * @return true if the Spaces of this HandleManager changed as a result of this action
+     * @return {@code true} if the {@link Space Spaces} of this HandleManager changed as a result of this action
      */
     boolean removeSpacesById(Collection<String> ids);
 
@@ -135,7 +137,7 @@ public interface HandleManager {
 
     /**
      * @param id id of the requested tag {@link Handle}
-     * @return tag Handle matching the specified id, or null if none are present
+     * @return tag {@link Handle} matching the specified id, or {@code null} if none are present
      */
     Handle getTag(String id);
 
@@ -146,7 +148,7 @@ public interface HandleManager {
 
     /**
      * @param id id of the tag {@link Handle} to be created
-     * @return created Handle
+     * @return created {@link Handle}
      *
      * @throws IllegalArgumentException if a tag Handle with the specified id is already present
      */
@@ -156,56 +158,56 @@ public interface HandleManager {
      * Checks if a tag {@link Handle} is present with the specified id. If one is present, that tag Handle is returned.
      * If none are present, a new tag Handle with the specified id is created and returned.
      *
-     * @param id id of the requested tag Handle
-     * @return requested tag Handle
+     * @param id id of the requested tag {@link Handle}
+     * @return requested tag {@link Handle}
      */
     Handle getOrCreateTag(String id);
 
     /**
      * @param tag tag {@link Handle} to be checked for
-     * @return true if this HandleManager contains the specified tag Handle
+     * @return {@code true} if this HandleManager contains the specified tag {@link Handle}
      */
     boolean containsTag(Handle tag);
 
     /**
      * @param id id of the tag {@link Handle} to be checked for
-     * @return true if this HandleManager contains a tag Handle with the specified id
+     * @return {@code true} if this HandleManager contains a tag {@link Handle} with the specified id
      */
     boolean containsTagById(String id);
 
     /**
      * @param tags tag {@link Handle Handles} to be checked for
-     * @return true if this HandleManager contains all the specified tag Handles
+     * @return {@code true} if this HandleManager contains all the specified tag {@link Handle Handles}
      */
     boolean containsTags(Collection<Handle> tags);
 
     /**
      * @param ids tag {@link Handle} ids to be checked for
-     * @return true if this HandleManager contains tag Handles with all the specified ids
+     * @return {@code true} if this HandleManager contains tag {@link Handle Handles} with all the specified ids
      */
     boolean containsTagsById(Collection<String> ids);
 
     /**
      * @param tag tag {@link Handle} to be removed
-     * @return true if the tag Handles of this HandleManager changed as a result of this action
+     * @return {@code true} if the tag {@link Handle Handles} of this HandleManager changed as a result of this action
      */
     boolean removeTag(Handle tag);
 
     /**
      * @param id id of the tag {@link Handle} to be removed
-     * @return true if the tag Handles of this HandleManager changed as a result of this action
+     * @return {@code true} if the tag {@link Handle Handles} of this HandleManager changed as a result of this action
      */
     boolean removeTagById(String id);
 
     /**
      * @param tags tag {@link Handle Handles} to be removed
-     * @return true if the tag Handles of this HandleManager changed as a result of this action
+     * @return {@code true} if the tag {@link Handle Handles} of this HandleManager changed as a result of this action
      */
     boolean removeTags(Collection<Handle> tags);
 
     /**
      * @param ids tag {@link Handle} ids to be removed
-     * @return true if the tag Handles of this HandleManager changed as a result of this action
+     * @return {@code true} if the tag {@link Handle Handles} of this HandleManager changed as a result of this action
      */
     boolean removeTagsById(Collection<String> ids);
 

@@ -9,7 +9,7 @@ public interface Handled {
     /**
      * Returns the {@link Handle} associated with this class.
      *
-     * @return Handle associated with this class
+     * @return {@link Handle} associated with this class
      */
     Handle getHandle();
 }

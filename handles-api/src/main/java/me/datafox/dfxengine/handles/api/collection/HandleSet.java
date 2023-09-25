@@ -20,31 +20,31 @@ public interface HandleSet extends Set<Handle> {
 
     /**
      * @param id id of the {@link Handle} to be checked for
-     * @return true if this set contains a Handle with the specified id
+     * @return {@code true} if this set contains a {@link Handle} with the specified id
      */
     boolean containsById(String id);
 
     /**
      * @param ids ids of the {@link Handle Handles} to be checked for
-     * @return true if this set contains all Handles with the specified ids
+     * @return {@code true} if this set contains all {@link Handle Handles} with the specified ids
      */
     boolean containsAllById(Collection<String> ids);
 
     /**
      * @param id id of the requested {@link Handle}
-     * @return Handle matching the specified id, or null if none are present
+     * @return {@link Handle} matching the specified id, or {@code null} if none are present
      */
     Handle get(String id);
 
     /**
      * @param id id of the {@link Handle} to be removed
-     * @return true if the Handles of this set changed as a result of this action
+     * @return {@code true} if the {@link Handle Handles} of this set changed as a result of this action
      */
     boolean removeById(String id);
 
     /**
      * @param ids ids of the {@link Handle Handles} to be removed
-     * @return true if the Handles of this set changed as a result of this action
+     * @return {@code true} if the {@link Handle Handles} of this set changed as a result of this action
      */
     boolean removeAllById(Collection<String> ids);
 }

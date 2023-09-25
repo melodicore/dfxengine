@@ -20,7 +20,7 @@ public interface Space extends Comparable<Space> {
      * {@link Handle} identifying this Space, present in a hardcoded Space, details of which are documented in
      * {@link HandleManager}.
      *
-     * @return Handle identifying this Space
+     * @return {@link Handle} identifying this Space
      */
     Handle getHandle();
 
@@ -31,19 +31,19 @@ public interface Space extends Comparable<Space> {
 
     /**
      * @param handle {@link Handle} to be checked
-     * @return true if the specified Handle matches the identifying Handle of this Space
+     * @return {@code true} if the specified {@link Handle} matches the identifying Handle of this Space
      */
     boolean isHandle(Handle handle);
 
     /**
      * @param id id to be checked
-     * @return true if the specified id matches the id of this Space
+     * @return {@code true} if the specified id matches the id of this Space
      */
     boolean isId(String id);
 
     /**
      * @param id id of the requested {@link Handle}
-     * @return contained Handle matching the specified id, or null if none are present
+     * @return contained {@link Handle} matching the specified id, or {@code null} if none are present
      */
     Handle getHandle(String id);
 
@@ -79,9 +79,9 @@ public interface Space extends Comparable<Space> {
 
     /**
      * @param id id of the {@link Handle} to be created
-     * @return created Handle
+     * @return created {@link Handle}
      *
-     * @throws IllegalArgumentException if a Handle with the specified id is already present
+     * @throws IllegalArgumentException if a {@link Handle} with the specified id is already present
      */
     Handle createHandle(String id);
 
@@ -89,56 +89,56 @@ public interface Space extends Comparable<Space> {
      * Checks if a {@link Handle} is present with the specified id. If one is present, that Handle is returned. If none
      * are present, a new Handle with the specified id is created and returned.
      *
-     * @param id id of the requested Handle
-     * @return requested Handle
+     * @param id id of the requested {@link Handle}
+     * @return requested {@link Handle}
      */
     Handle getOrCreateHandle(String id);
 
     /**
      * @param handle {@link Handle} to be checked for
-     * @return true if this Space contains the specified Handle
+     * @return {@code true} if this Space contains the specified {@link Handle}
      */
     boolean containsHandle(Handle handle);
 
     /**
      * @param id id of the {@link Handle} to be checked for
-     * @return true if this Space contains a Handle with the specified id
+     * @return {@code true} if this Space contains a {@link Handle} with the specified id
      */
     boolean containsHandleById(String id);
 
     /**
      * @param handles {@link Handle Handles} to be checked for
-     * @return true if this Space contains all the specified Handles
+     * @return {@code true} if this Space contains all the specified {@link Handle Handles}
      */
     boolean containsHandles(Collection<Handle> handles);
 
     /**
      * @param ids {@link Handle} ids to be checked for
-     * @return true if this Space contains Handles with all the specified ids
+     * @return {@code true} if this Space contains {@link Handle Handles} with all the specified ids
      */
     boolean containsHandlesById(Collection<String> ids);
 
     /**
      * @param handle {@link Handle} to be removed
-     * @return true if the Handles of this Space changed as a result of this action
+     * @return {@code true} if the {@link Handle Handles} of this Space changed as a result of this action
      */
     boolean removeHandle(Handle handle);
 
     /**
      * @param id ids of the {@link Handle} to be removed
-     * @return true if the Handles of this Space changed as a result of this action
+     * @return {@code true} if the {@link Handle Handles} of this Space changed as a result of this action
      */
     boolean removeHandleById(String id);
 
     /**
      * @param handles {@link Handle Handles} to be removed
-     * @return true if the Handles of this Space changed as a result of this action
+     * @return {@code true} if the {@link Handle Handles} of this Space changed as a result of this action
      */
     boolean removeHandles(Collection<Handle> handles);
 
     /**
      * @param ids ids of the {@link Handle} to be removed
-     * @return true if the Handles of this Space changed as a result of this action
+     * @return {@code true} if the {@link Handle Handles} of this Space changed as a result of this action
      */
     boolean removeHandlesById(Collection<String> ids);
 
