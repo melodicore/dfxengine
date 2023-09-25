@@ -4,58 +4,67 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * Enum containing the six types that a {@link Numeral} can be backed with.
+ * {@link Enum} containing the six types that a {@link Numeral} can be backed with.
  *
  * @author datafox
  */
 public enum NumeralType {
     /**
-     * Value that represents an int or {@link Integer}.
+     * Value that represents an {@code int} or {@link Integer}.
      */
-    INT(true),
+    INT(true, 0),
 
     /**
-     * Value that represents a long or {@link Long}.
+     * Value that represents a {@code long} or {@link Long}.
      */
-    LONG(true),
+    LONG(true, 1),
 
     /**
      * Value that represents a {@link BigInteger}.
      */
-    BIG_INT(true),
+    BIG_INT(true, 2),
 
     /**
-     * Value that represents a float or {@link Float}.
+     * Value that represents a {@code float} or {@link Float}.
      */
-    FLOAT(false),
+    FLOAT(false, 3),
 
     /**
-     * Value that represents a double or {@link Double}.
+     * Value that represents a {@code double} or {@link Double}.
      */
-    DOUBLE(false),
+    DOUBLE(false, 4),
 
     /**
      * Value that represents a {@link BigDecimal}.
      */
-    BIG_DEC(false);
+    BIG_DEC(false, 5);
 
     private final boolean integer;
+    private final int significance;
 
-    NumeralType(boolean integer) {
+    NumeralType(boolean integer, int significance) {
         this.integer = integer;
+        this.significance = significance;
     }
 
     /**
-     * @return true if this value represents an integer type (int, long, {@link BigInteger})
+     * @return {@code true} if this value represents an integer type ({@code int}, {@code long}, {@link BigInteger})
      */
     public boolean isInteger() {
         return integer;
     }
 
     /**
-     * @return true if this value represents a decimal type (float, double, {@link BigDecimal})
+     * @return {@code true} if this value represents a decimal type ({@code float}, {@code double}, {@link BigDecimal})
      */
     public boolean isDecimal() {
         return !integer;
+    }
+
+    /**
+     * @return the significance of this value
+     */
+    public int getSignificance() {
+        return significance;
     }
 }
