@@ -24,8 +24,11 @@ public class NumeralsTest {
         Assertions.assertInstanceOf(BigDecNumeral.class, Numerals.valueOf(new BigDecimal("5.34812375923e+360")));
 
         Assertions.assertInstanceOf(BigIntNumeral.class, Numerals.valueOf("53462"));
-        Assertions.assertInstanceOf(BigIntNumeral.class, Numerals.valueOf("5.3462e+4"));
+        Assertions.assertInstanceOf(BigDecNumeral.class, Numerals.valueOf("53462e+1"));
         Assertions.assertInstanceOf(BigDecNumeral.class, Numerals.valueOf("5.3462e+3"));
+        Assertions.assertThrows(NumberFormatException.class, () -> Numerals.valueOf("941.76.245"));
+        Assertions.assertThrows(NumberFormatException.class, () -> Numerals.valueOf("941,76"));
+        Assertions.assertThrows(NumberFormatException.class, () -> Numerals.valueOf("941a76"));
     }
 
     @Test
@@ -81,51 +84,44 @@ public class NumeralsTest {
 
     @Test
     public void getSignificantTypeTest() {
-        IntNumeral i = new IntNumeral(0);
-        LongNumeral l = new LongNumeral(0);
-        BigIntNumeral bi = new BigIntNumeral(BigInteger.ZERO);
-        FloatNumeral f = new FloatNumeral(0);
-        DoubleNumeral d = new DoubleNumeral(0);
-        BigDecNumeral bd = new BigDecNumeral(BigDecimal.ZERO);
+        Assertions.assertEquals(INT, Numerals.getSignificantType(INT, INT));
+        Assertions.assertEquals(LONG, Numerals.getSignificantType(INT, LONG));
+        Assertions.assertEquals(LONG, Numerals.getSignificantType(LONG, LONG));
+        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(INT, BIG_INT));
+        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(LONG, BIG_INT));
+        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(BIG_INT, BIG_INT));
+        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(INT, FLOAT));
+        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(LONG, FLOAT));
+        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(FLOAT, FLOAT));
+        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(INT, DOUBLE));
+        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(LONG, DOUBLE));
+        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(FLOAT, DOUBLE));
+        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(DOUBLE, DOUBLE));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(INT, BIG_DEC));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(LONG, BIG_DEC));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(BIG_INT, BIG_DEC));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(FLOAT, BIG_DEC));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(DOUBLE, BIG_DEC));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(BIG_DEC, BIG_DEC));
 
-        Assertions.assertEquals(INT, Numerals.getSignificantType(i, i));
-        Assertions.assertEquals(LONG, Numerals.getSignificantType(i, l));
-        Assertions.assertEquals(LONG, Numerals.getSignificantType(l, l));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(i, bi));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(l, bi));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(bi, bi));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(i, f));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(l, f));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(f, f));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(i, d));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(l, d));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(f, d));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(d, d));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(i, bd));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(l, bd));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(bi, bd));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(f, bd));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(d, bd));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(bd, bd));
-
-        Assertions.assertEquals(INT, Numerals.getSignificantType(i, i, i));
-        Assertions.assertEquals(LONG, Numerals.getSignificantType(i, l, i));
-        Assertions.assertEquals(LONG, Numerals.getSignificantType(l, l, i));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(i, bi, i));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(l, bi, i));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(bi, bi, i));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(i, f, i, l));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(l, f, i, l));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(f, f, i, l));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(i, d, i, l, f));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(l, d, i, l, f));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(f, d, i, l, f));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(d, d, i, l, f));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(i, bd, i, l, bi, f, d));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(l, bd, i, bi, f, d));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(bi, bd, i, bi, f, d));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(f, bd, i, bi, f, d));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(d, bd, i, bi, f, d));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(bd, bd, i, bi, f, d));
+        Assertions.assertEquals(INT, Numerals.getSignificantType(INT, INT, INT));
+        Assertions.assertEquals(LONG, Numerals.getSignificantType(INT, LONG, INT));
+        Assertions.assertEquals(LONG, Numerals.getSignificantType(LONG, LONG, INT));
+        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(INT, BIG_INT, INT));
+        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(LONG, BIG_INT, INT));
+        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(BIG_INT, BIG_INT, INT));
+        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(INT, FLOAT, INT, LONG));
+        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(LONG, FLOAT, INT, LONG));
+        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(FLOAT, FLOAT, INT, LONG));
+        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(INT, DOUBLE, INT, LONG, FLOAT));
+        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(LONG, DOUBLE, INT, LONG, FLOAT));
+        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(FLOAT, DOUBLE, INT, LONG, FLOAT));
+        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(DOUBLE, DOUBLE, INT, LONG, FLOAT));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(INT, BIG_DEC, INT, LONG, BIG_INT, FLOAT, DOUBLE));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(LONG, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(BIG_INT, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(FLOAT, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(DOUBLE, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
+        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(BIG_DEC, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
     }
 }
