@@ -3,6 +3,9 @@ package me.datafox.dfxengine.math.numeral;
 import lombok.EqualsAndHashCode;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
+import me.datafox.dfxengine.math.utils.internal.MathStrings;
+import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of {@link Numeral} backed with a {@code double}.
@@ -20,8 +23,11 @@ public final class DoubleNumeral extends AbstractNumeral {
      */
     public DoubleNumeral(double number) {
         if(!Double.isFinite(number)) {
-            throw new IllegalArgumentException("infinite double value");
+            throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
+                    MathStrings.infiniteDoubleValue(),
+                    IllegalArgumentException::new);
         }
+
         this.number = number;
         type = NumeralType.DOUBLE;
     }

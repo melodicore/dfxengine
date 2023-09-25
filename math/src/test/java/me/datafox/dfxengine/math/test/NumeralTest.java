@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.math.test;
 
+import me.datafox.dfxengine.math.exception.ExtendedArithmeticException;
 import me.datafox.dfxengine.math.numeral.*;
 import org.junit.jupiter.api.Test;
 
@@ -41,13 +42,13 @@ public class NumeralTest {
         assertInstanceOf(Long.class, numeral.getNumber());
         assertEquals(LONG, numeral.getType());
         assertEquals(FLOAT, numeral.convert(FLOAT).getType());
-        assertThrows(ArithmeticException.class, () -> numeral.convert(INT));
+        assertThrows(ExtendedArithmeticException.class, () -> numeral.convert(INT));
         assertEquals(DOUBLE, numeral.convertIfAllowed(DOUBLE).getType());
         assertEquals(numeral, numeral.convertIfAllowed(INT));
         assertTrue(numeral.canConvert(BIG_DEC));
         assertFalse(numeral.canConvert(INT));
 
-        assertThrows(ArithmeticException.class, numeral::intValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::intValue);
         assertEquals(36214209001609L, numeral.longValue());
         assertEquals(BigInteger.valueOf(36214209001609L), numeral.bigIntValue());
         assertEquals(3.6214208e13f, numeral.floatValue());
@@ -66,14 +67,14 @@ public class NumeralTest {
         assertInstanceOf(BigInteger.class, numeral.getNumber());
         assertEquals(BIG_INT, numeral.getType());
         assertEquals(FLOAT, numeral.convert(FLOAT).getType());
-        assertThrows(ArithmeticException.class, () -> numeral.convert(LONG));
+        assertThrows(ExtendedArithmeticException.class, () -> numeral.convert(LONG));
         assertEquals(DOUBLE, numeral.convertIfAllowed(DOUBLE).getType());
         assertEquals(numeral, numeral.convertIfAllowed(LONG));
         assertTrue(numeral.canConvert(DOUBLE));
         assertFalse(numeral.canConvert(INT));
 
-        assertThrows(ArithmeticException.class, numeral::intValue);
-        assertThrows(ArithmeticException.class, numeral::longValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::intValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::longValue);
         assertEquals(new BigInteger("46116860184273879035"), numeral.bigIntValue());
         assertEquals(4.611686e19f, numeral.floatValue());
         assertEquals(4.611686018427388e19d, numeral.doubleValue());
@@ -90,14 +91,14 @@ public class NumeralTest {
         assertInstanceOf(Float.class, numeral.getNumber());
         assertEquals(FLOAT, numeral.getType());
         assertEquals(DOUBLE, numeral.convert(DOUBLE).getType());
-        assertThrows(ArithmeticException.class, () -> numeral.convert(LONG));
+        assertThrows(ExtendedArithmeticException.class, () -> numeral.convert(LONG));
         assertEquals(BIG_DEC, numeral.convertIfAllowed(BIG_DEC).getType());
         assertEquals(numeral, numeral.convertIfAllowed(INT));
         assertTrue(numeral.canConvert(DOUBLE));
         assertFalse(numeral.canConvert(LONG));
 
-        assertThrows(ArithmeticException.class, numeral::intValue);
-        assertThrows(ArithmeticException.class, numeral::longValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::intValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::longValue);
         assertEquals(new BigInteger("400000000000000000000"), numeral.bigIntValue());
         assertEquals(4.0e20f, numeral.floatValue());
         assertEquals(4.0e20d, numeral.doubleValue());
@@ -111,16 +112,16 @@ public class NumeralTest {
         assertInstanceOf(Double.class, numeral.getNumber());
         assertEquals(DOUBLE, numeral.getType());
         assertEquals(BIG_INT, numeral.convert(BIG_INT).getType());
-        assertThrows(ArithmeticException.class, () -> numeral.convert(FLOAT));
+        assertThrows(ExtendedArithmeticException.class, () -> numeral.convert(FLOAT));
         assertEquals(BIG_DEC, numeral.convertIfAllowed(BIG_DEC).getType());
         assertEquals(numeral, numeral.convertIfAllowed(INT));
         assertTrue(numeral.canConvert(BIG_INT));
         assertFalse(numeral.canConvert(INT));
 
-        assertThrows(ArithmeticException.class, numeral::intValue);
-        assertThrows(ArithmeticException.class, numeral::longValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::intValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::longValue);
         assertEquals(new BigInteger("4200000000000000000000000000000000000000000000000000000000000000000000"), numeral.bigIntValue());
-        assertThrows(ArithmeticException.class, numeral::floatValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::floatValue);
         assertEquals(4.2e69d, numeral.doubleValue());
         assertEquals(new BigDecimal("4.2e+69"), numeral.bigDecValue());
 
@@ -135,17 +136,17 @@ public class NumeralTest {
         assertInstanceOf(BigDecimal.class, numeral.getNumber());
         assertEquals(BIG_DEC, numeral.getType());
         assertEquals(BIG_INT, numeral.convert(BIG_INT).getType());
-        assertThrows(ArithmeticException.class, () -> numeral.convert(DOUBLE));
+        assertThrows(ExtendedArithmeticException.class, () -> numeral.convert(DOUBLE));
         assertEquals(BIG_INT, numeral.convertIfAllowed(BIG_INT).getType());
         assertEquals(numeral, numeral.convertIfAllowed(INT));
         assertTrue(numeral.canConvert(BIG_DEC));
         assertFalse(numeral.canConvert(FLOAT));
 
-        assertThrows(ArithmeticException.class, numeral::intValue);
-        assertThrows(ArithmeticException.class, numeral::longValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::intValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::longValue);
         assertEquals(new BigInteger("898846567431157850000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"), numeral.bigIntValue());
-        assertThrows(ArithmeticException.class, numeral::floatValue);
-        assertThrows(ArithmeticException.class, numeral::doubleValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::floatValue);
+        assertThrows(ExtendedArithmeticException.class, numeral::doubleValue);
         assertEquals(new BigDecimal("8.9884656743115785e+308"), numeral.bigDecValue());
 
         BigDecNumeral smallNumeral = new BigDecNumeral(BigDecimal.valueOf(9.37e123));

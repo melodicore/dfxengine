@@ -3,6 +3,10 @@ package me.datafox.dfxengine.math.utils;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.numeral.*;
+import me.datafox.dfxengine.math.utils.internal.MathStrings;
+import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -16,6 +20,8 @@ import static me.datafox.dfxengine.math.api.NumeralType.BIG_INT;
  * @author datafox
  */
 public class Numerals {
+    private static final Logger logger = LoggerFactory.getLogger(Numerals.class);
+
     /**
      * @param i {@code int} value
      * @return {@link IntNumeral} representing specified value
@@ -83,8 +89,10 @@ public class Numerals {
     }
 
     /**
-     * @param numeral {@link Numeral} value
+     * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the specified value represents the number zero
+     *
+     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      */
     public static boolean isZero(Numeral numeral) {
         switch(numeral.getType()) {
@@ -101,13 +109,18 @@ public class Numerals {
             case BIG_DEC:
                 return numeral.bigDecValue().compareTo(BigDecimal.ZERO) == 0;
         }
-        throw new IllegalArgumentException("unknown type");
+
+        throw LogUtils.logExceptionAndGet(logger,
+                MathStrings.unknownType(numeral.getType()),
+                IllegalArgumentException::new);
     }
 
 
     /**
-     * @param numeral {@link Numeral} value
+     * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the specified value represents the number one
+     *
+     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      */
     public static boolean isOne(Numeral numeral) {
         switch(numeral.getType()) {
@@ -124,7 +137,37 @@ public class Numerals {
             case BIG_DEC:
                 return numeral.bigDecValue().compareTo(BigDecimal.ONE) == 0;
         }
-        throw new IllegalArgumentException("unknown type");
+
+        throw LogUtils.logExceptionAndGet(logger,
+                MathStrings.unknownType(numeral.getType()),
+                IllegalArgumentException::new);
+    }
+
+    /**
+     * @param numeral {@link Numeral} to be checked
+     * @return {@code true} if the {@link Numeral} represents an even number. For decimal Numerals, the number must not
+     * have a decimal part for {@code true} to be returned;
+     */
+    public static boolean isEven(Numeral numeral) {
+        switch(numeral.getType()) {
+            case INT:
+                return (numeral.intValue() & 1) == 0;
+            case LONG:
+                return (numeral.longValue() & 1) == 0;
+            case BIG_INT:
+                return !numeral.bigIntValue().testBit(0);
+            case FLOAT:
+                return numeral.floatValue() % 2 == 0;
+            case DOUBLE:
+                return numeral.doubleValue() % 2 == 0;
+            case BIG_DEC:
+                return isBigDecimalAnInteger(numeral.bigDecValue()) &&
+                        !numeral.bigDecValue().toBigInteger().testBit(0);
+        }
+
+        throw LogUtils.logExceptionAndGet(logger,
+                MathStrings.unknownType(numeral.getType()),
+                IllegalArgumentException::new);
     }
 
     /**
@@ -134,7 +177,9 @@ public class Numerals {
      * value than the second Numeral, and -1 if the first Numeral represents a smaller value than the second Numeral.
      */
     public static int compare(Numeral numeral, Numeral other) {
-        switch(getSignificantType(numeral.getType(), other.getType())) {
+        NumeralType type = getSignificantType(numeral.getType(), other.getType());
+
+        switch(type) {
             case INT:
                 return Integer.compare(numeral.intValue(), other.intValue());
             case LONG:
@@ -148,7 +193,10 @@ public class Numerals {
             case BIG_DEC:
                 return numeral.bigDecValue().compareTo(other.bigDecValue());
         }
-        throw new IllegalArgumentException("unknown type");
+
+        throw LogUtils.logExceptionAndGet(logger,
+                MathStrings.unknownType(type),
+                IllegalArgumentException::new);
     }
 
     /**
@@ -169,8 +217,9 @@ public class Numerals {
     /**
      * <p>
      * Returns the most significant {@link NumeralType}. The significance of a type is determined by how large numerical
-     * values it can represent. Additionally, if any of the specified types is a
-     * {@link NumeralType#isDecimal() decimal type}, the return value of this method is also a decimal type.
+     * values it can represent. If any of the specified types is a {@link NumeralType#isDecimal() decimal type}, the
+     * return value of this method is also a decimal type. If any of the specified types is {@code null}, the return
+     * value is also {@code null}. {@code null} check takes precedence over all other checks.
      * </p>
      * <p>
      * Therefore, if any of the specified types is {@link NumeralType#BIG_DEC BIG_DEC}, BIG_DEC is also returned.
@@ -184,6 +233,12 @@ public class Numerals {
     public static NumeralType getSignificantType(NumeralType ... types) {
         if(types.length == 0) {
             throw new IllegalArgumentException("empty array");
+        }
+
+        for(NumeralType type : types) {
+            if(type == null) {
+                return null;
+            }
         }
 
         NumeralType significantType = types[0];
@@ -211,5 +266,9 @@ public class Numerals {
         }
 
         return significantType;
+    }
+
+    private static boolean isBigDecimalAnInteger(BigDecimal bd) {
+        return bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros().scale() <= 0;
     }
 }

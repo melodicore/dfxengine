@@ -3,6 +3,9 @@ package me.datafox.dfxengine.math.numeral;
 import lombok.EqualsAndHashCode;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
+import me.datafox.dfxengine.math.utils.internal.MathStrings;
+import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -23,8 +26,11 @@ public final class FloatNumeral extends AbstractNumeral {
      */
     public FloatNumeral(float number) {
         if(!Float.isFinite(number)) {
-            throw new IllegalArgumentException("infinite float value");
+            throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
+                    MathStrings.infiniteFloatValue(),
+                    IllegalArgumentException::new);
         }
+
         this.number = number;
         type = NumeralType.FLOAT;
     }

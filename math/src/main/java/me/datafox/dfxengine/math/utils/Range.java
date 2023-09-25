@@ -2,6 +2,10 @@ package me.datafox.dfxengine.math.utils;
 
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
+import me.datafox.dfxengine.math.utils.internal.MathStrings;
+import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -12,6 +16,8 @@ import java.math.BigInteger;
  * @author datafox
  */
 public class Range {
+    private static final Logger logger = LoggerFactory.getLogger(Range.class);
+
     public static final BigInteger INT_MIN_INT = BigInteger.valueOf(Integer.MIN_VALUE);
     public static final BigInteger INT_MAX_INT = BigInteger.valueOf(Integer.MAX_VALUE);
     public static final BigInteger INT_MIN_LONG = BigInteger.valueOf(Long.MIN_VALUE);
@@ -45,16 +51,18 @@ public class Range {
                 return isOutOfIntRange(numeral);
             case LONG:
                 return isOutOfLongRange(numeral);
-            case BIG_INT:
-            case BIG_DEC:
-                return false;
             case FLOAT:
                 return isOutOfFloatRange(numeral);
             case DOUBLE:
                 return isOutOfDoubleRange(numeral);
+            case BIG_INT:
+            case BIG_DEC:
+                return false;
         }
 
-        throw new IllegalArgumentException("unknown type");
+        throw LogUtils.logExceptionAndGet(logger,
+                MathStrings.unknownType(type),
+                IllegalArgumentException::new);
     }
 
     /**
@@ -80,7 +88,9 @@ public class Range {
                 return isOutOfIntRange(numeral.bigDecValue());
         }
 
-        throw new IllegalArgumentException("unknown type");
+        throw LogUtils.logExceptionAndGet(logger,
+                MathStrings.unknownType(numeral.getType()),
+                IllegalArgumentException::new);
     }
 
     /**
@@ -105,7 +115,9 @@ public class Range {
                 return isOutOfLongRange(numeral.bigDecValue());
         }
 
-        throw new IllegalArgumentException("unknown type");
+        throw LogUtils.logExceptionAndGet(logger,
+                MathStrings.unknownType(numeral.getType()),
+                IllegalArgumentException::new);
     }
 
     /**
@@ -129,7 +141,9 @@ public class Range {
                 return isOutOfFloatRange(numeral.bigDecValue());
         }
 
-        throw new IllegalArgumentException("unknown type");
+        throw LogUtils.logExceptionAndGet(logger,
+                MathStrings.unknownType(numeral.getType()),
+                IllegalArgumentException::new);
     }
 
     /**
@@ -152,7 +166,9 @@ public class Range {
                 return isOutOfDoubleRange(numeral.bigDecValue());
         }
 
-        throw new IllegalArgumentException("unknown type");
+        throw LogUtils.logExceptionAndGet(logger,
+                MathStrings.unknownType(numeral.getType()),
+                IllegalArgumentException::new);
     }
 
     /**

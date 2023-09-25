@@ -20,6 +20,7 @@ public class OperationsTest {
     private static final IntNumeral intNumeral = new IntNumeral(5);
     private static final IntNumeral largeIntNumeral = new IntNumeral(Integer.MAX_VALUE - 2);
     private static final IntNumeral negativeIntNumeral = new IntNumeral(Integer.MIN_VALUE + 2);
+    private static final IntNumeral evenIntNumeral = new IntNumeral(10);
     private static final LongNumeral longNumeral = new LongNumeral(Long.MAX_VALUE - 2);
     private static final LongNumeral negativeLongNumeral = new LongNumeral(Long.MIN_VALUE + 2);
     private static final FloatNumeral floatNumeral = new FloatNumeral(4.57f);
@@ -30,8 +31,10 @@ public class OperationsTest {
     private static final DoubleNumeral doubleNumeral = new DoubleNumeral(Double.MAX_VALUE - Double.MAX_VALUE/10d);
     private static final DoubleNumeral negativeDoubleNumeral = new DoubleNumeral(-Double.MAX_VALUE + Double.MAX_VALUE/10d);
     private static final BigIntNumeral bigIntNumeral = new BigIntNumeral(BigInteger.valueOf(Long.MAX_VALUE).pow(5));
+    private static final BigIntNumeral negativeBigIntNumeral = new BigIntNumeral("-734273427342734273427342");
     private static final BigDecNumeral bigDecNumeral = new BigDecNumeral(BigDecimal.valueOf(Double.MAX_VALUE).pow(5));
     private static final BigDecNumeral otherBigDecNumeral = new BigDecNumeral(bigDecNumeral.bigDecValue().divide(BigDecimal.valueOf(2), MathContext.DECIMAL128));
+    private static final BigDecNumeral negativeBigDecNumeral = new BigDecNumeral("-9.88765432102468e+420");
 
     @Test
     public void addTest() {
@@ -174,7 +177,6 @@ public class OperationsTest {
     public void cbrtTest() {
         assertEquals(zero, cbrt(zero));
         assertEquals(one, cbrt(one));
-        assertThrows(ArithmeticException.class, () -> cbrt(negativeIntNumeral));
 
         assertEquals(new IntNumeral(1290), cbrt(largeIntNumeral));
         assertEquals(new LongNumeral(2097152L), cbrt(longNumeral));
@@ -183,6 +185,13 @@ public class OperationsTest {
         assertEquals(new FloatNumeral(6.7405291e12f), cbrt(largeFloatNumeral));
         assertEquals(new DoubleNumeral(5.449031976179548e102d), cbrt(doubleNumeral));
         assertEquals(new BigDecNumeral("5.726104460477540260293470052580462e+513"), cbrt(bigDecNumeral));
+
+        assertEquals(new IntNumeral(-1290), cbrt(negativeIntNumeral));
+        assertEquals(new LongNumeral(-2097152L), cbrt(negativeLongNumeral));
+        assertEquals(new BigIntNumeral("-90216492"), cbrt(negativeBigIntNumeral));
+        assertEquals(new FloatNumeral(-6.7405291e12f), cbrt(negativeFloatNumeral));
+        assertEquals(new DoubleNumeral(-5.449031976179548e102d), cbrt(negativeDoubleNumeral));
+        assertEquals(new BigDecNumeral("-2.146336238753136936138025729090429e+140"), cbrt(negativeBigDecNumeral));
     }
 
     @Test
@@ -191,7 +200,7 @@ public class OperationsTest {
         assertEquals(zero, root(zero, intNumeral));
         assertEquals(one, root(one, intNumeral));
         assertSame(intNumeral, root(intNumeral, one));
-        assertThrows(ArithmeticException.class, () -> root(negativeIntNumeral, intNumeral));
+        assertThrows(ArithmeticException.class, () -> root(negativeIntNumeral, evenIntNumeral));
 
         assertEquals(new IntNumeral(73), root(largeIntNumeral, intNumeral));
         assertEquals(new LongNumeral(6208L), root(longNumeral, intNumeral));
@@ -204,6 +213,13 @@ public class OperationsTest {
         assertEquals(new DoubleNumeral(9.808963383654187e65d), root(floatNumeral, smallFloatNumeral));
         assertEquals(new BigDecNumeral("4.057703555403599985284286405572210e+3848"), root(largeFloatNumeral, smallFloatNumeral));
         assertEquals(new BigDecNumeral("2.279186996101751382324694711909063e+154127"), root(bigDecNumeral, smallFloatNumeral));
+
+        assertEquals(new IntNumeral(-73), root(negativeIntNumeral, intNumeral));
+        assertEquals(new LongNumeral(-6208L), root(negativeLongNumeral, intNumeral));
+        assertEquals(new BigIntNumeral("-59315"), root(negativeBigIntNumeral, intNumeral));
+        assertEquals(new FloatNumeral(-4.9798516e7f), root(negativeFloatNumeral, intNumeral));
+        assertEquals(new DoubleNumeral(-4.3832032947053426e61d), root(negativeDoubleNumeral, intNumeral));
+        assertEquals(new BigDecNumeral("-1.581315962647914939569818892890886e+84"), root(negativeBigDecNumeral, intNumeral));
     }
 
     @Test
