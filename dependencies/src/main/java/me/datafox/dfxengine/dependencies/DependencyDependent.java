@@ -2,13 +2,27 @@ package me.datafox.dfxengine.dependencies;
 
 import org.slf4j.Logger;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.function.Supplier;
 
 /**
- * Abstract extension of {@link AbstractDependent} that also implements {@link Dependency}. Calls
- * {@link Dependent#invalidateDependencies()} when the implemented {@link Dependency#invalidate()} is called. This class
- * is the recommended way to create dependency graphs spanning multiple levels.
+ * <p>
+ * A class with values that values of other classes depend on. A class with values depending on the implementing class
+ * should implement {@link Dependency}, and all Dependencies should be added to the class implementing this interface
+ * with {@link #addDependency(Dependency)} or {@link #addDependencies(Collection)}. The implementation of these methods
+ * must check for cyclic dependencies and throw {@link IllegalArgumentException} if one would be caused by the
+ * operation.
+ * </p>
+ * <p>
+ * This class also implements {@link Dependency}. Calls {@link Dependent#invalidateDependencies()} when the implemented
+ * {@link Dependency#invalidate()} is called. This class is the recommended way to create dependency graphs spanning
+ * multiple levels.
+ * </p>
+ * <p>
+ * The cyclic dependency detection in this class will only detect dependent dependencies that implement both
+ * {@link Dependent} and {@link Dependency}.
+ * </p>
  *
  * @author datafox
  */

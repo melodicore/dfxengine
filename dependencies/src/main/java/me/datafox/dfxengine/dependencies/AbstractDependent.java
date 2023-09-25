@@ -13,9 +13,18 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
- * Abstract implementation of {@link Dependent}. Please note that the cyclic dependency detection in this class will
- * only detect dependent dependencies that implement both {@link Dependent} and {@link Dependency}. It is recommended
- * to extend {@link DependencyDependent} where possible for all cases where both interfaces would be implemented.
+ * <p>
+ * A class with values that values of other classes depend on. A class with values depending on the implementing class
+ * should implement {@link Dependency}, and all Dependencies should be added to the class implementing this interface
+ * with {@link #addDependency(Dependency)} or {@link #addDependencies(Collection)}. The implementation of these methods
+ * must check for cyclic dependencies and throw {@link IllegalArgumentException} if one would be caused by the
+ * operation.
+ * </p>
+ * <p>
+ * The cyclic dependency detection in this class will only detect dependent dependencies that implement both
+ * {@link Dependent} and {@link Dependency}. It is recommended to extend {@link DependencyDependent} where possible for
+ * all cases where both interfaces would be implemented.
+ * </p>
  *
  * @author datafox
  */
