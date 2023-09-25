@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.math.test;
 
+import me.datafox.dfxengine.math.exception.ExtendedArithmeticException;
 import me.datafox.dfxengine.math.numeral.*;
 import org.junit.jupiter.api.Test;
 
@@ -37,34 +38,34 @@ public class ConversionTest {
     @Test
     public void toIntTest() {
         assertEquals(666, toInt(intNumeral));
-        assertThrows(ArithmeticException.class, () -> toInt(longNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toInt(longNumeral));
         assertEquals(838, toInt(smallLongNumeral));
-        assertThrows(ArithmeticException.class, () -> toInt(negativeLongNumeral));
-        assertThrows(ArithmeticException.class, () -> toInt(bigIntNumeral));
-        assertThrows(ArithmeticException.class, () -> toInt(negativeBigIntNumeral));
-        assertThrows(ArithmeticException.class, () -> toInt(floatNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toInt(negativeLongNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toInt(bigIntNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toInt(negativeBigIntNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toInt(floatNumeral));
         assertEquals(961, toInt(smallFloatNumeral));
-        assertThrows(ArithmeticException.class, () -> toInt(negativeFloatNumeral));
-        assertThrows(ArithmeticException.class, () -> toInt(doubleNumeral));
-        assertThrows(ArithmeticException.class, () -> toInt(negativeDoubleNumeral));
-        assertThrows(ArithmeticException.class, () -> toInt(bigDecNumeral));
-        assertThrows(ArithmeticException.class, () -> toInt(negativeBigDecNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toInt(negativeFloatNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toInt(doubleNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toInt(negativeDoubleNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toInt(bigDecNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toInt(negativeBigDecNumeral));
     }
 
     @Test
     public void toLongTest() {
         assertEquals(666L, toLong(intNumeral));
         assertEquals(9988776655L, toLong(longNumeral));
-        assertThrows(ArithmeticException.class, () -> toLong(bigIntNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toLong(bigIntNumeral));
         assertEquals(2473658642L, toLong(smallBigIntNumeral));
-        assertThrows(ArithmeticException.class, () -> toLong(negativeBigIntNumeral));
-        assertThrows(ArithmeticException.class, () -> toLong(floatNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toLong(negativeBigIntNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toLong(floatNumeral));
         assertEquals(961L, toLong(smallFloatNumeral));
-        assertThrows(ArithmeticException.class, () -> toLong(negativeFloatNumeral));
-        assertThrows(ArithmeticException.class, () -> toLong(doubleNumeral));
-        assertThrows(ArithmeticException.class, () -> toLong(negativeDoubleNumeral));
-        assertThrows(ArithmeticException.class, () -> toLong(bigDecNumeral));
-        assertThrows(ArithmeticException.class, () -> toLong(negativeBigDecNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toLong(negativeFloatNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toLong(doubleNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toLong(negativeDoubleNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toLong(bigDecNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toLong(negativeBigDecNumeral));
     }
 
     @Test
@@ -83,11 +84,11 @@ public class ConversionTest {
         assertEquals(9.988777e9f, toFloat(longNumeral));
         assertEquals(7.3427344e23f, toFloat(bigIntNumeral));
         assertEquals(3.3333e33f, toFloat(floatNumeral));
-        assertThrows(ArithmeticException.class, () -> toFloat(doubleNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toFloat(doubleNumeral));
         assertEquals(1.5121531e32f, toFloat(smallDoubleNumeral));
-        assertThrows(ArithmeticException.class, () -> toFloat(negativeDoubleNumeral));
-        assertThrows(ArithmeticException.class, () -> toFloat(bigDecNumeral));
-        assertThrows(ArithmeticException.class, () -> toFloat(negativeBigDecNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toFloat(negativeDoubleNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toFloat(bigDecNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toFloat(negativeBigDecNumeral));
     }
 
     @Test
@@ -97,9 +98,9 @@ public class ConversionTest {
         assertEquals(7.342734273427342e23d, toDouble(bigIntNumeral));
         assertEquals(3.3333e33d, toDouble(floatNumeral));
         assertEquals(5.2e77d, toDouble(doubleNumeral));
-        assertThrows(ArithmeticException.class, () -> toDouble(bigDecNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toDouble(bigDecNumeral));
         assertEquals(1.111111e111d, toDouble(smallBigDecNumeral));
-        assertThrows(ArithmeticException.class, () -> toDouble(negativeBigDecNumeral));
+        assertThrows(ExtendedArithmeticException.class, () -> toDouble(negativeBigDecNumeral));
     }
 
     @Test
@@ -152,10 +153,10 @@ public class ConversionTest {
         assertEquals(new BigDecNumeral("5.2e+77"), toNumeral(doubleNumeral, BIG_DEC));
         assertEquals(new BigIntNumeral("9887654321024680000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"), toNumeral(bigDecNumeral, BIG_INT));
 
-        assertThrows(ArithmeticException.class, () -> toNumeral(longNumeral, INT));
-        assertThrows(ArithmeticException.class, () -> toNumeral(bigIntNumeral, LONG));
-        assertThrows(ArithmeticException.class, () -> toNumeral(floatNumeral, INT));
-        assertThrows(ArithmeticException.class, () -> toNumeral(doubleNumeral, FLOAT));
-        assertThrows(ArithmeticException.class, () -> toNumeral(bigDecNumeral, DOUBLE));
+        assertThrows(ExtendedArithmeticException.class, () -> toNumeral(longNumeral, INT));
+        assertThrows(ExtendedArithmeticException.class, () -> toNumeral(bigIntNumeral, LONG));
+        assertThrows(ExtendedArithmeticException.class, () -> toNumeral(floatNumeral, INT));
+        assertThrows(ExtendedArithmeticException.class, () -> toNumeral(doubleNumeral, FLOAT));
+        assertThrows(ExtendedArithmeticException.class, () -> toNumeral(bigDecNumeral, DOUBLE));
     }
 }
