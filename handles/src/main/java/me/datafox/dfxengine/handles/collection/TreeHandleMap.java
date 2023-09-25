@@ -1,6 +1,5 @@
 package me.datafox.dfxengine.handles.collection;
 
-import lombok.Getter;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.handles.api.Space;
@@ -16,18 +15,21 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Implementation of {@link HandleMap} backed with a {@link TreeMap}.
+ * An extension of {@link TreeMap} that can only use {@link Handle Handles} of the {@link Space} associated with this
+ * map as its keys. Implements {@link HandleMap} for various helper methods related to Handles.
  *
  * @author datafox
  */
 public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> {
     private final Logger logger;
 
-    @Getter
     private final Space space;
 
     private final Map<String,Handle> idMap;
 
+    /**
+     * @param space {@link Space} to be associated with this map
+     */
     public TreeHandleMap(Space space) {
         super();
         this.logger = LoggerFactory.getLogger(getClass());
@@ -35,6 +37,10 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
         idMap = new HashMap<>();
     }
 
+    /**
+     * @param space {@link Space} to be associated with this map
+     * @param handles mappings to be stored in this map
+     */
     public TreeHandleMap(Space space, Map<Handle,T> handles) {
         this(space);
 
@@ -42,15 +48,17 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
     }
 
     /**
-     * In addition to what is documented in {@link TreeMap#put(Object, Object)}, a {@link Handle} used as the key must
-     * be contained within the {@link Space} associated with this map.
+     * Associates the specified value with the specified {@link Handle} in this map. If the map previously contained a
+     * mapping for the Handle, the old value is replaced. The Handle used as the key must be present in the
+     * {@link Space} associated with this map.
      *
-     * @param handle Handle with which the specified value is to be associated
-     * @param value value to be associated with the specified Handle
-     * @return the previous value associated with the specified Handle, or null if there was no mapping for key
+     * @param handle {@link Handle} with which the specified value is to be associated
+     * @param value value to be associated with the specified {@link Handle}
+     * @return the previous value associated with the specified {@link Handle}, or {@code null} if there was no mapping
+     * for the Handle
      *
-     * @throws IllegalArgumentException if the specified Handle is not contained within the Space associated with this
-     * map
+     * @throws IllegalArgumentException if the specified {@link Handle} is not present in the {@link Space}
+     * associated with this map
      */
     @Override
     public T put(Handle handle, T value) {
@@ -60,13 +68,14 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
     }
 
     /**
-     * In addition to what is documented in {@link HashMap#putAll(Map)}, all {@link Handle Handles} used as the keys
-     * must be contained within the {@link Space} associated with this map.
+     * Copies all of the mappings from the specified map to this map. These mappings will replace any mappings that this
+     * map had for any of the {@link Handle Handles} currently in the specified map. All Handles used as the keys must
+     * be present in the {@link Space} associated with this map.
      *
      * @param map mappings to be stored in this map
      *
-     * @throws IllegalArgumentException if any of the specified Handles are not contained within the Space associated
-     * with this map
+     * @throws IllegalArgumentException if any of the specified {@link Handle Handles} are not present in the
+     * {@link Space} associated with this map
      */
     @Override
     public void putAll(Map<? extends Handle,? extends T> map) {
@@ -75,34 +84,71 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
         map.forEach(this::putInternal);
     }
 
+    /**
+     * Removes the mapping for the specified {@link Handle} from this map if present.
+     *
+     * @param  handle {@link Handle} whose mapping is to be removed from the map
+     * @return the previous value associated with the specified {@link Handle}, or {@code null} if there was no mapping
+     * for the specified key.
+     */
     @Override
-    public T remove(Object key) {
-        T previous = super.remove(key);
+    public T remove(Object handle) {
+        T previous = super.remove(handle);
 
-        if(key instanceof Handle) {
-            idMap.remove(((Handle) key).getId(), key);
+        if(handle instanceof Handle) {
+            idMap.remove(((Handle) handle).getId(), handle);
         }
 
         return previous;
     }
 
+    /**
+     * Removes the entry for the specified {@link Handle} only if it is currently mapped to the specified value.
+     *
+     * @param handle {@link Handle} with which the specified value is associated
+     * @param value value expected to be associated with the specified {@link Handle}
+     * @return {@code true} if the value was removed
+     */
     @Override
-    public boolean remove(Object key, Object value) {
-        boolean removed = super.remove(key, value);
+    public boolean remove(Object handle, Object value) {
+        boolean removed = super.remove(handle, value);
 
-        if(removed && key instanceof Handle) {
-            idMap.remove(((Handle) key).getId(), key);
+        if(removed && handle instanceof Handle) {
+            idMap.remove(((Handle) handle).getId(), handle);
         }
 
         return removed;
     }
 
+    /**
+     * Removes all of the mappings from this map. The map will be empty after this call returns.
+     */
     @Override
     public void clear() {
         idMap.clear();
         super.clear();
     }
 
+    /**
+     * @return {@link Space} associated with this map
+     */
+    @Override
+    public Space getSpace() {
+        return space;
+    }
+
+    /**
+     * Associates the specified value with its associated {@link Handle} in this map. If the map previously contained a
+     * mapping for the key, the old value is replaced. Because Java does not support union types, the specified value
+     * must implement {@link Handled}, and an exception is thrown otherwise.
+     *
+     * @param value value implementing {@link Handled} to be associated in this map with its associated {@link Handle}
+     * as a key
+     * @return the previously associated value in this map, or {@code null} if there was no previous association
+     *
+     * @throws IllegalArgumentException if the specified value does not implement {@link Handled}, or if the associated
+     * {@link Handle} is not present in the {@link Space} associated with this map
+     */
     @Override
     public T putHandled(T value) {
         if(!(value instanceof Handled)) {
@@ -114,21 +160,37 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
         return put(((Handled) value).getHandle(), value);
     }
 
+    /**
+     * @param id id of the {@link Handle} to be checked for
+     * @return {@code true} if this map contains a {@link Handle} with the specified id
+     */
     @Override
     public boolean containsById(String id) {
         return idMap.containsKey(id);
     }
 
+    /**
+     * @param handles {@link Handle Handles} to be checked for
+     * @return {@code true} if this map contains all the specified {@link Handle Handles}
+     */
     @Override
     public boolean containsAll(Collection<Handle> handles) {
         return keySet().containsAll(handles);
     }
 
+    /**
+     * @param ids ids of the {@link Handle Handles} to be checked for
+     * @return {@code true} if this map contains all {@link Handle Handles} with the specified ids
+     */
     @Override
     public boolean containsAllById(Collection<String> ids) {
         return idMap.keySet().containsAll(ids);
     }
 
+    /**
+     * @param id id of the requested {@link Handle}
+     * @return value matching the {@link Handle} with the specified id, or {@code null} if none are present
+     */
     @Override
     public T getById(String id) {
         Handle handle = idMap.get(id);
@@ -140,6 +202,10 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
         return get(handle);
     }
 
+    /**
+     * @param id id of the {@link Handle} to be removed
+     * @return the value associated with the {@link Handle} with the specified id, or {@code null} if none were present
+     */
     @Override
     public T removeById(String id) {
         Handle handle = idMap.remove(id);
@@ -151,6 +217,10 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
         return super.remove(handle);
     }
 
+    /**
+     * @param handles {@link Handle Handles} to be removed
+     * @return {@code true} if the contents of this map changed as a result of this action
+     */
     @Override
     public boolean removeAll(Collection<Handle> handles) {
         boolean changed = false;
@@ -164,6 +234,10 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
         return changed;
     }
 
+    /**
+     * @param ids ids of the {@link Handle Handles} to be removed
+     * @return {@code true} if the contents of this map changed as a result of this action
+     */
     @Override
     public boolean removeAllById(Collection<String> ids) {
         boolean changed = false;
