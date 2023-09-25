@@ -8,7 +8,7 @@ plugins {
 version = "$valuesApiVersion"
 
 dependencies {
-    api project(":math-api")
+    api "me.datafox.dfxengine:math-api:$mathApiVersion"
     api "me.datafox.dfxengine:handles-api:$handlesApiVersion"
     api "me.datafox.dfxengine:dependencies:$dependenciesVersion"
 }

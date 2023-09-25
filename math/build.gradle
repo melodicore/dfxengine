@@ -8,7 +8,7 @@ plugins {
 version = "$mathVersion"
 
 dependencies {
-    api project(":math-api")
+    api "me.datafox.dfxengine:math-api:$mathApiVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
     implementation "ch.obermuhlner:big-math:$bigMathVersion"
 
