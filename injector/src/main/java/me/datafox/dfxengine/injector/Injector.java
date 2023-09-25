@@ -398,7 +398,7 @@ public class Injector {
 
     @Data
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    static class PerInstanceReference<T,O> {
+    public static class PerInstanceReference<T,O> {
         private final Class<T> type;
 
         private final Class<O> owner;
