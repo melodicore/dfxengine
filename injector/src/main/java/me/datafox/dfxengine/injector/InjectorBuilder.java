@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Scans the classpath with {@link ClassGraph} and constructs an {@link Injector} instance. Handles checks for existence
- * of dependencies, instantiation order and cyclic dependencies. For more information on how it works, see
+ * Scans the classpath with {@link ClassGraph} and constructs an {@link Injector} instance. Has checks for existence of
+ * dependencies, instantiation order and cyclic dependencies. For more information on how it works, see
  * {@link Injector}.
  *
  * @author datafox
@@ -181,7 +181,7 @@ public class InjectorBuilder {
     }
 
     /**
-     * Builds the injector. See {@link Injector} for detailed information of what this entails.
+     * Builds the Injector. See {@link Injector} for detailed information of what this entails.
      *
      * @return injector
      */

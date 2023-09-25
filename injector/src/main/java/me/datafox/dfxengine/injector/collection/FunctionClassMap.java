@@ -11,8 +11,8 @@ import java.util.function.Function;
 
 /**
  * <p>
- * The FunctionClassMap is a collection used internally by the {@link InjectorBuilder} and {@link Injector}. It stores
- * references to objects in relation to a class hierarchy, determined by a function.
+ * The function class map is a collection used internally by the {@link InjectorBuilder} and {@link Injector}. It stores
+ * references to objects in relation to a class hierarchy, determined by a {@link Function}.
  * </p>
  * <p>
  * Whenever a value is added, a type is resolved by the function, and the value is added to a list of values, contained
@@ -34,7 +34,7 @@ public class FunctionClassMap<T> {
     private final Function<T,Class<?>> function;
 
     /**
-     * @param function the function that resolves types from values
+     * @param function {@link Function} that resolves types from values
      */
     public FunctionClassMap(Function<T,Class<?>> function) {
         this.function = function;
@@ -42,7 +42,7 @@ public class FunctionClassMap<T> {
     }
 
     /**
-     * @param value the value to be added
+     * @param value value to be added
      */
     public void put(T value) {
         ClassUtils
@@ -77,7 +77,7 @@ public class FunctionClassMap<T> {
 
     /**
      * @param type the type to be checked
-     * @return true if values are present for the type, false otherwise
+     * @return {@code true} if values are present for the type, false otherwise
      *
      * @see FunctionClassMap
      */
@@ -87,7 +87,7 @@ public class FunctionClassMap<T> {
 
     /**
      * @param type the type to be checked
-     * @return true if a single value is present for the type, false otherwise
+     * @return {@code true} if a single value is present for the type, false otherwise
      */
     public <R> boolean isSingleton(Class<R> type) {
         List<T> list = delegate.get(type);

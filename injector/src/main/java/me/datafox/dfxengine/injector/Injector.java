@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * </p>
  * <p>
  * The builder scans all classes and methods annotated with {@link Component}, instantiates/invokes them and registers
- * them as components. Components may have fields and constructors annotated with {@link Inject}, as well as methods
+ * them as Components. Components may have fields and constructors annotated with {@link Inject}, as well as methods
  * annotated with {@link Initialize}. The parameters of the constructor and the types of the fields are treated as
  * component dependencies and automatically injected. The initializer methods may also have dependency parameters, but
  * those methods are only invoked after all components have been instantiated. This can be used to circumvent cyclic
@@ -39,17 +39,17 @@ import java.util.stream.Collectors;
  * </p>
  * <p>
  * Components are referenced by {@link Class}es, and all superclasses and superinterfaces of the specified component are
- * also associated with that component. Multiple components of a specified type can exist simultaneously, and a class
- * that is only associated with a single component is called a singleton. When an injectable constructor parameter or
- * field references a component, that component must be a singleton. You can use a {@link List} (or a
- * superclass/interface like {@link AbstractList} or {@link Collection}) with the component's type as the type parameter
- * to inject multiple components of the same type.
+ * also associated with that Component. Multiple Components of a specified type can exist simultaneously, and a class
+ * that is only associated with a single Component is called a singleton. When an injectable constructor parameter or
+ * field references a Component, that Component must be a singleton. You can use a {@link List} (or a superclass or
+ * superinterface like {@link AbstractList} or {@link Collection}) with the Component's type as the type parameter
+ * to inject multiple Components of the same type.
  * </p>
  * <p>
- * <b>Parameterized components are not supported</b>. A component may extend or implement a parameterized
- * superclass/interface, but the parameterized type will be ignored which may lead to a
- * {@link MultipleValidComponentsException} or a {@link ClassCastException} or other unexpected behavior. A warning
- * will be logged by default when components or their superclasses/interfaces  have parameterized types, but this
+ * <b>Parameterized Components are not supported</b>. A Component may extend or implement a parameterized superclass or
+ * superinterface, but the parameterized type will be ignored which may lead to a
+ * {@link MultipleValidComponentsException}, a {@link ClassCastException} or other unexpected behavior. A warning
+ * will be logged by default when Components or their superclasses or superinterfaces have parameterized types, but this
  * behavior can be disabled with {@link InjectorBuilder#disableParameterizedWarnings}.
  * </p>
  *
@@ -66,9 +66,6 @@ public class Injector {
 
     private boolean building;
 
-    /**
-     * Constructor called by {@link InjectorBuilder}.
-     */
     Injector(Collection<PerInstanceReference<?,?>> perInstanceComponents) {
         logger = LoggerFactory.getLogger(getClass());
         instantiatedComponents = new ObjectClassMap();
@@ -85,7 +82,7 @@ public class Injector {
      * Instantiates the provided class, with the other provided class referenced as the requester for
      * {@link InstantiationDetails}. The class must either have a single constructor annotated with {@link Inject} or a
      * default constructor. Any parameters of the constructor are treated as dependencies and injected during
-     * instantiation. Any non-static and non-final fields annotated with {@link Inject} are also injected directly after
+     * instantiation. Any non-static and non-final fields annotated with Inject are also injected directly after
      * instantiation. Finally, any methods annotated with {@link Initialize} are invoked, with their parameters also
      * treated as dependencies.
      *
@@ -117,20 +114,20 @@ public class Injector {
     }
 
     /**
-     * Returns all components matching the provided class. If any of those components are
+     * Returns all {@link Component Components} matching the provided class. If any of those Components are
      * {@link InstantiationPolicy#PER_INSTANCE}, they are instantiated and the provided requesting class will be used
      * for any {@link InstantiationDetails} dependencies.
      *
-     * @param type requested component class
-     * @param requestingClass class requesting the components
-     * @return list of all components matching the provided class.
+     * @param type requested {@link Component} class
+     * @param requestingClass class requesting the {@link Component Components}
+     * @return list of all {@link Component Components} matching the provided class.
      *
-     * @throws ClassInstantiationException if a per instance component could not be instantiated, for example if its
-     * constructor is not accessible to the injector
-     * @throws FieldInjectionException if a per instance component has fields annotated with {@link Inject} that are not
-     * accessible to the injector
-     * @throws MethodInvocationException if a per instance component has a method or methods annotated with
-     * {@link Initialize} that are not accessible
+     * @throws ClassInstantiationException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} could not be
+     * instantiated, for example if its constructor is not accessible to the injector
+     * @throws FieldInjectionException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} has fields
+     * annotated with {@link Inject} that are not accessible to the injector
+     * @throws MethodInvocationException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} has a method or
+     * methods annotated with {@link Initialize} that are not accessible
      */
     @SuppressWarnings("unchecked")
     public <T,R> List<T> getComponents(Class<T> type, Class<R> requestingClass) {
@@ -151,18 +148,18 @@ public class Injector {
     }
 
     /**
-     * Calls {@link #getComponents(Class, Class)} with a null requesting class.
+     * Calls {@link #getComponents(Class, Class)} with a {@code null} requesting class.
      */
     public <T> List<T> getComponents(Class<T> type) {
         return getComponents(type, null);
     }
 
     /**
-     * Checks if only one component matches with the provided class and then calls {@link #getComponents(Class, Class)}
-     * and returns the first and only entry in the returned list.
+     * Checks if only one {@link Component} matches with the provided class and then calls
+     * {@link #getComponents(Class, Class)} and returns the first and only entry in the returned list.
      *
-     * @throws UnknownComponentException if no components match the provided class
-     * @throws MultipleValidComponentsException if multiple components match the provided class
+     * @throws UnknownComponentException if no {@link Component Components} match the provided class
+     * @throws MultipleValidComponentsException if multiple {@link Component Components} match the provided class
      */
     public <T,R> T getSingletonComponent(Class<T> type, Class<R> requestingClass) {
         logger.info(InjectorStrings.fetchingSingleton(type));
@@ -182,37 +179,37 @@ public class Injector {
 
 
     /**
-     * Calls {@link #getSingletonComponent(Class, Class)} with a null requesting class.
+     * Calls {@link #getSingletonComponent(Class, Class)} with a {@code null} requesting class.
      */
     public <T> T getSingletonComponent(Class<T> type) {
         return getSingletonComponent(type, null);
     }
 
     /**
-     * Checks if any components are present that match with the provided class.
+     * Checks if any {@link Component Components} are present that match with the provided class.
      *
      * @param type component class to check
-     * @return true if one or more components are present that match with the provided class
+     * @return {@code true} if one or more {@link Component Components} are present that match with the provided class
      */
     public <T> boolean containsComponents(Class<T> type) {
         return instantiatedComponents.contains(type) || perInstanceComponents.contains(type);
     }
 
     /**
-     * Checks if a single component is present that matches with the provided class.
+     * Checks if a single {@link Component} is present that matches with the provided class.
      *
-     * @param type component class to check
-     * @return true if a single component is present that matches with the provided class
+     * @param type {@link Component} class to check
+     * @return {@code true} if a single {@link Component} is present that matches with the provided class
      */
     public <T> boolean isSingletonComponent(Class<T> type) {
         return instantiatedComponents.isSingleton(type) != perInstanceComponents.isSingleton(type);
     }
 
     /**
-     * Registers a singleton component to be used with dependency injection. Normally only used by the
+     * Registers a singleton {@link Component} to be used with dependency injection. Normally only used by the
      * {@link InjectorBuilder}.
      *
-     * @param instance component instance
+     * @param instance {@link Component} instance
      */
     public <T> void addComponent(T instance) {
         logger.debug(InjectorStrings.registeringComponent(instance.getClass()));
@@ -401,18 +398,18 @@ public class Injector {
 
     @Data
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class PerInstanceReference<T,O> {
+    static class PerInstanceReference<T,O> {
         private final Class<T> type;
 
         private final Class<O> owner;
 
         private final Executable executable;
 
-        public static <T,O> PerInstanceReference<T,O> of(Class<T> type, Class<O> owner, Executable executable) {
+        static <T,O> PerInstanceReference<T,O> of(Class<T> type, Class<O> owner, Executable executable) {
             return new PerInstanceReference<>(type, owner, executable);
         }
 
-        public static <T,O> PerInstanceReference<T,O> of(Class<T> type, Executable executable) {
+        static <T,O> PerInstanceReference<T,O> of(Class<T> type, Executable executable) {
             return new PerInstanceReference<>(type, null, executable);
         }
     }

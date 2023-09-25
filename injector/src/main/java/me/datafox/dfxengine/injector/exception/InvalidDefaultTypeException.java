@@ -3,8 +3,8 @@ package me.datafox.dfxengine.injector.exception;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 
 /**
- * An exception that is thrown when a {@link Component} has a defaultFor value that is not a superclass or -interface of
- * the component class.
+ * An exception that is thrown when a {@link Component} has a defaultFor value that is not a superclass or
+ * superinterface of the component class.
  *
  * @author datafox
  */

@@ -1,7 +1,9 @@
 package me.datafox.dfxengine.injector.exception;
 
+import me.datafox.dfxengine.injector.api.annotation.Component;
+
 /**
- * An exception that is thrown when no components are present for the requested type.
+ * An exception that is thrown when no {@link Component Components} are present for the requested type.
  *
  * @author datafox
  */

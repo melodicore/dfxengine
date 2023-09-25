@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Contains preset components, currently only {@link Logger}.
+ * Contains preset {@link Component Components}, currently only {@link Logger}.
  *
  * @author datafox
  */

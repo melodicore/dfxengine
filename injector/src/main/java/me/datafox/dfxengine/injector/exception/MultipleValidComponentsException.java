@@ -1,7 +1,9 @@
 package me.datafox.dfxengine.injector.exception;
 
+import me.datafox.dfxengine.injector.api.annotation.Component;
+
 /**
- * An exception that is thrown when a single component is requested but multiple valid components are present.
+ * An exception that is thrown when a single {@link Component} is requested but multiple valid Components are present.
  *
  * @author datafox
  */

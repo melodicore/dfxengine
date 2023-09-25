@@ -4,13 +4,14 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 /**
  * Contains instantiation details of an object when using the {@link Injector}. It contains a reference to the class the
- * component was requested with, as well as the class depending on said component. Because of this, it is only useful
- * for components that have {@link InstantiationPolicy#PER_INSTANCE}. For components that have
+ * {@link Component} was requested with, as well as the class depending on said Component. Because of this, it is only
+ * useful for Components that have {@link InstantiationPolicy#PER_INSTANCE}. For Components that have
  * {@link InstantiationPolicy#ONCE}, {@link #type} will always be the declaring class of the component, and
- * {@link #requestingType} will always be null.
+ * {@link #requestingType} will always be {@code null}.
  *
  * @author datafox
  */

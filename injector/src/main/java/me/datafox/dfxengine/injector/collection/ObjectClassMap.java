@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * The ObjectClassMap is a collection used internally by the {@link Injector}. It is an extension of the
+ * The object class map is a collection used internally by the {@link Injector}. It is an extension of the
  * {@link FunctionClassMap} where the values are arbitrary objects and the function resolves the type of the object.
  * This ensures that all values in a list represented by a type are assignable to that type.
  * </p>
