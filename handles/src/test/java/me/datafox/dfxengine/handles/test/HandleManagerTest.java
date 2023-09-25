@@ -284,10 +284,18 @@ public class HandleManagerTest extends AbstractTest {
 
     @Test
     public void clearTest() {
+        testSpace.getHandle().getSpace().getHandle().addTag(testTag);
+
+        testTag.getSpace().getHandle().addTag(otherTag);
+
         handleManager.clear();
 
         assertEquals(Set.of(testSpace.getHandle().getSpace(), testTag.getSpace()), Set.copyOf(handleManager.getSpaces()));
 
         assertEquals(Set.of(), handleManager.getTags());
+
+        assertEquals(Set.of(), testSpace.getHandle().getSpace().getHandle().getTags());
+
+        assertEquals(Set.of(), testTag.getSpace().getHandle().getTags());
     }
 }

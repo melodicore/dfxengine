@@ -423,6 +423,8 @@ public class HandleManagerImpl implements HandleManager {
      */
     @Override
     public void clear() {
+        tagSpace.getHandle().clearTags();
+        spaceSpace.getHandle().clearTags();
         tagSpace.clear();
         spaceSpace.clear();
         ((SpaceImpl) spaceSpace).addInternal(spaceSpace.getHandle());
