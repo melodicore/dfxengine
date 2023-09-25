@@ -17,10 +17,10 @@ import static me.datafox.dfxengine.math.utils.Range.*;
 public class Conversion {
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return int representation of the specified value
+     * @return {@code int} representation of the specified value
      *
-     * @throws ArithmeticException if the value of the specified Numeral is smaller than {@link Integer#MIN_VALUE} or
-     * greater than {@link Integer#MAX_VALUE}
+     * @throws ArithmeticException if the value of the specified {@link Numeral} is smaller than
+     * {@link Integer#MIN_VALUE} or greater than {@link Integer#MAX_VALUE}
      */
     public static int toInt(Numeral numeral) {
         if(numeral instanceof IntNumeral) {
@@ -50,10 +50,10 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return long representation of the specified value
+     * @return {@code long} representation of the specified value
      *
-     * @throws ArithmeticException if the value of the specified Numeral is smaller than {@link Long#MIN_VALUE} or
-     * greater than {@link Long#MAX_VALUE}
+     * @throws ArithmeticException if the value of the specified {@link Numeral} is smaller than {@link Long#MIN_VALUE}
+     * or greater than {@link Long#MAX_VALUE}
      */
     public static long toLong(Numeral numeral) {
         if(numeral instanceof LongNumeral) {
@@ -112,9 +112,9 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return float representation of the specified value
+     * @return {@code float} representation of the specified value
      *
-     * @throws ArithmeticException if the value of the specified Numeral is smaller than
+     * @throws ArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Float#MAX_VALUE -Float.MAX_VALUE} or greater than {@link Float#MAX_VALUE}
      */
     public static float toFloat(Numeral numeral) {
@@ -144,9 +144,9 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return double representation of the specified value
+     * @return {@code double} representation of the specified value
      *
-     * @throws ArithmeticException if the value of the specified Numeral is smaller than
+     * @throws ArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Double#MAX_VALUE -Double.MAX_VALUE} or greater than {@link Double#MAX_VALUE}
      */
     public static double toDouble(Numeral numeral) {
@@ -202,8 +202,8 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return a Numeral backed with the smallest type that can hold the specified Numeral's value. This method does not
-     * convert between integer and decimal types.
+     * @return a {@link Numeral} backed with the smallest type that can hold the specified Numeral's value. This method
+     * does not convert between integer and decimal types.
      */
     public static Numeral toSmallestType(Numeral numeral) {
         switch(numeral.getType()) {
@@ -242,8 +242,8 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return a Numeral backed with the smallest integer type that can hold the specified Numeral's value, unless the
-     * Numeral is already an integer, in which case the specified Numeral is returned
+     * @return a {@link Numeral} backed with the smallest integer type that can hold the specified Numeral's value,
+     * unless the Numeral is already an integer, in which case the specified Numeral is returned
      */
     public static Numeral toInteger(Numeral numeral) {
         if(numeral.getType().isInteger()) {
@@ -260,8 +260,8 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return a Numeral backed with the smallest decimal type that can hold the specified Numeral's value, unless the
-     * Numeral is already a decimal, in which case the specified Numeral is returned
+     * @return a {@link Numeral} backed with the smallest decimal type that can hold the specified Numeral's value,
+     * unless the Numeral is already a decimal, in which case the specified Numeral is returned
      */
     public static Numeral toDecimal(Numeral numeral) {
         if(numeral.getType().isDecimal()) {
@@ -278,10 +278,10 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @param type type for the Numeral to be converted to
-     * @return a Numeral backed with the specified type
+     * @param type type for the {@link Numeral} to be converted to
+     * @return a {@link Numeral} backed with the specified type
      *
-     * @throws ArithmeticException if the value of the specified Numeral is outside the specified type's bounds
+     * @throws ArithmeticException if the value of the specified {@link Numeral} is outside the specified type's bounds
      */
     public static Numeral toNumeral(Numeral numeral, NumeralType type) {
         switch(type) {
@@ -303,10 +303,10 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return Numeral backed by an int with the specified Numeral's value
+     * @return {@link Numeral} backed by an {@code int} with the specified Numeral's value
      *
-     * @throws ArithmeticException if the value of the specified Numeral is smaller than {@link Integer#MIN_VALUE} or
-     * greater than {@link Integer#MAX_VALUE}
+     * @throws ArithmeticException if the value of the specified {@link Numeral} is smaller than
+     * {@link Integer#MIN_VALUE} or greater than {@link Integer#MAX_VALUE}
      */
     public static IntNumeral toIntNumeral(Numeral numeral) {
         if(numeral instanceof IntNumeral) {
@@ -318,10 +318,10 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return Numeral backed by a long with the specified Numeral's value
+     * @return {@link Numeral} backed by a {@code long} with the specified Numeral's value
      *
-     * @throws ArithmeticException if the value of the specified Numeral is smaller than {@link Long#MIN_VALUE} or
-     * greater than {@link Long#MAX_VALUE}
+     * @throws ArithmeticException if the value of the specified {@link Numeral} is smaller than {@link Long#MIN_VALUE}
+     * or greater than {@link Long#MAX_VALUE}
      */
     public static LongNumeral toLongNumeral(Numeral numeral) {
         if(numeral instanceof LongNumeral) {
@@ -333,7 +333,7 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return Numeral backed by a {@link BigInteger} with the specified Numeral's value
+     * @return {@link Numeral} backed by a {@link BigInteger} with the specified Numeral's value
      */
     public static BigIntNumeral toBigIntNumeral(Numeral numeral) {
         if(numeral instanceof BigIntNumeral) {
@@ -345,9 +345,9 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return Numeral backed by a long with the specified Numeral's value
+     * @return {@link Numeral} backed by a {@code float} with the specified Numeral's value
      *
-     * @throws ArithmeticException if the value of the specified Numeral is smaller than
+     * @throws ArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Float#MAX_VALUE -Float.MAX_VALUE} or greater than {@link Float#MAX_VALUE}
      */
     public static FloatNumeral toFloatNumeral(Numeral numeral) {
@@ -361,9 +361,9 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return Numeral backed by a double with the specified Numeral's value
+     * @return {@link Numeral} backed by a {@code double} with the specified Numeral's value
      *
-     * @throws ArithmeticException if the value of the specified Numeral is smaller than
+     * @throws ArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Double#MAX_VALUE -Double.MAX_VALUE} or greater than {@link Double#MAX_VALUE}
      */
     public static DoubleNumeral toDoubleNumeral(Numeral numeral) {
@@ -377,7 +377,7 @@ public class Conversion {
 
     /**
      * @param numeral {@link Numeral} to be converted
-     * @return Numeral backed by a {@link BigDecimal} with the specified Numeral's value
+     * @return {@link Numeral} backed by a {@link BigDecimal} with the specified Numeral's value
      */
     public static BigDecNumeral toBigDecNumeral(Numeral numeral) {
         if(numeral instanceof BigDecNumeral) {
