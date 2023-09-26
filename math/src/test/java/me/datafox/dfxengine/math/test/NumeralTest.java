@@ -86,6 +86,7 @@ public class NumeralTest {
 
     @Test
     public void floatNumeralTest() {
+        //BigInteger larger than Long.MAX_VALUE
         FloatNumeral numeral = new FloatNumeral(4e20f);
 
         assertInstanceOf(Float.class, numeral.getNumber());
@@ -103,10 +104,15 @@ public class NumeralTest {
         assertEquals(4.0e20f, numeral.floatValue());
         assertEquals(4.0e20d, numeral.doubleValue());
         assertEquals(new BigDecimal("4.0e+20"), numeral.bigDecValue());
+
+        assertThrows(IllegalArgumentException.class, () -> new FloatNumeral(Float.POSITIVE_INFINITY));
+        assertThrows(IllegalArgumentException.class, () -> new FloatNumeral(Float.NEGATIVE_INFINITY));
+        assertThrows(IllegalArgumentException.class, () -> new FloatNumeral(Float.NaN));
     }
 
     @Test
     public void doubleNumeralTest() {
+        //BigInteger larger than Float.MAX_VALUE
         DoubleNumeral numeral = new DoubleNumeral(4.2e69d);
 
         assertInstanceOf(Double.class, numeral.getNumber());
@@ -127,10 +133,15 @@ public class NumeralTest {
 
         DoubleNumeral smallNumeral = new DoubleNumeral(1e16d);
         assertEquals(FLOAT, smallNumeral.toSmallestType().getType());
+
+        assertThrows(IllegalArgumentException.class, () -> new DoubleNumeral(Double.POSITIVE_INFINITY));
+        assertThrows(IllegalArgumentException.class, () -> new DoubleNumeral(Double.NEGATIVE_INFINITY));
+        assertThrows(IllegalArgumentException.class, () -> new DoubleNumeral(Double.NaN));
     }
 
     @Test
     public void bigDecNumeralTest() {
+        //BigInteger larger than Double.MAX_VALUE
         BigDecNumeral numeral = new BigDecNumeral(BigDecimal.valueOf(Double.MAX_VALUE).multiply(BigDecimal.valueOf(5)));
 
         assertInstanceOf(BigDecimal.class, numeral.getNumber());

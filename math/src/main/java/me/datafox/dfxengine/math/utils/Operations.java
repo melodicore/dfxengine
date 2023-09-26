@@ -686,6 +686,50 @@ public class Operations {
     }
 
     /**
+     * Returns the minimum of two {@link Numeral Numerals}, that is, the Numeral that represents a lesser number. If
+     * the Numerals represent the same number, the first Numeral is returned
+     *
+     * @param numeral {@link Numeral} to compare
+     * @param other {@link Numeral} to compare
+     * @return the lesser of the specified {@link Numeral Numerals}
+     *
+     * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
+     * {@link Numeral#getType()}
+     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
+     */
+    public static Numeral min(Numeral numeral, Numeral other) {
+        if(compare(numeral, other) <= 0) {
+            return numeral;
+        } else {
+            return other;
+        }
+    }
+
+    /**
+     * Returns the maximum of two {@link Numeral Numerals}, that is, the Numeral that represents a greater number. If
+     * the Numerals represent the same number, the first Numeral is returned
+     *
+     * @param numeral {@link Numeral} to compare
+     * @param other {@link Numeral} to compare
+     * @return the greater of the specified {@link Numeral Numerals}
+     *
+     * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
+     * {@link Numeral#getType()}
+     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
+     */
+    public static Numeral max(Numeral numeral, Numeral other) {
+        if(compare(numeral, other) >= 0) {
+            return numeral;
+        } else {
+            return other;
+        }
+    }
+
+    /**
      * Linearly interpolates a {@link Numeral} based on a minimum and maximum numeral. The mathematical formula for the
      * operation is {@code numeral * (max - min) + min}. Values smaller than zero and greater than one are allowed.
      *
@@ -782,7 +826,7 @@ public class Operations {
     public static Numeral add(float augend, float addend) {
         float result = augend + addend;
 
-        if(!Float.isFinite(result)) {
+        if(Float.isInfinite(result)) {
             return add((double) augend, addend);
         }
 
@@ -797,7 +841,7 @@ public class Operations {
     public static Numeral add(double augend, double addend) {
         double result = augend + addend;
 
-        if(!Double.isFinite(result)) {
+        if(Double.isInfinite(result)) {
             return add(BigDecimal.valueOf(augend), BigDecimal.valueOf(addend));
         }
 
@@ -860,7 +904,7 @@ public class Operations {
     public static Numeral subtract(float minuend, float subtrahend) {
         float result = minuend - subtrahend;
 
-        if(!Float.isFinite(result)) {
+        if(Float.isInfinite(result)) {
             return subtract((double) minuend, subtrahend);
         }
 
@@ -875,7 +919,7 @@ public class Operations {
     public static Numeral subtract(double minuend, double subtrahend) {
         double result = minuend - subtrahend;
 
-        if(!Double.isFinite(result)) {
+        if(Double.isInfinite(result)) {
             return subtract(BigDecimal.valueOf(minuend), BigDecimal.valueOf(subtrahend));
         }
 
@@ -943,7 +987,7 @@ public class Operations {
     public static Numeral multiply(float multiplicand, float multiplier) {
         float result = multiplicand * multiplier;
 
-        if(!Float.isFinite(result)) {
+        if(Float.isInfinite(result)) {
             return multiply((double) multiplicand, multiplier);
         }
 
@@ -958,7 +1002,7 @@ public class Operations {
     public static Numeral multiply(double multiplicand, double multiplier) {
         double result = multiplicand * multiplier;
 
-        if(!Double.isFinite(result)) {
+        if(Double.isInfinite(result)) {
             return multiply(BigDecimal.valueOf(multiplicand), BigDecimal.valueOf(multiplier));
         }
 
@@ -1009,7 +1053,7 @@ public class Operations {
     public static Numeral divide(float dividend, float divisor) {
         float result = dividend / divisor;
 
-        if(!Float.isFinite(result)) {
+        if(Float.isInfinite(result)) {
             return divide((double) dividend, divisor);
         }
 
@@ -1024,7 +1068,7 @@ public class Operations {
     public static Numeral divide(double dividend, double divisor) {
         double result = dividend / divisor;
 
-        if(!Double.isFinite(result)) {
+        if(Double.isInfinite(result)) {
             return divide(BigDecimal.valueOf(dividend), BigDecimal.valueOf(divisor));
         }
 
@@ -1095,7 +1139,7 @@ public class Operations {
     public static Numeral power(float base, float exponent) {
         double value = Math.pow(base, exponent);
 
-        if(!Double.isFinite(value)) {
+        if(Double.isInfinite(value)) {
             return power(BigDecimal.valueOf(base), BigDecimal.valueOf(exponent));
         }
 
@@ -1114,7 +1158,7 @@ public class Operations {
     public static Numeral power(double base, double exponent) {
         double value = Math.pow(base, exponent);
 
-        if(!Double.isFinite(value)) {
+        if(Double.isInfinite(value)) {
             return power(BigDecimal.valueOf(base), BigDecimal.valueOf(exponent));
         }
 
@@ -1175,7 +1219,7 @@ public class Operations {
     public static Numeral exp(float value) {
         double result = Math.exp(value);
 
-        if(!Double.isFinite(result)) {
+        if(Double.isInfinite(result)) {
             return exp(BigDecimal.valueOf(value));
         }
 
@@ -1193,7 +1237,7 @@ public class Operations {
     public static Numeral exp(double value) {
         double result = Math.exp(value);
 
-        if(!Double.isFinite(result)) {
+        if(Double.isInfinite(result)) {
             return exp(BigDecimal.valueOf(value));
         }
 
@@ -1360,7 +1404,7 @@ public class Operations {
             result = Math.pow(value, 1d/base);
         }
 
-        if(!Double.isFinite(result)) {
+        if(Double.isInfinite(result)) {
             return root(BigDecimal.valueOf(value), BigDecimal.valueOf(base));
         }
 
@@ -1385,7 +1429,7 @@ public class Operations {
             result = Math.pow(value, 1d/base);
         }
 
-        if(!Double.isFinite(result)) {
+        if(Double.isInfinite(result)) {
             return root(BigDecimal.valueOf(value), BigDecimal.valueOf(base));
         }
 
@@ -1586,7 +1630,7 @@ public class Operations {
     public static Numeral logN(float value, float base) {
         double result = (Math.log(value) / Math.log(base));
 
-        if(!Double.isFinite(result)) {
+        if(Double.isInfinite(result)) {
             return logN(BigDecimal.valueOf(value), BigDecimal.valueOf(base));
         }
 
@@ -1605,7 +1649,7 @@ public class Operations {
     public static Numeral logN(double value, double base) {
         double result = (Math.log(value) / Math.log(base));
 
-        if(!Double.isFinite(result)) {
+        if(Double.isInfinite(result)) {
             return logN(BigDecimal.valueOf(value), BigDecimal.valueOf(base));
         }
 

@@ -23,11 +23,13 @@ public class OperationsTest {
     private static final IntNumeral evenIntNumeral = new IntNumeral(10);
     private static final LongNumeral longNumeral = new LongNumeral(Long.MAX_VALUE - 2);
     private static final LongNumeral smallLongNumeral = new LongNumeral(Integer.MAX_VALUE + 2L);
+    private static final LongNumeral tinyLongNumeral = new LongNumeral(473L);
     private static final LongNumeral negativeLongNumeral = new LongNumeral(Long.MIN_VALUE + 2);
     private static final FloatNumeral floatNumeral = new FloatNumeral(4.57f);
     private static final FloatNumeral largeFloatNumeral = new FloatNumeral(Float.MAX_VALUE - Float.MAX_VALUE/10f);
     private static final FloatNumeral smallFloatNumeral = new FloatNumeral(0.01f);
     private static final FloatNumeral tinyFloatNumeral = new FloatNumeral(1e-10f);
+    private static final FloatNumeral floatEqualToIntNumeral = new FloatNumeral(5f);
     private static final FloatNumeral negativeFloatNumeral = new FloatNumeral(-Float.MAX_VALUE + Float.MAX_VALUE/10f);
     private static final DoubleNumeral doubleNumeral = new DoubleNumeral(Double.MAX_VALUE - Double.MAX_VALUE/10d);
     private static final DoubleNumeral negativeDoubleNumeral = new DoubleNumeral(-Double.MAX_VALUE + Double.MAX_VALUE/10d);
@@ -284,6 +286,78 @@ public class OperationsTest {
         assertEquals(new FloatNumeral(58.31965f), logN(largeFloatNumeral, floatNumeral));
         assertEquals(new DoubleNumeral(467.04257000621146d), logN(doubleNumeral, floatNumeral));
         assertEquals(new BigDecNumeral("2335.559541706120210316557758576560"), logN(bigDecNumeral, floatNumeral));
+    }
+
+    @Test
+    public void minTest() {
+        assertSame(intNumeral, min(intNumeral, floatEqualToIntNumeral));
+        assertSame(floatEqualToIntNumeral, min(floatEqualToIntNumeral, intNumeral));
+
+        assertSame(intNumeral, min(intNumeral, evenIntNumeral));
+        assertSame(largeIntNumeral, min(smallLongNumeral, largeIntNumeral));
+        assertSame(tinyLongNumeral, min(tinyLongNumeral, largeIntNumeral));
+        assertSame(floatNumeral, min(intNumeral, floatNumeral));
+        assertSame(largeIntNumeral, min(largeFloatNumeral, largeIntNumeral));
+        assertSame(largeIntNumeral, min(doubleNumeral, largeIntNumeral));
+        assertSame(intNumeral, min(bigDecNumeral, intNumeral));
+
+        assertSame(smallLongNumeral, min(longNumeral, smallLongNumeral));
+        assertSame(longNumeral, min(bigIntNumeral, longNumeral));
+        assertSame(negativeBigIntNumeral, min(longNumeral, negativeBigIntNumeral));
+        assertSame(floatNumeral, min(tinyLongNumeral, floatNumeral));
+        assertSame(longNumeral, min(largeFloatNumeral, longNumeral));
+        assertSame(negativeDoubleNumeral, min(negativeDoubleNumeral, longNumeral));
+        assertSame(longNumeral, min(longNumeral, bigDecNumeral));
+
+        assertSame(negativeBigIntNumeral, min(bigIntNumeral, negativeBigIntNumeral));
+        assertSame(floatNumeral, min(bigIntNumeral, floatNumeral));
+        assertSame(negativeDoubleNumeral, min(bigIntNumeral, negativeDoubleNumeral));
+        assertSame(negativeBigDecNumeral, min(negativeBigIntNumeral, negativeBigDecNumeral));
+
+        assertSame(floatNumeral, min(floatNumeral, largeFloatNumeral));
+        assertSame(largeFloatNumeral, min(doubleNumeral, largeFloatNumeral));
+        assertSame(largeFloatNumeral, min(largeFloatNumeral, bigDecNumeral));
+
+        assertSame(negativeDoubleNumeral, min(doubleNumeral, negativeDoubleNumeral));
+        assertSame(doubleNumeral, min(doubleNumeral, bigDecNumeral));
+
+        assertSame(negativeBigDecNumeral, min(otherBigDecNumeral, negativeBigDecNumeral));
+    }
+
+    @Test
+    public void maxTest() {
+        assertSame(intNumeral, max(intNumeral, floatEqualToIntNumeral));
+        assertSame(floatEqualToIntNumeral, max(floatEqualToIntNumeral, intNumeral));
+
+        assertSame(evenIntNumeral, max(intNumeral, evenIntNumeral));
+        assertSame(smallLongNumeral, max(smallLongNumeral, largeIntNumeral));
+        assertSame(largeIntNumeral, max(tinyLongNumeral, largeIntNumeral));
+        assertSame(intNumeral, max(intNumeral, floatNumeral));
+        assertSame(largeFloatNumeral, max(largeFloatNumeral, largeIntNumeral));
+        assertSame(doubleNumeral, max(doubleNumeral, largeIntNumeral));
+        assertSame(bigDecNumeral, max(bigDecNumeral, intNumeral));
+
+        assertSame(longNumeral, max(longNumeral, smallLongNumeral));
+        assertSame(bigIntNumeral, max(bigIntNumeral, longNumeral));
+        assertSame(longNumeral, max(longNumeral, negativeBigIntNumeral));
+        assertSame(tinyLongNumeral, max(tinyLongNumeral, floatNumeral));
+        assertSame(largeFloatNumeral, max(largeFloatNumeral, longNumeral));
+        assertSame(longNumeral, max(negativeDoubleNumeral, longNumeral));
+        assertSame(bigDecNumeral, max(longNumeral, bigDecNumeral));
+
+        assertSame(bigIntNumeral, max(bigIntNumeral, negativeBigIntNumeral));
+        assertSame(bigIntNumeral, max(bigIntNumeral, floatNumeral));
+        assertSame(bigIntNumeral, max(bigIntNumeral, negativeDoubleNumeral));
+        assertSame(negativeBigIntNumeral, max(negativeBigIntNumeral, negativeBigDecNumeral));
+
+        assertSame(largeFloatNumeral, max(floatNumeral, largeFloatNumeral));
+        assertSame(doubleNumeral, max(doubleNumeral, largeFloatNumeral));
+        assertSame(bigDecNumeral, max(largeFloatNumeral, bigDecNumeral));
+
+        assertSame(doubleNumeral, max(doubleNumeral, negativeDoubleNumeral));
+        assertSame(bigDecNumeral, max(doubleNumeral, bigDecNumeral));
+
+        assertSame(otherBigDecNumeral, max(otherBigDecNumeral, negativeBigDecNumeral));
     }
 
     @Test

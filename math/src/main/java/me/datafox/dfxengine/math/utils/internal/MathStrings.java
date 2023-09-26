@@ -11,6 +11,7 @@ public class MathStrings {
     public static final String EMPTY_ARRAY = "Encountered an empty array where a populated one should be present";
 
     private static final String INFINITE_VALUE = "Attempted to instantiate a %sNumeral with an infinite %s value";
+    private static final String NAN_VALUE = "Attempted to instantiate a %sNumeral with a NaN %s value";
     private static final String UNKNOWN_TYPE = "Unknown NumeralType %s";
     private static final String DURING_CONVERSION = "Error happened while converting %s to %s";
     private static final String OVERFLOW = "%s overflow or underflow with %s %s";
@@ -27,8 +28,16 @@ public class MathStrings {
     private static final String LOGARITHM_OF_BASE_ONE =
             "Attempted to calculate the logarithm of the number %s with base 1";
 
+    public static String nanDoubleValue() {
+        return forTwoStrings(NAN_VALUE, "Double", "double");
+    }
+
     public static String infiniteDoubleValue() {
         return forTwoStrings(INFINITE_VALUE, "Double", "double");
+    }
+
+    public static String nanFloatValue() {
+        return forTwoStrings(NAN_VALUE, "Float", "float");
     }
 
     public static String infiniteFloatValue() {

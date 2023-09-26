@@ -20,9 +20,16 @@ public final class DoubleNumeral extends AbstractNumeral {
 
     /**
      * @param number {@code double} to be associated with this numeral
+     *
+     * @throws IllegalArgumentException if the {@code double} is {@code NaN} or infinite.
      */
     public DoubleNumeral(double number) {
-        if(!Double.isFinite(number)) {
+        if(Double.isNaN(number)) {
+            throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
+                    MathStrings.nanDoubleValue(),
+                    IllegalArgumentException::new);
+        }
+        if(Double.isInfinite(number)) {
             throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
                     MathStrings.infiniteDoubleValue(),
                     IllegalArgumentException::new);

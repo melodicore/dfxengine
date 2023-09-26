@@ -23,9 +23,16 @@ public final class FloatNumeral extends AbstractNumeral {
 
     /**
      * @param number {@code float} to be associated with this numeral
+     *
+     * @throws IllegalArgumentException if the {@code float} is {@code NaN} or infinite.
      */
     public FloatNumeral(float number) {
-        if(!Float.isFinite(number)) {
+        if(Double.isNaN(number)) {
+            throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
+                    MathStrings.nanFloatValue(),
+                    IllegalArgumentException::new);
+        }
+        if(Float.isInfinite(number)) {
             throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
                     MathStrings.infiniteFloatValue(),
                     IllegalArgumentException::new);
