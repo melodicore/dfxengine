@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
+import me.datafox.dfxengine.values.api.operation.DualParameterOperation;
 import me.datafox.dfxengine.values.api.operation.Operation;
 import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
 import me.datafox.dfxengine.values.api.operation.SourceOperation;
@@ -86,6 +87,11 @@ public final class MappingOperationChain implements Operation {
             return this;
         }
 
+        public Builder operation(DualParameterOperation operation) {
+            this.operations.add(operation);
+            return this;
+        }
+
         public Builder operation(Operation operation) {
             this.operations.add(operation);
             return this;
@@ -113,71 +119,122 @@ public final class MappingOperationChain implements Operation {
     public static class SpecialNumeral implements Numeral {
         private final int id;
 
+        /**
+         * @implNote always returns {@link Integer} 0
+         */
         @Override
         public Number getNumber() {
-            return null;
+            return 0;
         }
 
+        /**
+         * @implNote always returns {@link NumeralType#INT}
+         */
         @Override
         public NumeralType getType() {
-            return null;
+            return NumeralType.INT;
         }
 
+        /**
+         * @implNote unsupported operation, always returns itself
+         */
         @Override
-        public Numeral convert(NumeralType type) throws ArithmeticException {
+        public Numeral convert(NumeralType type) {
             return this;
         }
 
+        /**
+         * @implNote unsupported operation, always returns itself
+         */
         @Override
         public Numeral convertIfAllowed(NumeralType type) {
             return this;
         }
 
+        /**
+         * @implNote unsupported operation, always returns itself
+         */
+        @Override
+        public Numeral convertToInteger() {
+            return this;
+        }
+
+        /**
+         * @implNote unsupported operation, always returns itself
+         */
         @Override
         public Numeral convertToDecimal() {
             return this;
         }
 
+        /**
+         * @implNote unsupported operation, always returns false
+         */
         @Override
         public boolean canConvert(NumeralType type) {
             return false;
         }
 
+        /**
+         * @implNote unsupported operation, always returns itself
+         */
         @Override
         public Numeral toSmallestType() {
             return this;
         }
 
+        /**
+         * @implNote always returns 0
+         */
         @Override
-        public int intValue() throws ArithmeticException {
+        public int intValue() {
             return 0;
         }
 
+        /**
+         * @implNote always returns 0L
+         */
         @Override
-        public long longValue() throws ArithmeticException {
-            return 0;
+        public long longValue() {
+            return 0L;
         }
 
+        /**
+         * @implNote always returns {@link BigInteger#ZERO}
+         */
         @Override
         public BigInteger bigIntValue() {
             return BigInteger.ZERO;
         }
 
+        /**
+         * @implNote always returns 0f
+         */
         @Override
-        public float floatValue() throws ArithmeticException {
+        public float floatValue() {
             return 0;
         }
 
+        /**
+         * @implNote always returns 0d
+         */
         @Override
-        public double doubleValue() throws ArithmeticException {
+        public double doubleValue() {
             return 0;
         }
 
+        /**
+         * @implNote always returns {@link BigDecimal#ZERO}
+         */
         @Override
         public BigDecimal bigDecValue() {
             return BigDecimal.ZERO;
         }
 
+        /**
+         * @implNote if o is also a SpecialNumeral, the return values of {@link #getId()} are compared. Otherwise, 1 is
+         * returned
+         */
         @Override
         public int compareTo(Numeral o) {
             if(o instanceof SpecialNumeral) {
@@ -191,11 +248,10 @@ public final class MappingOperationChain implements Operation {
             if(this == o) {
                 return true;
             }
-            if(!(o instanceof Numeral)) {
+            if(!(o instanceof SpecialNumeral)) {
                 return false;
             }
-            Numeral numeral = (Numeral) o;
-            return numeral.getNumber() == null;
+            return getId() == ((SpecialNumeral) o).getId();
         }
     }
 }

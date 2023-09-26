@@ -1,14 +1,12 @@
 package me.datafox.dfxengine.values.utils;
 
-import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.utils.Operations;
-import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
-import me.datafox.dfxengine.values.operation.MappingOperationChain;
 import me.datafox.dfxengine.values.StaticValue;
 import me.datafox.dfxengine.values.api.Value;
+import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
+import me.datafox.dfxengine.values.modifier.MappingOperationModifier;
 import me.datafox.dfxengine.values.modifier.OperationModifier;
-
-import java.util.List;
+import me.datafox.dfxengine.values.operation.MappingOperationChain;
 
 /**
  * @author datafox
@@ -93,31 +91,31 @@ public class Modifiers {
         return new OperationModifier(priority, reverse(Operations::logN), value);
     }
 
+    public static OperationModifier min(int priority, Value value) {
+        return new OperationModifier(priority, Operations::min, value);
+    }
+
+    public static OperationModifier max(int priority, Value value) {
+        return new OperationModifier(priority, Operations::max, value);
+    }
+
+    public static OperationModifier lerp(int priority, Value min, Value max) {
+        return new OperationModifier(priority, Operations::lerp, min, max);
+    }
+
     public static OperationModifier percentMultiply(int priority, Value percentage, Value multiplier) {
-        return new OperationModifier(priority, MappingOperationChain.builder()
-                .operation(Operations::multiply)
-                .operation(Operations::add)
-                .operation(Operations::multiply)
-                .build(),
-                List.of(
-                        //Multiply percentage with multiplier
-                        percentage, multiplier,
-                        //Add 1 to result
-                        RESULT_VALUE, new StaticValue(1),
-                        //Multiply source with result
-                        SOURCE_VALUE, RESULT_VALUE));
+        return MappingOperationModifier.builder(priority)
+                .operation(Operations::multiply, percentage, multiplier)
+                .operation(Operations::add, RESULT_VALUE, StaticValue.of(1))
+                .operation(Operations::multiply, SOURCE_VALUE, RESULT_VALUE)
+                .build();
     }
 
     public static OperationModifier powerMultiply(int priority, Value base, Value exponent) {
-        return new OperationModifier(priority, MappingOperationChain.builder()
-                .operation(Operations::power)
-                .operation(Operations::multiply)
-                .build(),
-                List.of(
-                        //Exponentiation
-                        base, exponent,
-                        //Multiply source with result
-                        SOURCE_VALUE, RESULT_VALUE));
+        return MappingOperationModifier.builder(priority)
+                .operation(Operations::power, base, exponent)
+                .operation(Operations::multiply, SOURCE_VALUE, RESULT_VALUE)
+                .build();
     }
 
     public static SingleParameterOperation reverse(SingleParameterOperation operation) {
@@ -125,7 +123,7 @@ public class Modifiers {
     }
 
     public static class SpecialValue extends StaticValue {
-        private SpecialValue(Numeral value) {
+        private SpecialValue(MappingOperationChain.SpecialNumeral value) {
             super(value);
         }
     }

@@ -1,25 +1,30 @@
 package me.datafox.dfxengine.values.api.comparison;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import me.datafox.dfxengine.math.api.Numeral;
-
-import java.util.Optional;
 
 /**
  * @author datafox
  */
-@Data
-@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+@SuperBuilder(toBuilder = true)
+@ToString
 public class MapComparisonContext extends ComparisonContext {
     @Builder.Default
-    private final Optional<Numeral> treatNonExistingAs = Optional.empty();
+    private final Numeral treatNonExistingAs = null;
 
-    @Getter(lazy = true)
-    private static final MapComparisonContext defaults = MapComparisonContext.builder().build();
+    public Numeral getTreatNonExistingAs() {
+        return treatNonExistingAs;
+    }
+
+    private static MapComparisonContext defaults = null;
+
+    public static MapComparisonContext defaults() {
+        if(defaults == null) {
+            defaults = MapComparisonContext.builder().build();
+        }
+
+        return defaults;
+    }
 }

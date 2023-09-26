@@ -1,19 +1,29 @@
 package me.datafox.dfxengine.values.api.comparison;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 /**
  * @author datafox
  */
-@Data
+@EqualsAndHashCode
 @SuperBuilder(toBuilder = true)
+@ToString
 public class ComparisonContext {
     @Builder.Default
     private final boolean useModifiedValue = false;
 
-    @Getter(lazy = true)
-    private static final ComparisonContext defaults = ComparisonContext.builder().build();
+    public boolean useModifiedValue() {
+        return useModifiedValue;
+    }
+
+    private static ComparisonContext defaults = null;
+
+    public static ComparisonContext defaults() {
+        if(defaults == null) {
+            defaults = ComparisonContext.builder().build();
+        }
+
+        return defaults;
+    }
 }

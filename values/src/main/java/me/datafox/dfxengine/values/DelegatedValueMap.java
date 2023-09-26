@@ -126,6 +126,16 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
+    public void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2, MathContext context) {
+        contextOperation(() -> values().forEach(val -> val.apply(operation, parameter1, parameter2, context)), context);
+    }
+
+    @Override
+    public void apply(Collection<Handle> handles, DualParameterOperation operation, Numeral parameter1, Numeral parameter2, MapMathContext context) {
+        contextOperation(val -> val.apply(operation, parameter1, parameter2, context), handles, context);
+    }
+
+    @Override
     public void apply(Operation operation, List<Numeral> parameters, MathContext context) {
         contextOperation(() -> values().forEach(val -> val.apply(operation, parameters, context)), context);
     }
@@ -137,21 +147,22 @@ public class DelegatedValueMap implements ValueMap {
 
     @Override
     public void apply(Operation operation, Map<Handle,List<Numeral>> parameters, MapMathContext context) {
-        if(context.getConvertResult().isPresent() && !context.isIgnoreBadConversion()) {
+        if(context.conversionResult() != null && !context.ignoreBadConversion()) {
             logger.warn("exception may cause operation to fail midway");
         }
-        context.getCreateNonExisting().ifPresent(
-                num -> createNonExisting(parameters.keySet(), num));
-        context.getCreateNonExisting().ifPresentOrElse(
-                num -> values()
-                        .forEach(val -> val.apply(operation, parameters.get(val.getHandle()), context)),
-                () -> getExisting(parameters.keySet())
-                        .forEach(val -> val.apply(operation, parameters.get(val.getHandle()), context)));
+
+        if(context.createNonExistingAs() != null) {
+            createNonExisting(parameters.keySet(), context.createNonExistingAs());
+            values().forEach(val -> val.apply(operation, parameters.get(val.getHandle()), context));
+        } else {
+            getExisting(parameters.keySet())
+                    .forEach(val -> val.apply(operation, parameters.get(val.getHandle()), context));
+        }
     }
 
     @Override
     public boolean compare(Comparison comparison, Numeral other, ComparisonContext context) {
-        return stream().allMatch(val -> val.compare(comparison, other, context));
+        return stream().allMatch(comparison.predicate(other, context));
     }
 
     @Override
@@ -360,51 +371,58 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     private void contextOperation(Runnable operation, MathContext context) {
-        if(context.getConvertResult().isPresent() && !context.isIgnoreBadConversion()) {
+        if(context.conversionResult() != null && !context.ignoreBadConversion()) {
             logger.warn("exception may cause operation to fail midway");
         }
         operation.run();
     }
 
     private void contextOperation(Consumer<Value> operation, Collection<Handle> handles, MapMathContext context) {
-        if(context.getConvertResult().isPresent() && !context.isIgnoreBadConversion()) {
+        if(context.conversionResult() != null && !context.ignoreBadConversion()) {
             logger.warn("exception may cause operation to fail midway");
         }
-        context.getCreateNonExisting().ifPresent(
-                num -> createNonExisting(handles, num));
-        context.getCreateNonExisting().ifPresentOrElse(
-                num -> values().forEach(operation),
-                () -> getExisting(handles).forEach(operation));
+
+        if(context.createNonExistingAs() != null) {
+            createNonExisting(handles, context.createNonExistingAs());
+            values().forEach(operation);
+        } else {
+            getExisting(handles).forEach(operation);
+        }
     }
 
     private void contextOperation(BiConsumer<Numeral, Value> operation, Map<Handle, Numeral> values, MapMathContext context) {
-        if(context.getConvertResult().isPresent() && !context.isIgnoreBadConversion()) {
+        if(context.conversionResult() != null && !context.ignoreBadConversion()) {
             logger.warn("exception may cause operation to fail midway");
         }
-        context.getCreateNonExisting().ifPresent(
-                num -> createNonExisting(values.keySet(), num));
-        context.getCreateNonExisting().ifPresentOrElse(
-                num -> values()
-                        .forEach(val -> operation.accept(values.get(val.getHandle()), val)),
-                () -> getExisting(values.keySet())
-                        .forEach(val -> operation.accept(values.get(val.getHandle()), val)));
+
+        if(context.createNonExistingAs() != null) {
+            createNonExisting(values.keySet(), context.createNonExistingAs());
+            values().forEach(val -> operation.accept(values.get(val.getHandle()), val));
+        } else {
+            getExisting(values.keySet())
+                    .forEach(val -> operation.accept(values.get(val.getHandle()), val));
+        }
     }
 
     private boolean contextComparison(BiFunction<Value,Numeral,Boolean> valueComparison, BiFunction<Numeral,Numeral,Boolean> numeralComparison, Collection<Handle> handles, Numeral value, MapComparisonContext context) {
         boolean existing = getExisting(handles).allMatch(val -> valueComparison.apply(val, value));
-        if(context.getTreatNonExistingAs().isEmpty()) {
+
+        if(context.getTreatNonExistingAs() == null) {
             return existing;
         }
-        return existing && numeralComparison.apply(context.getTreatNonExistingAs().get(), value);
+
+        return existing && numeralComparison.apply(context.getTreatNonExistingAs(), value);
     }
 
     private boolean contextComparison(BiFunction<Value,Numeral,Boolean> valueComparison, BiFunction<Numeral,Numeral,Boolean> numeralComparison, Map<Handle,Numeral> values, MapComparisonContext context) {
         boolean existing = getExisting(values.keySet()).allMatch(val -> valueComparison.apply(val, values.get(val.getHandle())));
-        if(context.getTreatNonExistingAs().isEmpty()) {
+
+        if(context.getTreatNonExistingAs() == null) {
             return existing;
         }
+
         return existing && getNonExisting(values.keySet()).allMatch(handle ->
-                numeralComparison.apply(context.getTreatNonExistingAs().get(), values.get(handle)));
+                numeralComparison.apply(context.getTreatNonExistingAs(), values.get(handle)));
     }
 
     private void removeModifiersFrom(Value old) {

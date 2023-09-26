@@ -6,21 +6,17 @@ import me.datafox.dfxengine.dependencies.DependencyDependent;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
-import me.datafox.dfxengine.values.api.comparison.Comparison;
-import me.datafox.dfxengine.values.api.comparison.ComparisonContext;
-import me.datafox.dfxengine.values.api.operation.MathContext;
-import me.datafox.dfxengine.values.api.operation.Operation;
-import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
-import me.datafox.dfxengine.values.api.operation.SourceOperation;
 import me.datafox.dfxengine.math.utils.Numerals;
 import me.datafox.dfxengine.values.api.Modifier;
 import me.datafox.dfxengine.values.api.Value;
+import me.datafox.dfxengine.values.api.comparison.Comparison;
+import me.datafox.dfxengine.values.api.comparison.ComparisonContext;
+import me.datafox.dfxengine.values.api.operation.*;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * @author datafox
@@ -61,12 +57,13 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     @Override
-    public void convert(NumeralType type) throws ArithmeticException {
+    public boolean convert(NumeralType type) throws ArithmeticException {
         if(base.getType().equals(type)) {
-            return;
+            return false;
         }
         base = base.convert(type);
         invalidate();
+        return true;
     }
 
     @Override
@@ -85,13 +82,9 @@ public class ValueImpl extends DependencyDependent implements Value {
         if(base.getType().isDecimal()) {
             return false;
         }
-        Numeral old = base;
         base = base.convertToDecimal();
-        boolean changed = !old.equals(base);
-        if(changed) {
-            invalidate();
-        }
-        return changed;
+        invalidate();
+        return true;
     }
 
     @Override
@@ -121,13 +114,18 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     @Override
+    public void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2, MathContext context) {
+        contextOperation(() -> base = operation.apply(base, parameter1, parameter2), context);
+    }
+
+    @Override
     public void apply(Operation operation, List<Numeral> parameters, MathContext context) {
         contextOperation(() -> base = operation.apply(base, parameters), context);
     }
 
     @Override
     public boolean compare(Comparison comparison, Numeral other, ComparisonContext context) {
-        return comparison.compare(context.isUseModifiedValue() ? getValue() : base, other);
+        return comparison.compare(context.useModifiedValue() ? getValue() : base, other);
     }
 
     @Override
@@ -198,13 +196,20 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     private void contextOperation(Runnable action, MathContext context) {
-        if(base.getType().isInteger() && context.isConvertToDecimal()) {
+        if(base.getType().isInteger() && context.convertToDecimal()) {
             convertToDecimal();
         }
+
         action.run();
-        context.getConvertResult()
-                .filter(Predicate.not(Predicate.isEqual(base.getType())))
-                .ifPresent(context.isIgnoreBadConversion() ? this::convertIfAllowed : this::convert);
+
+        if(context.conversionResult() != null) {
+            if(context.ignoreBadConversion()) {
+                convertIfAllowed(context.conversionResult());
+            } else {
+                convert(context.conversionResult());
+            }
+        }
+
         invalidate();
     }
 
@@ -230,5 +235,9 @@ public class ValueImpl extends DependencyDependent implements Value {
 
     public static ValueImpl of(Handle handle, BigDecimal bd) {
         return new ValueImpl(handle, Numerals.valueOf(bd));
+    }
+
+    public static ValueImpl of(Handle handle, String val) {
+        return new ValueImpl(handle, Numerals.valueOf(val));
     }
 }

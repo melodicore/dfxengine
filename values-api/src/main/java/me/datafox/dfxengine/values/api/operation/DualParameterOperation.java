@@ -7,12 +7,12 @@ import java.util.List;
 /**
  * @author datafox
  */
-public interface SingleParameterOperation extends Operation {
-    Numeral apply(Numeral source, Numeral parameter);
+public interface DualParameterOperation extends Operation {
+    Numeral apply(Numeral source, Numeral parameter1, Numeral parameter2);
 
     @Override
     default int getParameterCount() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -20,6 +20,6 @@ public interface SingleParameterOperation extends Operation {
         if(parameters == null || parameters.size() != getParameterCount()) {
             throw new IllegalArgumentException("A SingleParameterOperation must be called with a List of one parameter");
         }
-        return apply(source, parameters.get(0));
+        return apply(source, parameters.get(0), parameters.get(1));
     }
 }

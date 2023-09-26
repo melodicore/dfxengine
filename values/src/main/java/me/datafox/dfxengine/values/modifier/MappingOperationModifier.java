@@ -1,6 +1,7 @@
 package me.datafox.dfxengine.values.modifier;
 
 import me.datafox.dfxengine.values.api.Value;
+import me.datafox.dfxengine.values.api.operation.DualParameterOperation;
 import me.datafox.dfxengine.values.api.operation.Operation;
 import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
 import me.datafox.dfxengine.values.api.operation.SourceOperation;
@@ -42,6 +43,12 @@ public class MappingOperationModifier extends OperationModifier {
         public MappingOperationModifier.Builder operation(SingleParameterOperation operation, Value parameter1, Value parameter2) {
             operationBuilder.operation(operation);
             parameters.addAll(List.of(parameter1, parameter2));
+            return this;
+        }
+
+        public MappingOperationModifier.Builder operation(DualParameterOperation operation, Value parameter1, Value parameter2, Value parameter3) {
+            operationBuilder.operation(operation);
+            parameters.addAll(List.of(parameter1, parameter2, parameter3));
             return this;
         }
 

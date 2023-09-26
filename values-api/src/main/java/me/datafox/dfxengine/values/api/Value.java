@@ -5,12 +5,10 @@ import me.datafox.dfxengine.dependencies.Dependent;
 import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
+import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
 import me.datafox.dfxengine.values.api.comparison.Comparison;
 import me.datafox.dfxengine.values.api.comparison.ComparisonContext;
-import me.datafox.dfxengine.values.api.operation.MathContext;
-import me.datafox.dfxengine.values.api.operation.Operation;
-import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
-import me.datafox.dfxengine.values.api.operation.SourceOperation;
+import me.datafox.dfxengine.values.api.operation.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,7 +23,7 @@ public interface Value extends Dependency, Dependent, Handled {
 
     boolean isStatic();
 
-    void convert(NumeralType type) throws ArithmeticException;
+    boolean convert(NumeralType type) throws ExtendedArithmeticException;
 
     boolean convertIfAllowed(NumeralType type);
 
@@ -40,6 +38,8 @@ public interface Value extends Dependency, Dependent, Handled {
     void apply(SourceOperation operation, MathContext context);
 
     void apply(SingleParameterOperation operation, Numeral parameter, MathContext context);
+
+    void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2, MathContext context);
 
     void apply(Operation operation, List<Numeral> parameters, MathContext context);
 
@@ -60,22 +60,26 @@ public interface Value extends Dependency, Dependent, Handled {
     boolean containsModifiers(Collection<Modifier> modifiers);
 
     default void set(Numeral value) {
-        set(value, MathContext.getDefaults());
+        set(value, MathContext.defaults());
     }
 
     default void apply(SourceOperation operation) {
-        apply(operation, MathContext.getDefaults());
+        apply(operation, MathContext.defaults());
     }
 
     default void apply(SingleParameterOperation operation, Numeral parameter) {
-        apply(operation, parameter, MathContext.getDefaults());
+        apply(operation, parameter, MathContext.defaults());
+    }
+
+    default void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2) {
+        apply(operation, parameter1, parameter2, MathContext.defaults());
     }
 
     default void apply(Operation operation, List<Numeral> parameters) {
-        apply(operation, parameters, MathContext.getDefaults());
+        apply(operation, parameters, MathContext.defaults());
     }
 
     default boolean compare(Comparison comparison, Numeral other) {
-        return compare(comparison, other, ComparisonContext.getDefaults());
+        return compare(comparison, other, ComparisonContext.defaults());
     }
 }

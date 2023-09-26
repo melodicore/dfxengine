@@ -1,11 +1,12 @@
 package me.datafox.dfxengine.values.modifier;
 
 import me.datafox.dfxengine.math.api.Numeral;
+import me.datafox.dfxengine.utils.LogUtils;
 import me.datafox.dfxengine.values.api.Value;
+import me.datafox.dfxengine.values.api.operation.DualParameterOperation;
 import me.datafox.dfxengine.values.api.operation.Operation;
 import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
 import me.datafox.dfxengine.values.api.operation.SourceOperation;
-import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
@@ -23,6 +24,10 @@ public class OperationModifier extends AbstractModifier {
 
     public OperationModifier(int priority, SingleParameterOperation operation, Value parameter) {
         this(priority, operation, List.of(parameter));
+    }
+
+    public OperationModifier(int priority, DualParameterOperation operation, Value parameter1, Value parameter2) {
+        this(priority, operation, List.of(parameter1, parameter2));
     }
 
     public OperationModifier(int priority, Operation operation, List<Value> parameters) {

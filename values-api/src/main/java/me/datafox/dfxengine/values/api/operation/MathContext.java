@@ -1,22 +1,18 @@
 package me.datafox.dfxengine.values.api.operation;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import me.datafox.dfxengine.math.api.NumeralType;
-
-import java.util.Optional;
 
 /**
  * @author datafox
  */
-@Data
+@EqualsAndHashCode
 @SuperBuilder(toBuilder = true)
-@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+@ToString
 public class MathContext {
     @Builder.Default
-    private final Optional<NumeralType> convertResult = Optional.empty();
+    private final NumeralType conversionResult = null;
 
     @Builder.Default
     private final boolean ignoreBadConversion = true;
@@ -24,6 +20,25 @@ public class MathContext {
     @Builder.Default
     private final boolean convertToDecimal = false;
 
-    @Getter(lazy = true)
-    private static final MathContext defaults = MathContext.builder().build();
+    public NumeralType conversionResult() {
+        return conversionResult;
+    }
+
+    public boolean ignoreBadConversion() {
+        return ignoreBadConversion;
+    }
+
+    public boolean convertToDecimal() {
+        return convertToDecimal;
+    }
+
+    private static MathContext defaults = null;
+
+    public static MathContext defaults() {
+        if(defaults == null) {
+            defaults = MathContext.builder().build();
+        }
+
+        return defaults;
+    }
 }

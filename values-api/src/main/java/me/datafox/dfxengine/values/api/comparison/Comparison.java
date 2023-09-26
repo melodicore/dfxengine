@@ -1,8 +1,10 @@
 package me.datafox.dfxengine.values.api.comparison;
 
 import me.datafox.dfxengine.math.api.Numeral;
+import me.datafox.dfxengine.values.api.Value;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * @author datafox
@@ -27,6 +29,18 @@ public interface Comparison {
     }
 
     static Comparison equal() {
+        return (numeral, other) -> numeral.compareTo(other) == 0;
+    }
+
+    static Comparison strictEqual() {
         return Objects::equals;
+    }
+
+    default Predicate<Numeral> predicate(Numeral other) {
+        return numeral -> compare(numeral, other);
+    }
+
+    default Predicate<Value> predicate(Numeral other, ComparisonContext context) {
+        return value -> value.compare(this, other, context);
     }
 }
