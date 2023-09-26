@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.math.exception;
+package me.datafox.dfxengine.math.api.exception;
 
 /**
  * Thrown when an exceptional arithmetic condition has occurred. This class exists because {@link ArithmeticException}

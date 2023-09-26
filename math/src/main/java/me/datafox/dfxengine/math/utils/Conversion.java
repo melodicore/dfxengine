@@ -2,7 +2,7 @@ package me.datafox.dfxengine.math.utils;
 
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
-import me.datafox.dfxengine.math.exception.ExtendedArithmeticException;
+import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
 import me.datafox.dfxengine.math.numeral.*;
 import me.datafox.dfxengine.math.utils.internal.MathStrings;
 import me.datafox.dfxengine.utils.LogUtils;

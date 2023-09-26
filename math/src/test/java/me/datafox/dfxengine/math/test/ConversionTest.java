@@ -1,6 +1,6 @@
 package me.datafox.dfxengine.math.test;
 
-import me.datafox.dfxengine.math.exception.ExtendedArithmeticException;
+import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
 import me.datafox.dfxengine.math.numeral.*;
 import org.junit.jupiter.api.Test;
 

@@ -18,24 +18,84 @@ import java.math.BigInteger;
 public class Range {
     private static final Logger logger = LoggerFactory.getLogger(Range.class);
 
+    /**
+     * {@link BigInteger} representation of {@link Integer#MIN_VALUE}.
+     */
     public static final BigInteger INT_MIN_INT = BigInteger.valueOf(Integer.MIN_VALUE);
+
+    /**
+     * {@link BigInteger} representation of {@link Integer#MAX_VALUE}.
+     */
     public static final BigInteger INT_MAX_INT = BigInteger.valueOf(Integer.MAX_VALUE);
+
+    /**
+     * {@link BigInteger} representation of {@link Long#MIN_VALUE}.
+     */
     public static final BigInteger INT_MIN_LONG = BigInteger.valueOf(Long.MIN_VALUE);
+
+    /**
+     * {@link BigInteger} representation of {@link Long#MAX_VALUE}.
+     */
     public static final BigInteger INT_MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE);
 
+    /**
+     * {@link BigDecimal} representation of {@link Integer#MIN_VALUE}.
+     */
     public static final BigDecimal DEC_MIN_INT = new BigDecimal(INT_MIN_INT);
+
+    /**
+     * {@link BigDecimal} representation of {@link Integer#MAX_VALUE}.
+     */
     public static final BigDecimal DEC_MAX_INT = new BigDecimal(INT_MAX_INT);
+
+    /**
+     * {@link BigDecimal} representation of {@link Long#MIN_VALUE}.
+     */
     public static final BigDecimal DEC_MIN_LONG = new BigDecimal(INT_MIN_LONG);
+
+    /**
+     * {@link BigDecimal} representation of {@link Long#MAX_VALUE}.
+     */
     public static final BigDecimal DEC_MAX_LONG = new BigDecimal(INT_MAX_LONG);
 
+    /**
+     * {@link BigDecimal} representation of {@link Float#MAX_VALUE -Float.MAX_VALUE}.
+     */
     public static final BigDecimal DEC_MIN_FLOAT = BigDecimal.valueOf(-Float.MAX_VALUE);
+
+    /**
+     * {@link BigDecimal} representation of {@link Float#MAX_VALUE}.
+     */
     public static final BigDecimal DEC_MAX_FLOAT = BigDecimal.valueOf(Float.MAX_VALUE);
+
+    /**
+     * {@link BigDecimal} representation of {@link Double#MAX_VALUE -Double.MAX_VALUE}.
+     */
     public static final BigDecimal DEC_MIN_DOUBLE = BigDecimal.valueOf(-Double.MAX_VALUE);
+
+    /**
+     * {@link BigDecimal} representation of {@link Double#MAX_VALUE Double.MAX_VALUE}.
+     */
     public static final BigDecimal DEC_MAX_DOUBLE = BigDecimal.valueOf(Double.MAX_VALUE);
 
+    /**
+     * {@link BigInteger} representation of {@link Float#MAX_VALUE -Float.MAX_VALUE}.
+     */
     public static final BigInteger INT_MIN_FLOAT = DEC_MIN_FLOAT.toBigInteger();
+
+    /**
+     * {@link BigInteger} representation of {@link Float#MAX_VALUE}.
+     */
     public static final BigInteger INT_MAX_FLOAT = DEC_MAX_FLOAT.toBigInteger();
+
+    /**
+     * {@link BigInteger} representation of {@link Double#MAX_VALUE -Double.MAX_VALUE}.
+     */
     public static final BigInteger INT_MIN_DOUBLE = DEC_MIN_DOUBLE.toBigInteger();
+
+    /**
+     * {@link BigInteger} representation of {@link Double#MAX_VALUE Double.MAX_VALUE}.
+     */
     public static final BigInteger INT_MAX_DOUBLE = DEC_MAX_DOUBLE.toBigInteger();
 
     /**

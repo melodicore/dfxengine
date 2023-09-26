@@ -15,6 +15,9 @@ public final class LongNumeral extends AbstractNumeral {
     private final long number;
     private final NumeralType type;
 
+    /**
+     * @param number {@code long} to be associated with this numeral
+     */
     public LongNumeral(long number) {
         this.number = number;
         type = NumeralType.LONG;
