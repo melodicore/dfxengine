@@ -65,19 +65,27 @@ public class MathStrings {
     }
 
     public static String intOverflow(Number number) {
-        return forTwoStringsAndNumber(OVERFLOW, "Integer", number.getClass().getSimpleName().toLowerCase(), number);
+        String simpleName = number.getClass().getSimpleName();
+        return forTwoStringsAndNumber(OVERFLOW, "Integer",
+                simpleName.startsWith("B") ? simpleName : simpleName.toLowerCase(), number);
     }
 
     public static String longOverflow(Number number) {
-        return forTwoStringsAndNumber(OVERFLOW, "Long", number.getClass().getSimpleName().toLowerCase(), number);
+        String simpleName = number.getClass().getSimpleName();
+        return forTwoStringsAndNumber(OVERFLOW, "Long",
+                simpleName.startsWith("B") ? simpleName : simpleName.toLowerCase(), number);
     }
 
     public static String floatOverflow(Number number) {
-        return forTwoStringsAndNumber(OVERFLOW, "Float", number.getClass().getSimpleName().toLowerCase(), number);
+        String simpleName = number.getClass().getSimpleName();
+        return forTwoStringsAndNumber(OVERFLOW, "Float",
+                simpleName.startsWith("B") ? simpleName : simpleName.toLowerCase(), number);
     }
 
     public static String doubleOverflow(Number number) {
-        return forTwoStringsAndNumber(OVERFLOW, "Double", number.getClass().getSimpleName().toLowerCase(), number);
+        String simpleName = number.getClass().getSimpleName();
+        return forTwoStringsAndNumber(OVERFLOW, "Double",
+                simpleName.startsWith("B") ? simpleName : simpleName.toLowerCase(), number);
     }
 
     public static String divisionByZero(Numeral numeral) {
