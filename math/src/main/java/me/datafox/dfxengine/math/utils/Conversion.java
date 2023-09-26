@@ -28,9 +28,18 @@ public class Conversion {
      *
      * @throws ExtendedArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Integer#MIN_VALUE} or greater than {@link Integer#MAX_VALUE}
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static int toInt(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         if(numeral instanceof IntNumeral) {
             return numeral.intValue();
         }
@@ -67,9 +76,18 @@ public class Conversion {
      *
      * @throws ExtendedArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Long#MIN_VALUE} or greater than {@link Long#MAX_VALUE}
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static long toLong(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         if(numeral instanceof LongNumeral) {
             return numeral.longValue();
         }
@@ -103,9 +121,18 @@ public class Conversion {
      * @param numeral {@link Numeral} to be converted
      * @return {@link BigInteger} representation of the specified value
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static BigInteger toBigInt(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         if(numeral instanceof BigIntNumeral || numeral instanceof FloatNumeral) {
             return numeral.bigIntValue();
         }
@@ -136,9 +163,18 @@ public class Conversion {
      *
      * @throws ExtendedArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Float#MAX_VALUE -Float.MAX_VALUE} or greater than {@link Float#MAX_VALUE}
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static float toFloat(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         if(numeral instanceof FloatNumeral) {
             return numeral.floatValue();
         }
@@ -174,9 +210,18 @@ public class Conversion {
      *
      * @throws ExtendedArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Double#MAX_VALUE -Double.MAX_VALUE} or greater than {@link Double#MAX_VALUE}
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static double toDouble(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         if(numeral instanceof DoubleNumeral || numeral instanceof FloatNumeral) {
             return numeral.doubleValue();
         }
@@ -208,9 +253,18 @@ public class Conversion {
      * @param numeral {@link Numeral} to be converted
      * @return {@link BigDecimal} representation of the specified value
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static BigDecimal toBigDec(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         if(numeral instanceof BigDecNumeral || numeral instanceof FloatNumeral) {
             return numeral.bigDecValue();
         }
@@ -238,9 +292,18 @@ public class Conversion {
      * @return a {@link Numeral} backed with the smallest type that can hold the specified Numeral's value. This method
      * does not convert between integer and decimal types.
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral toSmallestType(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         switch(numeral.getType()) {
             case INT:
             case FLOAT:
@@ -272,6 +335,7 @@ public class Conversion {
                 }
                 return numeral;
         }
+
         throw LogUtils.logExceptionAndGet(logger,
                 MathStrings.unknownType(numeral.getType()),
                 IllegalArgumentException::new);
@@ -282,9 +346,18 @@ public class Conversion {
      * @return a {@link Numeral} backed with the smallest integer type that can hold the specified Numeral's value,
      * unless the Numeral is already an integer, in which case the specified Numeral is returned
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral toInteger(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         if(numeral.getType().isInteger()) {
             return numeral;
         }
@@ -305,9 +378,18 @@ public class Conversion {
      * @return a {@link Numeral} backed with the smallest decimal type that can hold the specified Numeral's value,
      * unless the Numeral is already a decimal, in which case the specified Numeral is returned
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral toDecimal(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         if(numeral.getType().isDecimal()) {
             return numeral;
         }
@@ -330,9 +412,19 @@ public class Conversion {
      *
      * @throws ExtendedArithmeticException if the value of the specified {@link Numeral} is outside the specified type's
      * bounds
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the specified type is {@code null} or if the {@link Numeral} returns {@code null}
+     * for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the specified type is not {@code null} or if the {@link Numeral} does not
+     * return {@code null} for {@link Numeral#getType()}, but the value is not recognised as any of the values of
+     * {@link NumeralType}. This should never happen
      */
     public static Numeral toNumeral(Numeral numeral, NumeralType type) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         switch(type) {
             case INT:
                 return toIntNumeral(numeral);
@@ -359,7 +451,10 @@ public class Conversion {
      *
      * @throws ExtendedArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Integer#MIN_VALUE} or greater than {@link Integer#MAX_VALUE}
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static IntNumeral toIntNumeral(Numeral numeral) {
         if(numeral instanceof IntNumeral) {
@@ -375,7 +470,10 @@ public class Conversion {
      *
      * @throws ExtendedArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Long#MIN_VALUE} or greater than {@link Long#MAX_VALUE}
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static LongNumeral toLongNumeral(Numeral numeral) {
         if(numeral instanceof LongNumeral) {
@@ -389,7 +487,10 @@ public class Conversion {
      * @param numeral {@link Numeral} to be converted
      * @return {@link Numeral} backed by a {@link BigInteger} with the specified Numeral's value
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static BigIntNumeral toBigIntNumeral(Numeral numeral) {
         if(numeral instanceof BigIntNumeral) {
@@ -405,7 +506,10 @@ public class Conversion {
      *
      * @throws ExtendedArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Float#MAX_VALUE -Float.MAX_VALUE} or greater than {@link Float#MAX_VALUE}
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static FloatNumeral toFloatNumeral(Numeral numeral) {
         if(numeral instanceof FloatNumeral) {
@@ -422,7 +526,10 @@ public class Conversion {
      *
      * @throws ExtendedArithmeticException if the value of the specified {@link Numeral} is smaller than
      * {@link Double#MAX_VALUE -Double.MAX_VALUE} or greater than {@link Double#MAX_VALUE}
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static DoubleNumeral toDoubleNumeral(Numeral numeral) {
         if(numeral instanceof DoubleNumeral) {
@@ -437,7 +544,10 @@ public class Conversion {
      * @param numeral {@link Numeral} to be converted
      * @return {@link Numeral} backed by a {@link BigDecimal} with the specified Numeral's value
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static BigDecNumeral toBigDecNumeral(Numeral numeral) {
         if(numeral instanceof BigDecNumeral) {

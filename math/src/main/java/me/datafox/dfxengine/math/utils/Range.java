@@ -43,9 +43,19 @@ public class Range {
      * @param type type to be checked
      * @return {@code true} if the specified {@link Numeral} is outside the allowed range of the type
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the specified type is {@code null} or if the {@link Numeral} returns {@code null}
+     * for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the specified type is not {@code null} or if the {@link Numeral} does not
+     * return {@code null} for {@link Numeral#getType()}, but the value is not recognised as any of the values of
+     * {@link NumeralType}. This should never happen
      */
     public static boolean isOutOfRange(Numeral numeral, NumeralType type) {
+        if(type == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         switch(type) {
             case INT:
                 return isOutOfIntRange(numeral);
@@ -70,9 +80,18 @@ public class Range {
      * @return {@code true} if the specified {@link Numeral} is smaller than {@link Integer#MIN_VALUE} or greater than
      * {@link Integer#MAX_VALUE}
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static boolean isOutOfIntRange(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         switch(numeral.getType()) {
             case INT:
                 return false;
@@ -98,9 +117,18 @@ public class Range {
      * @return {@code true} if the specified {@link Numeral} is smaller than {@link Long#MIN_VALUE} or greater than
      * {@link Long#MAX_VALUE}
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static boolean isOutOfLongRange(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         switch(numeral.getType()) {
             case INT:
             case LONG:
@@ -125,9 +153,18 @@ public class Range {
      * @return {@code true} if the specified {@link Numeral} is smaller than {@link Float#MAX_VALUE -Float.MAX_VALUE}
      * or greater than {@link Float#MAX_VALUE}
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static boolean isOutOfFloatRange(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         switch(numeral.getType()) {
             case INT:
             case LONG:
@@ -151,9 +188,18 @@ public class Range {
      * @return {@code true} if the specified {@link Numeral} is smaller than {@link Double#MAX_VALUE -Double.MAX_VALUE}
      * or greater than {@link Double#MAX_VALUE}
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static boolean isOutOfDoubleRange(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         switch(numeral.getType()) {
             case INT:
             case LONG:
@@ -177,7 +223,7 @@ public class Range {
      * {@link Integer#MAX_VALUE}
      */
     public static boolean isOutOfIntRange(long l) {
-        return l > Integer.MAX_VALUE || l < Integer.MIN_VALUE;
+        return (int) l != l;
     }
 
     /**
@@ -186,7 +232,7 @@ public class Range {
      * {@link Integer#MAX_VALUE}
      */
     public static boolean isOutOfIntRange(BigInteger bi) {
-        return bi.compareTo(INT_MAX_INT) > 0 || bi.compareTo(INT_MIN_INT) < 0;
+        return bi.compareTo(BigInteger.valueOf(bi.intValue())) != 0;
     }
 
     /**
@@ -222,7 +268,7 @@ public class Range {
      * {@link Long#MAX_VALUE}
      */
     public static boolean isOutOfLongRange(BigInteger bi) {
-        return bi.compareTo(INT_MAX_LONG) > 0 || bi.compareTo(INT_MIN_LONG) < 0;
+        return bi.compareTo(BigInteger.valueOf(bi.longValue())) != 0;
     }
 
     /**

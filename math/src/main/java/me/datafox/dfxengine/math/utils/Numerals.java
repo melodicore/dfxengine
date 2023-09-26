@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
 import static me.datafox.dfxengine.math.api.NumeralType.BIG_DEC;
 import static me.datafox.dfxengine.math.api.NumeralType.BIG_INT;
@@ -92,9 +93,18 @@ public class Numerals {
      * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the specified value represents the number zero
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static boolean isZero(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         switch(numeral.getType()) {
             case INT:
                 return numeral.intValue() == 0;
@@ -120,9 +130,18 @@ public class Numerals {
      * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the specified value represents the number one
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static boolean isOne(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         switch(numeral.getType()) {
             case INT:
                 return numeral.intValue() == 1;
@@ -147,8 +166,19 @@ public class Numerals {
      * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the {@link Numeral} represents an even number. For decimal Numerals, the number must not
      * have a decimal part for {@code true} to be returned;
+     *
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static boolean isEven(Numeral numeral) {
+        if(numeral.getType() == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.NULL_NUMBER_TYPE,
+                    NullPointerException::new);
+        }
+
         switch(numeral.getType()) {
             case INT:
                 return (numeral.intValue() & 1) == 0;
@@ -175,6 +205,12 @@ public class Numerals {
      * @param other second {@link Numeral} to compare
      * @return 0 if the {@link Numeral} values represent the same number, 1 if the first Numeral represents a larger
      * value than the second Numeral, and -1 if the first Numeral represents a smaller value than the second Numeral.
+     *
+     * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
+     * {@link Numeral#getType()}
+     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static int compare(Numeral numeral, Numeral other) {
         NumeralType type = getSignificantType(numeral.getType(), other.getType());
@@ -204,10 +240,12 @@ public class Numerals {
      * @param type2 second {@link NumeralType}
      * @return the most significant type of specified values
      *
+     * @throws NullPointerException if any of the types are {@code null}
+     *
      * @see Numerals#getSignificantType(NumeralType...)
      */
     public static NumeralType getSignificantType(NumeralType type1, NumeralType type2) {
-        if(type1.equals(type2)) {
+        if(Objects.equals(type1, type2)) {
             return type1;
         }
 
@@ -227,17 +265,24 @@ public class Numerals {
      * a decimal type. In all other cases the specified type with the highest
      * {@link NumeralType#getSignificance() significance} will be returned.
      * </p>
+     *
      * @param types types to be checked
      * @return the most significant type
+     *
+     * @throws NullPointerException if any of the types are {@code null}
      */
     public static NumeralType getSignificantType(NumeralType ... types) {
         if(types.length == 0) {
-            throw new IllegalArgumentException("empty array");
+            throw LogUtils.logExceptionAndGet(logger,
+                    MathStrings.EMPTY_ARRAY,
+                    IllegalArgumentException::new);
         }
 
         for(NumeralType type : types) {
             if(type == null) {
-                return null;
+                throw LogUtils.logExceptionAndGet(logger,
+                        MathStrings.NULL_NUMBER_TYPE,
+                        NullPointerException::new);
             }
         }
 

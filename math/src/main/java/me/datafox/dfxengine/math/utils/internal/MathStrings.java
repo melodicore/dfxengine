@@ -7,6 +7,8 @@ import me.datafox.dfxengine.math.api.NumeralType;
  * @author datafox
  */
 public class MathStrings {
+    public static final String NULL_NUMBER_TYPE = "Encountered a null NumberType where one should not be present";
+    public static final String EMPTY_ARRAY = "Encountered an empty array where a populated one should be present";
 
     private static final String INFINITE_VALUE = "Attempted to instantiate a %sNumeral with an infinite %s value";
     private static final String UNKNOWN_TYPE = "Unknown NumeralType %s";

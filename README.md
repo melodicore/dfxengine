@@ -25,7 +25,7 @@ Here are the currently existing and planned modules:
 | [Injector API](injector-api) | Done (1.1.1)       | Annotations for the Injector module                 |
 | [Injector](injector)         | Done (1.1.1)       | A dependency injector                               |
 | [Math API](math-api)         | Done (1.0.0)       | Interfaces for the Math module                      |
-| [Math](math)                 | Done (1.0.1)       | Seamless wrapping and manipulation of number types  |
+| [Math](math)                 | Done (1.0.2)       | Seamless wrapping and manipulation of number types  |
 | [Utils](utils)               | Under construction | Utilities used by other modules                     |
 | [Values API](values-api)     | Under construction | Interfaces for the Values module                    |
 | [Values](values)             | Under construction | Mutable number values and a dynamic modifier system |

@@ -22,6 +22,7 @@ public class OperationsTest {
     private static final IntNumeral negativeIntNumeral = new IntNumeral(Integer.MIN_VALUE + 2);
     private static final IntNumeral evenIntNumeral = new IntNumeral(10);
     private static final LongNumeral longNumeral = new LongNumeral(Long.MAX_VALUE - 2);
+    private static final LongNumeral smallLongNumeral = new LongNumeral(Integer.MAX_VALUE + 2L);
     private static final LongNumeral negativeLongNumeral = new LongNumeral(Long.MIN_VALUE + 2);
     private static final FloatNumeral floatNumeral = new FloatNumeral(4.57f);
     private static final FloatNumeral largeFloatNumeral = new FloatNumeral(Float.MAX_VALUE - Float.MAX_VALUE/10f);
@@ -283,5 +284,30 @@ public class OperationsTest {
         assertEquals(new FloatNumeral(58.31965f), logN(largeFloatNumeral, floatNumeral));
         assertEquals(new DoubleNumeral(467.04257000621146d), logN(doubleNumeral, floatNumeral));
         assertEquals(new BigDecNumeral("2335.559541706120210316557758576560"), logN(bigDecNumeral, floatNumeral));
+    }
+
+    @Test
+    public void lerpTest() {
+        assertSame(intNumeral, lerp(one, intNumeral, intNumeral));
+
+        assertEquals(new IntNumeral(30), lerp(intNumeral, intNumeral, evenIntNumeral));
+        assertEquals(new LongNumeral(-19327352810L), lerp(intNumeral, largeIntNumeral, negativeIntNumeral));
+        assertEquals(new LongNumeral(4611685994805067805L), lerp(largeIntNumeral, intNumeral, largeIntNumeral));
+
+        assertEquals(new LongNumeral(10737418250L), lerp(smallLongNumeral, intNumeral, evenIntNumeral));
+        assertEquals(new BigIntNumeral("19807040637789456418060894205"), lerp(smallLongNumeral, intNumeral, longNumeral));
+        assertEquals(new BigIntNumeral("170141183460469231621006839273626796049"), lerp(longNumeral, negativeLongNumeral, longNumeral));
+
+        assertEquals(new BigIntNumeral("-615656346818663737091113647711988005247881238560803938334645148573653890359251174742729557799402954279674186914138"), lerp(longNumeral, bigIntNumeral, negativeBigIntNumeral));
+
+        assertEquals(new FloatNumeral(3.0625412e36f), lerp(smallFloatNumeral, floatNumeral, largeFloatNumeral));
+        assertEquals(new DoubleNumeral(-3.0012903981046942e38d), lerp(smallFloatNumeral, negativeFloatNumeral, largeFloatNumeral));
+        assertEquals(new DoubleNumeral(1.3995813906415794e39d), lerp(floatNumeral, smallFloatNumeral, largeFloatNumeral));
+
+        assertEquals(new DoubleNumeral(1.6179238213760842e306), lerp(smallFloatNumeral, floatNumeral, doubleNumeral));
+        assertEquals(new BigDecNumeral("-1.585565344948562516e+308"), lerp(smallFloatNumeral, negativeDoubleNumeral, doubleNumeral));
+        assertEquals(new BigDecNumeral("-2.617677491776191212904895725489640e+616"), lerp(doubleNumeral, largeFloatNumeral, negativeDoubleNumeral));
+
+        assertEquals(new BigDecNumeral("1.762485706054189291957687845179332e+3082"), lerp(otherBigDecNumeral, negativeBigDecNumeral, bigDecNumeral));
     }
 }

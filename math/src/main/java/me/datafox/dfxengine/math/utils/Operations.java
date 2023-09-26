@@ -50,8 +50,11 @@ public class Operations {
      * @param addend {@link Numeral} to be added
      * @return result of the addition
      *
-     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} return {@code null} for
+     * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
+     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral add(Numeral augend, Numeral addend) {
         if(isZero(augend)) {
@@ -93,8 +96,11 @@ public class Operations {
      * @param subtrahend {@link Numeral} to be subtracted
      * @return result of the subtraction
      *
-     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} return {@code null} for
+     * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
+     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral subtract(Numeral minuend, Numeral subtrahend) {
         if(isZero(subtrahend)) {
@@ -136,8 +142,11 @@ public class Operations {
      * @param multiplier {@link Numeral} to be multiplied
      * @return result of the multiplication
      *
-     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} return {@code null} for
+     * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
+     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral multiply(Numeral multiplicand, Numeral multiplier) {
         if(isZero(multiplicand) || isZero(multiplier)) {
@@ -184,8 +193,11 @@ public class Operations {
      * @return result of the division
      *
      * @throws ArithmeticException if the divisor is zero
-     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} return {@code null} for
+     * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
+     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral divide(Numeral dividend, Numeral divisor) {
         if(isZero(divisor)) {
@@ -236,7 +248,10 @@ public class Operations {
      * @return result of the inversion
      *
      * @throws ArithmeticException if the divisor is zero
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral inverse(Numeral numeral) {
         return divide(valueOf(1), numeral);
@@ -251,8 +266,11 @@ public class Operations {
      * @param exponent exponent
      * @return result of the exponentiation
      *
-     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} return {@code null} for
+     * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
+     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral power(Numeral base, Numeral exponent) {
         if(isOne(base) || isZero(exponent)) {
@@ -296,7 +314,10 @@ public class Operations {
      * @param numeral {@link Numeral} to be calculated
      * @return natural exponent of the specified {@link Numeral}
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral exp(Numeral numeral) {
         if(isZero(numeral)) {
@@ -330,7 +351,10 @@ public class Operations {
      * @return square root of the specified {@link Numeral}
      *
      * @throws ArithmeticException if the {@link Numeral} is negative
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral sqrt(Numeral numeral) {
         if(isZero(numeral)) {
@@ -373,7 +397,10 @@ public class Operations {
      * @param numeral {@link Numeral} to be calculated
      * @return cube root of the specified {@link Numeral}
      *
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral cbrt(Numeral numeral) {
         if(isZero(numeral)) {
@@ -414,8 +441,11 @@ public class Operations {
      * @return result of the operation
      *
      * @throws ArithmeticException if the {@link Numeral} is negative or if the root is zero
-     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} return {@code null} for
+     * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
+     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral root(Numeral numeral, Numeral base) {
         if(isZero(base)) {
@@ -471,7 +501,10 @@ public class Operations {
      * @return natural logarithm of the specified {@link Numeral}
      *
      * @throws ArithmeticException if the {@link Numeral} is zero or negative
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral log(Numeral numeral) {
         if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
@@ -486,17 +519,17 @@ public class Operations {
 
         switch(numeral.getType()) {
             case INT:
-                return(log(numeral.intValue()));
+                return log(numeral.intValue());
             case LONG:
-                return(log(numeral.longValue()));
+                return log(numeral.longValue());
             case BIG_INT:
-                return(log(numeral.bigIntValue()));
+                return log(numeral.bigIntValue());
             case FLOAT:
-                return(log(numeral.floatValue()));
+                return log(numeral.floatValue());
             case DOUBLE:
-                return(log(numeral.doubleValue()));
+                return log(numeral.doubleValue());
             case BIG_DEC:
-                return(log(numeral.bigDecValue()));
+                return log(numeral.bigDecValue());
         }
 
         throw LogUtils.logExceptionAndGet(logger,
@@ -511,7 +544,10 @@ public class Operations {
      * @return binary logarithm of the specified {@link Numeral}
      *
      * @throws ArithmeticException if the {@link Numeral} is zero or negative
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral log2(Numeral numeral) {
         if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
@@ -526,17 +562,17 @@ public class Operations {
 
         switch(numeral.getType()) {
             case INT:
-                return(log2(numeral.intValue()));
+                return log2(numeral.intValue());
             case LONG:
-                return(log2(numeral.longValue()));
+                return log2(numeral.longValue());
             case BIG_INT:
-                return(log2(numeral.bigIntValue()));
+                return log2(numeral.bigIntValue());
             case FLOAT:
-                return(log2(numeral.floatValue()));
+                return log2(numeral.floatValue());
             case DOUBLE:
-                return(log2(numeral.doubleValue()));
+                return log2(numeral.doubleValue());
             case BIG_DEC:
-                return(log2(numeral.bigDecValue()));
+                return log2(numeral.bigDecValue());
         }
 
         throw LogUtils.logExceptionAndGet(logger,
@@ -551,7 +587,10 @@ public class Operations {
      * @return base 10 logarithm of the specified {@link Numeral}
      *
      * @throws ArithmeticException if the {@link Numeral} is zero or negative
-     * @throws IllegalArgumentException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
+     * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral log10(Numeral numeral) {
         if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
@@ -566,17 +605,17 @@ public class Operations {
 
         switch(numeral.getType()) {
             case INT:
-                return(log10(numeral.intValue()));
+                return log10(numeral.intValue());
             case LONG:
-                return(log10(numeral.longValue()));
+                return log10(numeral.longValue());
             case BIG_INT:
-                return(log10(numeral.bigIntValue()));
+                return log10(numeral.bigIntValue());
             case FLOAT:
-                return(log10(numeral.floatValue()));
+                return log10(numeral.floatValue());
             case DOUBLE:
-                return(log10(numeral.doubleValue()));
+                return log10(numeral.doubleValue());
             case BIG_DEC:
-                return(log10(numeral.bigDecValue()));
+                return log10(numeral.bigDecValue());
         }
 
         throw LogUtils.logExceptionAndGet(logger,
@@ -595,8 +634,11 @@ public class Operations {
      *
      * @throws ArithmeticException if the {@link Numeral} is zero or negative, if the base is zero or negative, or if
      * the base is one
-     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} return {@code null} for
+     * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
+     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
      */
     public static Numeral logN(Numeral numeral, Numeral base) {
         if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
@@ -625,17 +667,67 @@ public class Operations {
 
         switch(type) {
             case INT:
-                return(logN(numeral.intValue(), base.intValue()));
+                return logN(numeral.intValue(), base.intValue());
             case LONG:
-                return(logN(numeral.longValue(), base.longValue()));
+                return logN(numeral.longValue(), base.longValue());
             case BIG_INT:
-                return(logN(numeral.bigIntValue(), base.bigIntValue()));
+                return logN(numeral.bigIntValue(), base.bigIntValue());
             case FLOAT:
-                return(logN(numeral.floatValue(), base.floatValue()));
+                return logN(numeral.floatValue(), base.floatValue());
             case DOUBLE:
-                return(logN(numeral.doubleValue(), base.doubleValue()));
+                return logN(numeral.doubleValue(), base.doubleValue());
             case BIG_DEC:
-                return(logN(numeral.bigDecValue(), base.bigDecValue()));
+                return logN(numeral.bigDecValue(), base.bigDecValue());
+        }
+
+        throw LogUtils.logExceptionAndGet(logger,
+                MathStrings.unknownType(type),
+                IllegalArgumentException::new);
+    }
+
+    /**
+     * Linearly interpolates a {@link Numeral} based on a minimum and maximum numeral. The mathematical formula for the
+     * operation is {@code numeral * (max - min) + min}. Values smaller than zero and greater than one are allowed.
+     *
+     * @param numeral {@link Numeral} to be interpolated
+     * @param min minimum value
+     * @param max maximum value
+     * @return result of the linear interpolation
+     *
+     * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
+     * {@link Numeral#getType()}
+     * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
+     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * should never happen
+     */
+    public static Numeral lerp(Numeral numeral, Numeral min, Numeral max) {
+        if(isZero(numeral)) {
+            return min;
+        }
+
+        if(isOne(numeral)) {
+            return max;
+        }
+
+        if(compare(min, max) == 0) {
+            return min;
+        }
+
+        NumeralType type = getSignificantType(numeral.getType(), min.getType(), max.getType());
+
+        switch(type) {
+            case INT:
+                return lerp(numeral.intValue(), min.intValue(), max.intValue());
+            case LONG:
+                return lerp(numeral.longValue(), min.longValue(), max.longValue());
+            case BIG_INT:
+                return lerp(numeral.bigIntValue(), min.bigIntValue(), max.bigIntValue());
+            case FLOAT:
+                return lerp(numeral.floatValue(), min.floatValue(), max.floatValue());
+            case DOUBLE:
+                return lerp(numeral.doubleValue(), min.doubleValue(), max.doubleValue());
+            case BIG_DEC:
+                return lerp(numeral.bigDecValue(), min.bigDecValue(), max.bigDecValue());
         }
 
         throw LogUtils.logExceptionAndGet(logger,
@@ -807,8 +899,8 @@ public class Operations {
     public static Numeral multiply(int multiplicand, int multiplier) {
         long result = (long) multiplicand * multiplier;
 
-        if((int) result != result) {
-            return multiply((long) multiplicand, multiplier);
+        if(isOutOfIntRange(result)) {
+            return valueOf(result);
         }
 
         return valueOf((int) result);
@@ -1528,5 +1620,108 @@ public class Operations {
     public static Numeral logN(BigDecimal value, BigDecimal base) {
         return valueOf(BigDecimalMath.log(value, CONTEXT).divide(
                 BigDecimalMath.log(base, CONTEXT), CONTEXT));
+    }
+
+    /**
+     * @param value value to be interpolated
+     * @param min minimum value
+     * @param max maximum value
+     * @return result of the linear interpolation
+     */
+    public static Numeral lerp(int value, int min, int max) {
+        long result = value * ((long) max - min) + min;
+
+        if(isOutOfIntRange(result)) {
+            return valueOf(result);
+        }
+
+        return valueOf((int) result);
+    }
+
+    /**
+     * @param value value to be interpolated
+     * @param min minimum value
+     * @param max maximum value
+     * @return result of the linear interpolation
+     */
+    public static Numeral lerp(long value, long min, long max) {
+        long diff = max - min;
+
+        if(((max ^ min) & (max ^ diff)) < 0) {
+            return lerp(BigInteger.valueOf(value), BigInteger.valueOf(min), BigInteger.valueOf(max));
+        }
+
+        long mul = value * diff;
+        long absValue = Math.abs(value);
+        long absDiff = Math.abs(diff);
+
+        if((absValue | absDiff) >>> 31 != 0) {
+            if (((diff != 0) && (mul / diff != value)) ||
+                    (value == Long.MIN_VALUE && diff == -1)) {
+                return lerp(BigInteger.valueOf(value), BigInteger.valueOf(min), BigInteger.valueOf(max));
+            }
+        }
+
+        long result = mul + min;
+
+        if(((mul ^ result) & (min ^ result)) < 0) {
+            return lerp(BigInteger.valueOf(value), BigInteger.valueOf(min), BigInteger.valueOf(max));
+        }
+
+        return valueOf(result);
+    }
+
+    /**
+     * @param value value to be interpolated
+     * @param min minimum value
+     * @param max maximum value
+     * @return result of the linear interpolation
+     */
+    public static Numeral lerp(BigInteger value, BigInteger min, BigInteger max) {
+        return valueOf(value.multiply(max.subtract(min)).add(min));
+    }
+
+    /**
+     * @param value value to be interpolated
+     * @param min minimum value
+     * @param max maximum value
+     * @return result of the linear interpolation
+     */
+    public static Numeral lerp(float value, float min, float max) {
+        float result = value * (max - min) + min;
+
+        if(Float.isInfinite(result)) {
+            return lerp((double) value, min, max);
+        }
+
+        return valueOf(result);
+    }
+
+    /**
+     * @param value value to be interpolated
+     * @param min minimum value
+     * @param max maximum value
+     * @return result of the linear interpolation
+     */
+    public static Numeral lerp(double value, double min, double max) {
+        double result = value * (max - min) + min;
+
+        if(Double.isInfinite(result)) {
+            return lerp(BigDecimal.valueOf(value), BigDecimal.valueOf(min), BigDecimal.valueOf(max));
+        }
+
+        return valueOf(result);
+    }
+
+    /**
+     * @param value value to be interpolated
+     * @param min minimum value
+     * @param max maximum value
+     * @return result of the linear interpolation
+     */
+    public static Numeral lerp(BigDecimal value, BigDecimal min, BigDecimal max) {
+        return valueOf(value.multiply(
+                max.subtract(min, CONTEXT), CONTEXT)
+                .add(min, CONTEXT));
     }
 }
