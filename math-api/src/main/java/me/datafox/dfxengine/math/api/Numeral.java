@@ -24,6 +24,16 @@ public interface Numeral extends Comparable<Numeral> {
     NumeralType getType();
 
     /**
+     * @param type type to be checked for
+     * @return {@code true} if this numeral can be converted to the specified type
+     *
+     * @throws NullPointerException if the specified type is {@code null}
+     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
+     * any of the values of {@link NumeralType}. This should never happen
+     */
+    boolean canConvert(NumeralType type);
+
+    /**
      * @param type type for this numeral to be converted to
      * @return a numeral backed with the specified type
      *
@@ -49,23 +59,13 @@ public interface Numeral extends Comparable<Numeral> {
      * @return a numeral backed with the smallest integer type that can hold this numeral's value, unless this numeral
      * is already an integer, in which case this numeral is returned
      */
-    Numeral convertToInteger();
+    Numeral toInteger();
 
     /**
      * @return a numeral backed with the smallest decimal type that can hold this numeral's value, unless this numeral
      * is already a decimal, in which case this numeral is returned
      */
-    Numeral convertToDecimal();
-
-    /**
-     * @param type type to be checked for
-     * @return {@code true} if this numeral can be converted to the specified type
-     *
-     * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
-     * any of the values of {@link NumeralType}. This should never happen
-     */
-    boolean canConvert(NumeralType type);
+    Numeral toDecimal();
 
     /**
      * @return a numeral backed with the smallest type that can hold this numeral's value. This method does not convert

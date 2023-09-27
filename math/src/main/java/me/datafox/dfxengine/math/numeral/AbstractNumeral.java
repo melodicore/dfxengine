@@ -22,6 +22,19 @@ import static me.datafox.dfxengine.math.utils.Numerals.compare;
 
 abstract class AbstractNumeral implements Numeral {
     /**
+     * @param type type to be checked for
+     * @return {@code true} if this numeral can be converted to the specified type
+     *
+     * @throws NullPointerException if the specified type is {@code null}
+     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
+     * any of the values of {@link NumeralType}. This should never happen
+     */
+    @Override
+    public boolean canConvert(NumeralType type) {
+        return !Range.isOutOfRange(this, type);
+    }
+
+    /**
      * @param type type for this numeral to be converted to
      * @return a numeral backed with the specified type
      *
@@ -58,7 +71,7 @@ abstract class AbstractNumeral implements Numeral {
      * is already an integer, in which case this numeral is returned
      */
     @Override
-    public Numeral convertToInteger() {
+    public Numeral toInteger() {
         return Conversion.toInteger(this);
     }
 
@@ -67,21 +80,8 @@ abstract class AbstractNumeral implements Numeral {
      * is already a decimal, in which case this numeral is returned
      */
     @Override
-    public Numeral convertToDecimal() {
+    public Numeral toDecimal() {
         return Conversion.toDecimal(this);
-    }
-
-    /**
-     * @param type type to be checked for
-     * @return {@code true} if this numeral can be converted to the specified type
-     *
-     * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
-     * any of the values of {@link NumeralType}. This should never happen
-     */
-    @Override
-    public boolean canConvert(NumeralType type) {
-        return !Range.isOutOfRange(this, type);
     }
 
     /**

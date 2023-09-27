@@ -22,7 +22,7 @@ public class NumeralTest {
         assertEquals(INT, numeral.getType());
         assertEquals(LONG, numeral.convert(LONG).getType());
         assertEquals(DOUBLE, numeral.convertIfAllowed(DOUBLE).getType());
-        assertEquals(FLOAT, numeral.convertToDecimal().getType());
+        assertEquals(FLOAT, numeral.toDecimal().getType());
         assertTrue(numeral.canConvert(BIG_INT));
         assertEquals(numeral, numeral.toSmallestType());
 
@@ -93,6 +93,7 @@ public class NumeralTest {
         assertEquals(FLOAT, numeral.getType());
         assertEquals(DOUBLE, numeral.convert(DOUBLE).getType());
         assertThrows(ExtendedArithmeticException.class, () -> numeral.convert(LONG));
+        assertEquals(BIG_INT, numeral.toInteger().getType());
         assertEquals(BIG_DEC, numeral.convertIfAllowed(BIG_DEC).getType());
         assertEquals(numeral, numeral.convertIfAllowed(INT));
         assertTrue(numeral.canConvert(DOUBLE));
