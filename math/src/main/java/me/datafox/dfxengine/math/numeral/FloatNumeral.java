@@ -16,10 +16,9 @@ import java.math.BigInteger;
  * @author datafox
  */
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public final class FloatNumeral extends AbstractNumeral {
     private final float number;
-    private final NumeralType type;
 
     /**
      * @param number {@code float} to be associated with this numeral
@@ -27,11 +26,14 @@ public final class FloatNumeral extends AbstractNumeral {
      * @throws IllegalArgumentException if the {@code float} is {@code NaN} or infinite.
      */
     public FloatNumeral(float number) {
+        super(NumeralType.FLOAT);
+
         if(Double.isNaN(number)) {
             throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
                     MathStrings.nanFloatValue(),
                     IllegalArgumentException::new);
         }
+
         if(Float.isInfinite(number)) {
             throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
                     MathStrings.infiniteFloatValue(),
@@ -39,7 +41,6 @@ public final class FloatNumeral extends AbstractNumeral {
         }
 
         this.number = number;
-        type = NumeralType.FLOAT;
     }
 
     /**
@@ -48,14 +49,6 @@ public final class FloatNumeral extends AbstractNumeral {
     @Override
     public Number getNumber() {
         return number;
-    }
-
-    /**
-     * @return the backing {@link Number}'s type ({@link NumeralType#FLOAT})
-     */
-    @Override
-    public NumeralType getType() {
-        return type;
     }
 
     /**

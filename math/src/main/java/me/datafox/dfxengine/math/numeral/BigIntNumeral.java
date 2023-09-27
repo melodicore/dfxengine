@@ -12,17 +12,16 @@ import java.math.BigInteger;
  * @author datafox
  */
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public final class BigIntNumeral extends AbstractNumeral {
     private final BigInteger number;
-    private final NumeralType type;
 
     /**
      * @param number {@link BigInteger} to be associated with this numeral
      */
     public BigIntNumeral(BigInteger number) {
+        super(NumeralType.BIG_INT);
         this.number = number;
-        type = NumeralType.BIG_INT;
     }
 
     /**
@@ -45,14 +44,6 @@ public final class BigIntNumeral extends AbstractNumeral {
     @Override
     public Number getNumber() {
         return number;
-    }
-
-    /**
-     * @return the backing {@link Number}'s type ({@link NumeralType#BIG_INT})
-     */
-    @Override
-    public NumeralType getType() {
-        return type;
     }
 
     /**

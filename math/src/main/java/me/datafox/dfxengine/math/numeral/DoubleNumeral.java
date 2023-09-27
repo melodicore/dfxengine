@@ -13,10 +13,9 @@ import org.slf4j.LoggerFactory;
  * @author datafox
  */
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public final class DoubleNumeral extends AbstractNumeral {
     private final double number;
-    private final NumeralType type;
 
     /**
      * @param number {@code double} to be associated with this numeral
@@ -24,11 +23,14 @@ public final class DoubleNumeral extends AbstractNumeral {
      * @throws IllegalArgumentException if the {@code double} is {@code NaN} or infinite.
      */
     public DoubleNumeral(double number) {
+        super(NumeralType.DOUBLE);
+
         if(Double.isNaN(number)) {
             throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
                     MathStrings.nanDoubleValue(),
                     IllegalArgumentException::new);
         }
+
         if(Double.isInfinite(number)) {
             throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
                     MathStrings.infiniteDoubleValue(),
@@ -36,7 +38,6 @@ public final class DoubleNumeral extends AbstractNumeral {
         }
 
         this.number = number;
-        type = NumeralType.DOUBLE;
     }
 
     /**
@@ -45,14 +46,6 @@ public final class DoubleNumeral extends AbstractNumeral {
     @Override
     public Number getNumber() {
         return number;
-    }
-
-    /**
-     * @return the backing {@link Number}'s type ({@link NumeralType#DOUBLE})
-     */
-    @Override
-    public NumeralType getType() {
-        return type;
     }
 
     /**

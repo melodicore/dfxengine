@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.math.numeral;
 
+import lombok.EqualsAndHashCode;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
@@ -20,7 +21,22 @@ import static me.datafox.dfxengine.math.utils.Numerals.compare;
  * @author datafox
  */
 
+@EqualsAndHashCode
 abstract class AbstractNumeral implements Numeral {
+    private final NumeralType type;
+
+    AbstractNumeral(NumeralType type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the backing {@link Number}'s type
+     */
+    @Override
+    public NumeralType getType() {
+        return type;
+    }
+
     /**
      * @param type type to be checked for
      * @return {@code true} if this numeral can be converted to the specified type

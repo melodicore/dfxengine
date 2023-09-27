@@ -10,17 +10,16 @@ import me.datafox.dfxengine.math.api.NumeralType;
  * @author datafox
  */
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public final class IntNumeral extends AbstractNumeral {
     private final int number;
-    private final NumeralType type;
 
     /**
      * @param number {@code int} to be associated with this numeral
      */
     public IntNumeral(int number) {
+        super(NumeralType.INT);
         this.number = number;
-        type = NumeralType.INT;
     }
 
     /**
@@ -29,14 +28,6 @@ public final class IntNumeral extends AbstractNumeral {
     @Override
     public Number getNumber() {
         return number;
-    }
-
-    /**
-     * @return the backing {@link Number}'s type ({@link NumeralType#INT})
-     */
-    @Override
-    public NumeralType getType() {
-        return type;
     }
 
     /**

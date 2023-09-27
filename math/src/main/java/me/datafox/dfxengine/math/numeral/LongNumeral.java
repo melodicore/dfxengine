@@ -10,17 +10,16 @@ import me.datafox.dfxengine.math.api.NumeralType;
  * @author datafox
  */
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public final class LongNumeral extends AbstractNumeral {
     private final long number;
-    private final NumeralType type;
 
     /**
      * @param number {@code long} to be associated with this numeral
      */
     public LongNumeral(long number) {
+        super(NumeralType.LONG);
         this.number = number;
-        type = NumeralType.LONG;
     }
 
     /**
@@ -29,14 +28,6 @@ public final class LongNumeral extends AbstractNumeral {
     @Override
     public Number getNumber() {
         return number;
-    }
-
-    /**
-     * @return the backing {@link Number}'s type ({@link NumeralType#LONG})
-     */
-    @Override
-    public NumeralType getType() {
-        return type;
     }
 
     /**

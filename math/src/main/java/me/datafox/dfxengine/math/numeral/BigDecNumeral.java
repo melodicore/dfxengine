@@ -12,17 +12,16 @@ import java.math.BigDecimal;
  * @author datafox
  */
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public final class BigDecNumeral extends AbstractNumeral {
     private final BigDecimal number;
-    private final NumeralType type;
 
     /**
      * @param number {@link BigDecimal} to be associated with this numeral
      */
     public BigDecNumeral(BigDecimal number) {
+        super(NumeralType.BIG_DEC);
         this.number = number;
-        type = NumeralType.BIG_DEC;
     }
 
     /**
@@ -52,14 +51,6 @@ public final class BigDecNumeral extends AbstractNumeral {
     @Override
     public Number getNumber() {
         return number;
-    }
-
-    /**
-     * @return the backing {@link Number}'s type ({@link NumeralType#BIG_DEC})
-     */
-    @Override
-    public NumeralType getType() {
-        return type;
     }
 
     /**
