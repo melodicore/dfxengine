@@ -274,7 +274,8 @@ public class Conversion {
             case LONG:
                 return BigDecimal.valueOf(numeral.getNumber().longValue());
             case BIG_INT:
-                return new BigDecimal((BigInteger) numeral.getNumber(), Operations.getContext());
+                return new BigDecimal((BigInteger) numeral.getNumber(), Operations.getContext())
+                        .stripTrailingZeros();
             case FLOAT:
             case DOUBLE:
                 return BigDecimal.valueOf(numeral.getNumber().doubleValue());
@@ -618,7 +619,7 @@ public class Conversion {
     }
 
     private static float toFloatInRange(BigInteger bi) {
-        return toFloatInRange(new BigDecimal(bi));
+        return toFloatInRange(new BigDecimal(bi, Operations.getContext()));
     }
 
     private static float toFloatInRange(double d) {
@@ -642,7 +643,7 @@ public class Conversion {
     }
 
     private static double toDoubleInRange(BigInteger bi) {
-        return toDoubleInRange(new BigDecimal(bi));
+        return toDoubleInRange(new BigDecimal(bi, Operations.getContext()));
     }
 
     private static double toDoubleInRange(BigDecimal bd) {

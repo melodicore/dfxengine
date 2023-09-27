@@ -111,6 +111,8 @@ public class ConversionTest {
         assertEquals(new BigDecimal("3.3333e+33"), toBigDec(floatNumeral));
         assertEquals(new BigDecimal("5.2e+77"), toBigDec(doubleNumeral));
         assertEquals(new BigDecimal("9.88765432102468e+420"), toBigDec(bigDecNumeral));
+
+        assertEquals(new BigDecimal("9.88765432102468e+420"), toBigDec(toBigIntNumeral(bigDecNumeral)));
     }
 
     @Test
