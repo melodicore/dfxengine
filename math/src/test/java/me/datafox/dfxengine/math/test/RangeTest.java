@@ -1,12 +1,14 @@
 package me.datafox.dfxengine.math.test;
 
 import me.datafox.dfxengine.math.numeral.*;
-import me.datafox.dfxengine.math.utils.Range;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import static me.datafox.dfxengine.math.utils.Range.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author datafox
@@ -60,97 +62,97 @@ public class RangeTest {
 
     @Test
     public void isOutOfIntRangeTest() {
-        Assertions.assertFalse(Range.isOutOfIntRange(intWithinInt));
-        Assertions.assertFalse(Range.isOutOfIntRange(negativeIntWithinInt));
-        Assertions.assertFalse(Range.isOutOfIntRange(longWithinInt));
-        Assertions.assertFalse(Range.isOutOfIntRange(negativeLongWithinInt));
-        Assertions.assertFalse(Range.isOutOfIntRange(bigIntWithinInt));
-        Assertions.assertFalse(Range.isOutOfIntRange(negativeBigIntWithinInt));
-        Assertions.assertFalse(Range.isOutOfIntRange(floatWithinInt));
-        Assertions.assertFalse(Range.isOutOfIntRange(negativeFloatWithinInt));
-        Assertions.assertFalse(Range.isOutOfIntRange(doubleWithinInt));
-        Assertions.assertFalse(Range.isOutOfIntRange(negativeDoubleWithinInt));
-        Assertions.assertFalse(Range.isOutOfIntRange(bigDecWithinInt));
-        Assertions.assertFalse(Range.isOutOfIntRange(negativeBigDecWithinInt));
+        assertFalse(isOutOfIntRange(intWithinInt));
+        assertFalse(isOutOfIntRange(negativeIntWithinInt));
+        assertFalse(isOutOfIntRange(longWithinInt));
+        assertFalse(isOutOfIntRange(negativeLongWithinInt));
+        assertFalse(isOutOfIntRange(bigIntWithinInt));
+        assertFalse(isOutOfIntRange(negativeBigIntWithinInt));
+        assertFalse(isOutOfIntRange(floatWithinInt));
+        assertFalse(isOutOfIntRange(negativeFloatWithinInt));
+        assertFalse(isOutOfIntRange(doubleWithinInt));
+        assertFalse(isOutOfIntRange(negativeDoubleWithinInt));
+        assertFalse(isOutOfIntRange(bigDecWithinInt));
+        assertFalse(isOutOfIntRange(negativeBigDecWithinInt));
 
-        Assertions.assertTrue(Range.isOutOfIntRange(longOutsideInt));
-        Assertions.assertTrue(Range.isOutOfIntRange(negativeLongOutsideInt));
-        Assertions.assertTrue(Range.isOutOfIntRange(bigIntWithinLong));
-        Assertions.assertTrue(Range.isOutOfIntRange(negativeBigIntWithinLong));
-        Assertions.assertTrue(Range.isOutOfIntRange(floatWithinLong));
-        Assertions.assertTrue(Range.isOutOfIntRange(negativeFloatWithinLong));
-        Assertions.assertTrue(Range.isOutOfIntRange(doubleWithinLong));
-        Assertions.assertTrue(Range.isOutOfIntRange(negativeDoubleWithinLong));
-        Assertions.assertTrue(Range.isOutOfIntRange(bigDecWithinLong));
-        Assertions.assertTrue(Range.isOutOfIntRange(negativeBigDecWithinLong));
+        assertTrue(isOutOfIntRange(longOutsideInt));
+        assertTrue(isOutOfIntRange(negativeLongOutsideInt));
+        assertTrue(isOutOfIntRange(bigIntWithinLong));
+        assertTrue(isOutOfIntRange(negativeBigIntWithinLong));
+        assertTrue(isOutOfIntRange(floatWithinLong));
+        assertTrue(isOutOfIntRange(negativeFloatWithinLong));
+        assertTrue(isOutOfIntRange(doubleWithinLong));
+        assertTrue(isOutOfIntRange(negativeDoubleWithinLong));
+        assertTrue(isOutOfIntRange(bigDecWithinLong));
+        assertTrue(isOutOfIntRange(negativeBigDecWithinLong));
     }
 
     @Test
     public void isOutOfLongRangeTest() {
-        Assertions.assertFalse(Range.isOutOfLongRange(intWithinInt));
-        Assertions.assertFalse(Range.isOutOfLongRange(negativeIntWithinInt));
-        Assertions.assertFalse(Range.isOutOfLongRange(longOutsideInt));
-        Assertions.assertFalse(Range.isOutOfLongRange(negativeLongOutsideInt));
-        Assertions.assertFalse(Range.isOutOfLongRange(bigIntWithinLong));
-        Assertions.assertFalse(Range.isOutOfLongRange(negativeBigIntWithinLong));
-        Assertions.assertFalse(Range.isOutOfLongRange(floatWithinLong));
-        Assertions.assertFalse(Range.isOutOfLongRange(negativeFloatWithinLong));
-        Assertions.assertFalse(Range.isOutOfLongRange(doubleWithinLong));
-        Assertions.assertFalse(Range.isOutOfLongRange(negativeDoubleWithinLong));
-        Assertions.assertFalse(Range.isOutOfLongRange(bigDecWithinLong));
-        Assertions.assertFalse(Range.isOutOfLongRange(negativeBigDecWithinLong));
+        assertFalse(isOutOfLongRange(intWithinInt));
+        assertFalse(isOutOfLongRange(negativeIntWithinInt));
+        assertFalse(isOutOfLongRange(longOutsideInt));
+        assertFalse(isOutOfLongRange(negativeLongOutsideInt));
+        assertFalse(isOutOfLongRange(bigIntWithinLong));
+        assertFalse(isOutOfLongRange(negativeBigIntWithinLong));
+        assertFalse(isOutOfLongRange(floatWithinLong));
+        assertFalse(isOutOfLongRange(negativeFloatWithinLong));
+        assertFalse(isOutOfLongRange(doubleWithinLong));
+        assertFalse(isOutOfLongRange(negativeDoubleWithinLong));
+        assertFalse(isOutOfLongRange(bigDecWithinLong));
+        assertFalse(isOutOfLongRange(negativeBigDecWithinLong));
 
-        Assertions.assertTrue(Range.isOutOfLongRange(bigIntWithinFloat));
-        Assertions.assertTrue(Range.isOutOfLongRange(negativeBigIntWithinFloat));
-        Assertions.assertTrue(Range.isOutOfLongRange(floatOutsideLong));
-        Assertions.assertTrue(Range.isOutOfLongRange(negativeFloatOutsideLong));
-        Assertions.assertTrue(Range.isOutOfLongRange(doubleWithinFloat));
-        Assertions.assertTrue(Range.isOutOfLongRange(negativeDoubleWithinFloat));
-        Assertions.assertTrue(Range.isOutOfLongRange(bigDecWithinFloat));
-        Assertions.assertTrue(Range.isOutOfLongRange(negativeBigDecWithinFloat));
+        assertTrue(isOutOfLongRange(bigIntWithinFloat));
+        assertTrue(isOutOfLongRange(negativeBigIntWithinFloat));
+        assertTrue(isOutOfLongRange(floatOutsideLong));
+        assertTrue(isOutOfLongRange(negativeFloatOutsideLong));
+        assertTrue(isOutOfLongRange(doubleWithinFloat));
+        assertTrue(isOutOfLongRange(negativeDoubleWithinFloat));
+        assertTrue(isOutOfLongRange(bigDecWithinFloat));
+        assertTrue(isOutOfLongRange(negativeBigDecWithinFloat));
     }
 
     @Test
     public void isOutOfFloatRangeTest() {
-        Assertions.assertFalse(Range.isOutOfFloatRange(intWithinInt));
-        Assertions.assertFalse(Range.isOutOfFloatRange(negativeIntWithinInt));
-        Assertions.assertFalse(Range.isOutOfFloatRange(longOutsideInt));
-        Assertions.assertFalse(Range.isOutOfFloatRange(negativeLongOutsideInt));
-        Assertions.assertFalse(Range.isOutOfFloatRange(bigIntWithinFloat));
-        Assertions.assertFalse(Range.isOutOfFloatRange(negativeBigIntWithinFloat));
-        Assertions.assertFalse(Range.isOutOfFloatRange(floatOutsideLong));
-        Assertions.assertFalse(Range.isOutOfFloatRange(negativeFloatOutsideLong));
-        Assertions.assertFalse(Range.isOutOfFloatRange(doubleWithinFloat));
-        Assertions.assertFalse(Range.isOutOfFloatRange(negativeDoubleWithinFloat));
-        Assertions.assertFalse(Range.isOutOfFloatRange(bigDecWithinFloat));
-        Assertions.assertFalse(Range.isOutOfFloatRange(negativeBigDecWithinFloat));
+        assertFalse(isOutOfFloatRange(intWithinInt));
+        assertFalse(isOutOfFloatRange(negativeIntWithinInt));
+        assertFalse(isOutOfFloatRange(longOutsideInt));
+        assertFalse(isOutOfFloatRange(negativeLongOutsideInt));
+        assertFalse(isOutOfFloatRange(bigIntWithinFloat));
+        assertFalse(isOutOfFloatRange(negativeBigIntWithinFloat));
+        assertFalse(isOutOfFloatRange(floatOutsideLong));
+        assertFalse(isOutOfFloatRange(negativeFloatOutsideLong));
+        assertFalse(isOutOfFloatRange(doubleWithinFloat));
+        assertFalse(isOutOfFloatRange(negativeDoubleWithinFloat));
+        assertFalse(isOutOfFloatRange(bigDecWithinFloat));
+        assertFalse(isOutOfFloatRange(negativeBigDecWithinFloat));
 
-        Assertions.assertTrue(Range.isOutOfFloatRange(bigIntWithinDouble));
-        Assertions.assertTrue(Range.isOutOfFloatRange(negativeBigIntWithinDouble));
-        Assertions.assertTrue(Range.isOutOfFloatRange(doubleOutsideFloat));
-        Assertions.assertTrue(Range.isOutOfFloatRange(negativeDoubleOutsideFloat));
-        Assertions.assertTrue(Range.isOutOfFloatRange(bigDecWithinDouble));
-        Assertions.assertTrue(Range.isOutOfFloatRange(negativeBigDecWithinDouble));
+        assertTrue(isOutOfFloatRange(bigIntWithinDouble));
+        assertTrue(isOutOfFloatRange(negativeBigIntWithinDouble));
+        assertTrue(isOutOfFloatRange(doubleOutsideFloat));
+        assertTrue(isOutOfFloatRange(negativeDoubleOutsideFloat));
+        assertTrue(isOutOfFloatRange(bigDecWithinDouble));
+        assertTrue(isOutOfFloatRange(negativeBigDecWithinDouble));
     }
 
     @Test
     public void isOutOfDoubleRangeTest() {
-        Assertions.assertFalse(Range.isOutOfDoubleRange(intWithinInt));
-        Assertions.assertFalse(Range.isOutOfDoubleRange(negativeIntWithinInt));
-        Assertions.assertFalse(Range.isOutOfDoubleRange(longOutsideInt));
-        Assertions.assertFalse(Range.isOutOfDoubleRange(negativeLongOutsideInt));
-        Assertions.assertFalse(Range.isOutOfDoubleRange(bigIntWithinDouble));
-        Assertions.assertFalse(Range.isOutOfDoubleRange(negativeBigIntWithinDouble));
-        Assertions.assertFalse(Range.isOutOfDoubleRange(floatOutsideLong));
-        Assertions.assertFalse(Range.isOutOfDoubleRange(negativeFloatOutsideLong));
-        Assertions.assertFalse(Range.isOutOfDoubleRange(doubleOutsideFloat));
-        Assertions.assertFalse(Range.isOutOfDoubleRange(negativeDoubleOutsideFloat));
-        Assertions.assertFalse(Range.isOutOfDoubleRange(bigDecWithinDouble));
-        Assertions.assertFalse(Range.isOutOfDoubleRange(negativeBigDecWithinDouble));
+        assertFalse(isOutOfDoubleRange(intWithinInt));
+        assertFalse(isOutOfDoubleRange(negativeIntWithinInt));
+        assertFalse(isOutOfDoubleRange(longOutsideInt));
+        assertFalse(isOutOfDoubleRange(negativeLongOutsideInt));
+        assertFalse(isOutOfDoubleRange(bigIntWithinDouble));
+        assertFalse(isOutOfDoubleRange(negativeBigIntWithinDouble));
+        assertFalse(isOutOfDoubleRange(floatOutsideLong));
+        assertFalse(isOutOfDoubleRange(negativeFloatOutsideLong));
+        assertFalse(isOutOfDoubleRange(doubleOutsideFloat));
+        assertFalse(isOutOfDoubleRange(negativeDoubleOutsideFloat));
+        assertFalse(isOutOfDoubleRange(bigDecWithinDouble));
+        assertFalse(isOutOfDoubleRange(negativeBigDecWithinDouble));
 
-        Assertions.assertTrue(Range.isOutOfDoubleRange(bigIntOutsideDouble));
-        Assertions.assertTrue(Range.isOutOfDoubleRange(negativeBigIntOutsideDouble));
-        Assertions.assertTrue(Range.isOutOfDoubleRange(bigDecOutsideDouble));
-        Assertions.assertTrue(Range.isOutOfDoubleRange(negativeBigDecOutsideDouble));
+        assertTrue(isOutOfDoubleRange(bigIntOutsideDouble));
+        assertTrue(isOutOfDoubleRange(negativeBigIntOutsideDouble));
+        assertTrue(isOutOfDoubleRange(bigDecOutsideDouble));
+        assertTrue(isOutOfDoubleRange(negativeBigDecOutsideDouble));
     }
 }

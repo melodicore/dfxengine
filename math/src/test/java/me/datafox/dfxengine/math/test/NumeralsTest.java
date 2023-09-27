@@ -1,14 +1,15 @@
 package me.datafox.dfxengine.math.test;
 
 import me.datafox.dfxengine.math.numeral.*;
-import me.datafox.dfxengine.math.utils.Numerals;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import static me.datafox.dfxengine.math.api.NumeralType.*;
+import static me.datafox.dfxengine.math.utils.Numerals.valueOf;
+import static me.datafox.dfxengine.math.utils.Numerals.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author datafox
@@ -16,112 +17,115 @@ import static me.datafox.dfxengine.math.api.NumeralType.*;
 public class NumeralsTest {
     @Test
     public void valueOfTest() {
-        Assertions.assertInstanceOf(IntNumeral.class, Numerals.valueOf(72));
-        Assertions.assertInstanceOf(LongNumeral.class, Numerals.valueOf(9524783641L));
-        Assertions.assertInstanceOf(BigIntNumeral.class, Numerals.valueOf(new BigInteger("864208642086420864208642086420")));
-        Assertions.assertInstanceOf(FloatNumeral.class, Numerals.valueOf(11.54f));
-        Assertions.assertInstanceOf(DoubleNumeral.class, Numerals.valueOf(7.24e190d));
-        Assertions.assertInstanceOf(BigDecNumeral.class, Numerals.valueOf(new BigDecimal("5.34812375923e+360")));
+        assertInstanceOf(IntNumeral.class, valueOf(72));
+        assertInstanceOf(LongNumeral.class, valueOf(9524783641L));
+        assertInstanceOf(BigIntNumeral.class, valueOf(new BigInteger("864208642086420864208642086420")));
+        assertInstanceOf(FloatNumeral.class, valueOf(11.54f));
+        assertInstanceOf(DoubleNumeral.class, valueOf(7.24e190d));
+        assertInstanceOf(BigDecNumeral.class, valueOf(new BigDecimal("5.34812375923e+360")));
 
-        Assertions.assertInstanceOf(BigIntNumeral.class, Numerals.valueOf("53462"));
-        Assertions.assertInstanceOf(BigDecNumeral.class, Numerals.valueOf("53462e+1"));
-        Assertions.assertInstanceOf(BigDecNumeral.class, Numerals.valueOf("5.3462e+3"));
-        Assertions.assertThrows(NumberFormatException.class, () -> Numerals.valueOf("941.76.245"));
-        Assertions.assertThrows(NumberFormatException.class, () -> Numerals.valueOf("941,76"));
-        Assertions.assertThrows(NumberFormatException.class, () -> Numerals.valueOf("941a76"));
+        assertInstanceOf(BigIntNumeral.class, valueOf("53462"));
+        assertInstanceOf(BigDecNumeral.class, valueOf("53462e+1"));
+        assertInstanceOf(BigDecNumeral.class, valueOf("5.3462e+3"));
+        assertThrows(NumberFormatException.class, () -> valueOf("941.76.245"));
+        assertThrows(NumberFormatException.class, () -> valueOf("941,76"));
+        assertThrows(NumberFormatException.class, () -> valueOf("941a76"));
+
+        assertInstanceOf(LongNumeral.class, valueOf(Long.valueOf(1337L)));
+        assertThrows(IllegalArgumentException.class, () -> valueOf(Short.valueOf("37")));
     }
 
     @Test
     public void isZeroTest() {
-        Assertions.assertTrue(Numerals.isZero(new IntNumeral(0)));
-        Assertions.assertTrue(Numerals.isZero(new LongNumeral(0L)));
-        Assertions.assertTrue(Numerals.isZero(new BigIntNumeral("0")));
-        Assertions.assertTrue(Numerals.isZero(new FloatNumeral(0.0f)));
-        Assertions.assertTrue(Numerals.isZero(new FloatNumeral(-0.0f)));
-        Assertions.assertTrue(Numerals.isZero(new DoubleNumeral(0.0d)));
-        Assertions.assertTrue(Numerals.isZero(new DoubleNumeral(-0.0d)));
-        Assertions.assertTrue(Numerals.isZero(new BigDecNumeral(0)));
-        Assertions.assertTrue(Numerals.isZero(new BigDecNumeral("0.0")));
+        assertTrue(isZero(new IntNumeral(0)));
+        assertTrue(isZero(new LongNumeral(0L)));
+        assertTrue(isZero(new BigIntNumeral("0")));
+        assertTrue(isZero(new FloatNumeral(0.0f)));
+        assertTrue(isZero(new FloatNumeral(-0.0f)));
+        assertTrue(isZero(new DoubleNumeral(0.0d)));
+        assertTrue(isZero(new DoubleNumeral(-0.0d)));
+        assertTrue(isZero(new BigDecNumeral(0)));
+        assertTrue(isZero(new BigDecNumeral("0.0")));
 
-        Assertions.assertFalse(Numerals.isZero(new IntNumeral(7)));
-        Assertions.assertFalse(Numerals.isZero(new LongNumeral(-345345345345345L)));
-        Assertions.assertFalse(Numerals.isZero(new BigIntNumeral(37)));
-        Assertions.assertFalse(Numerals.isZero(new FloatNumeral(0.1f)));
-        Assertions.assertFalse(Numerals.isZero(new FloatNumeral(-Float.MIN_VALUE)));
-        Assertions.assertFalse(Numerals.isZero(new DoubleNumeral(94.7d)));
-        Assertions.assertFalse(Numerals.isZero(new BigDecNumeral("-2.5147")));
-        Assertions.assertFalse(Numerals.isZero(new BigDecNumeral("1e-734")));
+        assertFalse(isZero(new IntNumeral(7)));
+        assertFalse(isZero(new LongNumeral(-345345345345345L)));
+        assertFalse(isZero(new BigIntNumeral(37)));
+        assertFalse(isZero(new FloatNumeral(0.1f)));
+        assertFalse(isZero(new FloatNumeral(-Float.MIN_VALUE)));
+        assertFalse(isZero(new DoubleNumeral(94.7d)));
+        assertFalse(isZero(new BigDecNumeral("-2.5147")));
+        assertFalse(isZero(new BigDecNumeral("1e-734")));
     }
 
     @Test
     public void isOneTest() {
-        Assertions.assertTrue(Numerals.isOne(new IntNumeral(1)));
-        Assertions.assertTrue(Numerals.isOne(new LongNumeral(1L)));
-        Assertions.assertTrue(Numerals.isOne(new BigIntNumeral(1)));
-        Assertions.assertTrue(Numerals.isOne(new FloatNumeral(1.0f)));
-        Assertions.assertTrue(Numerals.isOne(new DoubleNumeral(1.0d)));
-        Assertions.assertTrue(Numerals.isOne(new BigDecNumeral(1)));
-        Assertions.assertTrue(Numerals.isOne(new BigDecNumeral("1.0")));
+        assertTrue(isOne(new IntNumeral(1)));
+        assertTrue(isOne(new LongNumeral(1L)));
+        assertTrue(isOne(new BigIntNumeral(1)));
+        assertTrue(isOne(new FloatNumeral(1.0f)));
+        assertTrue(isOne(new DoubleNumeral(1.0d)));
+        assertTrue(isOne(new BigDecNumeral(1)));
+        assertTrue(isOne(new BigDecNumeral("1.0")));
 
-        Assertions.assertFalse(Numerals.isOne(new IntNumeral(7)));
-        Assertions.assertFalse(Numerals.isOne(new LongNumeral(-345345345345345L)));
-        Assertions.assertFalse(Numerals.isOne(new BigIntNumeral(37)));
-        Assertions.assertFalse(Numerals.isOne(new FloatNumeral(0.1f)));
-        Assertions.assertFalse(Numerals.isOne(new FloatNumeral(-Float.MIN_VALUE)));
-        Assertions.assertFalse(Numerals.isOne(new DoubleNumeral(94.7d)));
-        Assertions.assertFalse(Numerals.isOne(new BigDecNumeral("-2.5147")));
-        Assertions.assertFalse(Numerals.isOne(new BigDecNumeral("1e-734")));
+        assertFalse(isOne(new IntNumeral(7)));
+        assertFalse(isOne(new LongNumeral(-345345345345345L)));
+        assertFalse(isOne(new BigIntNumeral(37)));
+        assertFalse(isOne(new FloatNumeral(0.1f)));
+        assertFalse(isOne(new FloatNumeral(-Float.MIN_VALUE)));
+        assertFalse(isOne(new DoubleNumeral(94.7d)));
+        assertFalse(isOne(new BigDecNumeral("-2.5147")));
+        assertFalse(isOne(new BigDecNumeral("1e-734")));
     }
 
     @Test
     public void compareTest() {
-        Assertions.assertEquals(0, Numerals.compare(new IntNumeral(72), new BigIntNumeral(72)));
-        Assertions.assertEquals(0, Numerals.compare(new FloatNumeral(0.4f), new DoubleNumeral(0.4d)));
-        Assertions.assertEquals(0, Numerals.compare(new FloatNumeral(9372.561f), new BigDecNumeral("9372.561")));
-        Assertions.assertEquals(1, Numerals.compare(new BigDecNumeral("69247.0000000000001"), new IntNumeral(69247)));
-        Assertions.assertEquals(-1, Numerals.compare(new DoubleNumeral(-0.0), new DoubleNumeral(0.0)));
+        assertEquals(0, compare(new IntNumeral(72), new BigIntNumeral(72)));
+        assertEquals(0, compare(new FloatNumeral(0.4f), new DoubleNumeral(0.4d)));
+        assertEquals(0, compare(new FloatNumeral(9372.561f), new BigDecNumeral("9372.561")));
+        assertEquals(1, compare(new BigDecNumeral("69247.0000000000001"), new IntNumeral(69247)));
+        assertEquals(-1, compare(new DoubleNumeral(-0.0), new DoubleNumeral(0.0)));
     }
 
     @Test
     public void getSignificantTypeTest() {
-        Assertions.assertEquals(INT, Numerals.getSignificantType(INT, INT));
-        Assertions.assertEquals(LONG, Numerals.getSignificantType(INT, LONG));
-        Assertions.assertEquals(LONG, Numerals.getSignificantType(LONG, LONG));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(INT, BIG_INT));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(LONG, BIG_INT));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(BIG_INT, BIG_INT));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(INT, FLOAT));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(LONG, FLOAT));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(FLOAT, FLOAT));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(INT, DOUBLE));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(LONG, DOUBLE));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(FLOAT, DOUBLE));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(DOUBLE, DOUBLE));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(INT, BIG_DEC));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(LONG, BIG_DEC));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(BIG_INT, BIG_DEC));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(FLOAT, BIG_DEC));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(DOUBLE, BIG_DEC));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(BIG_DEC, BIG_DEC));
+        assertEquals(INT, getSignificantType(INT, INT));
+        assertEquals(LONG, getSignificantType(INT, LONG));
+        assertEquals(LONG, getSignificantType(LONG, LONG));
+        assertEquals(BIG_INT, getSignificantType(INT, BIG_INT));
+        assertEquals(BIG_INT, getSignificantType(LONG, BIG_INT));
+        assertEquals(BIG_INT, getSignificantType(BIG_INT, BIG_INT));
+        assertEquals(FLOAT, getSignificantType(INT, FLOAT));
+        assertEquals(FLOAT, getSignificantType(LONG, FLOAT));
+        assertEquals(FLOAT, getSignificantType(FLOAT, FLOAT));
+        assertEquals(DOUBLE, getSignificantType(INT, DOUBLE));
+        assertEquals(DOUBLE, getSignificantType(LONG, DOUBLE));
+        assertEquals(DOUBLE, getSignificantType(FLOAT, DOUBLE));
+        assertEquals(DOUBLE, getSignificantType(DOUBLE, DOUBLE));
+        assertEquals(BIG_DEC, getSignificantType(INT, BIG_DEC));
+        assertEquals(BIG_DEC, getSignificantType(LONG, BIG_DEC));
+        assertEquals(BIG_DEC, getSignificantType(BIG_INT, BIG_DEC));
+        assertEquals(BIG_DEC, getSignificantType(FLOAT, BIG_DEC));
+        assertEquals(BIG_DEC, getSignificantType(DOUBLE, BIG_DEC));
+        assertEquals(BIG_DEC, getSignificantType(BIG_DEC, BIG_DEC));
 
-        Assertions.assertEquals(INT, Numerals.getSignificantType(INT, INT, INT));
-        Assertions.assertEquals(LONG, Numerals.getSignificantType(INT, LONG, INT));
-        Assertions.assertEquals(LONG, Numerals.getSignificantType(LONG, LONG, INT));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(INT, BIG_INT, INT));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(LONG, BIG_INT, INT));
-        Assertions.assertEquals(BIG_INT, Numerals.getSignificantType(BIG_INT, BIG_INT, INT));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(INT, FLOAT, INT, LONG));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(LONG, FLOAT, INT, LONG));
-        Assertions.assertEquals(FLOAT, Numerals.getSignificantType(FLOAT, FLOAT, INT, LONG));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(INT, DOUBLE, INT, LONG, FLOAT));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(LONG, DOUBLE, INT, LONG, FLOAT));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(FLOAT, DOUBLE, INT, LONG, FLOAT));
-        Assertions.assertEquals(DOUBLE, Numerals.getSignificantType(DOUBLE, DOUBLE, INT, LONG, FLOAT));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(INT, BIG_DEC, INT, LONG, BIG_INT, FLOAT, DOUBLE));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(LONG, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(BIG_INT, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(FLOAT, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(DOUBLE, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
-        Assertions.assertEquals(BIG_DEC, Numerals.getSignificantType(BIG_DEC, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
+        assertEquals(INT, getSignificantType(INT, INT, INT));
+        assertEquals(LONG, getSignificantType(INT, LONG, INT));
+        assertEquals(LONG, getSignificantType(LONG, LONG, INT));
+        assertEquals(BIG_INT, getSignificantType(INT, BIG_INT, INT));
+        assertEquals(BIG_INT, getSignificantType(LONG, BIG_INT, INT));
+        assertEquals(BIG_INT, getSignificantType(BIG_INT, BIG_INT, INT));
+        assertEquals(FLOAT, getSignificantType(INT, FLOAT, INT, LONG));
+        assertEquals(FLOAT, getSignificantType(LONG, FLOAT, INT, LONG));
+        assertEquals(FLOAT, getSignificantType(FLOAT, FLOAT, INT, LONG));
+        assertEquals(DOUBLE, getSignificantType(INT, DOUBLE, INT, LONG, FLOAT));
+        assertEquals(DOUBLE, getSignificantType(LONG, DOUBLE, INT, LONG, FLOAT));
+        assertEquals(DOUBLE, getSignificantType(FLOAT, DOUBLE, INT, LONG, FLOAT));
+        assertEquals(DOUBLE, getSignificantType(DOUBLE, DOUBLE, INT, LONG, FLOAT));
+        assertEquals(BIG_DEC, getSignificantType(INT, BIG_DEC, INT, LONG, BIG_INT, FLOAT, DOUBLE));
+        assertEquals(BIG_DEC, getSignificantType(LONG, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
+        assertEquals(BIG_DEC, getSignificantType(BIG_INT, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
+        assertEquals(BIG_DEC, getSignificantType(FLOAT, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
+        assertEquals(BIG_DEC, getSignificantType(DOUBLE, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
+        assertEquals(BIG_DEC, getSignificantType(BIG_DEC, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
     }
 }

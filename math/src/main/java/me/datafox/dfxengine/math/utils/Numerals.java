@@ -90,6 +90,37 @@ public class Numerals {
     }
 
     /**
+     * @param number {@link Number} value
+     * @return {@link Numeral} representing the specified value
+     *
+     * @throws IllegalArgumentException if the {@link Number} is not any of the following classes: {@link Integer},
+     * {@link Long}, {@link BigInteger}, {@link Float}, {@link Double} or {@link BigDecimal}
+     */
+    public static Numeral valueOf(Number number) {
+        if(number instanceof Integer) {
+            return valueOf(number.intValue());
+        }
+        if(number instanceof Long) {
+            return valueOf(number.longValue());
+        }
+        if(number instanceof BigInteger) {
+            return valueOf((BigInteger) number);
+        }
+        if(number instanceof Float) {
+            return valueOf(number.floatValue());
+        }
+        if(number instanceof Double) {
+            return valueOf(number.doubleValue());
+        }
+        if(number instanceof BigDecimal) {
+            return valueOf((BigDecimal) number);
+        }
+        throw LogUtils.logExceptionAndGet(logger,
+                MathStrings.unknownNumberType(number),
+                IllegalArgumentException::new);
+    }
+
+    /**
      * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the specified value represents the number zero
      *
