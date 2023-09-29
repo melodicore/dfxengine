@@ -3,8 +3,6 @@ package me.datafox.dfxengine.dependencies;
 import org.slf4j.Logger;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.function.Supplier;
 
 /**
  * <p>
@@ -32,15 +30,6 @@ public abstract class DependencyDependent extends AbstractDependent implements D
      */
     protected DependencyDependent(Logger logger) {
         super(logger);
-    }
-
-    /**
-     * @param logger {@link Logger} for this dependent
-     * @param set {@link Supplier} for a {@link Set} containing {@link Dependency Dependencies} to be used as the
-     * backing set
-     */
-    protected DependencyDependent(Logger logger, Supplier<Set<Dependency>> set) {
-        super(logger, set);
     }
 
     /**

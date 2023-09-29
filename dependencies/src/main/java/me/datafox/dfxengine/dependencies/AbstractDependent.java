@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -45,16 +44,6 @@ public abstract class AbstractDependent implements Dependent {
     protected AbstractDependent(Logger logger) {
         this.logger = logger;
         dependencies = new HashSet<>();
-    }
-
-    /**
-     * @param logger {@link Logger} for this dependent
-     * @param set {@link Supplier} for a {@link Set} containing {@link Dependency Dependencies} to be used as the
-     * backing set
-     */
-    protected AbstractDependent(Logger logger, Supplier<Set<Dependency>> set) {
-        this.logger = logger;
-        dependencies = set.get();
     }
 
     /**
@@ -103,7 +92,7 @@ public abstract class AbstractDependent implements Dependent {
      * @throws IllegalArgumentException if this operation would cause a cyclic dependency
      */
     @Override
-    public boolean addDependencies(Collection<Dependency> dependencies) {
+    public boolean addDependencies(Collection<? extends Dependency> dependencies) {
         for(Dependency dependency : dependencies) {
             if(DependencyUtils.checkCyclicDependencies(this, dependency)) {
                 throw LogUtils.logExceptionAndGet(logger,
@@ -129,7 +118,7 @@ public abstract class AbstractDependent implements Dependent {
      * @return {@code true} if the registered {@link Dependency Dependencies} changed as a result of this operation
      */
     @Override
-    public boolean removeDependencies(Collection<Dependency> dependencies) {
+    public boolean removeDependencies(Collection<? extends Dependency> dependencies) {
         return this.dependencies.removeAll(dependencies);
     }
 
@@ -147,7 +136,7 @@ public abstract class AbstractDependent implements Dependent {
      * @return {@code true} if all the specified {@link Dependency Dependencies} are registered to this class
      */
     @Override
-    public boolean containsDependencies(Collection<Dependency> dependencies) {
+    public boolean containsDependencies(Collection<? extends Dependency> dependencies) {
         return this.dependencies.containsAll(dependencies);
     }
 
@@ -175,7 +164,7 @@ public abstract class AbstractDependent implements Dependent {
      * Dependencies that also implement {@link Dependent}, recursively
      */
     @Override
-    public boolean containsDependenciesRecursive(Collection<Dependency> dependencies) {
+    public boolean containsDependenciesRecursive(Collection<? extends Dependency> dependencies) {
         return dependencies.stream().allMatch(dependency ->
                 DependencyUtils.containsDependencyRecursive(dependency, this));
     }

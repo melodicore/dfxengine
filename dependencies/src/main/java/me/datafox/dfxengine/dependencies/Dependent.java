@@ -43,7 +43,7 @@ public interface Dependent {
      *
      * @throws IllegalArgumentException if this operation would cause a cyclic dependency
      */
-    boolean addDependencies(Collection<Dependency> dependencies);
+    boolean addDependencies(Collection<? extends Dependency> dependencies);
 
     /**
      * @param dependency {@link Dependency} to be removed
@@ -55,7 +55,7 @@ public interface Dependent {
      * @param dependencies {@link Dependency Dependencies} to be removed
      * @return {@code true} if the registered {@link Dependency Dependencies} changed as a result of this operation
      */
-    boolean removeDependencies(Collection<Dependency> dependencies);
+    boolean removeDependencies(Collection<? extends Dependency> dependencies);
 
     /**
      * @param dependency {@link Dependency} to be checked for
@@ -67,7 +67,7 @@ public interface Dependent {
      * @param dependencies {@link Dependency Dependencies} to be checked for
      * @return {@code true} if all the specified {@link Dependency Dependencies} are registered to this class
      */
-    boolean containsDependencies(Collection<Dependency> dependencies);
+    boolean containsDependencies(Collection<? extends Dependency> dependencies);
 
     /**
      * Checks if the specified {@link Dependency} is registered to this class or any of its Dependencies that also
@@ -89,7 +89,7 @@ public interface Dependent {
      * @return {@code true} if the specified {@link Dependency Dependencies} are registered to this class or any of its
      * Dependencies that also implement Dependent, recursively
      */
-    boolean containsDependenciesRecursive(Collection<Dependency> dependencies);
+    boolean containsDependenciesRecursive(Collection<? extends Dependency> dependencies);
 
     /**
      * @return {@link Stream} of all {@link Dependency Dependencies} that are registered to this class
