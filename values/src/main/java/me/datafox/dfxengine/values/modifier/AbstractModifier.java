@@ -2,12 +2,11 @@ package me.datafox.dfxengine.values.modifier;
 
 import lombok.Getter;
 import me.datafox.dfxengine.dependencies.DependencyDependent;
-import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.api.Modifier;
+import me.datafox.dfxengine.values.api.Value;
 import org.slf4j.Logger;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 /**
@@ -16,13 +15,14 @@ import java.util.function.Predicate;
 public abstract class AbstractModifier extends DependencyDependent implements Modifier {
     @Getter
     protected final int priority;
-    private final List<Value> parameters;
+    private final Value[] parameters;
 
-    protected AbstractModifier(Logger logger, int priority, List<Value> parameters) {
+    protected AbstractModifier(Logger logger, int priority, Value ... parameters) {
         super(logger);
         this.priority = priority;
         this.parameters = parameters;
-        parameters.stream()
+
+        Arrays.stream(parameters)
                 .filter(Predicate.not(Value::isStatic))
                 .forEach(val -> val.addDependency(this));
     }
@@ -31,10 +31,10 @@ public abstract class AbstractModifier extends DependencyDependent implements Mo
     protected void onInvalidate() {}
 
     protected Value getParameter(int index) {
-        return parameters.get(index);
+        return parameters[index];
     }
 
-    protected List<Value> getParameters() {
-        return Collections.unmodifiableList(parameters);
+    protected Value[] getParameters() {
+        return parameters;
     }
 }

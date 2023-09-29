@@ -11,7 +11,6 @@ import me.datafox.dfxengine.values.api.comparison.ComparisonContext;
 import me.datafox.dfxengine.values.api.operation.*;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author datafox
@@ -23,27 +22,29 @@ public interface Value extends Dependency, Dependent, Handled {
 
     boolean isStatic();
 
+    boolean canConvert(NumeralType type);
+
     boolean convert(NumeralType type) throws ExtendedArithmeticException;
 
     boolean convertIfAllowed(NumeralType type);
 
-    boolean convertToDecimal();
+    boolean toInteger();
 
-    boolean canConvert(NumeralType type);
+    boolean toDecimal();
 
-    void toSmallestType();
+    boolean toSmallestType();
 
-    void set(Numeral value, MathContext context);
+    void set(Numeral value);
 
     void apply(SourceOperation operation, MathContext context);
 
-    void apply(SingleParameterOperation operation, Numeral parameter, MathContext context);
+    void apply(SingleParameterOperation operation, MathContext context, Numeral parameter);
 
-    void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2, MathContext context);
+    void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2);
 
-    void apply(Operation operation, List<Numeral> parameters, MathContext context);
+    void apply(Operation operation, MathContext context, Numeral ... parameters);
 
-    boolean compare(Comparison comparison, Numeral other, ComparisonContext context);
+    boolean compare(Comparison comparison, ComparisonContext context, Numeral other);
 
     Collection<Modifier> getModifiers();
 
@@ -59,27 +60,47 @@ public interface Value extends Dependency, Dependent, Handled {
 
     boolean containsModifiers(Collection<Modifier> modifiers);
 
-    default void set(Numeral value) {
-        set(value, MathContext.defaults());
+    default void apply(SourceOperation operation, MathContext.MathContextBuilder<?,?> builder) {
+        apply(operation, builder.build());
     }
 
     default void apply(SourceOperation operation) {
         apply(operation, MathContext.defaults());
     }
 
+    default void apply(SingleParameterOperation operation, MathContext.MathContextBuilder<?,?> builder,
+                       Numeral parameter) {
+        apply(operation, builder.build(), parameter);
+    }
+
     default void apply(SingleParameterOperation operation, Numeral parameter) {
-        apply(operation, parameter, MathContext.defaults());
+        apply(operation, MathContext.defaults(), parameter);
+    }
+
+    default void apply(DualParameterOperation operation, MathContext.MathContextBuilder<?,?> builder,
+                       Numeral parameter1, Numeral parameter2) {
+        apply(operation, builder.build(), parameter1, parameter2);
     }
 
     default void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2) {
-        apply(operation, parameter1, parameter2, MathContext.defaults());
+        apply(operation, MathContext.defaults(), parameter1, parameter2);
     }
 
-    default void apply(Operation operation, List<Numeral> parameters) {
-        apply(operation, parameters, MathContext.defaults());
+    default void apply(Operation operation,
+                       MathContext.MathContextBuilder<?,?> builder, Numeral ... parameters) {
+        apply(operation, builder.build(), parameters);
+    }
+
+    default void apply(Operation operation, Numeral ... parameters) {
+        apply(operation, MathContext.defaults(), parameters);
+    }
+
+    default boolean compare(Comparison comparison, ComparisonContext.ComparisonContextBuilder<?,?> builder,
+                            Numeral other) {
+        return compare(comparison, builder.build(), other);
     }
 
     default boolean compare(Comparison comparison, Numeral other) {
-        return compare(comparison, other, ComparisonContext.defaults());
+        return compare(comparison, ComparisonContext.defaults(), other);
     }
 }

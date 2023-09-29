@@ -1,11 +1,11 @@
 package me.datafox.dfxengine.values;
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import me.datafox.dfxengine.dependencies.DependencyDependent;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
+import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
 import me.datafox.dfxengine.math.utils.Numerals;
 import me.datafox.dfxengine.values.api.Modifier;
 import me.datafox.dfxengine.values.api.Value;
@@ -21,7 +21,6 @@ import java.util.*;
 /**
  * @author datafox
  */
-@Getter
 @EqualsAndHashCode(callSuper = false)
 public class ValueImpl extends DependencyDependent implements Value {
     private final Handle handle;
@@ -43,6 +42,16 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     @Override
+    public Handle getHandle() {
+        return handle;
+    }
+
+    @Override
+    public Numeral getBase() {
+        return base;
+    }
+
+    @Override
     public Numeral getValue() {
         if(invalidated) {
             calculate();
@@ -57,7 +66,12 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     @Override
-    public boolean convert(NumeralType type) throws ArithmeticException {
+    public boolean canConvert(NumeralType type) {
+        return base.canConvert(type);
+    }
+
+    @Override
+    public boolean convert(NumeralType type) throws ExtendedArithmeticException {
         if(base.getType().equals(type)) {
             return false;
         }
@@ -68,39 +82,64 @@ public class ValueImpl extends DependencyDependent implements Value {
 
     @Override
     public boolean convertIfAllowed(NumeralType type) {
-        Numeral old = base;
-        base = base.convertIfAllowed(type);
-        boolean changed = !old.equals(base);
-        if(changed) {
-            invalidate();
-        }
-        return changed;
-    }
-
-    @Override
-    public boolean convertToDecimal() {
-        if(base.getType().isDecimal()) {
+        if(base.getType().equals(type)) {
             return false;
         }
-        base = base.convertToDecimal();
+        Numeral old = base;
+        base = base.convertIfAllowed(type);
+        if(base.equals(old)) {
+            return false;
+        }
         invalidate();
         return true;
     }
 
     @Override
-    public boolean canConvert(NumeralType type) {
-        return base.canConvert(type);
-    }
-
-    @Override
-    public void toSmallestType() {
-        base = base.toSmallestType();
+    public boolean toInteger() {
+        if(base.getType().isInteger()) {
+            return false;
+        }
+        Numeral old = base;
+        base = base.toInteger();
+        if(base.equals(old)) {
+            return false;
+        }
         invalidate();
+        return true;
     }
 
     @Override
-    public void set(Numeral value, MathContext context) {
-        contextOperation(() -> base = value, context);
+    public boolean toDecimal() {
+        if(base.getType().isDecimal()) {
+            return false;
+        }
+        Numeral old = base;
+        base = base.toDecimal();
+        if(base.equals(old)) {
+            return false;
+        }
+        invalidate();
+        return true;
+    }
+
+    @Override
+    public boolean toSmallestType() {
+        Numeral old = base;
+        base = base.toSmallestType();
+        if(base.equals(old)) {
+            return false;
+        }
+        invalidate();
+        return true;
+    }
+
+    @Override
+    public void set(Numeral value) {
+        Numeral old = base;
+        base = value;
+        if(!base.equals(old)) {
+            invalidate();
+        }
     }
 
     @Override
@@ -109,22 +148,22 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     @Override
-    public void apply(SingleParameterOperation operation, Numeral parameter, MathContext context) {
+    public void apply(SingleParameterOperation operation, MathContext context, Numeral parameter) {
         contextOperation(() -> base = operation.apply(base, parameter), context);
     }
 
     @Override
-    public void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2, MathContext context) {
+    public void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2) {
         contextOperation(() -> base = operation.apply(base, parameter1, parameter2), context);
     }
 
     @Override
-    public void apply(Operation operation, List<Numeral> parameters, MathContext context) {
+    public void apply(Operation operation, MathContext context, Numeral ... parameters) {
         contextOperation(() -> base = operation.apply(base, parameters), context);
     }
 
     @Override
-    public boolean compare(Comparison comparison, Numeral other, ComparisonContext context) {
+    public boolean compare(Comparison comparison, ComparisonContext context, Numeral other) {
         return comparison.compare(context.useModifiedValue() ? getValue() : base, other);
     }
 
@@ -188,29 +227,43 @@ public class ValueImpl extends DependencyDependent implements Value {
         invalidated = true;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Value(base=%s,value=%s)", getBase(), getValue());
+    }
+
     private void calculate() {
-        Numeral[] finalValue = {value};
+        Numeral[] finalValue = {base};
         modifiers.forEach(modifier -> finalValue[0] = modifier.apply(finalValue[0]));
         value = finalValue[0];
         invalidated = false;
     }
 
     private void contextOperation(Runnable action, MathContext context) {
+        Numeral old = base;
+
         if(base.getType().isInteger() && context.convertToDecimal()) {
-            convertToDecimal();
+            toDecimal();
         }
 
         action.run();
 
-        if(context.conversionResult() != null) {
+        if(context.convertResultTo() != null) {
             if(context.ignoreBadConversion()) {
-                convertIfAllowed(context.conversionResult());
+                convertIfAllowed(context.convertResultTo());
             } else {
-                convert(context.conversionResult());
+                try {
+                    convert(context.convertResultTo());
+                } catch(ExtendedArithmeticException e) {
+                    base = old;
+                    throw new ExtendedArithmeticException(e);
+                }
             }
         }
 
-        invalidate();
+        if(!base.equals(old)) {
+            invalidate();
+        }
     }
 
     public static ValueImpl of(Handle handle, int i) {

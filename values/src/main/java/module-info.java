@@ -6,9 +6,13 @@ module dfxengine.values {
 
     requires dfxengine.values.api;
     requires dfxengine.math.api;
+    requires dfxengine.handles.api;
     requires dfxengine.math;
     requires dfxengine.handles;
+    requires dfxengine.dependencies;
     requires dfxengine.utils;
+
+    requires org.slf4j;
 
     exports me.datafox.dfxengine.values;
     exports me.datafox.dfxengine.values.modifier;

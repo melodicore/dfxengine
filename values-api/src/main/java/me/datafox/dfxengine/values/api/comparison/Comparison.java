@@ -40,7 +40,7 @@ public interface Comparison {
         return numeral -> compare(numeral, other);
     }
 
-    default Predicate<Value> predicate(Numeral other, ComparisonContext context) {
-        return value -> value.compare(this, other, context);
+    default Predicate<Value> predicate(ComparisonContext context, Numeral other) {
+        return value -> value.compare(this, context, other);
     }
 }

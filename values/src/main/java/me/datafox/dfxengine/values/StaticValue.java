@@ -1,6 +1,6 @@
 package me.datafox.dfxengine.values;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.math.api.Numeral;
@@ -15,7 +15,6 @@ import me.datafox.dfxengine.values.api.operation.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -24,12 +23,20 @@ import java.util.stream.Stream;
  *
  * @author datafox
  */
-@Data
+@EqualsAndHashCode
 public class StaticValue implements Value {
     private final Numeral value;
 
     protected StaticValue(Numeral value) {
         this.value = value;
+    }
+
+    /**
+     * @implNote {@link Handle Handles} not supported, will return null
+     */
+    @Override
+    public Handle getHandle() {
+        return null;
     }
 
     @Override
@@ -38,8 +45,18 @@ public class StaticValue implements Value {
     }
 
     @Override
+    public Numeral getValue() {
+        return value;
+    }
+
+    @Override
     public boolean isStatic() {
         return true;
+    }
+
+    @Override
+    public boolean canConvert(NumeralType type) {
+        return value.getType().equals(type);
     }
 
     /**
@@ -59,33 +76,40 @@ public class StaticValue implements Value {
      */
     @Override
     public boolean convertIfAllowed(NumeralType type) {
-        return false;
+        return value.getType().equals(type);
+    }
+
+    @Override
+    public boolean toInteger() {
+        if(value.getType().isInteger()) {
+            return false;
+        }
+
+        throw new UnsupportedOperationException("static value cannot be modified");
     }
 
     /**
      * @implNote operation not supported, will throw an exception if the backing {@link Numeral} has an integer type
      */
     @Override
-    public boolean convertToDecimal() {
+    public boolean toDecimal() {
         if(value.getType().isDecimal()) {
             return false;
         }
+
         throw new UnsupportedOperationException("static value cannot be modified");
     }
 
     @Override
-    public boolean canConvert(NumeralType type) {
+    public boolean toSmallestType() {
         return false;
     }
-
-    @Override
-    public void toSmallestType() {}
 
     /**
      * @implNote operation not supported, will throw an exception
      */
     @Override
-    public void set(Numeral value, MathContext context) {
+    public void set(Numeral value) {
         throw new UnsupportedOperationException("static value cannot be modified");
     }
 
@@ -101,7 +125,7 @@ public class StaticValue implements Value {
      * @implNote operation not supported, will throw an exception
      */
     @Override
-    public void apply(SingleParameterOperation operation, Numeral parameter, MathContext context) {
+    public void apply(SingleParameterOperation operation, MathContext context, Numeral parameter) {
         throw new UnsupportedOperationException("static value cannot be modified");
     }
 
@@ -109,7 +133,7 @@ public class StaticValue implements Value {
      * @implNote operation not supported, will throw an exception
      */
     @Override
-    public void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2, MathContext context) {
+    public void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2) {
         throw new UnsupportedOperationException("static value cannot be modified");
     }
 
@@ -117,12 +141,12 @@ public class StaticValue implements Value {
      * @implNote operation not supported, will throw an exception
      */
     @Override
-    public void apply(Operation operation, List<Numeral> parameters, MathContext context) {
+    public void apply(Operation operation, MathContext context, Numeral ... parameters) {
         throw new UnsupportedOperationException("static value cannot be modified");
     }
 
     @Override
-    public boolean compare(Comparison comparison, Numeral other, ComparisonContext context) {
+    public boolean compare(Comparison comparison, ComparisonContext context, Numeral other) {
         return comparison.compare(value, other);
     }
 
@@ -212,7 +236,7 @@ public class StaticValue implements Value {
      * @implNote {@link Dependency Dependencies} not supported, will return false
      */
     @Override
-    public boolean addDependencies(Collection<Dependency> dependencies) {
+    public boolean addDependencies(Collection<? extends Dependency> dependencies) {
         return false;
     }
 
@@ -228,7 +252,7 @@ public class StaticValue implements Value {
      * @implNote {@link Dependency Dependencies} not supported, will return false
      */
     @Override
-    public boolean removeDependencies(Collection<Dependency> dependencies) {
+    public boolean removeDependencies(Collection<? extends Dependency> dependencies) {
         return false;
     }
 
@@ -244,7 +268,7 @@ public class StaticValue implements Value {
      * @implNote {@link Dependency Dependencies} not supported, will return false
      */
     @Override
-    public boolean containsDependencies(Collection<Dependency> dependencies) {
+    public boolean containsDependencies(Collection<? extends Dependency> dependencies) {
         return false;
     }
 
@@ -260,7 +284,7 @@ public class StaticValue implements Value {
      * @implNote {@link Dependency Dependencies} not supported, will return false
      */
     @Override
-    public boolean containsDependenciesRecursive(Collection<Dependency> dependencies) {
+    public boolean containsDependenciesRecursive(Collection<? extends Dependency> dependencies) {
         return false;
     }
 
@@ -280,12 +304,9 @@ public class StaticValue implements Value {
         return Stream.empty();
     }
 
-    /**
-     * @implNote {@link Handle Handles} not supported, will return null
-     */
     @Override
-    public Handle getHandle() {
-        return null;
+    public String toString() {
+        return String.format("StaticValue(%s)", getValue());
     }
 
     public static StaticValue of(Numeral numeral) {

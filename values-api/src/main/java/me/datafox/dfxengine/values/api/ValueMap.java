@@ -11,7 +11,6 @@ import me.datafox.dfxengine.values.api.comparison.MapComparisonContext;
 import me.datafox.dfxengine.values.api.operation.*;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,41 +25,47 @@ public interface ValueMap extends HandleMap<Value> {
 
     void convertAllowed(NumeralType type);
 
+    void toInteger();
+
+    void toDecimal();
+
     void toSmallestType();
 
     void toSmallestType(Collection<Handle> handles);
 
-    void set(Numeral value, MathContext context);
+    void set(Numeral value);
 
-    void set(Collection<Handle> handles, Numeral value, MapMathContext context);
+    void set(MapMathContext context, Collection<Handle> handles, Numeral value);
 
-    void set(Map<Handle, Numeral> values, MapMathContext context);
+    void set(MapMathContext context, Map<Handle, Numeral> values);
 
     void apply(SourceOperation operation, MathContext context);
 
-    void apply(Collection<Handle> handles, SourceOperation operation, MapMathContext context);
+    void apply(SourceOperation operation, MapMathContext context, Collection<Handle> handles);
 
-    void apply(SingleParameterOperation operation, Numeral parameter, MathContext context);
+    void apply(SingleParameterOperation operation, MathContext context, Numeral parameter);
 
-    void apply(Collection<Handle> handles, SingleParameterOperation operation, Numeral parameter, MapMathContext context);
+    void apply(SingleParameterOperation operation, MapMathContext context,
+               Collection<Handle> handles, Numeral parameter);
 
-    void apply(SingleParameterOperation operation, Map<Handle, Numeral> parameters, MapMathContext context);
+    void apply(SingleParameterOperation operation, MapMathContext context, Map<Handle, Numeral> parameters);
 
-    void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2, MathContext context);
+    void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2);
 
-    void apply(Collection<Handle> handles, DualParameterOperation operation, Numeral parameter1, Numeral parameter2, MapMathContext context);
+    void apply(DualParameterOperation operation, MapMathContext context,
+               Collection<Handle> handles, Numeral parameter1, Numeral parameter2);
 
-    void apply(Operation operation, List<Numeral> parameters, MathContext context);
+    void apply(Operation operation, MathContext context, Numeral ... parameters);
 
-    void apply(Collection<Handle> handles, Operation operation, List<Numeral> parameters, MapMathContext context);
+    void apply(Operation operation, MapMathContext context, Collection<Handle> handles, Numeral ... parameters);
 
-    void apply(Operation operation, Map<Handle, List<Numeral>> parameters, MapMathContext context);
+    void apply(Operation operation, MapMathContext context, Map<Handle, Numeral[]> parameters);
 
-    boolean compare(Comparison comparison, Numeral other, ComparisonContext context);
+    boolean compare(Comparison comparison, ComparisonContext context, Numeral other);
 
-    boolean compare(Collection<Handle> handles, Comparison comparison, Numeral other, MapComparisonContext context);
+    boolean compare(Comparison comparison, MapComparisonContext context, Collection<Handle> handles, Numeral other);
 
-    boolean compare(Comparison comparison, Map<Handle, Numeral> others, MapComparisonContext context);
+    boolean compare(Comparison comparison, MapComparisonContext context, Map<Handle, Numeral> others);
 
     Map<Handle, Numeral> getBaseNumeralMap();
 
@@ -80,67 +85,137 @@ public interface ValueMap extends HandleMap<Value> {
 
     boolean containsModifiers(Collection<Modifier> modifiers);
 
-    default void set(Numeral value) {
-        set(value, MathContext.defaults());
+    default void set(MapMathContext.MapMathContextBuilder<?,?> builder, Collection<Handle> handles, Numeral value) {
+        set(builder.build(), handles, value);
     }
 
     default void set(Collection<Handle> handles, Numeral value) {
-        set(handles, value, MapMathContext.defaults());
+        set(MapMathContext.defaults(), handles, value);
+    }
+
+    default void set(MapMathContext.MapMathContextBuilder<?,?> builder, Map<Handle, Numeral> values) {
+        set(builder.build(), values);
     }
 
     default void set(Map<Handle, Numeral> values) {
-        set(values, MapMathContext.defaults());
+        set(MapMathContext.defaults(), values);
+    }
+
+    default void apply(SourceOperation operation,
+                       MathContext.MathContextBuilder<?,?> builder) {
+        apply(operation, builder.build());
     }
 
     default void apply(SourceOperation operation) {
         apply(operation, MathContext.defaults());
     }
 
-    default void apply(Collection<Handle> handles, SourceOperation operation) {
-        apply(handles, operation, MapMathContext.defaults());
+    default void apply(SourceOperation operation,
+                       MapMathContext.MapMathContextBuilder<?,?> builder, Collection<Handle> handles) {
+        apply(operation, builder.build(), handles);
+    }
+
+    default void apply(SourceOperation operation, Collection<Handle> handles) {
+        apply(operation, MapMathContext.defaults(), handles);
+    }
+
+    default void apply(SingleParameterOperation operation,
+                       MapMathContext.MapMathContextBuilder<?,?> builder, Numeral parameter) {
+        apply(operation, builder.build(), parameter);
     }
 
     default void apply(SingleParameterOperation operation, Numeral parameter) {
-        apply(operation, parameter, MathContext.defaults());
+        apply(operation, MathContext.defaults(), parameter);
     }
 
-    default void apply(Collection<Handle> handles, SingleParameterOperation operation, Numeral parameter) {
-        apply(handles, operation, parameter, MapMathContext.defaults());
+    default void apply(SingleParameterOperation operation, Collection<Handle> handles,
+                       MapMathContext.MapMathContextBuilder<?,?> builder, Numeral parameter) {
+        apply(operation, builder.build(), handles, parameter);
+    }
+
+    default void apply(SingleParameterOperation operation, Collection<Handle> handles, Numeral parameter) {
+        apply(operation, MapMathContext.defaults(), handles, parameter);
+    }
+
+    default void apply(SingleParameterOperation operation,
+                       MapMathContext.MapMathContextBuilder<?,?> builder, Map<Handle, Numeral> parameters) {
+        apply(operation, builder.build(), parameters);
     }
 
     default void apply(SingleParameterOperation operation, Map<Handle, Numeral> parameters) {
-        apply(operation, parameters, MapMathContext.defaults());
+        apply(operation, MapMathContext.defaults(), parameters);
+    }
+
+    default void apply(DualParameterOperation operation,
+                       MathContext.MathContextBuilder<?,?> builder, Numeral parameter1, Numeral parameter2) {
+        apply(operation, builder.build(), parameter1, parameter2);
     }
 
     default void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2) {
-        apply(operation, parameter1, parameter2, MathContext.defaults());
+        apply(operation, MathContext.defaults(), parameter1, parameter2);
     }
 
-    default void apply(Collection<Handle> handles, DualParameterOperation operation, Numeral parameter1, Numeral parameter2) {
-        apply(handles, operation, parameter1, parameter2, MapMathContext.defaults());
+    default void apply(DualParameterOperation operation, MapMathContext.MapMathContextBuilder<?,?> builder,
+                       Collection<Handle> handles, Numeral parameter1, Numeral parameter2) {
+        apply(operation, builder.build(), handles, parameter1, parameter2);
     }
 
-    default void apply(Operation operation, List<Numeral> parameters) {
-        apply(operation, parameters, MathContext.defaults());
+    default void apply(DualParameterOperation operation, Collection<Handle> handles,
+                       Numeral parameter1, Numeral parameter2) {
+        apply(operation, MapMathContext.defaults(), handles, parameter1, parameter2);
     }
 
-    default void apply(Collection<Handle> handles, Operation operation, List<Numeral> parameters) {
-        apply(handles, operation, parameters, MapMathContext.defaults());
+    default void apply(Operation operation,
+                       MapMathContext.MapMathContextBuilder<?,?> builder, Numeral ... parameters) {
+        apply(operation, builder.build(), parameters);
     }
 
-    default void apply(Operation operation, Map<Handle, List<Numeral>> parameters) {
-        apply(operation, parameters, MapMathContext.defaults());
+    default void apply(Operation operation, Numeral ... parameters) {
+        apply(operation, MathContext.defaults(), parameters);
+    }
+
+    default void apply(Operation operation, MapMathContext.MapMathContextBuilder<?,?> builder,
+                       Collection<Handle> handles, Numeral ... parameters) {
+        apply(operation, builder.build(), handles, parameters);
+    }
+
+    default void apply(Operation operation, Collection<Handle> handles, Numeral ... parameters) {
+        apply(operation, MapMathContext.defaults(), handles, parameters);
+    }
+
+    default void apply(Operation operation, MapMathContext.MapMathContextBuilder<?,?> builder,
+                       Map<Handle, Numeral[]> parameters) {
+        apply(operation, builder.build(), parameters);
+    }
+
+    default void apply(Operation operation, Map<Handle, Numeral[]> parameters) {
+        apply(operation, MapMathContext.defaults(), parameters);
+    }
+
+    default boolean compare(Comparison comparison, ComparisonContext.ComparisonContextBuilder<?,?> builder,
+                            Numeral other) {
+        return compare(comparison, builder.build(), other);
     }
 
     default boolean compare(Comparison comparison, Numeral other) {
-        return compare(comparison, other, ComparisonContext.defaults());
+        return compare(comparison, ComparisonContext.defaults(), other);
     }
 
-    default boolean compare(Collection<Handle> handles, Comparison comparison, Numeral other) {
-        return compare(handles, comparison, other, MapComparisonContext.defaults());
+    default boolean compare(Comparison comparison, MapComparisonContext.MapComparisonContextBuilder<?,?> builder,
+                            Collection<Handle> handles, Numeral other) {
+        return compare(comparison, builder.build(), handles, other);
+    }
+
+    default boolean compare(Comparison comparison, Collection<Handle> handles, Numeral other) {
+        return compare(comparison, MapComparisonContext.defaults(), handles, other);
+    }
+
+    default boolean compare(Comparison comparison, MapComparisonContext.MapComparisonContextBuilder<?,?> builder,
+                            Map<Handle, Numeral> others) {
+        return compare(comparison, builder.build(), others);
     }
 
     default boolean compare(Comparison comparison, Map<Handle, Numeral> others) {
-        return compare(comparison, others, MapComparisonContext.defaults());
+        return compare(comparison, MapComparisonContext.defaults(), others);
     }
 }

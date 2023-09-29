@@ -1,26 +1,37 @@
 package me.datafox.dfxengine.values.modifier;
 
+import me.datafox.dfxengine.utils.LogUtils;
+import me.datafox.dfxengine.values.StaticValue;
 import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.api.operation.DualParameterOperation;
 import me.datafox.dfxengine.values.api.operation.Operation;
 import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
 import me.datafox.dfxengine.values.api.operation.SourceOperation;
 import me.datafox.dfxengine.values.operation.MappingOperationChain;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author datafox
  */
 public class MappingOperationModifier extends OperationModifier {
-    public MappingOperationModifier(int priority, MappingOperationChain operation, List<Value> parameters) {
-        super(priority, operation, parameters);
+    public MappingOperationModifier(int priority, MappingOperationChain operation, Value ... parameters) {
+        super(LoggerFactory.getLogger(MappingOperationModifier.class), priority, operation, parameters);
     }
 
     public static Builder builder(int priority) {
         return new Builder(priority);
+    }
+
+    public static SpecialValue resultValue(int operationIndex) {
+        return new SpecialValue(MappingOperationChain.resultNumeral(operationIndex));
+    }
+
+    public static SpecialValue sourceValue() {
+        return new SpecialValue(MappingOperationChain.sourceNumeral());
     }
 
     public static class Builder {
@@ -52,21 +63,13 @@ public class MappingOperationModifier extends OperationModifier {
             return this;
         }
 
-        public MappingOperationModifier.Builder operation(Operation operation, List<Value> parameters) {
-            if(parameters.size() != operation.getParameterCount() + 1) {
-                throw new IllegalArgumentException("invalid parameter count");
+        public MappingOperationModifier.Builder operation(Operation operation, Value ... parameters) {
+            if(parameters.length != operation.getParameterCount() + 1) {
+                throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(Builder.class),
+                        "invalid parameter count", IllegalArgumentException::new);
             }
             operationBuilder.operation(operation);
-            this.parameters.addAll(parameters);
-            return this;
-        }
-
-        public MappingOperationModifier.Builder operations(Collection<? extends Operation> operations, List<Value> parameters) {
-            if(parameters.size() != operations.stream().mapToInt(Operation::getParameterCount).sum() + operations.size()) {
-                throw new IllegalArgumentException("invalid parameter count");
-            }
-            operationBuilder.operations(operations);
-            this.parameters.addAll(parameters);
+            this.parameters.addAll(Arrays.asList(parameters));
             return this;
         }
 
@@ -77,7 +80,14 @@ public class MappingOperationModifier extends OperationModifier {
         }
 
         public MappingOperationModifier build() {
-            return new MappingOperationModifier(priority, operationBuilder.build(), parameters);
+            return new MappingOperationModifier(priority, operationBuilder.build(),
+                    parameters.toArray(Value[]::new));
+        }
+    }
+
+    public static class SpecialValue extends StaticValue {
+        private SpecialValue(MappingOperationChain.SpecialNumeral value) {
+            super(value);
         }
     }
 }

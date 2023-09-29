@@ -2,15 +2,14 @@ package me.datafox.dfxengine.values.api.operation;
 
 import me.datafox.dfxengine.math.api.Numeral;
 
-import java.util.List;
 import java.util.function.BiFunction;
 
 /**
  * @author datafox
  */
-public interface Operation extends BiFunction<Numeral, List<Numeral>, Numeral> {
+public interface Operation extends BiFunction<Numeral, Numeral[], Numeral> {
     int getParameterCount();
 
     @Override
-    Numeral apply(Numeral source, List<Numeral> parameters) throws IllegalArgumentException;
+    Numeral apply(Numeral source, Numeral ... parameters) throws IllegalArgumentException;
 }

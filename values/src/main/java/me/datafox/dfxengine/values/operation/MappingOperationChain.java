@@ -1,69 +1,102 @@
 package me.datafox.dfxengine.values.operation;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
+import me.datafox.dfxengine.utils.LogUtils;
 import me.datafox.dfxengine.values.api.operation.DualParameterOperation;
 import me.datafox.dfxengine.values.api.operation.Operation;
 import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
 import me.datafox.dfxengine.values.api.operation.SourceOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author datafox
  */
 public final class MappingOperationChain implements Operation {
-    public static final int SOURCE_ID = 0;
-    public static final int RESULT_ID = 1;
-    public static final SpecialNumeral SOURCE_NUMERAL = new SpecialNumeral(SOURCE_ID);
-    public static final SpecialNumeral RESULT_NUMERAL = new SpecialNumeral(RESULT_ID);
+    public static SpecialNumeral resultNumeral(int operationIndex) {
+        return new SpecialNumeral(operationIndex);
+    }
 
-    private final List<Operation> operations;
+    public static SpecialNumeral sourceNumeral() {
+        return new SpecialNumeral(-1);
+    }
+
+    private final Logger logger;
+    private final Operation[] operations;
     @Getter
     private final int parameterCount;
 
-    private MappingOperationChain(List<Operation> operations) {
+    public MappingOperationChain(Operation ... operations) {
+        logger = LoggerFactory.getLogger(MappingOperationChain.class);
         this.operations = operations;
-        parameterCount = operations.stream().mapToInt(Operation::getParameterCount).sum() + operations.size();
+        parameterCount = Arrays.stream(operations)
+                .mapToInt(Operation::getParameterCount)
+                .sum() + operations.length;
     }
 
     @Override
-    public Numeral apply(Numeral source, List<Numeral> parameters) throws IllegalArgumentException {
-        if(parameters.size() != parameterCount) {
-            throw new IllegalArgumentException("invalid parameter count");
+    public Numeral apply(Numeral source, Numeral ... parameters) throws IllegalArgumentException {
+        if(parameters.length != parameterCount) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "invalid parameter count", IllegalArgumentException::new);
         }
-        parameters = parameters.stream()
-                .map(numeral -> replaceSpecial(numeral, source, SOURCE_ID))
-                .collect(Collectors.toList());
+        System.out.println(source + Arrays.toString(parameters));
+        checkSpecial(parameters);
+        Numeral[] results = new Numeral[operations.length + 1];
+        results[0] = source;
         int nextIndex = 0;
-        Numeral result = source;
-        for(Operation operation : operations) {
-            Numeral lastResult = result;
-            result = apply(operation, parameters.subList(nextIndex, operation.getParameterCount()).stream()
-                    .map(numeral -> replaceSpecial(numeral, lastResult, RESULT_ID))
-                    .collect(Collectors.toList()));
-            nextIndex = operation.getParameterCount() + 1;
+        for(int i=0;i<operations.length;i++) {
+            Operation operation = operations[i];
+            results[i+1] = apply(operation, Arrays.stream(
+                    parameters, nextIndex, nextIndex + operation.getParameterCount() + 1)
+                    .map(numeral -> replaceSpecial(numeral, results))
+                    .toArray(Numeral[]::new));
+            nextIndex += operation.getParameterCount() + 1;
         }
-        return result;
+        return results[operations.length];
     }
 
-    private Numeral replaceSpecial(Numeral source, Numeral target, int id) {
-        if(source instanceof SpecialNumeral &&
-                ((SpecialNumeral) source).getId() == id) {
-            return target;
+    private Numeral replaceSpecial(Numeral source, Numeral[] results) {
+        if(source instanceof SpecialNumeral) {
+            return results[((SpecialNumeral) source).getId() + 1];
         }
+
         return source;
     }
 
-    private Numeral apply(Operation operation, List<Numeral> parameters) {
-        return operation.apply(parameters.get(0), parameters.subList(1, parameters.size() - 1));
+    private void checkSpecial(Numeral[] parameters) {
+        int nextIndex = 0;
+        for(int i=0;i<operations.length;i++) {
+            Operation operation = operations[i];
+            int ii = i;
+            if(Arrays.stream(parameters, nextIndex, nextIndex + operation.getParameterCount())
+                    .filter(SpecialNumeral.class::isInstance)
+                    .map(SpecialNumeral.class::cast)
+                    .mapToInt(SpecialNumeral::getId)
+                    .anyMatch(value -> value >= ii)) {
+                throw LogUtils.logExceptionAndGet(logger,
+                        "Reference to future operation", IllegalArgumentException::new);
+            }
+            nextIndex = operation.getParameterCount() + 1;
+        }
+    }
+
+    private Numeral apply(Operation operation, Numeral[] parameters) {
+        if(parameters.length == 1) {
+            return operation.apply(parameters[0]);
+        }
+        return operation.apply(parameters[0],
+                Arrays.copyOfRange(parameters, 1, parameters.length));
     }
 
     public static Builder builder() {
@@ -111,13 +144,21 @@ public final class MappingOperationChain implements Operation {
         }
 
         public MappingOperationChain build() {
-            return new MappingOperationChain(operations);
+            return new MappingOperationChain(operations.toArray(Operation[]::new));
         }
     }
 
-    @Data
+    @EqualsAndHashCode
     public static class SpecialNumeral implements Numeral {
         private final int id;
+
+        public SpecialNumeral(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
 
         /**
          * @implNote always returns {@link Integer} 0
@@ -133,6 +174,14 @@ public final class MappingOperationChain implements Operation {
         @Override
         public NumeralType getType() {
             return NumeralType.INT;
+        }
+
+        /**
+         * @implNote unsupported operation, always returns false
+         */
+        @Override
+        public boolean canConvert(NumeralType type) {
+            return false;
         }
 
         /**
@@ -155,7 +204,7 @@ public final class MappingOperationChain implements Operation {
          * @implNote unsupported operation, always returns itself
          */
         @Override
-        public Numeral convertToInteger() {
+        public Numeral toInteger() {
             return this;
         }
 
@@ -163,16 +212,8 @@ public final class MappingOperationChain implements Operation {
          * @implNote unsupported operation, always returns itself
          */
         @Override
-        public Numeral convertToDecimal() {
+        public Numeral toDecimal() {
             return this;
-        }
-
-        /**
-         * @implNote unsupported operation, always returns false
-         */
-        @Override
-        public boolean canConvert(NumeralType type) {
-            return false;
         }
 
         /**
@@ -244,14 +285,12 @@ public final class MappingOperationChain implements Operation {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if(this == o) {
-                return true;
+        public String toString() {
+            if(id == -1) {
+                return "Source Value";
             }
-            if(!(o instanceof SpecialNumeral)) {
-                return false;
-            }
-            return getId() == ((SpecialNumeral) o).getId();
+
+            return String.format("Operation %s Result", id);
         }
     }
 }

@@ -1,6 +1,5 @@
 package me.datafox.dfxengine.values;
 
-import lombok.Getter;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
@@ -28,14 +27,12 @@ import java.util.stream.Stream;
  * @author datafox
  */
 public class DelegatedValueMap implements ValueMap {
-    @Getter(lazy = true)
-    private final NumeralMap baseNumeralMap = new NumeralMap(false);
-    @Getter(lazy = true)
-    private final NumeralMap valueNumeralMap = new NumeralMap(true);
-
     private final Logger logger;
     private final HandleMap<Value> map;
     private final SortedSet<Modifier> modifiers;
+
+    private NumeralMap baseNumeralMap;
+    private NumeralMap valueNumeralMap;
 
     public DelegatedValueMap(HandleMap<Value> map) {
         logger = LoggerFactory.getLogger(getClass());
@@ -76,6 +73,16 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
+    public void toInteger() {
+        values().forEach(Value::toInteger);
+    }
+
+    @Override
+    public void toDecimal() {
+        values().forEach(Value::toDecimal);
+    }
+
+    @Override
     public void toSmallestType() {
         values().forEach(Value::toSmallestType);
     }
@@ -86,18 +93,18 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
-    public void set(Numeral value, MathContext context) {
-        contextOperation(() -> values().forEach(val -> val.set(value, context)), context);
+    public void set(Numeral value) {
+        values().forEach(val -> val.set(value));
     }
 
     @Override
-    public void set(Collection<Handle> handles, Numeral value, MapMathContext context) {
-        contextOperation(val -> val.set(value, context), handles, context);
+    public void set(MapMathContext context, Collection<Handle> handles, Numeral value) {
+        contextOperation(val -> val.set(value), handles, context);
     }
 
     @Override
-    public void set(Map<Handle,Numeral> values, MapMathContext context) {
-        contextOperation((num, val) -> val.set(num, context), values, context);
+    public void set(MapMathContext context, Map<Handle,Numeral> values) {
+        contextOperation((num, val) -> val.set(num), values, context);
     }
 
     @Override
@@ -106,75 +113,94 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
-    public void apply(Collection<Handle> handles, SourceOperation operation, MapMathContext context) {
+    public void apply(SourceOperation operation, MapMathContext context, Collection<Handle> handles) {
         contextOperation(val -> val.apply(operation, context), handles, context);
     }
 
     @Override
-    public void apply(SingleParameterOperation operation, Numeral parameter, MathContext context) {
-        contextOperation(() -> values().forEach(val -> val.apply(operation, parameter, context)), context);
+    public void apply(SingleParameterOperation operation, MathContext context, Numeral parameter) {
+        contextOperation(() -> values().forEach(val -> val.apply(operation, context, parameter)), context);
     }
 
     @Override
-    public void apply(Collection<Handle> handles, SingleParameterOperation operation, Numeral parameter, MapMathContext context) {
-        contextOperation(val -> val.apply(operation, parameter, context), handles, context);
+    public void apply(SingleParameterOperation operation, MapMathContext context,
+                      Collection<Handle> handles, Numeral parameter) {
+        contextOperation(val -> val.apply(operation, context, parameter), handles, context);
     }
 
     @Override
-    public void apply(SingleParameterOperation operation, Map<Handle,Numeral> parameters, MapMathContext context) {
-        contextOperation((num, val) -> val.apply(operation, num, context), parameters, context);
+    public void apply(SingleParameterOperation operation, MapMathContext context, Map<Handle,Numeral> parameters) {
+        contextOperation((num, val) -> val.apply(operation, context, num), parameters, context);
     }
 
     @Override
-    public void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2, MathContext context) {
-        contextOperation(() -> values().forEach(val -> val.apply(operation, parameter1, parameter2, context)), context);
+    public void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2) {
+        contextOperation(() -> values().forEach(val -> val.apply(operation, context, parameter1, parameter2)), context);
     }
 
     @Override
-    public void apply(Collection<Handle> handles, DualParameterOperation operation, Numeral parameter1, Numeral parameter2, MapMathContext context) {
-        contextOperation(val -> val.apply(operation, parameter1, parameter2, context), handles, context);
+    public void apply(DualParameterOperation operation, MapMathContext context,
+                      Collection<Handle> handles, Numeral parameter1, Numeral parameter2) {
+        contextOperation(val -> val.apply(operation, context, parameter1, parameter2), handles, context);
     }
 
     @Override
-    public void apply(Operation operation, List<Numeral> parameters, MathContext context) {
-        contextOperation(() -> values().forEach(val -> val.apply(operation, parameters, context)), context);
+    public void apply(Operation operation, MathContext context, Numeral ... parameters) {
+        contextOperation(() -> values().forEach(val -> val.apply(operation, context, parameters)), context);
     }
 
     @Override
-    public void apply(Collection<Handle> handles, Operation operation, List<Numeral> parameters, MapMathContext context) {
-        contextOperation(val -> val.apply(operation, parameters, context), handles, context);
+    public void apply(Operation operation, MapMathContext context, Collection<Handle> handles, Numeral ... parameters) {
+        contextOperation(val -> val.apply(operation, context, parameters), handles, context);
     }
 
     @Override
-    public void apply(Operation operation, Map<Handle,List<Numeral>> parameters, MapMathContext context) {
-        if(context.conversionResult() != null && !context.ignoreBadConversion()) {
+    public void apply(Operation operation, MapMathContext context, Map<Handle,Numeral[]> parameters) {
+        if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn("exception may cause operation to fail midway");
         }
 
         if(context.createNonExistingAs() != null) {
             createNonExisting(parameters.keySet(), context.createNonExistingAs());
-            values().forEach(val -> val.apply(operation, parameters.get(val.getHandle()), context));
+            values().forEach(val -> val.apply(operation, context, parameters.get(val.getHandle())));
         } else {
             getExisting(parameters.keySet())
-                    .forEach(val -> val.apply(operation, parameters.get(val.getHandle()), context));
+                    .forEach(val -> val.apply(operation, context, parameters.get(val.getHandle())));
         }
     }
 
     @Override
-    public boolean compare(Comparison comparison, Numeral other, ComparisonContext context) {
-        return stream().allMatch(comparison.predicate(other, context));
+    public boolean compare(Comparison comparison, ComparisonContext context, Numeral other) {
+        return stream().allMatch(comparison.predicate(context, other));
     }
 
     @Override
-    public boolean compare(Collection<Handle> handles, Comparison comparison, Numeral other, MapComparisonContext context) {
-        return contextComparison((val, num) -> val.compare(comparison, num, context),
+    public boolean compare(Comparison comparison, MapComparisonContext context,
+                           Collection<Handle> handles, Numeral other) {
+        return contextComparison((val, num) -> val.compare(comparison, context, num),
                 comparison::compare, handles, other, context);
     }
 
     @Override
-    public boolean compare(Comparison comparison, Map<Handle,Numeral> others, MapComparisonContext context) {
-        return contextComparison((val, num) -> val.compare(comparison, num, context),
+    public boolean compare(Comparison comparison, MapComparisonContext context, Map<Handle,Numeral> others) {
+        return contextComparison((val, num) -> val.compare(comparison, context, num),
                 comparison::compare, others, context);
+    }
+
+    @Override
+    public Map<Handle,Numeral> getBaseNumeralMap() {
+        if(baseNumeralMap == null) {
+            baseNumeralMap = new NumeralMap(false);
+        }
+        return baseNumeralMap;
+    }
+
+    @Override
+    public Map<Handle,Numeral> getValueNumeralMap() {
+        if(valueNumeralMap == null) {
+            valueNumeralMap = new NumeralMap(true);
+        }
+        return valueNumeralMap;
     }
 
     @Override
@@ -371,14 +397,14 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     private void contextOperation(Runnable operation, MathContext context) {
-        if(context.conversionResult() != null && !context.ignoreBadConversion()) {
+        if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn("exception may cause operation to fail midway");
         }
         operation.run();
     }
 
     private void contextOperation(Consumer<Value> operation, Collection<Handle> handles, MapMathContext context) {
-        if(context.conversionResult() != null && !context.ignoreBadConversion()) {
+        if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn("exception may cause operation to fail midway");
         }
 
@@ -391,7 +417,7 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     private void contextOperation(BiConsumer<Numeral, Value> operation, Map<Handle, Numeral> values, MapMathContext context) {
-        if(context.conversionResult() != null && !context.ignoreBadConversion()) {
+        if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn("exception may cause operation to fail midway");
         }
 

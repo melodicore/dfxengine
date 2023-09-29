@@ -12,7 +12,7 @@ import me.datafox.dfxengine.math.api.NumeralType;
 @ToString
 public class MathContext {
     @Builder.Default
-    private final NumeralType conversionResult = null;
+    private final NumeralType convertResultTo = null;
 
     @Builder.Default
     private final boolean ignoreBadConversion = true;
@@ -20,8 +20,8 @@ public class MathContext {
     @Builder.Default
     private final boolean convertToDecimal = false;
 
-    public NumeralType conversionResult() {
-        return conversionResult;
+    public NumeralType convertResultTo() {
+        return convertResultTo;
     }
 
     public boolean ignoreBadConversion() {

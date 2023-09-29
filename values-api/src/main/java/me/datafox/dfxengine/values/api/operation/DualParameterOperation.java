@@ -2,8 +2,6 @@ package me.datafox.dfxengine.values.api.operation;
 
 import me.datafox.dfxengine.math.api.Numeral;
 
-import java.util.List;
-
 /**
  * @author datafox
  */
@@ -16,10 +14,10 @@ public interface DualParameterOperation extends Operation {
     }
 
     @Override
-    default Numeral apply(Numeral source, List<Numeral> parameters) {
-        if(parameters == null || parameters.size() != getParameterCount()) {
-            throw new IllegalArgumentException("A SingleParameterOperation must be called with a List of one parameter");
+    default Numeral apply(Numeral source, Numeral ... parameters) {
+        if(parameters == null || parameters.length != 2) {
+            throw new IllegalArgumentException("A DualParameterOperation must be called with two parameters");
         }
-        return apply(source, parameters.get(0), parameters.get(1));
+        return apply(source, parameters[0], parameters[1]);
     }
 }
