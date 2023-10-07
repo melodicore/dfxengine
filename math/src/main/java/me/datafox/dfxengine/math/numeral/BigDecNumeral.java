@@ -3,6 +3,8 @@ package me.datafox.dfxengine.math.numeral;
 import lombok.EqualsAndHashCode;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 
@@ -14,6 +16,8 @@ import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
 public final class BigDecNumeral extends AbstractNumeral {
+    private static final Logger logger = LoggerFactory.getLogger(BigDecNumeral.class);
+
     private final BigDecimal number;
 
     /**
@@ -59,6 +63,11 @@ public final class BigDecNumeral extends AbstractNumeral {
     @Override
     public BigDecimal bigDecValue() {
         return number;
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return logger;
     }
 }
 

@@ -3,6 +3,8 @@ package me.datafox.dfxengine.math.numeral;
 import lombok.EqualsAndHashCode;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of {@link Numeral} backed with an {@code int}.
@@ -12,6 +14,8 @@ import me.datafox.dfxengine.math.api.NumeralType;
 
 @EqualsAndHashCode(callSuper = true)
 public final class IntNumeral extends AbstractNumeral {
+    private static final Logger logger = LoggerFactory.getLogger(IntNumeral.class);
+
     private final int number;
 
     /**
@@ -36,5 +40,10 @@ public final class IntNumeral extends AbstractNumeral {
     @Override
     public int intValue() {
         return number;
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return logger;
     }
 }

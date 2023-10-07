@@ -5,6 +5,7 @@ import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.utils.internal.MathStrings;
 import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -15,6 +16,8 @@ import org.slf4j.LoggerFactory;
 
 @EqualsAndHashCode(callSuper = true)
 public final class DoubleNumeral extends AbstractNumeral {
+    private static final Logger logger = LoggerFactory.getLogger(DoubleNumeral.class);
+
     private final double number;
 
     /**
@@ -26,13 +29,13 @@ public final class DoubleNumeral extends AbstractNumeral {
         super(NumeralType.DOUBLE);
 
         if(Double.isNaN(number)) {
-            throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
+            throw LogUtils.logExceptionAndGet(logger,
                     MathStrings.nanDoubleValue(),
                     IllegalArgumentException::new);
         }
 
         if(Double.isInfinite(number)) {
-            throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
+            throw LogUtils.logExceptionAndGet(logger,
                     MathStrings.infiniteDoubleValue(),
                     IllegalArgumentException::new);
         }
@@ -54,5 +57,10 @@ public final class DoubleNumeral extends AbstractNumeral {
     @Override
     public double doubleValue() {
         return number;
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return logger;
     }
 }

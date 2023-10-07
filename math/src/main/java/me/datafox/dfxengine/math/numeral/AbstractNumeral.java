@@ -7,6 +7,8 @@ import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
 import me.datafox.dfxengine.math.utils.Conversion;
 import me.datafox.dfxengine.math.utils.Numerals;
 import me.datafox.dfxengine.math.utils.Range;
+import me.datafox.dfxengine.math.utils.internal.MathStrings;
+import org.slf4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -25,8 +27,11 @@ import static me.datafox.dfxengine.math.utils.Numerals.compare;
 abstract class AbstractNumeral implements Numeral {
     private final NumeralType type;
 
+    private final Logger logger;
+
     AbstractNumeral(NumeralType type) {
         this.type = type;
+        logger = getLogger();
     }
 
     /**
@@ -78,6 +83,8 @@ abstract class AbstractNumeral implements Numeral {
         if(canConvert(type)) {
             return convert(type);
         }
+
+        logger.info(MathStrings.couldNotConvert(this, type));
 
         return this;
     }
@@ -197,4 +204,6 @@ abstract class AbstractNumeral implements Numeral {
     public int compareTo(Numeral other) {
         return compare(this, other);
     }
+
+    protected abstract Logger getLogger();
 }

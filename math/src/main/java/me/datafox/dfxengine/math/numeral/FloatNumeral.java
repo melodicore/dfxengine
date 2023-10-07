@@ -5,6 +5,7 @@ import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.utils.internal.MathStrings;
 import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
@@ -18,6 +19,8 @@ import java.math.BigInteger;
 
 @EqualsAndHashCode(callSuper = true)
 public final class FloatNumeral extends AbstractNumeral {
+    private static final Logger logger = LoggerFactory.getLogger(FloatNumeral.class);
+
     private final float number;
 
     /**
@@ -29,13 +32,13 @@ public final class FloatNumeral extends AbstractNumeral {
         super(NumeralType.FLOAT);
 
         if(Double.isNaN(number)) {
-            throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
+            throw LogUtils.logExceptionAndGet(logger,
                     MathStrings.nanFloatValue(),
                     IllegalArgumentException::new);
         }
 
         if(Float.isInfinite(number)) {
-            throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(getClass()),
+            throw LogUtils.logExceptionAndGet(logger,
                     MathStrings.infiniteFloatValue(),
                     IllegalArgumentException::new);
         }
@@ -91,5 +94,10 @@ public final class FloatNumeral extends AbstractNumeral {
     @Override
     public BigDecimal bigDecValue() {
         return new BigDecimal(Float.toString(number));
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return logger;
     }
 }

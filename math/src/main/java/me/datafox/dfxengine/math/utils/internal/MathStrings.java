@@ -10,6 +10,7 @@ public class MathStrings {
     public static final String NULL_NUMBER_TYPE = "Encountered a null NumberType where one should not be present";
     public static final String EMPTY_ARRAY = "Encountered an empty array where a populated one should be present";
 
+    private static final String COULD_NOT_CONVERT = "Could not convert %s to type %s";
     private static final String INFINITE_VALUE = "Attempted to instantiate a %sNumeral with an infinite %s value";
     private static final String NAN_VALUE = "Attempted to instantiate a %sNumeral with a NaN %s value";
     private static final String UNKNOWN_NUMBER_TYPE =
@@ -122,8 +123,16 @@ public class MathStrings {
         return forNumeral(LOGARITHM_OF_BASE_ONE, numeral);
     }
 
+    public static String couldNotConvert(Numeral numeral, NumeralType type) {
+        return forNumeralAndType(COULD_NOT_CONVERT, numeral, type);
+    }
+
     private static String forNumeralAndString(String str, Numeral numeral, String string) {
         return String.format(str, numeral, string);
+    }
+
+    private static String forNumeralAndType(String str, Numeral numeral, NumeralType type) {
+        return String.format(str, numeral, type.name());
     }
 
     private static String forNumeral(String str, Numeral numeral) {
