@@ -50,7 +50,6 @@ public final class MappingOperationChain implements Operation {
             throw LogUtils.logExceptionAndGet(logger,
                     "invalid parameter count", IllegalArgumentException::new);
         }
-        System.out.println(source + Arrays.toString(parameters));
         checkSpecial(parameters);
         Numeral[] results = new Numeral[operations.length + 1];
         results[0] = source;
