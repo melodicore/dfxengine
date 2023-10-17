@@ -3,6 +3,7 @@ package me.datafox.dfxengine.values;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
+import me.datafox.dfxengine.handles.collection.HashHandleMap;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.values.api.Modifier;
@@ -16,10 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -533,6 +531,66 @@ public class DelegatedValueMap implements ValueMap {
             }
 
             return value.getBase();
+        }
+    }
+
+    public static Builder builder(Space space) {
+        return new Builder(space);
+    }
+
+    public static class Builder {
+        private final Space space;
+        private Function<Space, HandleMap<Value>> map;
+        private final Set<Value> values;
+        private final Set<Modifier> modifiers;
+
+        private Builder(Space space) {
+            this.space = space;
+            map = HashHandleMap::new;
+            values = new HashSet<>();
+            modifiers = new HashSet<>();
+        }
+
+        public Builder map(Function<Space, HandleMap<Value>> map) {
+            this.map = map;
+            return this;
+        }
+
+        public Builder value(Value value) {
+            values.add(value);
+            return this;
+        }
+
+        public Builder values(Collection<Value> values) {
+            this.values.addAll(values);
+            return this;
+        }
+
+        public Builder clearValues() {
+            values.clear();
+            return this;
+        }
+
+        public Builder modifier(Modifier modifier) {
+            modifiers.add(modifier);
+            return this;
+        }
+
+        public Builder modifiers(Collection<Modifier> modifiers) {
+            this.modifiers.addAll(modifiers);
+            return this;
+        }
+
+        public Builder clearModifiers() {
+            modifiers.clear();
+            return this;
+        }
+
+        public ValueMap build() {
+            ValueMap map = new DelegatedValueMap(this.map.apply(space));
+            values.forEach(map::putHandled);
+            map.addModifiers(modifiers);
+            return map;
         }
     }
 }
