@@ -63,7 +63,7 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param type type for the base {@link Numeral} of this value to be converted to
      * @return {@code true} if the base {@link Numeral} of this value was changed as a result of this operation
      *
-     * @throws ExtendedArithmeticException if the base {@link Numeral} of this value is outside the provided type's
+     * @throws ExtendedArithmeticException if the base {@link Numeral} of this value is outside the specified type's
      * bounds
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as

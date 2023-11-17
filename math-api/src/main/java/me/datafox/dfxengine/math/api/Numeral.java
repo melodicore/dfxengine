@@ -37,7 +37,7 @@ public interface Numeral extends Comparable<Numeral> {
      * @param type type for this numeral to be converted to
      * @return a numeral backed with the specified type
      *
-     * @throws ExtendedArithmeticException if the value of this numeral is outside the provided type's bounds
+     * @throws ExtendedArithmeticException if the value of this numeral is outside the specified type's bounds
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
      * any of the values of {@link NumeralType}. This should never happen
