@@ -26,7 +26,7 @@ import java.util.Collection;
  * </p>
  * <p>
  * Values can also be considered static. A static value should be immutable, unmodifiable and not identified by a
- * Handle. More specifically, {@link #getHandle()} should return {@link null}, any calls to {@link #set(Numeral)} and
+ * Handle. More specifically, {@link #getHandle()} should return {@code null}, any calls to {@link #set(Numeral)} and
  * all {@code apply(...)} methods should throw {@link UnsupportedOperationException}, and all Modifier-related methods
  * should return {@code false} with no other action.
  * </p>
@@ -82,7 +82,7 @@ public interface Value extends Dependency, Dependent, Handled {
     boolean convertIfAllowed(NumeralType type);
 
     /**
-     * If the base {@link Numeral} does not represent an integer value ({@link NumeralType#isInteger()} is {@link false}
+     * If the base {@link Numeral} does not represent an integer value ({@link NumeralType#isInteger()} is {@code false}
      * for {@link Numeral#getType()}), converts it to the smallest integer type that hold the represented value.
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
@@ -90,7 +90,7 @@ public interface Value extends Dependency, Dependent, Handled {
     boolean toInteger();
 
     /**
-     * If the base {@link Numeral} does not represent a decimal value ({@link NumeralType#isDecimal()} is {@link false}
+     * If the base {@link Numeral} does not represent a decimal value ({@link NumeralType#isDecimal()} is {@code false}
      * for {@link Numeral#getType()}), converts it to the smallest decimal type that hold the represented value.
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
@@ -142,7 +142,7 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param comparison {@link Comparison} to be used
      * @param context {@link ComparisonContext} for the comparison
      * @param other {@link Numeral} to be compared with
-     * @return {@code true} if the specified {@link Comparison} returns {@link true}
+     * @return {@code true} if the specified {@link Comparison} returns {@code true}
      */
     boolean compare(Comparison comparison, ComparisonContext context, Numeral other);
 
@@ -282,7 +282,7 @@ public interface Value extends Dependency, Dependent, Handled {
      *
      * @param comparison {@link Comparison} to be used
      * @param other {@link Numeral} to be compared with
-     * @return {@code true} if the specified {@link Comparison} returns {@link true}
+     * @return {@code true} if the specified {@link Comparison} returns {@code true}
      */
     default boolean compare(Comparison comparison, Numeral other) {
         return compare(comparison, ComparisonContext.defaults(), other);
