@@ -6,6 +6,8 @@ import me.datafox.dfxengine.handles.api.collection.HandleMap;
 import me.datafox.dfxengine.handles.collection.HashHandleMap;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
+import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
+import me.datafox.dfxengine.utils.LogUtils;
 import me.datafox.dfxengine.values.api.Modifier;
 import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.api.ValueMap;
@@ -39,29 +41,32 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
-    public void convert(NumeralType type) throws ArithmeticException {
+    public void convert(NumeralType type) {
         if(stream().allMatch(val -> val.canConvert(type))) {
             values().forEach(val -> val.convert(type));
         } else {
-            throw new ArithmeticException("number overflow");
+            throw LogUtils.logExceptionAndGet(logger, "number overflow",
+                    ExtendedArithmeticException::new);
         }
     }
 
     @Override
-    public void convert(Collection<Handle> handles, NumeralType type) throws ArithmeticException {
+    public void convert(Collection<? extends Handle> handles, NumeralType type) {
         if(getExisting(handles).allMatch(val -> val.canConvert(type))) {
             getExisting(handles).forEach(val -> val.convert(type));
         } else {
-            throw new ArithmeticException("number overflow");
+            throw LogUtils.logExceptionAndGet(logger, "number overflow",
+                    ExtendedArithmeticException::new);
         }
     }
 
     @Override
-    public void convert(Map<Handle,NumeralType> types) throws ArithmeticException {
+    public void convert(Map<? extends Handle,NumeralType> types) {
         if(getExisting(types.keySet()).allMatch(val -> val.canConvert(types.get(val.getHandle())))) {
             getExisting(types.keySet()).forEach(val -> val.convert(types.get(val.getHandle())));
         } else {
-            throw new ArithmeticException("number overflow");
+            throw LogUtils.logExceptionAndGet(logger, "number overflow",
+                    ExtendedArithmeticException::new);
         }
     }
 
@@ -86,7 +91,7 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
-    public void toSmallestType(Collection<Handle> handles) {
+    public void toSmallestType(Collection<? extends Handle> handles) {
         getExisting(handles).forEach(Value::toSmallestType);
     }
 
@@ -96,12 +101,12 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
-    public void set(MapMathContext context, Collection<Handle> handles, Numeral value) {
+    public void set(MapMathContext context, Collection<? extends Handle> handles, Numeral value) {
         contextOperation(val -> val.set(value), handles, context);
     }
 
     @Override
-    public void set(MapMathContext context, Map<Handle,Numeral> values) {
+    public void set(MapMathContext context, Map<? extends Handle,Numeral> values) {
         contextOperation((num, val) -> val.set(num), values, context);
     }
 
@@ -111,7 +116,7 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
-    public void apply(SourceOperation operation, MapMathContext context, Collection<Handle> handles) {
+    public void apply(SourceOperation operation, MapMathContext context, Collection<? extends Handle> handles) {
         contextOperation(val -> val.apply(operation, context), handles, context);
     }
 
@@ -122,12 +127,12 @@ public class DelegatedValueMap implements ValueMap {
 
     @Override
     public void apply(SingleParameterOperation operation, MapMathContext context,
-                      Collection<Handle> handles, Numeral parameter) {
+                      Collection<? extends Handle> handles, Numeral parameter) {
         contextOperation(val -> val.apply(operation, context, parameter), handles, context);
     }
 
     @Override
-    public void apply(SingleParameterOperation operation, MapMathContext context, Map<Handle,Numeral> parameters) {
+    public void apply(SingleParameterOperation operation, MapMathContext context, Map<? extends Handle,Numeral> parameters) {
         contextOperation((num, val) -> val.apply(operation, context, num), parameters, context);
     }
 
@@ -138,7 +143,7 @@ public class DelegatedValueMap implements ValueMap {
 
     @Override
     public void apply(DualParameterOperation operation, MapMathContext context,
-                      Collection<Handle> handles, Numeral parameter1, Numeral parameter2) {
+                      Collection<? extends Handle> handles, Numeral parameter1, Numeral parameter2) {
         contextOperation(val -> val.apply(operation, context, parameter1, parameter2), handles, context);
     }
 
@@ -148,12 +153,12 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
-    public void apply(Operation operation, MapMathContext context, Collection<Handle> handles, Numeral ... parameters) {
+    public void apply(Operation operation, MapMathContext context, Collection<? extends Handle> handles, Numeral ... parameters) {
         contextOperation(val -> val.apply(operation, context, parameters), handles, context);
     }
 
     @Override
-    public void apply(Operation operation, MapMathContext context, Map<Handle,Numeral[]> parameters) {
+    public void apply(Operation operation, MapMathContext context, Map<? extends Handle,Numeral[]> parameters) {
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn("exception may cause operation to fail midway");
         }
@@ -174,13 +179,13 @@ public class DelegatedValueMap implements ValueMap {
 
     @Override
     public boolean compare(Comparison comparison, MapComparisonContext context,
-                           Collection<Handle> handles, Numeral other) {
+                           Collection<? extends Handle> handles, Numeral other) {
         return contextComparison((val, num) -> val.compare(comparison, context, num),
                 comparison::compare, handles, other, context);
     }
 
     @Override
-    public boolean compare(Comparison comparison, MapComparisonContext context, Map<Handle,Numeral> others) {
+    public boolean compare(Comparison comparison, MapComparisonContext context, Map<? extends Handle,Numeral> others) {
         return contextComparison((val, num) -> val.compare(comparison, context, num),
                 comparison::compare, others, context);
     }
@@ -216,7 +221,7 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
-    public boolean addModifiers(Collection<Modifier> modifiers) {
+    public boolean addModifiers(Collection<? extends Modifier> modifiers) {
         boolean changed = this.modifiers.addAll(modifiers);
         if(changed) {
             values().forEach(val -> val.addModifiers(modifiers));
@@ -234,7 +239,7 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
-    public boolean removeModifiers(Collection<Modifier> modifiers) {
+    public boolean removeModifiers(Collection<? extends Modifier> modifiers) {
         boolean changed = this.modifiers.removeAll(modifiers);
         if(changed) {
             values().forEach(val -> val.removeModifiers(modifiers));
@@ -248,7 +253,7 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     @Override
-    public boolean containsModifiers(Collection<Modifier> modifiers) {
+    public boolean containsModifiers(Collection<? extends Modifier> modifiers) {
         return this.modifiers.containsAll(modifiers);
     }
 
@@ -380,17 +385,20 @@ public class DelegatedValueMap implements ValueMap {
         return map.entrySet();
     }
 
-    private Stream<Value> getExisting(Collection<Handle> handles) {
+    private Stream<Value> getExisting(Collection<? extends Handle> handles) {
         return handles.stream().filter(this::containsKey).map(this::get);
     }
 
-    private Stream<Handle> getNonExisting(Collection<Handle> handles) {
+    private Stream<? extends Handle> getNonExisting(Collection<? extends Handle> handles) {
+        if(handles.stream().noneMatch(Predicate.not(handle -> getSpace().equals(handle.getSpace())))) {
+            logger.warn("Handles that are not part of " + getSpace() + " are ignored");
+        }
         return handles.stream()
                 .filter(Predicate.not(this::containsKey))
                 .filter(handle -> getSpace().equals(handle.getSpace()));
     }
 
-    private void createNonExisting(Collection<Handle> handles, Numeral initialValue) {
+    private void createNonExisting(Collection<? extends Handle> handles, Numeral initialValue) {
         getNonExisting(handles).forEach(handle -> putHandled(new ValueImpl(handle, initialValue)));
     }
 
@@ -401,7 +409,7 @@ public class DelegatedValueMap implements ValueMap {
         operation.run();
     }
 
-    private void contextOperation(Consumer<Value> operation, Collection<Handle> handles, MapMathContext context) {
+    private void contextOperation(Consumer<Value> operation, Collection<? extends Handle> handles, MapMathContext context) {
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn("exception may cause operation to fail midway");
         }
@@ -414,7 +422,7 @@ public class DelegatedValueMap implements ValueMap {
         }
     }
 
-    private void contextOperation(BiConsumer<Numeral, Value> operation, Map<Handle, Numeral> values, MapMathContext context) {
+    private void contextOperation(BiConsumer<Numeral, Value> operation, Map<? extends Handle, Numeral> values, MapMathContext context) {
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn("exception may cause operation to fail midway");
         }
@@ -428,7 +436,9 @@ public class DelegatedValueMap implements ValueMap {
         }
     }
 
-    private boolean contextComparison(BiFunction<Value,Numeral,Boolean> valueComparison, BiFunction<Numeral,Numeral,Boolean> numeralComparison, Collection<Handle> handles, Numeral value, MapComparisonContext context) {
+    private boolean contextComparison(BiFunction<Value,Numeral,Boolean> valueComparison,
+                                      BiFunction<Numeral,Numeral,Boolean> numeralComparison,
+                                      Collection<? extends Handle> handles, Numeral value, MapComparisonContext context) {
         boolean existing = getExisting(handles).allMatch(val -> valueComparison.apply(val, value));
 
         if(context.getTreatNonExistingAs() == null) {
@@ -438,7 +448,9 @@ public class DelegatedValueMap implements ValueMap {
         return existing && numeralComparison.apply(context.getTreatNonExistingAs(), value);
     }
 
-    private boolean contextComparison(BiFunction<Value,Numeral,Boolean> valueComparison, BiFunction<Numeral,Numeral,Boolean> numeralComparison, Map<Handle,Numeral> values, MapComparisonContext context) {
+    private boolean contextComparison(BiFunction<Value,Numeral,Boolean> valueComparison,
+                                      BiFunction<Numeral,Numeral,Boolean> numeralComparison,
+                                      Map<? extends Handle,Numeral> values, MapComparisonContext context) {
         boolean existing = getExisting(values.keySet()).allMatch(val -> valueComparison.apply(val, values.get(val.getHandle())));
 
         if(context.getTreatNonExistingAs() == null) {

@@ -170,7 +170,7 @@ public class StaticValue implements Value {
      * @implNote {@link Modifier Modifiers} not supported, will return false
      */
     @Override
-    public boolean addModifiers(Collection<Modifier> modifiers) {
+    public boolean addModifiers(Collection<? extends Modifier> modifiers) {
         return false;
     }
 
@@ -186,7 +186,7 @@ public class StaticValue implements Value {
      * @implNote {@link Modifier Modifiers} not supported, will return false
      */
     @Override
-    public boolean removeModifiers(Collection<Modifier> modifiers) {
+    public boolean removeModifiers(Collection<? extends Modifier> modifiers) {
         return false;
     }
 
@@ -202,7 +202,7 @@ public class StaticValue implements Value {
      * @implNote {@link Modifier Modifiers} not supported, will return false
      */
     @Override
-    public boolean containsModifiers(Collection<Modifier> modifiers) {
+    public boolean containsModifiers(Collection<? extends Modifier> modifiers) {
         return false;
     }
 

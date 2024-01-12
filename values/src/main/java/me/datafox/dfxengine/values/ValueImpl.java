@@ -183,7 +183,7 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     @Override
-    public boolean addModifiers(Collection<Modifier> modifiers) {
+    public boolean addModifiers(Collection<? extends Modifier> modifiers) {
         boolean changed = this.modifiers.addAll(modifiers);
         if(changed) {
             modifiers.forEach(modifier -> modifier.addDependency(this));
@@ -203,7 +203,7 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     @Override
-    public boolean removeModifiers(Collection<Modifier> modifiers) {
+    public boolean removeModifiers(Collection<? extends Modifier> modifiers) {
         boolean changed = this.modifiers.removeAll(modifiers);
         if(changed) {
             modifiers.forEach(modifier -> modifier.removeDependency(this));
@@ -218,7 +218,7 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     @Override
-    public boolean containsModifiers(Collection<Modifier> modifiers) {
+    public boolean containsModifiers(Collection<? extends Modifier> modifiers) {
         return this.modifiers.containsAll(modifiers);
     }
 
