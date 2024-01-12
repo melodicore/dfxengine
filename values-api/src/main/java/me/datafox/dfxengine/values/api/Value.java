@@ -35,6 +35,12 @@ import java.util.Collection;
  */
 public interface Value extends Dependency, Dependent, Handled {
     /**
+     * @return {@link Handle} associated with this value, or {@code null} if this value is static
+     */
+    @Override
+    Handle getHandle();
+
+    /**
      * @return the base {@link Numeral} of this value
      */
     Numeral getBase();
@@ -54,8 +60,8 @@ public interface Value extends Dependency, Dependent, Handled {
      * @return {@code true} if the base {@link Numeral} of this value can be converted to the specified type
      *
      * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
-     * any of the values of {@link NumeralType}. This should never happen
+     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
+     * the elements of {@link NumeralType}. This should never happen
      */
     boolean canConvert(NumeralType type);
 
@@ -66,8 +72,8 @@ public interface Value extends Dependency, Dependent, Handled {
      * @throws ExtendedArithmeticException if the base {@link Numeral} of this value is outside the specified type's
      * bounds
      * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
-     * any of the values of {@link NumeralType}. This should never happen
+     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
+     * the elements of {@link NumeralType}. This should never happen
      */
     boolean convert(NumeralType type);
 
@@ -76,8 +82,8 @@ public interface Value extends Dependency, Dependent, Handled {
      * @return {@code true} if the base {@link Numeral} of this value was changed as a result of this operation
      *
      * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
-     * any of the values of {@link NumeralType}. This should never happen
+     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
+     * the elements of {@link NumeralType}. This should never happen
      */
     boolean convertIfAllowed(NumeralType type);
 
@@ -135,6 +141,9 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param operation {@link Operation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      * @param parameters parameters for the operation
+     *
+     * @throws IllegalArgumentException if the amount of parameters is not equal to
+     * {@link Operation#getParameterCount()}
      */
     void apply(Operation operation, MathContext context, Numeral ... parameters);
 
@@ -161,7 +170,7 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param modifiers {@link Modifier Modifiers} to be added
      * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
      */
-    boolean addModifiers(Collection<Modifier> modifiers);
+    boolean addModifiers(Collection<? extends Modifier> modifiers);
 
     /**
      * @param modifier {@link Modifier} to be removed
@@ -173,7 +182,7 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param modifiers {@link Modifier Modifiers} to be removed
      * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
      */
-    boolean removeModifiers(Collection<Modifier> modifiers);
+    boolean removeModifiers(Collection<? extends Modifier> modifiers);
 
     /**
      * @param modifier {@link Modifier} to be checked for
@@ -185,15 +194,7 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param modifiers {@link Modifier Modifiers} to be checked for
      * @return {@code true} if all of the specified {@link Modifier Modifiers} are associated with this value
      */
-    boolean containsModifiers(Collection<Modifier> modifiers);
-
-    /**
-     * @param operation {@link SourceOperation} to be applied to the base {@link Numeral}
-     * @param builder builder for the {@link MathContext} to be used for the operation
-     */
-    default void apply(SourceOperation operation, MathContext.MathContextBuilder<?,?> builder) {
-        apply(operation, builder.build());
-    }
+    boolean containsModifiers(Collection<? extends Modifier> modifiers);
 
     /**
      * Uses {@link MathContext#defaults()} for context.
@@ -205,16 +206,6 @@ public interface Value extends Dependency, Dependent, Handled {
     }
 
     /**
-     * @param operation {@link SingleParameterOperation} to be applied to the base {@link Numeral}
-     * @param builder builder for the {@link MathContext} to be used for the operation
-     * @param parameter parameter for the operation
-     */
-    default void apply(SingleParameterOperation operation, MathContext.MathContextBuilder<?,?> builder,
-                       Numeral parameter) {
-        apply(operation, builder.build(), parameter);
-    }
-
-    /**
      * Uses {@link MathContext#defaults()} for context.
      *
      * @param operation {@link SingleParameterOperation} to be applied to the base {@link Numeral}
@@ -222,17 +213,6 @@ public interface Value extends Dependency, Dependent, Handled {
      */
     default void apply(SingleParameterOperation operation, Numeral parameter) {
         apply(operation, MathContext.defaults(), parameter);
-    }
-
-    /**
-     * @param operation {@link DualParameterOperation} to be applied to the base {@link Numeral}
-     * @param builder builder for the {@link MathContext} to be used for the operation
-     * @param parameter1 first parameter for the operation
-     * @param parameter1 second parameter for the operation
-     */
-    default void apply(DualParameterOperation operation, MathContext.MathContextBuilder<?,?> builder,
-                       Numeral parameter1, Numeral parameter2) {
-        apply(operation, builder.build(), parameter1, parameter2);
     }
 
     /**
@@ -247,34 +227,16 @@ public interface Value extends Dependency, Dependent, Handled {
     }
 
     /**
-     * @param operation {@link Operation} to be applied to the base {@link Numeral}
-     * @param builder builder for the {@link MathContext} to be used for the operation
-     * @param parameters parameters for the operation
-     */
-    default void apply(Operation operation,
-                       MathContext.MathContextBuilder<?,?> builder, Numeral ... parameters) {
-        apply(operation, builder.build(), parameters);
-    }
-
-    /**
      * Uses {@link MathContext#defaults()} for context.
      *
      * @param operation {@link Operation} to be applied to the base {@link Numeral}
      * @param parameters parameters for the operation
+     *
+     * @throws IllegalArgumentException if the amount of parameters is not equal to
+     * {@link Operation#getParameterCount()}
      */
     default void apply(Operation operation, Numeral ... parameters) {
         apply(operation, MathContext.defaults(), parameters);
-    }
-
-    /**
-     * @param comparison {@link Comparison} to be used
-     * @param builder builder for the {@link ComparisonContext} to be used for the operation
-     * @param other {@link Numeral} to be compared with
-     * @return {@code true} if the specified {@link Comparison} returns {@link true}
-     */
-    default boolean compare(Comparison comparison, ComparisonContext.ComparisonContextBuilder<?,?> builder,
-                            Numeral other) {
-        return compare(comparison, builder.build(), other);
     }
 
     /**
