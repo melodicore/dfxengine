@@ -126,7 +126,7 @@ public class Numerals {
      *
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static boolean isZero(Numeral numeral) {
@@ -163,7 +163,7 @@ public class Numerals {
      *
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static boolean isOne(Numeral numeral) {
@@ -200,7 +200,7 @@ public class Numerals {
      *
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static boolean isEven(Numeral numeral) {
@@ -240,7 +240,7 @@ public class Numerals {
      * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
      * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static int compare(Numeral numeral, Numeral other) {

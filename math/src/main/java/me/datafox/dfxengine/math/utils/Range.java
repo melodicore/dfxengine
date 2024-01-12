@@ -106,7 +106,7 @@ public class Range {
      * @throws NullPointerException if the specified type is {@code null} or if the {@link Numeral} returns {@code null}
      * for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the specified type is not {@code null} or if the {@link Numeral} does not
-     * return {@code null} for {@link Numeral#getType()}, but the value is not recognised as any of the values of
+     * return {@code null} for {@link Numeral#getType()}, but the value is not recognised as any of the elements of
      * {@link NumeralType}. This should never happen
      */
     public static boolean isOutOfRange(Numeral numeral, NumeralType type) {
@@ -142,7 +142,7 @@ public class Range {
      *
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static boolean isOutOfIntRange(Numeral numeral) {
@@ -179,7 +179,7 @@ public class Range {
      *
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static boolean isOutOfLongRange(Numeral numeral) {
@@ -215,7 +215,7 @@ public class Range {
      *
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static boolean isOutOfFloatRange(Numeral numeral) {
@@ -250,7 +250,7 @@ public class Range {
      *
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static boolean isOutOfDoubleRange(Numeral numeral) {

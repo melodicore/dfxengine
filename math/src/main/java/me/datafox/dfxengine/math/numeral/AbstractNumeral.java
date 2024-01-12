@@ -47,8 +47,8 @@ abstract class AbstractNumeral implements Numeral {
      * @return {@code true} if this numeral can be converted to the specified type
      *
      * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
-     * any of the values of {@link NumeralType}. This should never happen
+     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
+     * the elements of {@link NumeralType}. This should never happen
      */
     @Override
     public boolean canConvert(NumeralType type) {
@@ -61,8 +61,8 @@ abstract class AbstractNumeral implements Numeral {
      *
      * @throws ExtendedArithmeticException if the value of this numeral is outside the provided type's bounds
      * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
-     * any of the values of {@link NumeralType}. This should never happen
+     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
+     * the elements of {@link NumeralType}. This should never happen
      */
     @Override
     public Numeral convert(NumeralType type) {
@@ -75,8 +75,8 @@ abstract class AbstractNumeral implements Numeral {
      * type's bounds, in which case this numeral is returned
      *
      * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
-     * any of the values of {@link NumeralType}. This should never happen
+     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
+     * the elements of {@link NumeralType}. This should never happen
      */
     @Override
     public Numeral convertIfAllowed(NumeralType type) {

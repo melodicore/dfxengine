@@ -53,7 +53,7 @@ public class Operations {
      * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
      * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral add(Numeral augend, Numeral addend) {
@@ -99,7 +99,7 @@ public class Operations {
      * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
      * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral subtract(Numeral minuend, Numeral subtrahend) {
@@ -145,7 +145,7 @@ public class Operations {
      * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
      * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral multiply(Numeral multiplicand, Numeral multiplier) {
@@ -196,7 +196,7 @@ public class Operations {
      * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
      * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral divide(Numeral dividend, Numeral divisor) {
@@ -250,7 +250,7 @@ public class Operations {
      * @throws ArithmeticException if the divisor is zero
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral inverse(Numeral numeral) {
@@ -269,7 +269,7 @@ public class Operations {
      * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
      * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral power(Numeral base, Numeral exponent) {
@@ -316,7 +316,7 @@ public class Operations {
      *
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral exp(Numeral numeral) {
@@ -353,7 +353,7 @@ public class Operations {
      * @throws ArithmeticException if the {@link Numeral} is negative
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral sqrt(Numeral numeral) {
@@ -399,7 +399,7 @@ public class Operations {
      *
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral cbrt(Numeral numeral) {
@@ -444,7 +444,7 @@ public class Operations {
      * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
      * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral root(Numeral numeral, Numeral base) {
@@ -503,7 +503,7 @@ public class Operations {
      * @throws ArithmeticException if the {@link Numeral} is zero or negative
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral log(Numeral numeral) {
@@ -546,7 +546,7 @@ public class Operations {
      * @throws ArithmeticException if the {@link Numeral} is zero or negative
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral log2(Numeral numeral) {
@@ -589,7 +589,7 @@ public class Operations {
      * @throws ArithmeticException if the {@link Numeral} is zero or negative
      * @throws NullPointerException if the {@link Numeral} returns {@code null} for {@link Numeral#getType()}
      * @throws IllegalArgumentException if the {@link Numeral} does not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral log10(Numeral numeral) {
@@ -637,7 +637,7 @@ public class Operations {
      * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
      * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral logN(Numeral numeral, Numeral base) {
@@ -696,7 +696,7 @@ public class Operations {
      * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
      * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral min(Numeral numeral, Numeral other) {
@@ -718,7 +718,7 @@ public class Operations {
      * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
      * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral max(Numeral numeral, Numeral other) {
@@ -741,7 +741,7 @@ public class Operations {
      * @throws NullPointerException if any of the {@link Numeral Numerals} return {@code null} for
      * {@link Numeral#getType()}
      * @throws IllegalArgumentException if any of the {@link Numeral Numerals} do not return {@code null} for
-     * {@link Numeral#getType()}, but the value is not recognised as any of the values of {@link NumeralType}. This
+     * {@link Numeral#getType()}, but the value is not recognised as any of the elements of {@link NumeralType}. This
      * should never happen
      */
     public static Numeral lerp(Numeral numeral, Numeral min, Numeral max) {

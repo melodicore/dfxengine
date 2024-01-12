@@ -28,8 +28,8 @@ public interface Numeral extends Comparable<Numeral> {
      * @return {@code true} if this numeral can be converted to the specified type
      *
      * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
-     * any of the values of {@link NumeralType}. This should never happen
+     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
+     * the elements of {@link NumeralType}. This should never happen
      */
     boolean canConvert(NumeralType type);
 
@@ -39,8 +39,8 @@ public interface Numeral extends Comparable<Numeral> {
      *
      * @throws ExtendedArithmeticException if the value of this numeral is outside the specified type's bounds
      * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
-     * any of the values of {@link NumeralType}. This should never happen
+     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
+     * the elements of {@link NumeralType}. This should never happen
      */
     Numeral convert(NumeralType type);
 
@@ -50,8 +50,8 @@ public interface Numeral extends Comparable<Numeral> {
      * type's bounds, in which case this numeral is returned
      *
      * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but the value is not recognised as
-     * any of the values of {@link NumeralType}. This should never happen
+     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
+     * the elements of {@link NumeralType}. This should never happen
      */
     Numeral convertIfAllowed(NumeralType type);
 
