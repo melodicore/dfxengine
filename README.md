@@ -19,6 +19,7 @@ Here are the currently existing and planned modules:
 
 | Module                       | Status             | Description                                         |
 |------------------------------|--------------------|-----------------------------------------------------|
+| [Collections](collections)   | Done (1.0.0)^1^    | Collections for other modules and general usage     |
 | [Dependencies](dependencies) | Done (1.0.1)       | Data structure dependencies and invalidation        |
 | [Handles API](handles-api)   | Done (1.0.5)       | Interfaces for the Handles module                   |
 | [Handles](handles)           | Done (1.0.5)       | Dynamic enum-like structures for map keys           |
@@ -26,18 +27,19 @@ Here are the currently existing and planned modules:
 | [Injector](injector)         | Done (1.1.1)       | A dependency injector                               |
 | [Math API](math-api)         | Done (1.0.1)       | Interfaces for the Math module                      |
 | [Math](math)                 | Done (1.0.3)       | Seamless wrapping and manipulation of number types  |
-| [Utils](utils)               | Under construction | Utilities used by other modules                     |
+| [Utils](utils)               | Done (1.0.0)^1^    | Utilities used by other modules                     |
 | [Values API](values-api)     | Under construction | Interfaces for the Values module                    |
 | [Values](values)             | Under construction | Mutable number values and a dynamic modifier system |
 | Entities                     | Not yet started    | Data-oriented entity system                         |
 | Text                         | Not yet started    | Textual presentation for other modules              |
 | Serialization                | Not yet started    | Serialization for other modules                     |
 
+1: These modules will get more features as they are required by other modules
+
 There are four possible statuses for modules.
 
  - Done: Production-ready, commented and tested
- - Functional: Feature-complete but subject to minor changes and may lack comments or 
-tests
+ - Functional: Feature-complete but subject to minor changes and may lack comments or tests
  - Under construction: Incomplete and subject to major changes
  - Not yet started: Planned but without anything concrete
 
