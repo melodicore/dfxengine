@@ -25,7 +25,7 @@ publishing {
         mavenJava(MavenPublication) {
             pom {
                 name = "DFXEngine Dependencies"
-                description = "Data structure dependencies and invalidation"
+                description = "Tools to invalidate values that depend on other values"
             }
         }
     }

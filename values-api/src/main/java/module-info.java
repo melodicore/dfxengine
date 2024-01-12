@@ -1,7 +1,7 @@
 /**
  * @author datafox
  */
-module dfxengine.values.api {
+open module dfxengine.values.api {
     requires static lombok;
 
     requires dfxengine.math.api;

@@ -10,6 +10,7 @@ version = "$handlesVersion"
 dependencies {
     api "me.datafox.dfxengine:handles-api:$handlesApiVersion"
     implementation "me.datafox.dfxengine:utils:$utilsVersion"
+    implementation "me.datafox.dfxengine:collections:$collectionsVersion"
     implementation "me.datafox.dfxengine:injector-api:$injectorApiVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
@@ -28,7 +29,7 @@ publishing {
         mavenJava(MavenPublication) {
             pom {
                 name = "DFXEngine Handles"
-                description = "Handles are dynamic enum-like values to use as keys"
+                description = "Dynamic enum-like values to use for identification, such as map keys, and tools to manipulate them"
             }
         }
     }

@@ -24,7 +24,7 @@ publishing {
         mavenJava(MavenPublication) {
             pom {
                 name = "DFXEngine Utils"
-                description = "Various utility classes used by other modules of the DFXEngine project"
+                description = "Various utility classes used by other DFXEngine modules"
             }
         }
     }

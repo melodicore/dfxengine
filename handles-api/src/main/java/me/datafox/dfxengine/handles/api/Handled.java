@@ -7,8 +7,6 @@ package me.datafox.dfxengine.handles.api;
  */
 public interface Handled {
     /**
-     * Returns the {@link Handle} associated with this class.
-     *
      * @return {@link Handle} associated with this class
      */
     Handle getHandle();

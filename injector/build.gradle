@@ -10,6 +10,7 @@ version = "$injectorVersion"
 dependencies {
     api "me.datafox.dfxengine:injector-api:$injectorApiVersion"
     implementation "me.datafox.dfxengine:utils:$utilsVersion"
+    implementation "me.datafox.dfxengine:collections:$collectionsVersion"
     implementation "io.github.classgraph:classgraph:$classgraphVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
@@ -28,7 +29,7 @@ publishing {
         mavenJava(MavenPublication) {
             pom {
                 name = "DFXEngine Injector"
-                description = "A dependency injection module for DFXEngine"
+                description = "A simple dependency injector"
             }
         }
     }
