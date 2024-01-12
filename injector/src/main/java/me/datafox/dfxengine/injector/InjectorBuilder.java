@@ -74,15 +74,6 @@ public class InjectorBuilder {
     }
 
     /**
-     * This method exists solely for testing purposes.
-     *
-     * @return logger
-     */
-    public Logger getLogger() {
-        return logger;
-    }
-
-    /**
      * Whitelists a single package. Package name should be in the standard format of <i>com.example.package</i>
      *
      * @param packageName name of package to whitelist
