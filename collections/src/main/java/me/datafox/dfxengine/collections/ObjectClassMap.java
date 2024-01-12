@@ -1,6 +1,4 @@
-package me.datafox.dfxengine.injector.collection;
-
-import me.datafox.dfxengine.injector.Injector;
+package me.datafox.dfxengine.collections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +6,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * The object class map is a collection used internally by the {@link Injector}. It is an extension of the
+ * The object class map is a collection used internally by the Injector module. It is an extension of the
  * {@link FunctionClassMap} where the values are arbitrary objects and the function resolves the type of the object.
  * This ensures that all values in a list represented by a type are assignable to that type.
  * </p>

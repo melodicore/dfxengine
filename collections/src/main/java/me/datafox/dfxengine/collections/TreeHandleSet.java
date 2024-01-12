@@ -1,25 +1,25 @@
-package me.datafox.dfxengine.handles.collection;
+package me.datafox.dfxengine.collections;
 
+import me.datafox.dfxengine.collections.utils.CollectionStrings;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleSet;
-import me.datafox.dfxengine.handles.utils.HandleStrings;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
+import java.util.TreeSet;
 
 /**
- * An extension of {@link HashSet} that can only contain {@link Handle Handles} of the {@link Space} associated with
+ * An extension of {@link TreeSet} that can only contain {@link Handle Handles} of the {@link Space} associated with
  * this set. Implements {@link HandleSet} for various helper methods related to Handles.
  *
  * @author datafox
  */
-public class HashHandleSet extends HashSet<Handle> implements HandleSet {
+public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
     private final Logger logger;
 
     private final Space space;
@@ -29,7 +29,7 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     /**
      * @param space {@link Space} to be associated with this set
      */
-    public HashHandleSet(Space space) {
+    public TreeHandleSet(Space space) {
         super();
         this.logger = LoggerFactory.getLogger(getClass());
         this.space = space;
@@ -40,7 +40,7 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
      * @param space {@link Space} to be associated with this set
      * @param handles collection of {@link Handle Handles} that are to be placed into this set
      */
-    public HashHandleSet(Space space, Collection<Handle> handles) {
+    public TreeHandleSet(Space space, Collection<Handle> handles) {
         this(space);
         addAll(handles);
     }
@@ -205,7 +205,7 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     private void checkSpace(Handle handle) {
         if(!space.equals(handle.getSpace())) {
             throw LogUtils.logExceptionAndGet(logger,
-                    HandleStrings.spaceMismatchHandleSet(handle, space),
+                    CollectionStrings.spaceMismatchHandleSet(handle, space),
                     IllegalArgumentException::new);
         }
     }

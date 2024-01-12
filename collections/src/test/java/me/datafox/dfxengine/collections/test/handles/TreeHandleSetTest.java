@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.handles.test;
+package me.datafox.dfxengine.collections.test.handles;
 
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleSet;

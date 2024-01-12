@@ -1,11 +1,11 @@
 package me.datafox.dfxengine.handles;
 
 import lombok.*;
+import me.datafox.dfxengine.collections.HashHandleSet;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleManager;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleSet;
-import me.datafox.dfxengine.handles.collection.HashHandleSet;
 
 import java.lang.reflect.Field;
 import java.util.Collection;

@@ -1,17 +1,18 @@
 package me.datafox.dfxengine.handles;
 
 import lombok.*;
+import me.datafox.dfxengine.collections.TreeHandleSet;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleManager;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleSet;
-import me.datafox.dfxengine.handles.collection.TreeHandleSet;
 import me.datafox.dfxengine.handles.utils.HandleStrings;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

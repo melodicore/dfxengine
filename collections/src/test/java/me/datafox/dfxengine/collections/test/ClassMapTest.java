@@ -1,7 +1,7 @@
-package me.datafox.dfxengine.injector.test;
+package me.datafox.dfxengine.collections.test;
 
-import me.datafox.dfxengine.injector.collection.FunctionClassMap;
-import me.datafox.dfxengine.injector.collection.ObjectClassMap;
+import me.datafox.dfxengine.collections.FunctionClassMap;
+import me.datafox.dfxengine.collections.ObjectClassMap;
 import org.junit.jupiter.api.Test;
 
 import java.io.FilterOutputStream;

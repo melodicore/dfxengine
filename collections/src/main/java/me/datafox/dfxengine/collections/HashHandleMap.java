@@ -1,10 +1,10 @@
-package me.datafox.dfxengine.handles.collection;
+package me.datafox.dfxengine.collections;
 
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
-import me.datafox.dfxengine.handles.utils.HandleStrings;
+import me.datafox.dfxengine.collections.utils.CollectionStrings;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,7 +152,7 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
     public T putHandled(T value) {
         if(!(value instanceof Handled)) {
             throw LogUtils.logExceptionAndGet(logger,
-                    HandleStrings.notHandledType(value),
+                    CollectionStrings.notHandledType(value),
                     IllegalArgumentException::new);
         }
 
@@ -252,7 +252,7 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
     private void checkSpace(Handle handle) {
         if(!space.equals(handle.getSpace())) {
             throw LogUtils.logExceptionAndGet(logger,
-                    HandleStrings.spaceMismatchHandleMap(handle, space),
+                    CollectionStrings.spaceMismatchHandleMap(handle, space),
                     IllegalArgumentException::new);
         }
     }

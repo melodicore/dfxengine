@@ -328,12 +328,16 @@ public class InjectorTest {
     }
 
     @Test
-    public void parameterized_warn() {
+    public void parameterized_warn() throws NoSuchFieldException, IllegalAccessException {
         var builder = (InjectorBuilder) InjectorBuilder.create();
         var appender = new TestAppender();
 
         appender.setContext((Context) LoggerFactory.getILoggerFactory());
-        ((Logger) builder.getLogger()).addAppender(appender);
+
+        var loggerField = InjectorBuilder.class.getDeclaredField("logger");
+        loggerField.setAccessible(true);
+        ((Logger) loggerField.get(builder)).addAppender(appender);
+
         appender.start();
 
         builder.whitelistPackage("me.datafox.dfxengine.injector.test.injector.warn.parameterized").build();

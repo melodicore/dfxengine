@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.handles.test;
+package me.datafox.dfxengine.collections.test.handles;
 
 import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.handles.api.Space;
@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 import java.util.Set;
 
-import static me.datafox.dfxengine.handles.test.TestConstants.*;
+import static me.datafox.dfxengine.collections.test.handles.HandleCollectionTestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author datafox
  */
-public abstract class AbstractHandleMapTest extends AbstractTest {
+public abstract class AbstractHandleMapTest extends AbstractHandleCollectionTest {
     protected HandleMap<Object> testMap;
 
     @Override
@@ -37,6 +37,8 @@ public abstract class AbstractHandleMapTest extends AbstractTest {
         assertEquals(TEST_STRING, testMap.put(testHandle, TEST_BOOLEAN));
 
         assertEquals(Map.of(testHandle, TEST_BOOLEAN, otherHandle, TEST_INTEGER), testMap);
+
+        assertThrows(IllegalArgumentException.class, () -> testMap.put(testHandle.getSpace().getHandle(), TEST_BOOLEAN));
     }
 
     @Test
