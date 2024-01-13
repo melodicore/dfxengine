@@ -15,11 +15,13 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
+ * An extension of {@link HandleMap} for storing and manipulating multiple {@link Value Values} simultaneously.
+ *
  * @author datafox
  */
 public interface ValueMap extends HandleMap<Value> {
     /**
-     * @param type type for the {@link Value Values} to be converted to
+     * @param type {@link NumeralType} for the {@link Value Values} to be converted to
      *
      * @throws ExtendedArithmeticException if any of the {@link Value Values} in this map cannot be converted to the
      * specified type
@@ -33,7 +35,7 @@ public interface ValueMap extends HandleMap<Value> {
      * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param handles {@link Handle Handles} of the {@link Value Values} to be converted
-     * @param type type for the {@link Value Values} to be converted to
+     * @param type {@link NumeralType} for the {@link Value Values} to be converted to
      *
      * @throws ExtendedArithmeticException if any of the specified values in this map cannot be converted to the
      * specified type
@@ -46,8 +48,8 @@ public interface ValueMap extends HandleMap<Value> {
     /**
      * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
      *
-     * @param types map of {@link Handle Handles} and types for the {@link Value Values} represented by those Handles
-     * to be converted to.
+     * @param types map of {@link Handle Handles} and {@link NumeralType NumeralTypes} for the {@link Value Values}
+     * represented by those Handles to be converted to.
      *
      * @throws ExtendedArithmeticException if any of the specified values in this map cannot be converted to the
      * specified type
@@ -61,7 +63,7 @@ public interface ValueMap extends HandleMap<Value> {
      * Only converts {@link Value Values} of this map that can be converted to the specified type. In other words, calls
      * {@link Numeral#convertIfAllowed(NumeralType)} on every Value of this map.
      *
-     * @param type type for the {@link Value Values} to be converted to
+     * @param type {@link NumeralType} for the {@link Value Values} to be converted to
      *
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of

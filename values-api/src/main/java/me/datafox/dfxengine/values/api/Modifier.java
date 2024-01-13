@@ -16,12 +16,12 @@ import java.util.function.Function;
  */
 public interface Modifier extends Dependency, Dependent, Function<Numeral, Numeral>, Comparable<Modifier> {
     /**
-     * @return the priority of this modifier
+     * @return priority of this modifier
      */
     int getPriority();
 
     /**
-     * @param other the modifier to be compared
+     * @param other modifier to be compared
      * @return a negative integer, zero, or a positive integer as this modifier's priority is less than, equal to, or
      * greater than the specified modifier's priority
      */

@@ -41,12 +41,12 @@ public interface Value extends Dependency, Dependent, Handled {
     Handle getHandle();
 
     /**
-     * @return the base {@link Numeral} of this value
+     * @return base {@link Numeral} of this value
      */
     Numeral getBase();
 
     /**
-     * @return the base {@link Numeral} of this value with all {@link Modifier Modifiers} of this value applied to it
+     * @return base {@link Numeral} of this value with all {@link Modifier Modifiers} of this value applied to it
      */
     Numeral getValue();
 
@@ -56,7 +56,7 @@ public interface Value extends Dependency, Dependent, Handled {
     boolean isStatic();
 
     /**
-     * @param type type to be checked for
+     * @param type {@link NumeralType} to be checked for
      * @return {@code true} if the base {@link Numeral} of this value can be converted to the specified type
      *
      * @throws NullPointerException if the specified type is {@code null}
@@ -66,7 +66,7 @@ public interface Value extends Dependency, Dependent, Handled {
     boolean canConvert(NumeralType type);
 
     /**
-     * @param type type for the base {@link Numeral} of this value to be converted to
+     * @param type {@link NumeralType} for the base {@link Numeral} of this value to be converted to
      * @return {@code true} if the base {@link Numeral} of this value was changed as a result of this operation
      *
      * @throws ExtendedArithmeticException if the base {@link Numeral} of this value is outside the specified type's
@@ -78,7 +78,7 @@ public interface Value extends Dependency, Dependent, Handled {
     boolean convert(NumeralType type);
 
     /**
-     * @param type type for the base {@link Numeral} of this value to be converted to
+     * @param type {@link NumeralType} for the base {@link Numeral} of this value to be converted to
      * @return {@code true} if the base {@link Numeral} of this value was changed as a result of this operation
      *
      * @throws NullPointerException if the specified type is {@code null}
