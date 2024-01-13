@@ -74,6 +74,8 @@ public interface Value extends Dependency, Dependent, Handled {
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
      * the elements of {@link NumeralType}. This should never happen
+     * @throws UnsupportedOperationException if this value is static and the specified type is not the same as the
+     * {@link Numeral} value's type
      */
     boolean convert(NumeralType type);
 
@@ -92,6 +94,8 @@ public interface Value extends Dependency, Dependent, Handled {
      * for {@link Numeral#getType()}), converts it to the smallest integer type that hold the represented value.
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
+     *
+     * @throws UnsupportedOperationException if this value is static and the {@link Numeral} value is not an integer
      */
     boolean toInteger();
 
@@ -100,6 +104,8 @@ public interface Value extends Dependency, Dependent, Handled {
      * for {@link Numeral#getType()}), converts it to the smallest decimal type that hold the represented value.
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
+     *
+     * @throws UnsupportedOperationException if this value is static and the {@link Numeral} value is not a decimal
      */
     boolean toDecimal();
 
@@ -113,12 +119,16 @@ public interface Value extends Dependency, Dependent, Handled {
 
     /**
      * @param value value to replace the current base {@link Numeral}
+     *
+     * @throws UnsupportedOperationException if this value is static
      */
     void set(Numeral value);
 
     /**
      * @param operation {@link SourceOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
+     *
+     * @throws UnsupportedOperationException if this value is static
      */
     void apply(SourceOperation operation, MathContext context);
 
@@ -126,6 +136,8 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param operation {@link SingleParameterOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      * @param parameter parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this value is static
      */
     void apply(SingleParameterOperation operation, MathContext context, Numeral parameter);
 
@@ -134,6 +146,8 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param context {@link MathContext} for the operation
      * @param parameter1 first parameter for the operation
      * @param parameter1 second parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this value is static
      */
     void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2);
 
@@ -144,6 +158,7 @@ public interface Value extends Dependency, Dependent, Handled {
      *
      * @throws IllegalArgumentException if the amount of parameters is not equal to
      * {@link Operation#getParameterCount()}
+     * @throws UnsupportedOperationException if this value is static
      */
     void apply(Operation operation, MathContext context, Numeral ... parameters);
 
@@ -200,6 +215,8 @@ public interface Value extends Dependency, Dependent, Handled {
      * Uses {@link MathContext#defaults()} for context.
      *
      * @param operation {@link SourceOperation} to be applied to the base {@link Numeral}
+     *
+     * @throws UnsupportedOperationException if this value is static
      */
     default void apply(SourceOperation operation) {
         apply(operation, MathContext.defaults());
@@ -210,6 +227,8 @@ public interface Value extends Dependency, Dependent, Handled {
      *
      * @param operation {@link SingleParameterOperation} to be applied to the base {@link Numeral}
      * @param parameter parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this value is static
      */
     default void apply(SingleParameterOperation operation, Numeral parameter) {
         apply(operation, MathContext.defaults(), parameter);
@@ -221,6 +240,8 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param operation {@link DualParameterOperation} to be applied to the base {@link Numeral}
      * @param parameter1 first parameter for the operation
      * @param parameter1 second parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this value is static
      */
     default void apply(DualParameterOperation operation, Numeral parameter1, Numeral parameter2) {
         apply(operation, MathContext.defaults(), parameter1, parameter2);
@@ -234,6 +255,7 @@ public interface Value extends Dependency, Dependent, Handled {
      *
      * @throws IllegalArgumentException if the amount of parameters is not equal to
      * {@link Operation#getParameterCount()}
+     * @throws UnsupportedOperationException if this value is static
      */
     default void apply(Operation operation, Numeral ... parameters) {
         apply(operation, MathContext.defaults(), parameters);

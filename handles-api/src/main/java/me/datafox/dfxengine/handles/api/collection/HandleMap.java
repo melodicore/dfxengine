@@ -44,7 +44,7 @@ public interface HandleMap<T> extends Map<Handle,T> {
      * @param handles {@link Handle Handles} to be checked for
      * @return {@code true} if this map contains all the specified {@link Handle Handles}
      */
-    boolean containsAll(Collection<Handle> handles);
+    boolean containsAll(Collection<? extends Handle> handles);
 
     /**
      * @param ids ids of the {@link Handle Handles} to be checked for
@@ -60,7 +60,7 @@ public interface HandleMap<T> extends Map<Handle,T> {
 
     /**
      * @param id id of the {@link Handle} to be removed
-     * @return the value associated with the {@link Handle} with the specified id, or {@code null} if none were present
+     * @return value associated with the {@link Handle} with the specified id, or {@code null} if none were present
      */
     T removeById(String id);
 
@@ -68,7 +68,7 @@ public interface HandleMap<T> extends Map<Handle,T> {
      * @param handles {@link Handle Handles} to be removed
      * @return {@code true} if the contents of this map changed as a result of this action
      */
-    boolean removeAll(Collection<Handle> handles);
+    boolean removeAll(Collection<? extends Handle> handles);
 
     /**
      * @param ids ids of the {@link Handle Handles} to be removed

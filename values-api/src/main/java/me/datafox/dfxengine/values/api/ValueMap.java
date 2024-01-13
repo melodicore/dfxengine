@@ -29,7 +29,7 @@ public interface ValueMap extends HandleMap<Value> {
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
      * the elements of {@link NumeralType}. This should never happen
      */
-    void convert(NumeralType type) throws ExtendedArithmeticException;
+    void convert(NumeralType type);
 
     /**
      * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
@@ -252,13 +252,13 @@ public interface ValueMap extends HandleMap<Value> {
 
     /**
      * @return {@link Map} containing all entries of this map, but with the return value of {@link Value#getBase()} as
-     * the map values. The returned map is immutable and changes automatically as this map changes
+     * the map values. The returned map does not have any state and instead provides a view to this map
      */
     Map<Handle, Numeral> getBaseNumeralMap();
 
     /**
      * @return {@link Map} containing all entries of this map, but with the return value of {@link Value#getValue()} as
-     * the map values. The returned map is immutable and changes automatically as this map changes
+     * the map values. The returned map does not have any state and instead provides a view to this map
      */
     Map<Handle, Numeral> getValueNumeralMap();
 
