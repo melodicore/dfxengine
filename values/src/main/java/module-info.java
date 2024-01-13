@@ -10,6 +10,7 @@ module dfxengine.values {
     requires dfxengine.math;
     requires dfxengine.handles;
     requires dfxengine.dependencies;
+    requires dfxengine.collections;
     requires dfxengine.utils;
 
     requires org.slf4j;
