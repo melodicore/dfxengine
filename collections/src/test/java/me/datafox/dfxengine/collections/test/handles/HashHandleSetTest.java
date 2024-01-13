@@ -1,8 +1,8 @@
 package me.datafox.dfxengine.collections.test.handles;
 
+import me.datafox.dfxengine.collections.HashHandleSet;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleSet;
-import me.datafox.dfxengine.handles.collection.HashHandleSet;
 
 /**
  * @author datafox
