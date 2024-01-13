@@ -2,7 +2,6 @@ plugins {
     id "java-library"
     id "maven-publish"
     id "signing"
-    id "io.freefair.lombok" version "${lombokPluginVersion}"
 }
 
 version = "$collectionsVersion"
@@ -12,6 +11,9 @@ dependencies {
     implementation "me.datafox.dfxengine:utils:$utilsVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
     testImplementation "me.datafox.dfxengine:handles:$handlesVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
@@ -20,6 +22,7 @@ dependencies {
 }
 
 test {
+    dependsOn(jar)
     useJUnitPlatform()
 }
 
