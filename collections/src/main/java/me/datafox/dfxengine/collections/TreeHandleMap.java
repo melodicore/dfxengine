@@ -78,7 +78,7 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      * {@link Space} associated with this map
      */
     @Override
-    public void putAll(Map<? extends Handle,? extends T> map) {
+    public void putAll(Map<? extends Handle, ? extends T> map) {
         map.keySet().forEach(this::checkSpace);
 
         map.forEach(this::putInternal);
@@ -174,7 +174,7 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      * @return {@code true} if this map contains all the specified {@link Handle Handles}
      */
     @Override
-    public boolean containsAll(Collection<Handle> handles) {
+    public boolean containsAll(Collection<? extends Handle> handles) {
         return keySet().containsAll(handles);
     }
 
@@ -222,7 +222,7 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      * @return {@code true} if the contents of this map changed as a result of this action
      */
     @Override
-    public boolean removeAll(Collection<Handle> handles) {
+    public boolean removeAll(Collection<? extends Handle> handles) {
         boolean changed = false;
 
         for(Handle handle : handles) {
