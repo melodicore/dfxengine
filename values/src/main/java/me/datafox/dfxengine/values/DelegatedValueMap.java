@@ -858,7 +858,6 @@ public class DelegatedValueMap implements ValueMap {
          * This method will always throw {@link UnsupportedOperationException}.
          *
          * @param m ignored parameter
-         * @return this method will never return
          */
         @Override
         public void putAll(Map<? extends Handle,? extends Numeral> m) {
