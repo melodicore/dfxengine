@@ -309,6 +309,7 @@ public final class SpaceImpl implements Space {
         return String.format("%s[%s]", handleId, handles.stream().map(Handle::getId).collect(Collectors.joining(", ")));
     }
 
+    @SuppressWarnings("SameParameterValue")
     static Space bootstrap(HandleManager handleManager, String id) {
         return new SpaceImpl(handleManager, id);
     }
