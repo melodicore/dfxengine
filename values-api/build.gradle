@@ -7,9 +7,9 @@ plugins {
 version = "$valuesApiVersion"
 
 dependencies {
-    api "me.datafox.dfxengine:math-api:$mathApiVersion"
-    api "me.datafox.dfxengine:handles-api:$handlesApiVersion"
-    api "me.datafox.dfxengine:dependencies:$dependenciesVersion"
+    api project(":math-api")
+    api project(":handles-api")
+    api project(":dependencies")
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"

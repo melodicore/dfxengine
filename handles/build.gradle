@@ -7,10 +7,10 @@ plugins {
 version = "$handlesVersion"
 
 dependencies {
-    api "me.datafox.dfxengine:handles-api:$handlesApiVersion"
-    implementation "me.datafox.dfxengine:utils:$utilsVersion"
-    implementation "me.datafox.dfxengine:collections:$collectionsVersion"
-    implementation "me.datafox.dfxengine:injector-api:$injectorApiVersion"
+    api project(":handles-api")
+    implementation project(":utils")
+    implementation project(":collections")
+    implementation project(":injector-api")
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
