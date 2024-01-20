@@ -29,7 +29,7 @@ Here are the currently existing and planned modules:
 | [Math](math)                 | Done (1.0.3)       | Seamless wrapping and manipulation of number types  |
 | [Utils](utils)               | Done (1.0.0)^1^    | Utilities used by other modules                     |
 | [Values API](values-api)     | Done (1.0.0)       | Interfaces for the Values module                    |
-| [Values](values)             | Done (1.0.0)       | Mutable number values and a dynamic modifier system |
+| [Values](values)             | Done (1.0.1)       | Mutable number values and a dynamic modifier system |
 | [Text API](text-api)         | Under Construction | Interfaces for the Text module                      |
 | [Text](text)                 | Under Construction | Text handling and representation                    |
 | Entities                     | Not yet started    | Data-oriented entity system                         |

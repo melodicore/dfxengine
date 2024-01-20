@@ -8,7 +8,6 @@ module dfxengine.values {
     requires dfxengine.math.api;
     requires dfxengine.handles.api;
     requires dfxengine.math;
-    requires dfxengine.handles;
     requires dfxengine.dependencies;
     requires dfxengine.collections;
     requires dfxengine.utils;
