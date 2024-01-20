@@ -1,8 +1,11 @@
 package me.datafox.dfxengine.utils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -86,11 +89,22 @@ public class ClassUtils {
      * @param aClass {@link Class}
      * @param <T> type of the input
      * @param <C> type to be cast to
-     * @return {@link Stream} of the object cast to the specified Class, or an empty Stream if the object cannot be cast
-     * to the specified Class
+     * @return {@link Stream} of the object cast to the specified {@link Class}, or an empty Stream if the object cannot
+     * be cast to the specified Class
      */
     public static <T,C> Stream<C> filterInstanceAndCast(T input, Class<C> aClass) {
         return aClass.isInstance(input) ? Stream.of(aClass.cast(input)) : Stream.empty();
+    }
+
+    /**
+     * @param aClass {@link Class}
+     * @param <T> type of the input
+     * @param <C> type to be cast to
+     * @return {@link Function} that returns a {@link Stream} of the object cast to the specified {@link Class}, or an
+     * empty Stream if the object cannot be cast to the specified Class
+     */
+    public static <T,C> Function<T,Stream<C>> filterInstanceAndCast(Class<C> aClass) {
+        return input -> filterInstanceAndCast(input, aClass);
     }
 
     @SuppressWarnings("unchecked")
