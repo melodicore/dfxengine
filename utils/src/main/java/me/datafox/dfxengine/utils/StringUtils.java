@@ -1,7 +1,9 @@
 package me.datafox.dfxengine.utils;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
@@ -43,5 +45,37 @@ public class StringUtils {
                 Arrays.stream(constructor.getParameterTypes())
                         .map(StringUtils::className)
                         .collect(Collectors.joining(",")));
+    }
+
+    /**
+     * @param str {@link String} to be capitalized
+     * @return capitalized {@link String}
+     */
+    public static String capitalize(String str) {
+        return str.substring(0, 1).toUpperCase() +
+                str.substring(1).toLowerCase();
+    }
+
+    /**
+     * @param elements {@link CharSequence} elements to be joined
+     * @param separator separator to be used
+     * @param lastSeparator separator to be used before the last element, or {@code null} if the normal separator should
+     * be used instead
+     * @return {@link String} of the elements joined together
+     */
+    public static String joining(Collection<? extends CharSequence> elements, String separator, String lastSeparator) {
+        String result = elements
+                .stream()
+                .collect(Collectors.joining(separator));
+
+        if(lastSeparator == null) {
+            return result;
+        }
+
+        int lastLength = new ArrayList<>(elements).get(elements.size() - 1).length();
+
+        return result.substring(0, result.length() - lastLength - separator.length()) +
+                lastSeparator +
+                result.substring(result.length() - lastLength);
     }
 }
