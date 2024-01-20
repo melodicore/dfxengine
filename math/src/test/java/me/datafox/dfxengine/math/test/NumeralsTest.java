@@ -1,13 +1,14 @@
 package me.datafox.dfxengine.math.test;
 
 import me.datafox.dfxengine.math.numeral.*;
+import me.datafox.dfxengine.math.utils.Numerals;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import static me.datafox.dfxengine.math.api.NumeralType.*;
-import static me.datafox.dfxengine.math.utils.Numerals.valueOf;
+import static me.datafox.dfxengine.math.utils.Numerals.of;
 import static me.datafox.dfxengine.math.utils.Numerals.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,22 +18,22 @@ import static org.junit.jupiter.api.Assertions.*;
 public class NumeralsTest {
     @Test
     public void valueOfTest() {
-        assertInstanceOf(IntNumeral.class, valueOf(72));
-        assertInstanceOf(LongNumeral.class, valueOf(9524783641L));
-        assertInstanceOf(BigIntNumeral.class, valueOf(new BigInteger("864208642086420864208642086420")));
-        assertInstanceOf(FloatNumeral.class, valueOf(11.54f));
-        assertInstanceOf(DoubleNumeral.class, valueOf(7.24e190d));
-        assertInstanceOf(BigDecNumeral.class, valueOf(new BigDecimal("5.34812375923e+360")));
+        assertInstanceOf(IntNumeral.class, Numerals.of(72));
+        assertInstanceOf(LongNumeral.class, Numerals.of(9524783641L));
+        assertInstanceOf(BigIntNumeral.class, Numerals.of(new BigInteger("864208642086420864208642086420")));
+        assertInstanceOf(FloatNumeral.class, Numerals.of(11.54f));
+        assertInstanceOf(DoubleNumeral.class, Numerals.of(7.24e190d));
+        assertInstanceOf(BigDecNumeral.class, Numerals.of(new BigDecimal("5.34812375923e+360")));
 
-        assertInstanceOf(BigIntNumeral.class, valueOf("53462"));
-        assertInstanceOf(BigDecNumeral.class, valueOf("53462e+1"));
-        assertInstanceOf(BigDecNumeral.class, valueOf("5.3462e+3"));
-        assertThrows(NumberFormatException.class, () -> valueOf("941.76.245"));
-        assertThrows(NumberFormatException.class, () -> valueOf("941,76"));
-        assertThrows(NumberFormatException.class, () -> valueOf("941a76"));
+        assertInstanceOf(BigIntNumeral.class, Numerals.of("53462"));
+        assertInstanceOf(BigDecNumeral.class, Numerals.of("53462e+1"));
+        assertInstanceOf(BigDecNumeral.class, Numerals.of("5.3462e+3"));
+        assertThrows(NumberFormatException.class, () -> Numerals.of("941.76.245"));
+        assertThrows(NumberFormatException.class, () -> Numerals.of("941,76"));
+        assertThrows(NumberFormatException.class, () -> Numerals.of("941a76"));
 
-        assertInstanceOf(LongNumeral.class, valueOf(Long.valueOf(1337L)));
-        assertThrows(IllegalArgumentException.class, () -> valueOf(Short.valueOf("37")));
+        assertInstanceOf(LongNumeral.class, of(Long.valueOf(1337L)));
+        assertThrows(IllegalArgumentException.class, () -> of(Short.valueOf("37")));
     }
 
     @Test

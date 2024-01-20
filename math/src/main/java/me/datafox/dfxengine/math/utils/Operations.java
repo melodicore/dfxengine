@@ -108,7 +108,7 @@ public class Operations {
         }
 
         if(compare(minuend, subtrahend) == 0) {
-            return valueOf(0);
+            return of(0);
         }
 
         NumeralType type = getSignificantType(minuend.getType(), subtrahend.getType());
@@ -150,7 +150,7 @@ public class Operations {
      */
     public static Numeral multiply(Numeral multiplicand, Numeral multiplier) {
         if(isZero(multiplicand) || isZero(multiplier)) {
-            return valueOf(0);
+            return of(0);
         }
 
         if(isOne(multiplicand)) {
@@ -207,7 +207,7 @@ public class Operations {
         }
 
         if(isZero(dividend)) {
-            return Numerals.valueOf(0);
+            return Numerals.of(0);
         }
 
         if(isOne(divisor)) {
@@ -215,7 +215,7 @@ public class Operations {
         }
 
         if(compare(dividend, divisor) == 0) {
-            return valueOf(1);
+            return of(1);
         }
 
         NumeralType type = getSignificantType(dividend.getType(), divisor.getType());
@@ -254,7 +254,7 @@ public class Operations {
      * should never happen
      */
     public static Numeral inverse(Numeral numeral) {
-        return divide(valueOf(1), numeral);
+        return divide(of(1), numeral);
     }
 
     /**
@@ -274,11 +274,11 @@ public class Operations {
      */
     public static Numeral power(Numeral base, Numeral exponent) {
         if(isOne(base) || isZero(exponent)) {
-            return valueOf(1);
+            return of(1);
         }
 
         if(isZero(base)) {
-            return valueOf(0);
+            return of(0);
         }
 
         if(isOne(exponent)) {
@@ -321,7 +321,7 @@ public class Operations {
      */
     public static Numeral exp(Numeral numeral) {
         if(isZero(numeral)) {
-            return valueOf(1);
+            return of(1);
         }
 
         switch(numeral.getType()) {
@@ -358,14 +358,14 @@ public class Operations {
      */
     public static Numeral sqrt(Numeral numeral) {
         if(isZero(numeral)) {
-            return valueOf(0);
+            return of(0);
         }
 
         if(isOne(numeral)) {
-            return valueOf(1);
+            return of(1);
         }
 
-        if(compare(numeral, valueOf(0)) < 0) {
+        if(compare(numeral, of(0)) < 0) {
             throw LogUtils.logExceptionAndGet(logger,
                     MathStrings.squareRootOfNegative(numeral),
                     ArithmeticException::new);
@@ -404,11 +404,11 @@ public class Operations {
      */
     public static Numeral cbrt(Numeral numeral) {
         if(isZero(numeral)) {
-            return valueOf(0);
+            return of(0);
         }
 
         if(isOne(numeral)) {
-            return valueOf(1);
+            return of(1);
         }
 
         switch(numeral.getType()) {
@@ -455,18 +455,18 @@ public class Operations {
         }
 
         if(isZero(numeral)) {
-            return valueOf(0);
+            return of(0);
         }
 
         if(isOne(numeral)) {
-            return valueOf(1);
+            return of(1);
         }
 
         if(isOne(base)) {
             return numeral;
         }
 
-        if(compare(numeral, valueOf(0)) < 0 && compare(base, valueOf(0)) > 0 && isEven(base)) {
+        if(compare(numeral, of(0)) < 0 && compare(base, of(0)) > 0 && isEven(base)) {
             throw LogUtils.logExceptionAndGet(logger,
                     MathStrings.rootOfNegativeEvenBase(numeral, base),
                     ArithmeticException::new);
@@ -507,14 +507,14 @@ public class Operations {
      * should never happen
      */
     public static Numeral log(Numeral numeral) {
-        if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
+        if(isZero(numeral) || compare(numeral, Numerals.of(0)) < 0) {
             throw LogUtils.logExceptionAndGet(logger,
                     MathStrings.logarithmOfZeroOrNegative(numeral),
                     ArithmeticException::new);
         }
 
         if(isOne(numeral)) {
-            return valueOf(0);
+            return of(0);
         }
 
         switch(numeral.getType()) {
@@ -550,14 +550,14 @@ public class Operations {
      * should never happen
      */
     public static Numeral log2(Numeral numeral) {
-        if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
+        if(isZero(numeral) || compare(numeral, Numerals.of(0)) < 0) {
             throw LogUtils.logExceptionAndGet(logger,
                     MathStrings.logarithmOfZeroOrNegative(numeral),
                     ArithmeticException::new);
         }
 
         if(isOne(numeral)) {
-            return valueOf(0);
+            return of(0);
         }
 
         switch(numeral.getType()) {
@@ -593,14 +593,14 @@ public class Operations {
      * should never happen
      */
     public static Numeral log10(Numeral numeral) {
-        if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
+        if(isZero(numeral) || compare(numeral, Numerals.of(0)) < 0) {
             throw LogUtils.logExceptionAndGet(logger,
                     MathStrings.logarithmOfZeroOrNegative(numeral),
                     ArithmeticException::new);
         }
 
         if(isOne(numeral)) {
-            return valueOf(0);
+            return of(0);
         }
 
         switch(numeral.getType()) {
@@ -641,13 +641,13 @@ public class Operations {
      * should never happen
      */
     public static Numeral logN(Numeral numeral, Numeral base) {
-        if(isZero(numeral) || compare(numeral, Numerals.valueOf(0)) < 0) {
+        if(isZero(numeral) || compare(numeral, Numerals.of(0)) < 0) {
             throw LogUtils.logExceptionAndGet(logger,
                     MathStrings.logarithmOfZeroOrNegative(numeral),
                     ArithmeticException::new);
         }
 
-        if(isZero(base) || compare(base, Numerals.valueOf(0)) < 0) {
+        if(isZero(base) || compare(base, Numerals.of(0)) < 0) {
             throw LogUtils.logExceptionAndGet(logger,
                     MathStrings.logarithmOfBaseZeroOrNegative(numeral, base),
                     ArithmeticException::new);
@@ -660,7 +660,7 @@ public class Operations {
         }
 
         if(isOne(numeral)) {
-            return valueOf(0);
+            return of(0);
         }
 
         NumeralType type = getSignificantType(numeral.getType(), base.getType());
@@ -791,7 +791,7 @@ public class Operations {
             return add((long) augend, addend);
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -806,7 +806,7 @@ public class Operations {
             return add(BigInteger.valueOf(augend), BigInteger.valueOf(addend));
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -815,7 +815,7 @@ public class Operations {
      * @return result of the addition
      */
     public static BigIntNumeral add(BigInteger augend, BigInteger addend) {
-        return valueOf(augend.add(addend));
+        return of(augend.add(addend));
     }
 
     /**
@@ -830,7 +830,7 @@ public class Operations {
             return add((double) augend, addend);
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -845,7 +845,7 @@ public class Operations {
             return add(BigDecimal.valueOf(augend), BigDecimal.valueOf(addend));
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -854,7 +854,7 @@ public class Operations {
      * @return result of the addition
      */
     public static BigDecNumeral add(BigDecimal augend, BigDecimal addend) {
-        return valueOf(augend.add(addend, CONTEXT));
+        return of(augend.add(addend, CONTEXT));
     }
 
     /**
@@ -869,7 +869,7 @@ public class Operations {
             return subtract((long) minuend, subtrahend);
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -884,7 +884,7 @@ public class Operations {
             return subtract(BigInteger.valueOf(minuend), BigInteger.valueOf(subtrahend));
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -893,7 +893,7 @@ public class Operations {
      * @return result of the subtraction
      */
     public static BigIntNumeral subtract(BigInteger minuend, BigInteger subtrahend) {
-        return valueOf(minuend.subtract(subtrahend));
+        return of(minuend.subtract(subtrahend));
     }
 
     /**
@@ -908,7 +908,7 @@ public class Operations {
             return subtract((double) minuend, subtrahend);
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -923,7 +923,7 @@ public class Operations {
             return subtract(BigDecimal.valueOf(minuend), BigDecimal.valueOf(subtrahend));
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -932,7 +932,7 @@ public class Operations {
      * @return result of the subtraction
      */
     public static BigDecNumeral subtract(BigDecimal minuend, BigDecimal subtrahend) {
-        return valueOf(minuend.subtract(subtrahend, CONTEXT));
+        return of(minuend.subtract(subtrahend, CONTEXT));
     }
 
     /**
@@ -944,10 +944,10 @@ public class Operations {
         long result = (long) multiplicand * multiplier;
 
         if(isOutOfIntRange(result)) {
-            return valueOf(result);
+            return of(result);
         }
 
-        return valueOf((int) result);
+        return of((int) result);
     }
 
     /**
@@ -967,7 +967,7 @@ public class Operations {
             }
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -976,7 +976,7 @@ public class Operations {
      * @return result of the multiplication
      */
     public static BigIntNumeral multiply(BigInteger multiplicand, BigInteger multiplier) {
-        return valueOf(multiplicand.multiply(multiplier));
+        return of(multiplicand.multiply(multiplier));
     }
 
     /**
@@ -991,7 +991,7 @@ public class Operations {
             return multiply((double) multiplicand, multiplier);
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -1006,7 +1006,7 @@ public class Operations {
             return multiply(BigDecimal.valueOf(multiplicand), BigDecimal.valueOf(multiplier));
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -1015,7 +1015,7 @@ public class Operations {
      * @return result of the multiplication
      */
     public static BigDecNumeral multiply(BigDecimal multiplicand, BigDecimal multiplier) {
-        return valueOf(multiplicand.multiply(multiplier, CONTEXT));
+        return of(multiplicand.multiply(multiplier, CONTEXT));
     }
 
     /**
@@ -1024,7 +1024,7 @@ public class Operations {
      * @return result of the division
      */
     public static Numeral divide(int dividend, int divisor) {
-        return valueOf(dividend / divisor);
+        return of(dividend / divisor);
     }
 
     /**
@@ -1033,7 +1033,7 @@ public class Operations {
      * @return result of the division
      */
     public static Numeral divide(long dividend, long divisor) {
-        return valueOf(dividend / divisor);
+        return of(dividend / divisor);
     }
 
     /**
@@ -1042,7 +1042,7 @@ public class Operations {
      * @return result of the division
      */
     public static BigIntNumeral divide(BigInteger dividend, BigInteger divisor) {
-        return valueOf(dividend.divide(divisor));
+        return of(dividend.divide(divisor));
     }
 
     /**
@@ -1057,7 +1057,7 @@ public class Operations {
             return divide((double) dividend, divisor);
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -1072,7 +1072,7 @@ public class Operations {
             return divide(BigDecimal.valueOf(dividend), BigDecimal.valueOf(divisor));
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -1081,7 +1081,7 @@ public class Operations {
      * @return result of the division
      */
     public static BigDecNumeral divide(BigDecimal dividend, BigDecimal divisor) {
-        return valueOf(dividend.divide(divisor, CONTEXT));
+        return of(dividend.divide(divisor, CONTEXT));
     }
 
     /**
@@ -1097,10 +1097,10 @@ public class Operations {
         }
 
         if(isOutOfIntRange(value)) {
-            return valueOf((long) value);
+            return of((long) value);
         }
 
-        return valueOf((int) value);
+        return of((int) value);
     }
 
     /**
@@ -1115,7 +1115,7 @@ public class Operations {
             return power(BigInteger.valueOf(base), BigInteger.valueOf(exponent));
         }
 
-        return valueOf((long) value);
+        return of((long) value);
     }
 
     /**
@@ -1125,10 +1125,10 @@ public class Operations {
      */
     public static Numeral power(BigInteger base, BigInteger exponent) {
         if(isOutOfIntRange(exponent)) {
-            return valueOf(BigDecimalMath.pow(new BigDecimal(base), new BigDecimal(exponent), CONTEXT).toBigInteger());
+            return of(BigDecimalMath.pow(new BigDecimal(base), new BigDecimal(exponent), CONTEXT).toBigInteger());
         }
 
-        return valueOf(base.pow(exponent.intValue()));
+        return of(base.pow(exponent.intValue()));
     }
 
     /**
@@ -1144,10 +1144,10 @@ public class Operations {
         }
 
         if(isOutOfFloatRange(value)) {
-            return valueOf(value);
+            return of(value);
         }
 
-        return valueOf((float) value);
+        return of((float) value);
     }
 
     /**
@@ -1162,7 +1162,7 @@ public class Operations {
             return power(BigDecimal.valueOf(base), BigDecimal.valueOf(exponent));
         }
 
-        return valueOf(value);
+        return of(value);
     }
 
     /**
@@ -1171,7 +1171,7 @@ public class Operations {
      * @return result of the exponentiation
      */
     public static Numeral power(BigDecimal base, BigDecimal exponent) {
-        return valueOf(BigDecimalMath.pow(base, exponent, CONTEXT));
+        return of(BigDecimalMath.pow(base, exponent, CONTEXT));
     }
 
     /**
@@ -1186,10 +1186,10 @@ public class Operations {
         }
 
         if(isOutOfIntRange(result)) {
-            return valueOf((long) result);
+            return of((long) result);
         }
 
-        return valueOf((int) result);
+        return of((int) result);
     }
 
     /**
@@ -1201,7 +1201,7 @@ public class Operations {
         if(isOutOfLongRange(result)) {
             return exp(BigInteger.valueOf(value));
         }
-        return valueOf((long) result);
+        return of((long) result);
     }
 
     /**
@@ -1209,7 +1209,7 @@ public class Operations {
      * @return natural exponent of value
      */
     public static Numeral exp(BigInteger value) {
-        return valueOf(BigDecimalMath.exp(new BigDecimal(value), CONTEXT).toBigInteger());
+        return of(BigDecimalMath.exp(new BigDecimal(value), CONTEXT).toBigInteger());
     }
 
     /**
@@ -1224,10 +1224,10 @@ public class Operations {
         }
 
         if(isOutOfFloatRange(result)) {
-            return valueOf(result);
+            return of(result);
         }
 
-        return valueOf((float) result);
+        return of((float) result);
     }
 
     /**
@@ -1241,7 +1241,7 @@ public class Operations {
             return exp(BigDecimal.valueOf(value));
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -1249,7 +1249,7 @@ public class Operations {
      * @return natural exponent of the value
      */
     public static Numeral exp(BigDecimal value) {
-        return valueOf(BigDecimalMath.exp(value, CONTEXT));
+        return of(BigDecimalMath.exp(value, CONTEXT));
     }
 
     /**
@@ -1257,7 +1257,7 @@ public class Operations {
      * @return square root of value
      */
     public static Numeral sqrt(int value) {
-        return valueOf((int) Math.sqrt(value));
+        return of((int) Math.sqrt(value));
     }
 
     /**
@@ -1265,7 +1265,7 @@ public class Operations {
      * @return square root of value
      */
     public static Numeral sqrt(long value) {
-        return valueOf((long) Math.sqrt(value));
+        return of((long) Math.sqrt(value));
     }
 
     /**
@@ -1273,7 +1273,7 @@ public class Operations {
      * @return square root of value
      */
     public static Numeral sqrt(BigInteger value) {
-        return valueOf(value.sqrt());
+        return of(value.sqrt());
     }
 
     /**
@@ -1281,7 +1281,7 @@ public class Operations {
      * @return square root of value
      */
     public static Numeral sqrt(float value) {
-        return valueOf((float) Math.sqrt(value));
+        return of((float) Math.sqrt(value));
     }
 
     /**
@@ -1289,7 +1289,7 @@ public class Operations {
      * @return square root of value
      */
     public static Numeral sqrt(double value) {
-        return valueOf(Math.sqrt(value));
+        return of(Math.sqrt(value));
     }
 
     /**
@@ -1297,7 +1297,7 @@ public class Operations {
      * @return square root of value
      */
     public static Numeral sqrt(BigDecimal value) {
-        return valueOf(value.sqrt(CONTEXT));
+        return of(value.sqrt(CONTEXT));
     }
 
     /**
@@ -1305,7 +1305,7 @@ public class Operations {
      * @return cube root of value
      */
     public static Numeral cbrt(int value) {
-        return valueOf((int) Math.cbrt(value));
+        return of((int) Math.cbrt(value));
     }
 
     /**
@@ -1313,7 +1313,7 @@ public class Operations {
      * @return cube root of value
      */
     public static Numeral cbrt(long value) {
-        return valueOf((long) Math.cbrt(value));
+        return of((long) Math.cbrt(value));
     }
 
     /**
@@ -1329,7 +1329,7 @@ public class Operations {
      * @return cube root of value
      */
     public static Numeral cbrt(float value) {
-        return valueOf((float) Math.cbrt(value));
+        return of((float) Math.cbrt(value));
     }
 
     /**
@@ -1337,7 +1337,7 @@ public class Operations {
      * @return cube root of value
      */
     public static Numeral cbrt(double value) {
-        return valueOf(Math.cbrt(value));
+        return of(Math.cbrt(value));
     }
 
     /**
@@ -1355,10 +1355,10 @@ public class Operations {
      */
     public static Numeral root(int value, int base) {
         if(value < 0) {
-            return valueOf((int) -Math.pow(-value, 1d/base));
+            return of((int) -Math.pow(-value, 1d/base));
         }
 
-        return valueOf((int) Math.pow(value, 1d/base));
+        return of((int) Math.pow(value, 1d/base));
     }
 
     /**
@@ -1368,10 +1368,10 @@ public class Operations {
      */
     public static Numeral root(long value, long base) {
         if(value < 0) {
-            return valueOf((long) -Math.pow(-value, 1d/base));
+            return of((long) -Math.pow(-value, 1d/base));
         }
 
-        return valueOf((long) Math.pow(value, 1d/base));
+        return of((long) Math.pow(value, 1d/base));
     }
 
     /**
@@ -1381,12 +1381,12 @@ public class Operations {
      */
     public static Numeral root(BigInteger value, BigInteger base) {
         if(value.compareTo(BigInteger.ZERO) < 0) {
-            return valueOf(BigDecimalMath.root(
+            return of(BigDecimalMath.root(
                     new BigDecimal(value.negate()),
                     new BigDecimal(base), CONTEXT).toBigInteger().negate());
         }
 
-        return valueOf(BigDecimalMath.root(
+        return of(BigDecimalMath.root(
                 new BigDecimal(value), new BigDecimal(base), CONTEXT).toBigInteger());
     }
 
@@ -1409,10 +1409,10 @@ public class Operations {
         }
 
         if(isOutOfFloatRange(result)) {
-            return valueOf(result);
+            return of(result);
         }
 
-        return valueOf((float) result);
+        return of((float) result);
     }
 
     /**
@@ -1433,7 +1433,7 @@ public class Operations {
             return root(BigDecimal.valueOf(value), BigDecimal.valueOf(base));
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -1443,10 +1443,10 @@ public class Operations {
      */
     public static Numeral root(BigDecimal value, BigDecimal base) {
         if(value.compareTo(BigDecimal.ZERO) < 0) {
-            return valueOf(BigDecimalMath.root(value.negate(), base, CONTEXT).negate());
+            return of(BigDecimalMath.root(value.negate(), base, CONTEXT).negate());
         }
 
-        return valueOf(BigDecimalMath.root(value, base, CONTEXT));
+        return of(BigDecimalMath.root(value, base, CONTEXT));
     }
 
     /**
@@ -1454,7 +1454,7 @@ public class Operations {
      * @return natural logarithm of the value
      */
     public static Numeral log(int value) {
-        return valueOf((int) Math.log(value));
+        return of((int) Math.log(value));
     }
 
     /**
@@ -1462,7 +1462,7 @@ public class Operations {
      * @return natural logarithm of the value
      */
     public static Numeral log(long value) {
-        return valueOf((long) Math.log(value));
+        return of((long) Math.log(value));
     }
 
     /**
@@ -1470,7 +1470,7 @@ public class Operations {
      * @return natural logarithm of the value
      */
     public static Numeral log(BigInteger value) {
-        return valueOf(BigDecimalMath.log(new BigDecimal(value), CONTEXT).toBigInteger());
+        return of(BigDecimalMath.log(new BigDecimal(value), CONTEXT).toBigInteger());
     }
 
     /**
@@ -1478,7 +1478,7 @@ public class Operations {
      * @return natural logarithm of the value
      */
     public static Numeral log(float value) {
-        return valueOf((float) Math.log(value));
+        return of((float) Math.log(value));
     }
 
     /**
@@ -1486,7 +1486,7 @@ public class Operations {
      * @return natural logarithm of the value
      */
     public static Numeral log(double value) {
-        return valueOf(Math.log(value));
+        return of(Math.log(value));
     }
 
     /**
@@ -1494,7 +1494,7 @@ public class Operations {
      * @return natural logarithm of the value
      */
     public static Numeral log(BigDecimal value) {
-        return valueOf(BigDecimalMath.log(value, CONTEXT));
+        return of(BigDecimalMath.log(value, CONTEXT));
     }
 
     /**
@@ -1502,7 +1502,7 @@ public class Operations {
      * @return binary logarithm of the value
      */
     public static Numeral log2(int value) {
-        return valueOf((int) (Math.log(value) / Math.log(2)));
+        return of((int) (Math.log(value) / Math.log(2)));
     }
 
     /**
@@ -1510,7 +1510,7 @@ public class Operations {
      * @return binary logarithm of the value
      */
     public static Numeral log2(long value) {
-        return valueOf((long) (Math.log(value) / Math.log(2)));
+        return of((long) (Math.log(value) / Math.log(2)));
     }
 
     /**
@@ -1518,7 +1518,7 @@ public class Operations {
      * @return binary logarithm of the value
      */
     public static Numeral log2(BigInteger value) {
-        return valueOf(BigDecimalMath.log2(new BigDecimal(value), CONTEXT).toBigInteger());
+        return of(BigDecimalMath.log2(new BigDecimal(value), CONTEXT).toBigInteger());
     }
 
     /**
@@ -1526,7 +1526,7 @@ public class Operations {
      * @return binary logarithm of the value
      */
     public static Numeral log2(float value) {
-        return valueOf((float) (Math.log(value) / Math.log(2)));
+        return of((float) (Math.log(value) / Math.log(2)));
     }
 
     /**
@@ -1534,7 +1534,7 @@ public class Operations {
      * @return binary logarithm of the value
      */
     public static Numeral log2(double value) {
-        return valueOf(Math.log(value) / Math.log(2));
+        return of(Math.log(value) / Math.log(2));
     }
 
     /**
@@ -1542,7 +1542,7 @@ public class Operations {
      * @return binary logarithm of the value
      */
     public static Numeral log2(BigDecimal value) {
-        return valueOf(BigDecimalMath.log2(value, CONTEXT));
+        return of(BigDecimalMath.log2(value, CONTEXT));
     }
 
     /**
@@ -1550,7 +1550,7 @@ public class Operations {
      * @return base 10 logarithm of the value
      */
     public static Numeral log10(int value) {
-        return valueOf((int) Math.log10(value));
+        return of((int) Math.log10(value));
     }
 
     /**
@@ -1558,7 +1558,7 @@ public class Operations {
      * @return base 10 logarithm of the value
      */
     public static Numeral log10(long value) {
-        return valueOf((long) Math.log10(value));
+        return of((long) Math.log10(value));
     }
 
     /**
@@ -1566,7 +1566,7 @@ public class Operations {
      * @return base 10 logarithm of the value
      */
     public static Numeral log10(BigInteger value) {
-        return valueOf(BigDecimalMath.log10(new BigDecimal(value), CONTEXT).toBigInteger());
+        return of(BigDecimalMath.log10(new BigDecimal(value), CONTEXT).toBigInteger());
     }
 
     /**
@@ -1574,7 +1574,7 @@ public class Operations {
      * @return base 10 logarithm of the value
      */
     public static Numeral log10(float value) {
-        return valueOf((float) Math.log10(value));
+        return of((float) Math.log10(value));
     }
 
     /**
@@ -1582,7 +1582,7 @@ public class Operations {
      * @return base 10 logarithm of the value
      */
     public static Numeral log10(double value) {
-        return valueOf(Math.log10(value));
+        return of(Math.log10(value));
     }
 
     /**
@@ -1590,7 +1590,7 @@ public class Operations {
      * @return base 10 logarithm of the value
      */
     public static Numeral log10(BigDecimal value) {
-        return valueOf(BigDecimalMath.log10(value, CONTEXT));
+        return of(BigDecimalMath.log10(value, CONTEXT));
     }
 
     /**
@@ -1599,7 +1599,7 @@ public class Operations {
      * @return logarithm of the value in the specified base
      */
     public static Numeral logN(int value, int base) {
-        return valueOf((int) (Math.log(value) / Math.log(base)));
+        return of((int) (Math.log(value) / Math.log(base)));
     }
 
     /**
@@ -1608,7 +1608,7 @@ public class Operations {
      * @return logarithm of the value in the specified base
      */
     public static Numeral logN(long value, long base) {
-        return valueOf((long) (Math.log(value) / Math.log(base)));
+        return of((long) (Math.log(value) / Math.log(base)));
     }
 
     /**
@@ -1617,7 +1617,7 @@ public class Operations {
      * @return logarithm of the value in the specified base
      */
     public static Numeral logN(BigInteger value, BigInteger base) {
-        return valueOf(BigDecimalMath.log(new BigDecimal(value), CONTEXT).divide(
+        return of(BigDecimalMath.log(new BigDecimal(value), CONTEXT).divide(
                 BigDecimalMath.log(new BigDecimal(base), CONTEXT), CONTEXT)
                 .toBigInteger());
     }
@@ -1635,10 +1635,10 @@ public class Operations {
         }
 
         if(isOutOfFloatRange(result)) {
-            return valueOf(result);
+            return of(result);
         }
 
-        return valueOf((float) result);
+        return of((float) result);
     }
 
     /**
@@ -1653,7 +1653,7 @@ public class Operations {
             return logN(BigDecimal.valueOf(value), BigDecimal.valueOf(base));
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -1662,7 +1662,7 @@ public class Operations {
      * @return logarithm of the value in the specified base
      */
     public static Numeral logN(BigDecimal value, BigDecimal base) {
-        return valueOf(BigDecimalMath.log(value, CONTEXT).divide(
+        return of(BigDecimalMath.log(value, CONTEXT).divide(
                 BigDecimalMath.log(base, CONTEXT), CONTEXT));
     }
 
@@ -1676,10 +1676,10 @@ public class Operations {
         long result = value * ((long) max - min) + min;
 
         if(isOutOfIntRange(result)) {
-            return valueOf(result);
+            return of(result);
         }
 
-        return valueOf((int) result);
+        return of((int) result);
     }
 
     /**
@@ -1712,7 +1712,7 @@ public class Operations {
             return lerp(BigInteger.valueOf(value), BigInteger.valueOf(min), BigInteger.valueOf(max));
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -1722,7 +1722,7 @@ public class Operations {
      * @return result of the linear interpolation
      */
     public static Numeral lerp(BigInteger value, BigInteger min, BigInteger max) {
-        return valueOf(value.multiply(max.subtract(min)).add(min));
+        return of(value.multiply(max.subtract(min)).add(min));
     }
 
     /**
@@ -1738,7 +1738,7 @@ public class Operations {
             return lerp((double) value, min, max);
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -1754,7 +1754,7 @@ public class Operations {
             return lerp(BigDecimal.valueOf(value), BigDecimal.valueOf(min), BigDecimal.valueOf(max));
         }
 
-        return valueOf(result);
+        return of(result);
     }
 
     /**
@@ -1764,7 +1764,7 @@ public class Operations {
      * @return result of the linear interpolation
      */
     public static Numeral lerp(BigDecimal value, BigDecimal min, BigDecimal max) {
-        return valueOf(value.multiply(
+        return of(value.multiply(
                 max.subtract(min, CONTEXT), CONTEXT)
                 .add(min, CONTEXT));
     }

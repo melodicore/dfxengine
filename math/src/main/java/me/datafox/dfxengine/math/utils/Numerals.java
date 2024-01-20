@@ -27,7 +27,7 @@ public class Numerals {
      * @param i {@code int} value
      * @return {@link IntNumeral} representing specified value
      */
-    public static IntNumeral valueOf(int i) {
+    public static IntNumeral of(int i) {
         return new IntNumeral(i);
     }
 
@@ -35,7 +35,7 @@ public class Numerals {
      * @param l {@code long} value
      * @return {@link LongNumeral} representing specified value
      */
-    public static LongNumeral valueOf(long l) {
+    public static LongNumeral of(long l) {
         return new LongNumeral(l);
     }
 
@@ -43,7 +43,7 @@ public class Numerals {
      * @param bi {@link BigInteger} value
      * @return {@link BigIntNumeral} representing specified value
      */
-    public static BigIntNumeral valueOf(BigInteger bi) {
+    public static BigIntNumeral of(BigInteger bi) {
         return new BigIntNumeral(bi);
     }
 
@@ -51,7 +51,7 @@ public class Numerals {
      * @param f {@code float} value
      * @return {@link FloatNumeral} representing specified value
      */
-    public static FloatNumeral valueOf(float f) {
+    public static FloatNumeral of(float f) {
         return new FloatNumeral(f);
     }
 
@@ -59,7 +59,7 @@ public class Numerals {
      * @param d {@code double} value
      * @return {@link DoubleNumeral} representing specified value
      */
-    public static DoubleNumeral valueOf(double d) {
+    public static DoubleNumeral of(double d) {
         return new DoubleNumeral(d);
     }
 
@@ -67,7 +67,7 @@ public class Numerals {
      * @param bd {@link BigDecimal} value
      * @return {@link BigDecNumeral} representing specified value
      */
-    public static BigDecNumeral valueOf(BigDecimal bd) {
+    public static BigDecNumeral of(BigDecimal bd) {
         return new BigDecNumeral(bd);
     }
 
@@ -81,11 +81,11 @@ public class Numerals {
      *
      * @throws NumberFormatException if str is not a valid number representation
      */
-    public static Numeral valueOf(String str) {
+    public static Numeral of(String str) {
         if(str.matches(".*[.eE].*")) {
-            return valueOf(new BigDecimal(str));
+            return of(new BigDecimal(str));
         } else {
-            return valueOf(new BigInteger(str));
+            return of(new BigInteger(str));
         }
     }
 
@@ -96,24 +96,24 @@ public class Numerals {
      * @throws IllegalArgumentException if the {@link Number} is not any of the following classes: {@link Integer},
      * {@link Long}, {@link BigInteger}, {@link Float}, {@link Double} or {@link BigDecimal}
      */
-    public static Numeral valueOf(Number number) {
+    public static Numeral of(Number number) {
         if(number instanceof Integer) {
-            return valueOf(number.intValue());
+            return of(number.intValue());
         }
         if(number instanceof Long) {
-            return valueOf(number.longValue());
+            return of(number.longValue());
         }
         if(number instanceof BigInteger) {
-            return valueOf((BigInteger) number);
+            return of((BigInteger) number);
         }
         if(number instanceof Float) {
-            return valueOf(number.floatValue());
+            return of(number.floatValue());
         }
         if(number instanceof Double) {
-            return valueOf(number.doubleValue());
+            return of(number.doubleValue());
         }
         if(number instanceof BigDecimal) {
-            return valueOf((BigDecimal) number);
+            return of((BigDecimal) number);
         }
         throw LogUtils.logExceptionAndGet(logger,
                 MathStrings.unknownNumberType(number),

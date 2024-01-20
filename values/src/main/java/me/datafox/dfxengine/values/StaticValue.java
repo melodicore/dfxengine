@@ -491,7 +491,7 @@ public class StaticValue implements Value {
      * @return static value with the specified value
      */
     public static StaticValue of(int i) {
-        return new StaticValue(Numerals.valueOf(i));
+        return new StaticValue(Numerals.of(i));
     }
 
     /**
@@ -499,7 +499,7 @@ public class StaticValue implements Value {
      * @return static value with the specified value
      */
     public static StaticValue of(long l) {
-        return new StaticValue(Numerals.valueOf(l));
+        return new StaticValue(Numerals.of(l));
     }
 
     /**
@@ -507,7 +507,7 @@ public class StaticValue implements Value {
      * @return static value with the specified value
      */
     public static StaticValue of(BigInteger bi) {
-        return new StaticValue(Numerals.valueOf(bi));
+        return new StaticValue(Numerals.of(bi));
     }
 
     /**
@@ -515,7 +515,7 @@ public class StaticValue implements Value {
      * @return static value with the specified value
      */
     public static StaticValue of(float f) {
-        return new StaticValue(Numerals.valueOf(f));
+        return new StaticValue(Numerals.of(f));
     }
 
     /**
@@ -523,7 +523,7 @@ public class StaticValue implements Value {
      * @return static value with the specified value
      */
     public static StaticValue of(double d) {
-        return new StaticValue(Numerals.valueOf(d));
+        return new StaticValue(Numerals.of(d));
     }
 
     /**
@@ -531,7 +531,7 @@ public class StaticValue implements Value {
      * @return static value with the specified value
      */
     public static StaticValue of(BigDecimal bd) {
-        return new StaticValue(Numerals.valueOf(bd));
+        return new StaticValue(Numerals.of(bd));
     }
 
     /**
@@ -541,6 +541,6 @@ public class StaticValue implements Value {
      * @throws NumberFormatException if str is not a valid number representation
      */
     public static StaticValue of(String str) {
-        return new StaticValue(Numerals.valueOf(str));
+        return new StaticValue(Numerals.of(str));
     }
 }

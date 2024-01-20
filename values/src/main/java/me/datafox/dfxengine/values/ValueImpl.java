@@ -405,7 +405,7 @@ public class ValueImpl extends DependencyDependent implements Value {
      * @return value with the specified parameters
      */
     public static ValueImpl of(Handle handle, int i) {
-        return new ValueImpl(handle, Numerals.valueOf(i));
+        return new ValueImpl(handle, Numerals.of(i));
     }
 
     /**
@@ -414,7 +414,7 @@ public class ValueImpl extends DependencyDependent implements Value {
      * @return value with the specified parameters
      */
     public static ValueImpl of(Handle handle, long l) {
-        return new ValueImpl(handle, Numerals.valueOf(l));
+        return new ValueImpl(handle, Numerals.of(l));
     }
 
     /**
@@ -423,7 +423,7 @@ public class ValueImpl extends DependencyDependent implements Value {
      * @return value with the specified parameters
      */
     public static ValueImpl of(Handle handle, BigInteger bi) {
-        return new ValueImpl(handle, Numerals.valueOf(bi));
+        return new ValueImpl(handle, Numerals.of(bi));
     }
 
     /**
@@ -432,7 +432,7 @@ public class ValueImpl extends DependencyDependent implements Value {
      * @return value with the specified parameters
      */
     public static ValueImpl of(Handle handle, float f) {
-        return new ValueImpl(handle, Numerals.valueOf(f));
+        return new ValueImpl(handle, Numerals.of(f));
     }
 
     /**
@@ -441,7 +441,7 @@ public class ValueImpl extends DependencyDependent implements Value {
      * @return value with the specified parameters
      */
     public static ValueImpl of(Handle handle, double d) {
-        return new ValueImpl(handle, Numerals.valueOf(d));
+        return new ValueImpl(handle, Numerals.of(d));
     }
 
     /**
@@ -450,7 +450,7 @@ public class ValueImpl extends DependencyDependent implements Value {
      * @return value with the specified parameters
      */
     public static ValueImpl of(Handle handle, BigDecimal bd) {
-        return new ValueImpl(handle, Numerals.valueOf(bd));
+        return new ValueImpl(handle, Numerals.of(bd));
     }
 
     /**
@@ -461,6 +461,6 @@ public class ValueImpl extends DependencyDependent implements Value {
      * @throws NumberFormatException if str is not a valid number representation
      */
     public static ValueImpl of(Handle handle, String str) {
-        return new ValueImpl(handle, Numerals.valueOf(str));
+        return new ValueImpl(handle, Numerals.of(str));
     }
 }

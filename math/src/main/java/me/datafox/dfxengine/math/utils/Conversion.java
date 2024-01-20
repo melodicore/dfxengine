@@ -462,7 +462,7 @@ public class Conversion {
             return (IntNumeral) numeral;
         }
 
-        return Numerals.valueOf(toInt(numeral));
+        return Numerals.of(toInt(numeral));
     }
 
     /**
@@ -481,7 +481,7 @@ public class Conversion {
             return (LongNumeral) numeral;
         }
 
-        return Numerals.valueOf(toLong(numeral));
+        return Numerals.of(toLong(numeral));
     }
 
     /**
@@ -498,7 +498,7 @@ public class Conversion {
             return (BigIntNumeral) numeral;
         }
 
-        return Numerals.valueOf(toBigInt(numeral));
+        return Numerals.of(toBigInt(numeral));
     }
 
     /**
@@ -517,7 +517,7 @@ public class Conversion {
             return (FloatNumeral) numeral;
         }
 
-        return Numerals.valueOf(toFloat(numeral));
+        return Numerals.of(toFloat(numeral));
     }
 
 
@@ -537,7 +537,7 @@ public class Conversion {
             return (DoubleNumeral) numeral;
         }
 
-        return Numerals.valueOf(toDouble(numeral));
+        return Numerals.of(toDouble(numeral));
     }
 
 
@@ -555,7 +555,7 @@ public class Conversion {
             return (BigDecNumeral) numeral;
         }
 
-        return Numerals.valueOf(toBigDec(numeral));
+        return Numerals.of(toBigDec(numeral));
     }
 
     private static int toIntInRange(float f) {

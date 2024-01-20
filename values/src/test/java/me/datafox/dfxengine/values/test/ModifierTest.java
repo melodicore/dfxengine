@@ -34,15 +34,15 @@ public class ModifierTest {
         OperationModifier divide = new OperationModifier(3, new DivideTestOperation(), StaticValue.of("7.5"));
         assertEquals(0, log2.getPriority());
         assertEquals(0, log2.getDependencies().size());
-        assertEquals(Numerals.valueOf(5.1234514e142d), doubleValue.getValue());
+        assertEquals(Numerals.of(5.1234514e142d), doubleValue.getValue());
         assertTrue(doubleValue.addModifier(lerp));
-        assertEquals(Numerals.valueOf(-1.5370354199999998e143d), doubleValue.getValue());
+        assertEquals(Numerals.of(-1.5370354199999998e143d), doubleValue.getValue());
         assertTrue(doubleValue.addModifier(power));
-        assertEquals(Numerals.valueOf("-9.232320920332658947832317896633030e+1047"), doubleValue.getValue());
+        assertEquals(Numerals.of("-9.232320920332658947832317896633030e+1047"), doubleValue.getValue());
         assertTrue(doubleValue.addModifier(log2));
-        assertEquals(Numerals.valueOf(-1.3116292617697139e20d), doubleValue.getValue());
+        assertEquals(Numerals.of(-1.3116292617697139e20d), doubleValue.getValue());
         assertTrue(doubleValue.addModifier(divide));
-        assertEquals(Numerals.valueOf("-17488390156929518666.66666666666667"), doubleValue.getValue());
+        assertEquals(Numerals.of("-17488390156929518666.66666666666667"), doubleValue.getValue());
     }
 
     @Test
@@ -53,9 +53,9 @@ public class ModifierTest {
                 .operation(Operations::lerp, resultValue(0), StaticValue.of(0), resultValue(1))
                 .operation(new DivideTestOperation(), resultValue(2), sourceValue())
                 .build();
-        assertEquals(Numerals.valueOf(99456), intValue.getValue());
+        assertEquals(Numerals.of(99456), intValue.getValue());
         assertTrue(intValue.addModifier(modifier));
-        assertEquals(Numerals.valueOf("9.646812985527996160915179597332683e+43192"), intValue.getValue());
+        assertEquals(Numerals.of("9.646812985527996160915179597332683e+43192"), intValue.getValue());
 
         assertThrows(IllegalArgumentException.class,
                 () -> MappingOperationModifier.builder(0).operation(new DivideTestOperation()).build());

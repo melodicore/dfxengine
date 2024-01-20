@@ -34,8 +34,8 @@ public class OperationTest {
                 .operation(new ToIntegerTestOperation())
                 .build();
 
-        assertEquals(Numerals.valueOf(1191099896184766L),
-                operation.apply(floatNumeral, intNumeral, Numerals.valueOf(-1e10), intNumeral));
+        assertEquals(Numerals.of(1191099896184766L),
+                operation.apply(floatNumeral, intNumeral, Numerals.of(-1e10), intNumeral));
 
         assertThrows(IllegalArgumentException.class, () -> operation.apply(floatNumeral, intNumeral));
     }
@@ -49,20 +49,20 @@ public class OperationTest {
                 .operation(new ToIntegerTestOperation())
                 .build();
 
-        assertEquals(Numerals.valueOf(1191099896184766L),
+        assertEquals(Numerals.of(1191099896184766L),
                 operation.apply(floatNumeral,
                         sourceNumeral(),
                         resultNumeral(0), intNumeral,
-                        resultNumeral(1), Numerals.valueOf(-1e10), intNumeral,
+                        resultNumeral(1), Numerals.of(-1e10), intNumeral,
                         resultNumeral(2)));
 
         assertThrows(IllegalArgumentException.class, () -> operation.apply(floatNumeral,
                         sourceNumeral(),
                         resultNumeral(1), intNumeral,
-                        resultNumeral(2), Numerals.valueOf(-1e10), intNumeral,
+                        resultNumeral(2), Numerals.of(-1e10), intNumeral,
                         resultNumeral(3)));
 
-        assertThrows(IllegalArgumentException.class, () -> operation.apply(floatNumeral, intNumeral, Numerals.valueOf(-1e10), intNumeral));
+        assertThrows(IllegalArgumentException.class, () -> operation.apply(floatNumeral, intNumeral, Numerals.of(-1e10), intNumeral));
     }
 
     private static class ToIntegerTestOperation implements Operation {

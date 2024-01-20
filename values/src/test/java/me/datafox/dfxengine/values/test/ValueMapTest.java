@@ -100,40 +100,40 @@ public class ValueMapTest {
 
     @Test
     public void setTest() {
-        valueMap.set(Numerals.valueOf(420L));
-        assertEquals(Numerals.valueOf(421L), valueMap.get(doubleHandle).getValue());
-        valueMap.set(Set.of(intHandle, longHandle), Numerals.valueOf(5.23e13d));
-        assertEquals(Numerals.valueOf(5.2300000000001e13d), valueMap.get(intHandle).getValue());
+        valueMap.set(Numerals.of(420L));
+        assertEquals(Numerals.of(421L), valueMap.get(doubleHandle).getValue());
+        valueMap.set(Set.of(intHandle, longHandle), Numerals.of(5.23e13d));
+        assertEquals(Numerals.of(5.2300000000001e13d), valueMap.get(intHandle).getValue());
         assertNull(valueMap.get(longHandle));
-        valueMap.set(MapMathContext.builder().createNonExistingAs(Numerals.valueOf(0)).build(), Set.of(longHandle), Numerals.valueOf(4056181923489831L));
-        assertEquals(Numerals.valueOf(4056181923489832L), valueMap.get(longHandle).getValue());
-        valueMap.set(Map.of(doubleHandle, Numerals.valueOf(52)));
-        assertEquals(Numerals.valueOf(53), valueMap.get(doubleHandle).getValue());
+        valueMap.set(MapMathContext.builder().createNonExistingAs(Numerals.of(0)).build(), Set.of(longHandle), Numerals.of(4056181923489831L));
+        assertEquals(Numerals.of(4056181923489832L), valueMap.get(longHandle).getValue());
+        valueMap.set(Map.of(doubleHandle, Numerals.of(52)));
+        assertEquals(Numerals.of(53), valueMap.get(doubleHandle).getValue());
     }
 
     @Test
     public void applyTest() {
-        valueMap.apply(Operations::add, Numerals.valueOf(3912));
-        assertEquals(Numerals.valueOf(103369), valueMap.get(intHandle).getValue());
-        assertEquals(Numerals.valueOf("28975389235899203095289151"), valueMap.get(bigIntHandle).getValue());
-        assertEquals(Numerals.valueOf(5.1234514e142d), valueMap.get(doubleHandle).getValue());
-        assertEquals(Numerals.valueOf("2.689423689278274536642740000000000e555"), valueMap.get(bigDecHandle).getValue());
+        valueMap.apply(Operations::add, Numerals.of(3912));
+        assertEquals(Numerals.of(103369), valueMap.get(intHandle).getValue());
+        assertEquals(Numerals.of("28975389235899203095289151"), valueMap.get(bigIntHandle).getValue());
+        assertEquals(Numerals.of(5.1234514e142d), valueMap.get(doubleHandle).getValue());
+        assertEquals(Numerals.of("2.689423689278274536642740000000000e555"), valueMap.get(bigDecHandle).getValue());
 
-        assertThrows(ExtendedArithmeticException.class, () -> valueMap.apply(Operations::multiply, MathContext.builder().convertResultTo(FLOAT).ignoreBadConversion(false).build(), Numerals.valueOf(1.2f)));
+        assertThrows(ExtendedArithmeticException.class, () -> valueMap.apply(Operations::multiply, MathContext.builder().convertResultTo(FLOAT).ignoreBadConversion(false).build(), Numerals.of(1.2f)));
 
-        assertEquals(Numerals.valueOf(124042.6f), valueMap.get(intHandle).getValue());
-        assertEquals(Numerals.valueOf(3.4770466e25f), valueMap.get(bigIntHandle).getValue());
-        assertEquals(Numerals.valueOf(5.1234514e142d), valueMap.get(doubleHandle).getValue());
-        assertEquals(Numerals.valueOf("2.689423689278274536642740000000000e555"), valueMap.get(bigDecHandle).getValue());
+        assertEquals(Numerals.of(124042.6f), valueMap.get(intHandle).getValue());
+        assertEquals(Numerals.of(3.4770466e25f), valueMap.get(bigIntHandle).getValue());
+        assertEquals(Numerals.of(5.1234514e142d), valueMap.get(doubleHandle).getValue());
+        assertEquals(Numerals.of("2.689423689278274536642740000000000e555"), valueMap.get(bigDecHandle).getValue());
     }
 
     @Test
     public void compareTest() {
-        assertTrue(valueMap.compare(Comparison.greaterThan(), Numerals.valueOf(0)));
-        assertFalse(valueMap.compare(Comparison.greaterThan(), Numerals.valueOf(1000000)));
-        assertTrue(valueMap.compare(Comparison.greaterThan(), Set.of(bigDecHandle, doubleHandle), Numerals.valueOf(1000000)));
-        assertFalse(valueMap.compare(Comparison.greaterThan(), Map.of(doubleHandle, Numerals.valueOf(5.1234514e143d))));
-        assertTrue(valueMap.compare(Comparison.greaterThan(), Map.of(bigDecHandle, Numerals.valueOf(5.1234514e143d))));
+        assertTrue(valueMap.compare(Comparison.greaterThan(), Numerals.of(0)));
+        assertFalse(valueMap.compare(Comparison.greaterThan(), Numerals.of(1000000)));
+        assertTrue(valueMap.compare(Comparison.greaterThan(), Set.of(bigDecHandle, doubleHandle), Numerals.of(1000000)));
+        assertFalse(valueMap.compare(Comparison.greaterThan(), Map.of(doubleHandle, Numerals.of(5.1234514e143d))));
+        assertTrue(valueMap.compare(Comparison.greaterThan(), Map.of(bigDecHandle, Numerals.of(5.1234514e143d))));
     }
 
     @Test
@@ -141,9 +141,9 @@ public class ValueMapTest {
         Map<Handle, Numeral> map = valueMap.getBaseNumeralMap();
         assertEquals(intNumeral, map.get(intHandle));
         map = valueMap.getValueNumeralMap();
-        assertEquals(Numerals.valueOf(99457), map.get(intHandle));
+        assertEquals(Numerals.of(99457), map.get(intHandle));
         assertNull(map.get(longHandle));
         valueMap.putHandled(longValue);
-        assertEquals(Numerals.valueOf(47567929325878133L), map.get(longHandle));
+        assertEquals(Numerals.of(47567929325878133L), map.get(longHandle));
     }
 }
