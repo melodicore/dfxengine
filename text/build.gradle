@@ -1,0 +1,28 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+    id "signing"
+}
+
+version = "$textVersion"
+
+dependencies {
+    api project(":text-api")
+    api project(":handles-api")
+    api project(":math-api")
+    api project(":values-api")
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name = "DFXEngine Text API"
+                description = "API for DFXEngine Text"
+            }
+        }
+    }
+}
