@@ -11,6 +11,8 @@ dependencies {
     api project(":handles-api")
     api project(":math-api")
     api project(":values-api")
+    implementation project(":utils")
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
