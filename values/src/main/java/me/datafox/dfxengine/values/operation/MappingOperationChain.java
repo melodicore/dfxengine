@@ -20,15 +20,32 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * An extension of the {@link OperationChain} which offers more flexible ways for routing parameters. There are two main
+ * changes. Firstly, inputs are now counted as regular parameters. This means that {@link #getParameterCount()} now
+ * returns the number of parameters for all specified {@link Operation Operations}, plus the amount of operations
+ * themselves. The second change is the inclusion of the {@link SpecialNumeral}, which is used to request the source
+ * {@link Numeral} and the result of any prior operation as an arbitrary parameter. Two static methods are provided for
+ * these, {@link #sourceNumeral()} and {@link #resultNumeral(int)}, but you can also instantiate a SpecialNumeral
+ * manually with {@link SpecialNumeral#SpecialNumeral(int)}, where -1 refers to the source and any positive value refers
+ * to the operation with that index. Referring to an operation that has yet to be executed results in an
+ * {@link IllegalArgumentException}.
+ *
  * @author datafox
  */
 public final class MappingOperationChain implements Operation {
-    public static SpecialNumeral resultNumeral(int operationIndex) {
-        return new SpecialNumeral(operationIndex);
-    }
-
+    /**
+     * @return {@link SpecialNumeral} that refers to the source {@link Numeral}
+     */
     public static SpecialNumeral sourceNumeral() {
         return new SpecialNumeral(-1);
+    }
+
+    /**
+     * @param operationIndex index of the {@link Operation} to refer to
+     * @return {@link SpecialNumeral} that refers to the result of the specified {@link Operation}
+     */
+    public static SpecialNumeral resultNumeral(int operationIndex) {
+        return new SpecialNumeral(operationIndex);
     }
 
     private final Logger logger;
@@ -36,16 +53,27 @@ public final class MappingOperationChain implements Operation {
     @Getter
     private final int parameterCount;
 
-    public MappingOperationChain(Operation ... operations) {
+    /**
+     * @param operations {@link Operation Operations} to associate with this operation
+     */
+    public MappingOperationChain(List<? extends Operation> operations) {
         logger = LoggerFactory.getLogger(MappingOperationChain.class);
-        this.operations = operations;
-        parameterCount = Arrays.stream(operations)
+        this.operations = operations.toArray(Operation[]::new);
+        parameterCount = operations
+                .stream()
                 .mapToInt(Operation::getParameterCount)
-                .sum() + operations.length;
+                .sum() + operations.size();
     }
 
+    /**
+     * @param source source {@link Numeral} for this operation
+     * @param parameters parameter {@link Numeral Numerals} for this operation
+     * @return resulting {@link Numeral} of this operation
+     *
+     * @throws IllegalArgumentException if the amount of parameters is not equal to {@link #getParameterCount()}
+     */
     @Override
-    public Numeral apply(Numeral source, Numeral ... parameters) throws IllegalArgumentException {
+    public Numeral apply(Numeral source, Numeral ... parameters) {
         if(parameters.length != parameterCount) {
             throw LogUtils.logExceptionAndGet(logger,
                     "invalid parameter count", IllegalArgumentException::new);
@@ -98,10 +126,16 @@ public final class MappingOperationChain implements Operation {
                 Arrays.copyOfRange(parameters, 1, parameters.length));
     }
 
+    /**
+     * @return {@link Builder} instance
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * A Builder for {@link MappingOperationChain}.
+     */
     public static class Builder {
         private final List<Operation> operations;
 
@@ -109,26 +143,46 @@ public final class MappingOperationChain implements Operation {
             operations = new ArrayList<>();
         }
 
+        /**
+         * @param operation {@link SourceOperation} to add to the {@link MappingOperationChain}
+         * @return this builder
+         */
         public Builder operation(SourceOperation operation) {
             this.operations.add(operation);
             return this;
         }
 
+        /**
+         * @param operation {@link SingleParameterOperation} to add to the {@link MappingOperationChain}
+         * @return this builder
+         */
         public Builder operation(SingleParameterOperation operation) {
             this.operations.add(operation);
             return this;
         }
 
+        /**
+         * @param operation {@link DualParameterOperation} to add to the {@link MappingOperationChain}
+         * @return this builder
+         */
         public Builder operation(DualParameterOperation operation) {
             this.operations.add(operation);
             return this;
         }
 
+        /**
+         * @param operation {@link Operation} to add to the {@link MappingOperationChain}
+         * @return this builder
+         */
         public Builder operation(Operation operation) {
             this.operations.add(operation);
             return this;
         }
 
+        /**
+         * @param operations {@link Operation Operations} to add to the {@link MappingOperationChain}
+         * @return this builder
+         */
         public Builder operations(Collection<? extends Operation> operations) {
             if(operations == null) {
                 return this;
@@ -137,30 +191,52 @@ public final class MappingOperationChain implements Operation {
             return this;
         }
 
+        /**
+         * Clears all {@link Operation Operations} from the {@link MappingOperationChain}.
+         *
+         * @return this builder
+         */
         public Builder clearOperations() {
             this.operations.clear();
             return this;
         }
 
+        /**
+         * @return {@link MappingOperationChain} initialized by this builder
+         */
         public MappingOperationChain build() {
-            return new MappingOperationChain(operations.toArray(Operation[]::new));
+            return new MappingOperationChain(operations);
         }
     }
 
+    /**
+     * A special {@link MappingOperationChain}-specific extension of {@link Numeral} that is used to refer to the source
+     * numeral and the result numerals of {@link Operation Operations}.
+     */
     @EqualsAndHashCode
     public static class SpecialNumeral implements Numeral {
         private final int id;
 
+        /**
+         * @param id index of the {@link Operation} whose result is being referred to, or -1 if referring to the source
+         * {@link Numeral} instead
+         */
         public SpecialNumeral(int id) {
             this.id = id;
         }
 
+        /**
+         * @return index of the {@link Operation} whose result is being referred to, or -1 if referring to the source
+         * {@link Numeral} instead
+         */
         public int getId() {
             return id;
         }
 
         /**
-         * @implNote always returns {@link Integer} 0
+         * This implementation always returns the {@link Integer} {@code 0}.
+         *
+         * @return {@link Number} backing this numeral
          */
         @Override
         public Number getNumber() {
@@ -168,7 +244,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote always returns {@link NumeralType#INT}
+         * This implementation always returns {@link NumeralType#INT}.
+         *
+         * @return backing {@link Number}'s type
          */
         @Override
         public NumeralType getType() {
@@ -176,7 +254,10 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote unsupported operation, always returns false
+         * This implementation always returns {@code false}.
+         *
+         * @param type ignored parameter
+         * @return {@code false}
          */
         @Override
         public boolean canConvert(NumeralType type) {
@@ -184,7 +265,10 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote unsupported operation, always returns itself
+         * This implementation always returns itself.
+         *
+         * @param type ignored parameter
+         * @return this numeral
          */
         @Override
         public Numeral convert(NumeralType type) {
@@ -192,7 +276,10 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote unsupported operation, always returns itself
+         * This implementation always returns itself.
+         *
+         * @param type ignored parameter
+         * @return this numeral
          */
         @Override
         public Numeral convertIfAllowed(NumeralType type) {
@@ -200,7 +287,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote unsupported operation, always returns itself
+         * This implementation always returns itself.
+         *
+         * @return this numeral
          */
         @Override
         public Numeral toInteger() {
@@ -208,7 +297,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote unsupported operation, always returns itself
+         * This implementation always returns itself.
+         *
+         * @return this numeral
          */
         @Override
         public Numeral toDecimal() {
@@ -216,7 +307,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote unsupported operation, always returns itself
+         * This implementation always returns itself.
+         *
+         * @return this numeral
          */
         @Override
         public Numeral toSmallestType() {
@@ -224,7 +317,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote always returns 0
+         * This implementation always returns {@code 0}.
+         *
+         * @return the value of this numeral as an {@code int}
          */
         @Override
         public int intValue() {
@@ -232,7 +327,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote always returns 0L
+         * This implementation always returns {@code 0L}.
+         *
+         * @return the value of this numeral as a {@code long}
          */
         @Override
         public long longValue() {
@@ -240,7 +337,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote always returns {@link BigInteger#ZERO}
+         * This implementation always returns {@link BigInteger#ZERO}.
+         *
+         * @return the value of this numeral as a {@link BigInteger}
          */
         @Override
         public BigInteger bigIntValue() {
@@ -248,7 +347,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote always returns 0f
+         * This implementation always returns {@code 0f}.
+         *
+         * @return the value of this numeral as a {@code float}
          */
         @Override
         public float floatValue() {
@@ -256,7 +357,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote always returns 0d
+         * This implementation always returns {@code 0d}.
+         *
+         * @return the value of this numeral as a {@code double}
          */
         @Override
         public double doubleValue() {
@@ -264,25 +367,36 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @implNote always returns {@link BigDecimal#ZERO}
+         * This implementation always returns {@link BigDecimal#ZERO}.
+         *
+         * @return the value of this numeral as a {@link BigDecimal}
          */
         @Override
         public BigDecimal bigDecValue() {
             return BigDecimal.ZERO;
         }
 
+
         /**
-         * @implNote if o is also a SpecialNumeral, the return values of {@link #getId()} are compared. Otherwise, 1 is
-         * returned
+         * Compares this numeral with the specified numeral for order. If the other numeral is also a SpecialNumeral,
+         * they are compared with {@link Integer#compare(int, int)} using {@link #getId()}. Otherwise, 1 is returned.
+         *
+         * @param other numeral to be compared
+         * @return a negative integer, zero, or a positive integer as this numeral is less than, equal to, or greater
+         * than the specified numeral
          */
         @Override
-        public int compareTo(Numeral o) {
-            if(o instanceof SpecialNumeral) {
-                return Integer.compare(getId(), ((SpecialNumeral) o).getId());
+        public int compareTo(Numeral other) {
+            if(other instanceof SpecialNumeral) {
+                return Integer.compare(getId(), ((SpecialNumeral) other).getId());
             }
             return 1;
         }
 
+        /**
+         * @return {@link String} representation of this numeral ("Source Value" for id -1, "Operation [id] Result"
+         * otherwise)
+         */
         @Override
         public String toString() {
             if(id == -1) {

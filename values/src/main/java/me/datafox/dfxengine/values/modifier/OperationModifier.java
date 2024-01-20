@@ -2,6 +2,7 @@ package me.datafox.dfxengine.values.modifier;
 
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.utils.LogUtils;
+import me.datafox.dfxengine.values.api.Modifier;
 import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.api.operation.DualParameterOperation;
 import me.datafox.dfxengine.values.api.operation.Operation;
@@ -13,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 
 /**
+ * Wraps an {@link Operation} as a {@link Modifier}. Will always use {@link Value#getValue()} for the Operation
+ * parameters.
+ *
  * @author datafox
  */
 public class OperationModifier extends AbstractModifier {
@@ -20,22 +24,54 @@ public class OperationModifier extends AbstractModifier {
 
     private final Operation operation;
 
+    /**
+     * @param priority priority for this modifier
+     * @param operation {@link SourceOperation} to be used
+     */
     public OperationModifier(int priority, SourceOperation operation) {
         this(priority, operation, EMPTY_ARR);
     }
 
+    /**
+     * @param priority priority for this modifier
+     * @param operation {@link SingleParameterOperation} to be used
+     * @param parameter parameter {@link Value} for the {@link SingleParameterOperation}
+     */
     public OperationModifier(int priority, SingleParameterOperation operation, Value parameter) {
         this(priority, operation, new Value[] {parameter});
     }
 
+    /**
+     * @param priority priority for this modifier
+     * @param operation {@link DualParameterOperation} to be used
+     * @param parameter1 first parameter {@link Value} for the {@link DualParameterOperation}
+     * @param parameter2 second parameter {@link Value} for the {@link DualParameterOperation}
+     */
     public OperationModifier(int priority, DualParameterOperation operation, Value parameter1, Value parameter2) {
         this(priority, operation, new Value[] {parameter1, parameter2});
     }
 
+    /**
+     * @param priority priority for this modifier
+     * @param operation {@link Operation} to be used
+     * @param parameters parameter {@link Value Values} for the {@link Operation}
+     *
+     * @throws IllegalArgumentException if the number of parameters is not equal to
+     * {@link Operation#getParameterCount()} for the {@link Operation}
+     */
     public OperationModifier(int priority, Operation operation, Value ... parameters) {
         this(LoggerFactory.getLogger(OperationModifier.class), priority, operation, parameters);
     }
 
+    /**
+     * @param logger {@link Logger} for this modifier
+     * @param priority priority for this modifier
+     * @param operation {@link Operation} to be used
+     * @param parameters parameter {@link Value Values} for the {@link Operation}
+     *
+     * @throws IllegalArgumentException if the number of parameters is not equal to
+     * {@link Operation#getParameterCount()} for the {@link Operation}
+     */
     protected OperationModifier(Logger logger, int priority, Operation operation, Value ... parameters) {
         super(logger, priority, parameters);
 
@@ -47,6 +83,10 @@ public class OperationModifier extends AbstractModifier {
         this.operation = operation;
     }
 
+    /**
+     * @param source source {@link Numeral} for this modifier
+     * @return resulting {@link Numeral} of this modifier
+     */
     @Override
     public Numeral apply(Numeral source) {
         return operation.apply(source,

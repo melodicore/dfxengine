@@ -16,22 +16,37 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * An {@link Operation} that chains multiple operations together. The operations are executed in order, with the
+ * previous one's output as the next one's input. Parameters are given in order, with the total parameter count being
+ * the sum of all parameter counts of the specified operations. A simple {@link Builder} that works with method
+ * references is included for convenience.
+ *
  * @author datafox
  */
 public final class OperationChain implements Operation {
     private final Logger logger;
-    private final List<Operation> operations;
+    private final Operation[] operations;
     @Getter
     private final int parameterCount;
 
-    private OperationChain(List<Operation> operations) {
+    /**
+     * @param operations {@link Operation Operations} for this operation
+     */
+    public OperationChain(List<? extends Operation> operations) {
         logger = LoggerFactory.getLogger(OperationChain.class);
-        this.operations = operations;
+        this.operations = operations.toArray(Operation[]::new);
         parameterCount = operations.stream().mapToInt(Operation::getParameterCount).sum();
     }
 
+    /**
+     * @param source source {@link Numeral} for this operation
+     * @param parameters parameter {@link Numeral Numerals} for this operation
+     * @return resulting {@link Numeral} of this operation
+     *
+     * @throws IllegalArgumentException if the amount of parameters is not equal to {@link #getParameterCount()}
+     */
     @Override
-    public Numeral apply(Numeral source, Numeral ... parameters) throws IllegalArgumentException {
+    public Numeral apply(Numeral source, Numeral ... parameters) {
         if(parameters.length != parameterCount) {
             throw LogUtils.logExceptionAndGet(logger,
                     "invalid parameter count", IllegalArgumentException::new);
@@ -45,10 +60,16 @@ public final class OperationChain implements Operation {
         return source;
     }
 
+    /**
+     * @return {@link Builder} instance
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * A builder for {@link OperationChain}.
+     */
     public static class Builder {
         private final List<Operation> operations;
 
@@ -56,26 +77,46 @@ public final class OperationChain implements Operation {
             operations = new ArrayList<>();
         }
 
+        /**
+         * @param operation {@link SourceOperation} to add to the {@link OperationChain}
+         * @return this builder
+         */
         public Builder operation(SourceOperation operation) {
             this.operations.add(operation);
             return this;
         }
 
+        /**
+         * @param operation {@link SingleParameterOperation} to add to the {@link OperationChain}
+         * @return this builder
+         */
         public Builder operation(SingleParameterOperation operation) {
             this.operations.add(operation);
             return this;
         }
 
+        /**
+         * @param operation {@link DualParameterOperation} to add to the {@link OperationChain}
+         * @return this builder
+         */
         public Builder operation(DualParameterOperation operation) {
             this.operations.add(operation);
             return this;
         }
 
+        /**
+         * @param operation {@link Operation} to add to the {@link OperationChain}
+         * @return this builder
+         */
         public Builder operation(Operation operation) {
             this.operations.add(operation);
             return this;
         }
 
+        /**
+         * @param operations {@link Operation Operations} to add to the {@link OperationChain}
+         * @return this builder
+         */
         public Builder operations(Collection<? extends Operation> operations) {
             if(operations == null) {
                 return this;
@@ -84,11 +125,19 @@ public final class OperationChain implements Operation {
             return this;
         }
 
+        /**
+         * Clears all {@link Operation Operations} from the {@link OperationChain}.
+         *
+         * @return this builder
+         */
         public Builder clearOperations() {
             this.operations.clear();
             return this;
         }
 
+        /**
+         * @return {@link OperationChain} initialized by this builder
+         */
         public OperationChain build() {
             return new OperationChain(operations);
         }
