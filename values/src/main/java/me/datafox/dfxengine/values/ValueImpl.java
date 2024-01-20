@@ -239,7 +239,7 @@ public class ValueImpl extends DependencyDependent implements Value {
      * @param operation {@link DualParameterOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      * @param parameter1 first parameter for the operation
-     * @param parameter1 second parameter for the operation
+     * @param parameter2 second parameter for the operation
      */
     @Override
     public void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2) {
@@ -397,70 +397,5 @@ public class ValueImpl extends DependencyDependent implements Value {
         if(!base.equals(old)) {
             invalidate();
         }
-    }
-
-    /**
-     * @param handle {@link Handle} identifier for this value
-     * @param i {@code int} to initialize this value with
-     * @return value with the specified parameters
-     */
-    public static ValueImpl of(Handle handle, int i) {
-        return new ValueImpl(handle, Numerals.of(i));
-    }
-
-    /**
-     * @param handle {@link Handle} identifier for this value
-     * @param l {@code long} to initialize this value with
-     * @return value with the specified parameters
-     */
-    public static ValueImpl of(Handle handle, long l) {
-        return new ValueImpl(handle, Numerals.of(l));
-    }
-
-    /**
-     * @param handle {@link Handle} identifier for this value
-     * @param bi {@link BigInteger} to initialize this value with
-     * @return value with the specified parameters
-     */
-    public static ValueImpl of(Handle handle, BigInteger bi) {
-        return new ValueImpl(handle, Numerals.of(bi));
-    }
-
-    /**
-     * @param handle {@link Handle} identifier for this value
-     * @param f {@code float} to initialize this value with
-     * @return value with the specified parameters
-     */
-    public static ValueImpl of(Handle handle, float f) {
-        return new ValueImpl(handle, Numerals.of(f));
-    }
-
-    /**
-     * @param handle {@link Handle} identifier for this value
-     * @param d {@code double} to initialize this value with
-     * @return value with the specified parameters
-     */
-    public static ValueImpl of(Handle handle, double d) {
-        return new ValueImpl(handle, Numerals.of(d));
-    }
-
-    /**
-     * @param handle {@link Handle} identifier for this value
-     * @param bd {@link BigDecimal} to initialize this value with
-     * @return value with the specified parameters
-     */
-    public static ValueImpl of(Handle handle, BigDecimal bd) {
-        return new ValueImpl(handle, Numerals.of(bd));
-    }
-
-    /**
-     * @param handle {@link Handle} identifier for this value
-     * @param str {@link String} to initialize this value with
-     * @return value with the specified parameters
-     *
-     * @throws NumberFormatException if str is not a valid number representation
-     */
-    public static ValueImpl of(Handle handle, String str) {
-        return new ValueImpl(handle, Numerals.of(str));
     }
 }

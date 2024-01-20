@@ -4,19 +4,19 @@ import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
 import me.datafox.dfxengine.math.utils.Numerals;
 import me.datafox.dfxengine.math.utils.Operations;
-import me.datafox.dfxengine.values.StaticValue;
 import me.datafox.dfxengine.values.api.Modifier;
+import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.api.comparison.Comparison;
 import me.datafox.dfxengine.values.api.operation.MathContext;
 import me.datafox.dfxengine.values.api.operation.Operation;
 import me.datafox.dfxengine.values.utils.Modifiers;
+import me.datafox.dfxengine.values.utils.Values;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
 import static me.datafox.dfxengine.math.api.NumeralType.*;
-import static me.datafox.dfxengine.math.utils.Numerals.of;
 import static me.datafox.dfxengine.values.test.TestHandles.initializeHandles;
 import static me.datafox.dfxengine.values.test.TestValues.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -217,7 +217,7 @@ public class ValueTest {
         longValue.set(Numerals.of(40.0));
         assertEquals(Numerals.of(40), intValue.getBase());
         assertEquals(Numerals.of(8.94427190999916d), intValue.getValue());
-        assertTrue(longValue.addModifier(Modifiers.power(0, StaticValue.of(Math.PI))));
+        assertTrue(longValue.addModifier(Modifiers.power(0, Values.of(Math.PI))));
         assertEquals(Numerals.of(40), intValue.getBase());
         assertEquals(Numerals.of(328.54165043166324d), intValue.getValue());
         assertTrue(intValue.addModifier(Modifiers.operation(20, Numeral::toInteger)));
@@ -242,7 +242,7 @@ public class ValueTest {
 
     @Test
     public void staticValueTest() {
-        StaticValue staticValue = StaticValue.of(9000.0001d);
+        Value staticValue = Values.of(9000.0001d);
 
         assertNull(staticValue.getHandle());
         assertEquals(Numerals.of(9000.0001d), staticValue.getBase());

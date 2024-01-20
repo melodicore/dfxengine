@@ -36,7 +36,10 @@ import java.util.stream.Stream;
 public class StaticValue implements Value {
     private final Numeral value;
 
-    protected StaticValue(Numeral value) {
+    /**
+     * @param value {@link Numeral} to initialize this value with
+     */
+    public StaticValue(Numeral value) {
         this.value = value;
     }
 
@@ -219,7 +222,7 @@ public class StaticValue implements Value {
      * @param operation ignored parameter
      * @param context ignored parameter
      * @param parameter1 ignored parameter
-     * @param parameter1 ignored parameter
+     * @param parameter2 ignored parameter
      *
      * @throws UnsupportedOperationException if this value is static
      */
@@ -476,71 +479,5 @@ public class StaticValue implements Value {
     @Override
     public String toString() {
         return String.format("StaticValue(%s)", getValue());
-    }
-
-    /**
-     * @param numeral {@link Numeral} to initialize this value with
-     * @return static value with the specified value
-     */
-    public static StaticValue of(Numeral numeral) {
-        return new StaticValue(numeral);
-    }
-
-    /**
-     * @param i {@code int} to initialize this value with
-     * @return static value with the specified value
-     */
-    public static StaticValue of(int i) {
-        return new StaticValue(Numerals.of(i));
-    }
-
-    /**
-     * @param l {@code long} to initialize this value with
-     * @return static value with the specified value
-     */
-    public static StaticValue of(long l) {
-        return new StaticValue(Numerals.of(l));
-    }
-
-    /**
-     * @param bi {@link BigInteger} to initialize this value with
-     * @return static value with the specified value
-     */
-    public static StaticValue of(BigInteger bi) {
-        return new StaticValue(Numerals.of(bi));
-    }
-
-    /**
-     * @param f {@code float} to initialize this value with
-     * @return static value with the specified value
-     */
-    public static StaticValue of(float f) {
-        return new StaticValue(Numerals.of(f));
-    }
-
-    /**
-     * @param d {@code double} to initialize this value with
-     * @return static value with the specified value
-     */
-    public static StaticValue of(double d) {
-        return new StaticValue(Numerals.of(d));
-    }
-
-    /**
-     * @param bd {@link BigDecimal} to initialize this value with
-     * @return static value with the specified value
-     */
-    public static StaticValue of(BigDecimal bd) {
-        return new StaticValue(Numerals.of(bd));
-    }
-
-    /**
-     * @param str {@link String} to initialize this value with
-     * @return static value with the specified value
-     *
-     * @throws NumberFormatException if str is not a valid number representation
-     */
-    public static StaticValue of(String str) {
-        return new StaticValue(Numerals.of(str));
     }
 }

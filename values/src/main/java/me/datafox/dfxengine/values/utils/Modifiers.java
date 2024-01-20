@@ -2,7 +2,6 @@ package me.datafox.dfxengine.values.utils;
 
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.utils.Operations;
-import me.datafox.dfxengine.values.StaticValue;
 import me.datafox.dfxengine.values.api.Modifier;
 import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.api.operation.DualParameterOperation;
@@ -12,7 +11,8 @@ import me.datafox.dfxengine.values.api.operation.SourceOperation;
 import me.datafox.dfxengine.values.modifier.MappingOperationModifier;
 import me.datafox.dfxengine.values.modifier.OperationModifier;
 
-import static me.datafox.dfxengine.values.modifier.MappingOperationModifier.*;
+import static me.datafox.dfxengine.values.modifier.MappingOperationModifier.resultValue;
+import static me.datafox.dfxengine.values.modifier.MappingOperationModifier.sourceValue;
 
 /**
  * A utility class that contains various methods for creating {@link Modifier Modifiers}.
@@ -310,7 +310,7 @@ public class Modifiers {
                 .operation(Operations::multiply,
                         percentage, multiplier)
                 .operation(Operations::add,
-                        resultValue(0), StaticValue.of(1))
+                        resultValue(0), Values.of(1))
                 .operation(Operations::multiply,
                         sourceValue(), resultValue(1))
                 .build();

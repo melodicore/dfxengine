@@ -3,10 +3,10 @@ package me.datafox.dfxengine.values.test;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.utils.Numerals;
 import me.datafox.dfxengine.math.utils.Operations;
-import me.datafox.dfxengine.values.StaticValue;
 import me.datafox.dfxengine.values.api.operation.Operation;
 import me.datafox.dfxengine.values.modifier.MappingOperationModifier;
 import me.datafox.dfxengine.values.modifier.OperationModifier;
+import me.datafox.dfxengine.values.utils.Values;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,9 +29,9 @@ public class ModifierTest {
     @Test
     public void operationModifierTest() {
         OperationModifier log2 = new OperationModifier(0, Operations::log2);
-        OperationModifier power = new OperationModifier(1, Operations::power, StaticValue.of(7.34f));
-        OperationModifier lerp = new OperationModifier(2, Operations::lerp, StaticValue.of(2), StaticValue.of(-1));
-        OperationModifier divide = new OperationModifier(3, new DivideTestOperation(), StaticValue.of("7.5"));
+        OperationModifier power = new OperationModifier(1, Operations::power, Values.of(7.34f));
+        OperationModifier lerp = new OperationModifier(2, Operations::lerp, Values.of(2), Values.of(-1));
+        OperationModifier divide = new OperationModifier(3, new DivideTestOperation(), Values.of("7.5"));
         assertEquals(0, log2.getPriority());
         assertEquals(0, log2.getDependencies().size());
         assertEquals(Numerals.of(5.1234514e142d), doubleValue.getValue());
@@ -49,8 +49,8 @@ public class ModifierTest {
     public void mappingOperationModifierTest() {
         MappingOperationModifier modifier = MappingOperationModifier.builder(0)
                 .operation(Operations::exp, sourceValue())
-                .operation(Operations::multiply, sourceValue(), StaticValue.of(0.62f))
-                .operation(Operations::lerp, resultValue(0), StaticValue.of(0), resultValue(1))
+                .operation(Operations::multiply, sourceValue(), Values.of(0.62f))
+                .operation(Operations::lerp, resultValue(0), Values.of(0), resultValue(1))
                 .operation(new DivideTestOperation(), resultValue(2), sourceValue())
                 .build();
         assertEquals(Numerals.of(99456), intValue.getValue());

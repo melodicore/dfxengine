@@ -6,13 +6,12 @@ import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
 import me.datafox.dfxengine.math.utils.Numerals;
 import me.datafox.dfxengine.math.utils.Operations;
 import me.datafox.dfxengine.values.DelegatedValueMap;
-import me.datafox.dfxengine.values.StaticValue;
-import me.datafox.dfxengine.values.ValueImpl;
 import me.datafox.dfxengine.values.api.ValueMap;
 import me.datafox.dfxengine.values.api.comparison.Comparison;
 import me.datafox.dfxengine.values.api.operation.MapMathContext;
 import me.datafox.dfxengine.values.api.operation.MathContext;
 import me.datafox.dfxengine.values.utils.Modifiers;
+import me.datafox.dfxengine.values.utils.Values;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +40,7 @@ public class ValueMapTest {
                 .value(bigIntValue)
                 .value(doubleValue)
                 .value(bigDecValue)
-                .modifier(Modifiers.add(0, StaticValue.of(1)))
+                .modifier(Modifiers.add(0, Values.of(1)))
                 .build();
     }
 
@@ -88,11 +87,11 @@ public class ValueMapTest {
 
     @Test
     public void toSmallestTypeTest() {
-        valueMap.putHandled(ValueImpl.of(longHandle, 1000L));
+        valueMap.putHandled(Values.of(longHandle, 1000L));
         valueMap.toSmallestType();
         assertEquals(INT, valueMap.get(intHandle).getValue().getType());
         assertEquals(INT, valueMap.get(longHandle).getValue().getType());
-        valueMap.putHandled(ValueImpl.of(longHandle, 1000L));
+        valueMap.putHandled(Values.of(longHandle, 1000L));
         valueMap.toSmallestType(Set.of(intHandle));
         assertEquals(INT, valueMap.get(intHandle).getValue().getType());
         assertEquals(LONG, valueMap.get(longHandle).getValue().getType());

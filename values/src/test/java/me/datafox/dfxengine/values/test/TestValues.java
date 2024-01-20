@@ -2,10 +2,9 @@ package me.datafox.dfxengine.values.test;
 
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.utils.Numerals;
-import me.datafox.dfxengine.values.ValueImpl;
 import me.datafox.dfxengine.values.api.Value;
+import me.datafox.dfxengine.values.utils.Values;
 
-import static me.datafox.dfxengine.math.utils.Numerals.of;
 import static me.datafox.dfxengine.values.test.TestHandles.*;
 
 /**
@@ -34,11 +33,11 @@ public class TestValues {
         doubleNumeral = Numerals.of(5.1234514e142d);
         bigDecNumeral = Numerals.of("2.68942368927827453664274e+555");
 
-        intValue = new ValueImpl(intHandle, intNumeral);
-        longValue = new ValueImpl(longHandle, longNumeral);
-        bigIntValue = new ValueImpl(bigIntHandle, bigIntNumeral);
-        floatValue = new ValueImpl(floatHandle, floatNumeral);
-        doubleValue = new ValueImpl(doubleHandle, doubleNumeral);
-        bigDecValue = new ValueImpl(bigDecHandle, bigDecNumeral);
+        intValue = Values.of(intHandle, intNumeral);
+        longValue = Values.of(longHandle, longNumeral);
+        bigIntValue = Values.of(bigIntHandle, bigIntNumeral);
+        floatValue = Values.of(floatHandle, floatNumeral);
+        doubleValue = Values.of(doubleHandle, doubleNumeral);
+        bigDecValue = Values.of(bigDecHandle, bigDecNumeral);
     }
 }
