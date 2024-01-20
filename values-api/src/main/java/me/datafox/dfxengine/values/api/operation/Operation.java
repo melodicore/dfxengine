@@ -23,8 +23,9 @@ public interface Operation extends BiFunction<Numeral, Numeral[], Numeral> {
      * @param source source {@link Numeral} for this operation
      * @param parameters parameter {@link Numeral Numerals} for this operation
      * @return resulting {@link Numeral} of this operation
+     *
      * @throws IllegalArgumentException if the amount of parameters is not equal to {@link #getParameterCount()}
      */
     @Override
-    Numeral apply(Numeral source, Numeral ... parameters) throws IllegalArgumentException;
+    Numeral apply(Numeral source, Numeral ... parameters);
 }
