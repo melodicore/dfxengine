@@ -145,7 +145,7 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param operation {@link DualParameterOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      * @param parameter1 first parameter for the operation
-     * @param parameter1 second parameter for the operation
+     * @param parameter2 second parameter for the operation
      *
      * @throws UnsupportedOperationException if this value is static
      */
@@ -239,7 +239,7 @@ public interface Value extends Dependency, Dependent, Handled {
      *
      * @param operation {@link DualParameterOperation} to be applied to the base {@link Numeral}
      * @param parameter1 first parameter for the operation
-     * @param parameter1 second parameter for the operation
+     * @param parameter2 second parameter for the operation
      *
      * @throws UnsupportedOperationException if this value is static
      */

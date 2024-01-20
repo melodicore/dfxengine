@@ -17,6 +17,9 @@ import java.util.function.Predicate;
  * @author datafox
  */
 public abstract class AbstractModifier extends DependencyDependent implements Modifier {
+    /**
+     * Priority for this operation
+     */
     @Getter
     protected final int priority;
     private final Value[] parameters;

@@ -7,6 +7,7 @@ import me.datafox.dfxengine.handles.api.Space;
  *
  * @author datafox
  */
+@SuppressWarnings({"MissingJavadoc", "SameParameterValue"})
 public class HandleStrings {
     private static final String SPACE_WITH_ID_ALREADY_PRESENT = "HandleManager already contains a Space with id %s";
     private static final String HANDLE_WITH_ID_ALREADY_PRESENT = "Space %s already contains a Handle with id %s";

@@ -18,6 +18,7 @@ public class LogUtils {
      * @param message exception message
      * @param cause exception cause
      * @param constructor function to instantiate the exception
+     * @param <T> type of the exception
      * @return exception instantiated with the provided function
      */
     public static <T extends Throwable> T logExceptionAndGet(Logger logger,
@@ -34,6 +35,7 @@ public class LogUtils {
      * @param logger logger
      * @param message exception message
      * @param constructor function to instantiate the exception
+     * @param <T> type of the exception
      * @return exception instantiated with the provided function
      */
     public static <T extends Throwable> T logExceptionAndGet(Logger logger,

@@ -26,6 +26,9 @@ import java.util.function.Function;
  */
 @EqualsAndHashCode
 public class FunctionClassMap<T> {
+    /**
+     * Delegate map
+     */
     protected final Map<Class<?>,List<T>> delegate;
 
     @ToString.Exclude
@@ -49,7 +52,7 @@ public class FunctionClassMap<T> {
     }
 
     /**
-     * @param values the values to be added
+     * @param values values to be added
      */
     public void putAll(Collection<? extends T> values) {
         for(T value : values) {
@@ -58,7 +61,8 @@ public class FunctionClassMap<T> {
     }
 
     /**
-     * @param type the type to be retrieved
+     * @param type type to be retrieved
+     * @param <R> type to be checked for
      * @return list of values associated with the type
      *
      * @see FunctionClassMap
@@ -74,8 +78,9 @@ public class FunctionClassMap<T> {
     }
 
     /**
-     * @param type the type to be checked
-     * @return {@code true} if values are present for the type, false otherwise
+     * @param type type to be checked for
+     * @param <R> type to be checked for
+     * @return {@code true} if values are present for the type
      *
      * @see FunctionClassMap
      */
@@ -84,8 +89,9 @@ public class FunctionClassMap<T> {
     }
 
     /**
-     * @param type the type to be checked
-     * @return {@code true} if a single value is present for the type, false otherwise
+     * @param type type to be checked for
+     * @param <R> type to be checked for
+     * @return {@code true} if a single value is present for the type
      */
     public <R> boolean isSingleton(Class<R> type) {
         List<T> list = delegate.get(type);
@@ -95,10 +101,6 @@ public class FunctionClassMap<T> {
         return list.size() == 1;
     }
 
-    /**
-     * @param type the resolved type
-     * @param value the value to be added
-     */
     private <R> void putInternal(Class<R> type, T value) {
         if(!delegate.containsKey(type)) {
             delegate.put(type, new ArrayList<>());
@@ -107,6 +109,9 @@ public class FunctionClassMap<T> {
         delegate.get(type).add(value);
     }
 
+    /**
+     * @return {@link String} representation of this map
+     */
     @Override
     public String toString() {
         return delegate.toString();

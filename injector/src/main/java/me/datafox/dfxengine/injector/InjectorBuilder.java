@@ -39,6 +39,9 @@ import java.util.stream.Stream;
  * @author datafox
  */
 public class InjectorBuilder {
+    /**
+     * @return {@link InjectorBuilder} instance
+     */
     public static InjectorBuilder create() {
         return new InjectorBuilder();
     }
@@ -582,6 +585,7 @@ public class InjectorBuilder {
 
     @Data
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    @SuppressWarnings("MissingJavadoc")
     public static class MethodReference<T,R> {
         private final Class<T> owner;
 

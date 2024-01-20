@@ -13,10 +13,10 @@ public class StringUtils {
     /**
      * Replaces the last occurrence of the target in a string.
      *
-     * @param str input String
+     * @param str input {@link String}
      * @param target target to be replaced
-     * @param replacement replacement
-     * @return modified String
+     * @param replacement replacement {@link String}
+     * @return modified {@link String}
      */
     public static String replaceLast(String str, String target, String replacement) {
         int i = str.lastIndexOf(target);
@@ -25,19 +25,18 @@ public class StringUtils {
     }
 
     /**
-     * Returns the simple name of a class with a <b>.class</b> suffix
-     *
      * @param aClass class
-     * @return String representation of the class
+     * @param <T> type of the class
+     * @return {@link String} representation of the class in <i>ClassName.class</i> format
      */
     public static <T> String className(Class<T> aClass) {
         return aClass.getSimpleName() + ".class";
     }
 
     /**
-     * Returns a String representation of a constructor in <b>ClassName(Param1.class,Param2.class)</b> format
      * @param constructor constructor
-     * @return String representation of the constructor
+     * @param <T> type of the constructor
+     * @return {@link String} representation of the constructor in <i>ClassName(Param1.class,Param2.class)</i> format
      */
     public static <T> String constructorName(Constructor<T> constructor) {
         return String.format("%s(%s)", constructor.getDeclaringClass().getSimpleName(),

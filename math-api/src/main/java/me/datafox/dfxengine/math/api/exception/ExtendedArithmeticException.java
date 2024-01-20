@@ -7,23 +7,38 @@ package me.datafox.dfxengine.math.api.exception;
  * @author datafox
  */
 public class ExtendedArithmeticException extends RuntimeException {
+    /**
+     * Constructor for ExtendedArithmeticException
+     */
     public ExtendedArithmeticException() {
         super();
     }
 
+    /**
+     * Constructor for ExtendedArithmeticException
+     *
+     * @param message message for the exception
+     */
     public ExtendedArithmeticException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor for ExtendedArithmeticException
+     *
+     * @param message message for the exception
+     * @param cause cause for the exception
+     */
     public ExtendedArithmeticException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * Constructor for ExtendedArithmeticException
+     *
+     * @param cause cause for the exception
+     */
     public ExtendedArithmeticException(Throwable cause) {
         super(cause);
-    }
-
-    protected ExtendedArithmeticException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 public class ClassUtils {
     /**
      * @param aClass class
+     * @param <T> type of the class
      * @return Stream of the class and all superclasses and superinterfaces of the class
      */
     public static <T> Stream<Class<? super T>> getSuperclassesFor(Class<? super T> aClass) {
@@ -26,6 +27,7 @@ public class ClassUtils {
     /**
      * @param aClass class
      * @param annotation annotation
+     * @param <T> type of the class
      * @return List of all declared constructors of the class with the annotation
      */
     @SuppressWarnings("unchecked")
@@ -42,6 +44,7 @@ public class ClassUtils {
     /**
      * @param aClass class
      * @param annotation annotation
+     * @param <T> type of the class
      * @return List of all declared fields of the class with the annotation
      */
     public static <T> List<Field> getFieldsWithAnnotation(Class<T> aClass, Class<? extends Annotation> annotation) {
@@ -54,6 +57,7 @@ public class ClassUtils {
     /**
      * @param aClass class
      * @param annotation annotation
+     * @param <T> type of the class
      * @return List of all declared methods of the class with the annotation
      */
     public static <T> List<Method> getMethodsWithAnnotation(Class<T> aClass, Class<? extends Annotation> annotation) {
@@ -66,6 +70,7 @@ public class ClassUtils {
     /**
      * @param arr array of annotations
      * @param annotationType annotation type
+     * @param <T> type of the annotation
      * @return Optional containing the first annotation in the array matching the type, or empty if no matches are found
      */
     public static <T extends Annotation> Optional<T> getAnnotationFromArray(Annotation[] arr, Class<T> annotationType) {
@@ -79,6 +84,8 @@ public class ClassUtils {
     /**
      * @param input object to be checked
      * @param aClass {@link Class}
+     * @param <T> type of the input
+     * @param <C> type to be cast to
      * @return {@link Stream} of the object cast to the specified Class, or an empty Stream if the object cannot be cast
      * to the specified Class
      */

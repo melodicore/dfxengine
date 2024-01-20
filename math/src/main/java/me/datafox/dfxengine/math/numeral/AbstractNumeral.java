@@ -205,5 +205,8 @@ abstract class AbstractNumeral implements Numeral {
         return compare(this, other);
     }
 
+    /**
+     * @return {@link Logger} for this numeral
+     */
     protected abstract Logger getLogger();
 }

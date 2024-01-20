@@ -16,6 +16,7 @@ import java.util.Collection;
  *
  * @author datafox
  */
+@SuppressWarnings({"MissingJavadoc", "SameParameterValue"})
 public class InjectorStrings {
     public static final String BUILD_STARTED = "Building injector";
     public static final String SCANNING_CLASSPATH = "Scanning classpath";

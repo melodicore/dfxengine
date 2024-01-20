@@ -6,24 +6,38 @@ package me.datafox.dfxengine.injector.exception;
  * @author datafox
  */
 public class MethodInvocationException extends RuntimeException {
+    /**
+     * Constructor for MethodInvocationException
+     */
     public MethodInvocationException() {
         super();
     }
 
+    /**
+     * Constructor for MethodInvocationException
+     *
+     * @param message message for the exception
+     */
     public MethodInvocationException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor for MethodInvocationException
+     *
+     * @param message message for the exception
+     * @param cause cause for the exception
+     */
     public MethodInvocationException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * Constructor for MethodInvocationException
+     *
+     * @param cause cause for the exception
+     */
     public MethodInvocationException(Throwable cause) {
         super(cause);
-    }
-
-    protected MethodInvocationException(String message, Throwable cause,
-                                        boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

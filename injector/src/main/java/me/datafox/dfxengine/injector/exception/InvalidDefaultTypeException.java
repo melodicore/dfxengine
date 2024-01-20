@@ -9,24 +9,38 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
  * @author datafox
  */
 public class InvalidDefaultTypeException extends RuntimeException {
+    /**
+     * Constructor for InvalidDefaultTypeException
+     */
     public InvalidDefaultTypeException() {
         super();
     }
 
+    /**
+     * Constructor for InvalidDefaultTypeException
+     *
+     * @param message message for the exception
+     */
     public InvalidDefaultTypeException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor for InvalidDefaultTypeException
+     *
+     * @param message message for the exception
+     * @param cause cause for the exception
+     */
     public InvalidDefaultTypeException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * Constructor for InvalidDefaultTypeException
+     *
+     * @param cause cause for the exception
+     */
     public InvalidDefaultTypeException(Throwable cause) {
         super(cause);
-    }
-
-    protected InvalidDefaultTypeException(String message, Throwable cause,
-                                          boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

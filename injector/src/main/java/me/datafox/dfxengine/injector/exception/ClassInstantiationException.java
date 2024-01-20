@@ -6,24 +6,38 @@ package me.datafox.dfxengine.injector.exception;
  * @author datafox
  */
 public class ClassInstantiationException extends RuntimeException {
+    /**
+     * Constructor for ClassInstantiationException
+     */
     public ClassInstantiationException() {
         super();
     }
 
+    /**
+     * Constructor for ClassInstantiationException
+     *
+     * @param message message for the exception
+     */
     public ClassInstantiationException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor for ClassInstantiationException
+     *
+     * @param message message for the exception
+     * @param cause cause for the exception
+     */
     public ClassInstantiationException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * Constructor for ClassInstantiationException
+     *
+     * @param cause cause for the exception
+     */
     public ClassInstantiationException(Throwable cause) {
         super(cause);
-    }
-
-    protected ClassInstantiationException(String message, Throwable cause,
-                                          boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

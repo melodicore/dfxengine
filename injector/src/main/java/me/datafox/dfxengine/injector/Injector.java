@@ -88,6 +88,8 @@ public class Injector {
      *
      * @param type class to be instantiated
      * @param requestingClass class requesting the instance
+     * @param <T> type to be instantiated
+     * @param <R> type of the requesting class
      * @return new instance of the provided class
      *
      * @throws NoValidConstructorException if no valid constructor is present
@@ -108,6 +110,19 @@ public class Injector {
 
     /**
      * Calls {@link Injector#newInstance(Class, Class)} with a null requesting class.
+     *
+     * @param type class to be instantiated
+     * @param <T> type to be instantiated
+     * @return new instance of the provided class
+     *
+     * @throws NoValidConstructorException if no valid constructor is present
+     * @throws MultipleInjectConstructorsException if multiple constructors annotated with {@link Inject} are present
+     * @throws ClassInstantiationException if a component could not be instantiated, for example if its constructor is
+     * not accessible to the injector
+     * @throws FieldInjectionException if a component has fields annotated with {@link Inject} that are not accessible
+     * to the injector
+     * @throws MethodInvocationException if a component has a method or methods annotated with {@link Initialize} that
+     * are not accessible
      */
     public <T> T newInstance(Class<T> type) {
         return newInstance(type, (Class<?>) null);
@@ -119,8 +134,10 @@ public class Injector {
      * for any {@link InstantiationDetails} dependencies.
      *
      * @param type requested {@link Component} class
-     * @param requestingClass class requesting the {@link Component Components}
-     * @return list of all {@link Component Components} matching the provided class.
+     * @param requestingClass class that is requesting the {@link Component Components}
+     * @param <T> type to be checked for
+     * @param <R> type of the requesting class
+     * @return list of all {@link Component Components} matching the provided class
      *
      * @throws ClassInstantiationException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} could not be
      * instantiated, for example if its constructor is not accessible to the injector
@@ -149,6 +166,17 @@ public class Injector {
 
     /**
      * Calls {@link #getComponents(Class, Class)} with a {@code null} requesting class.
+     *
+     * @param type {@link Component} class to be checked for
+     * @param <T> type to be checked for
+     * @return list of all {@link Component Components} matching the provided class
+     *
+     * @throws ClassInstantiationException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} could not be
+     * instantiated, for example if its constructor is not accessible to the injector
+     * @throws FieldInjectionException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} has fields
+     * annotated with {@link Inject} that are not accessible to the injector
+     * @throws MethodInvocationException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} has a method or
+     * methods annotated with {@link Initialize} that are not accessible
      */
     public <T> List<T> getComponents(Class<T> type) {
         return getComponents(type, null);
@@ -157,6 +185,12 @@ public class Injector {
     /**
      * Checks if only one {@link Component} matches with the provided class and then calls
      * {@link #getComponents(Class, Class)} and returns the first and only entry in the returned list.
+     *
+     * @param type {@link Component} class to be checked for
+     * @param requestingClass class that is requesting the {@link Component}
+     * @param <T> type to be checked for
+     * @param <R> type of the requesting class
+     * @return {@link Component} matching the provided class
      *
      * @throws UnknownComponentException if no {@link Component Components} match the provided class
      * @throws MultipleValidComponentsException if multiple {@link Component Components} match the provided class
@@ -180,6 +214,13 @@ public class Injector {
 
     /**
      * Calls {@link #getSingletonComponent(Class, Class)} with a {@code null} requesting class.
+     *
+     * @param type {@link Component} class to be checked for
+     * @param <T> type to be checked for
+     * @return {@link Component} matching the provided class
+     *
+     * @throws UnknownComponentException if no {@link Component Components} match the provided class
+     * @throws MultipleValidComponentsException if multiple {@link Component Components} match the provided class
      */
     public <T> T getSingletonComponent(Class<T> type) {
         return getSingletonComponent(type, null);
@@ -188,7 +229,8 @@ public class Injector {
     /**
      * Checks if any {@link Component Components} are present that match with the provided class.
      *
-     * @param type component class to check
+     * @param type {@link Component} class to be checked for
+     * @param <T> type to be checked for
      * @return {@code true} if one or more {@link Component Components} are present that match with the provided class
      */
     public <T> boolean containsComponents(Class<T> type) {
@@ -198,7 +240,8 @@ public class Injector {
     /**
      * Checks if a single {@link Component} is present that matches with the provided class.
      *
-     * @param type {@link Component} class to check
+     * @param type {@link Component} class to be checked for
+     * @param <T> type to be checked for
      * @return {@code true} if a single {@link Component} is present that matches with the provided class
      */
     public <T> boolean isSingletonComponent(Class<T> type) {
@@ -210,6 +253,7 @@ public class Injector {
      * {@link InjectorBuilder}.
      *
      * @param instance {@link Component} instance
+     * @param <T> type to be checked for
      */
     public <T> void addComponent(T instance) {
         logger.debug(InjectorStrings.registeringComponent(instance.getClass()));
@@ -398,6 +442,7 @@ public class Injector {
 
     @Data
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    @SuppressWarnings("MissingJavadoc")
     public static class PerInstanceReference<T,O> {
         private final Class<T> type;
 

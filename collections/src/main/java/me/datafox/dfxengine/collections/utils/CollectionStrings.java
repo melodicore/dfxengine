@@ -6,6 +6,7 @@ import me.datafox.dfxengine.handles.api.Space;
 /**
  * @author datafox
  */
+@SuppressWarnings({"SameParameterValue", "MissingJavadoc"})
 public class CollectionStrings {
     private static final String SPACE_MISMATCH_HANDLE_SET = "Tried to add Handle %s to HandleSet with Space %s";
     private static final String NOT_HANDLED_TYPE = "Tried to add Object %s to HandleMap with putHandled() but it " +

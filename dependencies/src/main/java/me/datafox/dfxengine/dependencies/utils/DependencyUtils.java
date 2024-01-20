@@ -12,6 +12,7 @@ import java.util.stream.Stream;
  *
  * @author datafox
  */
+@SuppressWarnings("MissingJavadoc")
 public class DependencyUtils {
     public static boolean checkCyclicDependencies(Dependent parent, Dependency child) {
         if(!(parent instanceof Dependency && child instanceof Dependent)) {

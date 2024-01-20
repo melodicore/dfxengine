@@ -18,13 +18,17 @@ import java.util.stream.Collectors;
  * @author datafox
  */
 public class ObjectClassMap extends FunctionClassMap<Object> {
+    /**
+     * Constructor for ObjectClassMap
+     */
     public ObjectClassMap() {
         super(Object::getClass);
     }
 
     /**
-     * @param type the type to be retrieved
-     * @return the retrieved values cast to the type
+     * @param type type to be retrieved
+     * @param <T> type to be retrieved
+     * @return retrieved values cast to the type
      *
      * @see ObjectClassMap
      */

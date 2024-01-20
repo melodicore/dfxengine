@@ -13,6 +13,8 @@ public class MapUtils {
      * Reverses a map.
      *
      * @param map map to be reversed
+     * @param <K> map key type
+     * @param <V> map value type
      * @return map with all keys and values reversed
      *
      * @throws IllegalArgumentException if the values of the map are not all distinct
