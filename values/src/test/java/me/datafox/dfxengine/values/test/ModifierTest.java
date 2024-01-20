@@ -59,6 +59,9 @@ public class ModifierTest {
 
         assertThrows(IllegalArgumentException.class,
                 () -> MappingOperationModifier.builder(0).operation(new DivideTestOperation()).build());
+
+        assertThrows(IllegalArgumentException.class,
+                () -> MappingOperationModifier.builder(0).operation(new DivideTestOperation(), resultValue(0)).build());
     }
 
     private static class DivideTestOperation implements Operation {
