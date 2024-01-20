@@ -17,22 +17,22 @@ that are supported by Android's
 
 Here are the currently existing and planned modules:
 
-| Module                       | Status             | Description                                         |
-|------------------------------|--------------------|-----------------------------------------------------|
-| [Collections](collections)   | Done (1.0.0)^1^    | Collections for other modules and general usage     |
-| [Dependencies](dependencies) | Done (1.0.1)       | Data structure dependencies and invalidation        |
-| [Handles API](handles-api)   | Done (1.0.5)       | Interfaces for the Handles module                   |
-| [Handles](handles)           | Done (1.0.5)       | Dynamic enum-like structures for map keys           |
-| [Injector API](injector-api) | Done (1.1.1)       | Annotations for the Injector module                 |
-| [Injector](injector)         | Done (1.1.1)       | A dependency injector                               |
-| [Math API](math-api)         | Done (1.0.1)       | Interfaces for the Math module                      |
-| [Math](math)                 | Done (1.0.3)       | Seamless wrapping and manipulation of number types  |
-| [Utils](utils)               | Done (1.0.0)^1^    | Utilities used by other modules                     |
-| [Values API](values-api)     | Done (1.0.0)       | Interfaces for the Values module                    |
-| [Values](values)             | Under construction | Mutable number values and a dynamic modifier system |
-| Entities                     | Not yet started    | Data-oriented entity system                         |
-| Text                         | Not yet started    | Textual presentation for other modules              |
-| Serialization                | Not yet started    | Serialization for other modules                     |
+| Module                       | Status          | Description                                         |
+|------------------------------|-----------------|-----------------------------------------------------|
+| [Collections](collections)   | Done (1.0.0)^1^ | Collections for other modules and general usage     |
+| [Dependencies](dependencies) | Done (1.0.1)    | Data structure dependencies and invalidation        |
+| [Handles API](handles-api)   | Done (1.0.5)    | Interfaces for the Handles module                   |
+| [Handles](handles)           | Done (1.0.5)    | Dynamic enum-like structures for map keys           |
+| [Injector API](injector-api) | Done (1.1.1)    | Annotations for the Injector module                 |
+| [Injector](injector)         | Done (1.1.1)    | A dependency injector                               |
+| [Math API](math-api)         | Done (1.0.1)    | Interfaces for the Math module                      |
+| [Math](math)                 | Done (1.0.3)    | Seamless wrapping and manipulation of number types  |
+| [Utils](utils)               | Done (1.0.0)^1^ | Utilities used by other modules                     |
+| [Values API](values-api)     | Done (1.0.0)    | Interfaces for the Values module                    |
+| [Values](values)             | Done (1.0.0)    | Mutable number values and a dynamic modifier system |
+| Entities                     | Not yet started | Data-oriented entity system                         |
+| Text                         | Not yet started | Textual presentation for other modules              |
+| Serialization                | Not yet started | Serialization for other modules                     |
 
 1: These modules will get more features as they are required by other modules
 
