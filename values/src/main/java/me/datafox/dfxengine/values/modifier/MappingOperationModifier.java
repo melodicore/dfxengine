@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static me.datafox.dfxengine.values.utils.internal.ValuesStrings.FUTURE_REFERENCE;
+
 /**
  * An extension of {@link OperationModifier} that works with {@link MappingOperationChain}. Includes
  * {@link SpecialValue}, the {@link Value} equivalent of {@link SpecialNumeral}, with the static convenience methods
@@ -154,7 +156,7 @@ public class MappingOperationModifier extends OperationModifier {
                 SpecialNumeral sn = (SpecialNumeral) parameter.getValue();
                 if(sn.getId() < -1 || sn.getId() >= parameters.size()) {
                     throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(Builder.class),
-                            "reference to future operation", IllegalArgumentException::new);
+                            FUTURE_REFERENCE, IllegalArgumentException::new);
                 }
             }
         }

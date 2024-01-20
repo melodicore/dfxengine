@@ -23,6 +23,8 @@ import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static me.datafox.dfxengine.values.utils.internal.ValuesStrings.*;
+
 /**
  * An implementation of {@link ValueMap} that can be backed with any implementation of {@link HandleMap}. Includes a
  * {@link Builder} for easy instantiation.
@@ -60,7 +62,7 @@ public class DelegatedValueMap implements ValueMap {
         if(stream().allMatch(val -> val.canConvert(type))) {
             values().forEach(val -> val.convert(type));
         } else {
-            throw LogUtils.logExceptionAndGet(logger, "number overflow",
+            throw LogUtils.logExceptionAndGet(logger, OVERFLOW,
                     ExtendedArithmeticException::new);
         }
     }
@@ -82,7 +84,7 @@ public class DelegatedValueMap implements ValueMap {
         if(getExisting(handles).allMatch(val -> val.canConvert(type))) {
             getExisting(handles).forEach(val -> val.convert(type));
         } else {
-            throw LogUtils.logExceptionAndGet(logger, "number overflow",
+            throw LogUtils.logExceptionAndGet(logger, OVERFLOW,
                     ExtendedArithmeticException::new);
         }
     }
@@ -104,7 +106,7 @@ public class DelegatedValueMap implements ValueMap {
         if(getExisting(types.keySet()).allMatch(val -> val.canConvert(types.get(val.getHandle())))) {
             getExisting(types.keySet()).forEach(val -> val.convert(types.get(val.getHandle())));
         } else {
-            throw LogUtils.logExceptionAndGet(logger, "number overflow",
+            throw LogUtils.logExceptionAndGet(logger, OVERFLOW,
                     ExtendedArithmeticException::new);
         }
     }
@@ -322,7 +324,7 @@ public class DelegatedValueMap implements ValueMap {
     @Override
     public void apply(Operation operation, MapMathContext context, Map<? extends Handle,Numeral[]> parameters) {
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
-            logger.warn("exception may cause operation to fail midway");
+            logger.warn(MIDWAY_EXCEPTION);
         }
 
         if(context.createNonExistingAs() != null) {
@@ -640,7 +642,7 @@ public class DelegatedValueMap implements ValueMap {
      */
     @Override
     public Value put(Handle key, Value value) {
-        logger.warn("The specified Handle is ignored and the Value's Handle is used as a key instead, consider using ValueMap.putHandled(Value) instead");
+        logger.warn(handleIgnored(key, value));
         return putHandled(value);
     }
 
@@ -702,7 +704,7 @@ public class DelegatedValueMap implements ValueMap {
 
     private Stream<? extends Handle> getNonExisting(Collection<? extends Handle> handles) {
         if(handles.stream().noneMatch(Predicate.not(handle -> getSpace().equals(handle.getSpace())))) {
-            logger.warn("Handles that are not part of " + getSpace() + " are ignored");
+            logger.warn(spaceIgnored(getSpace()));
         }
         return handles.stream()
                 .filter(Predicate.not(this::containsKey))
@@ -715,14 +717,14 @@ public class DelegatedValueMap implements ValueMap {
 
     private void contextOperation(Runnable operation, MathContext context) {
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
-            logger.warn("exception may cause operation to fail midway");
+            logger.warn(MIDWAY_EXCEPTION);
         }
         operation.run();
     }
 
     private void contextOperation(Consumer<Value> operation, Collection<? extends Handle> handles, MapMathContext context) {
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
-            logger.warn("exception may cause operation to fail midway");
+            logger.warn(MIDWAY_EXCEPTION);
         }
 
         if(context.createNonExistingAs() != null) {
@@ -735,7 +737,7 @@ public class DelegatedValueMap implements ValueMap {
 
     private void contextOperation(BiConsumer<Numeral, Value> operation, Map<? extends Handle, Numeral> values, MapMathContext context) {
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
-            logger.warn("exception may cause operation to fail midway");
+            logger.warn(MIDWAY_EXCEPTION);
         }
 
         if(context.createNonExistingAs() != null) {

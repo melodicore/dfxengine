@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static me.datafox.dfxengine.values.utils.internal.ValuesStrings.invalidParameterCount;
+
 /**
  * An {@link Operation} that chains multiple operations together. The operations are executed in order, with the
  * previous one's output as the next one's input. Parameters are given in order, with the total parameter count being
@@ -49,7 +51,8 @@ public final class OperationChain implements Operation {
     public Numeral apply(Numeral source, Numeral ... parameters) {
         if(parameters.length != parameterCount) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "invalid parameter count", IllegalArgumentException::new);
+                    invalidParameterCount(parameterCount, parameters.length),
+                    IllegalArgumentException::new);
         }
         int nextIndex = 0;
         for(Operation operation : operations) {

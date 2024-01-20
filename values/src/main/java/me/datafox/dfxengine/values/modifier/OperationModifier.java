@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+import static me.datafox.dfxengine.values.utils.internal.ValuesStrings.invalidParameterCount;
+
 /**
  * Wraps an {@link Operation} as a {@link Modifier}. Will always use {@link Value#getValue()} for the Operation
  * parameters.
@@ -77,7 +79,8 @@ public class OperationModifier extends AbstractModifier {
 
         if(parameters.length != operation.getParameterCount()) {
             LogUtils.logExceptionAndGet(logger,
-                    "invalid parameter count", IllegalArgumentException::new);
+                    invalidParameterCount(operation.getParameterCount(), parameters.length),
+                    IllegalArgumentException::new);
         }
 
         this.operation = operation;

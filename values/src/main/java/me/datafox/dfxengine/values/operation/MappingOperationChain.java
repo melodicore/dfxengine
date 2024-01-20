@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static me.datafox.dfxengine.values.utils.internal.ValuesStrings.invalidParameterCount;
+
 /**
  * An extension of the {@link OperationChain} which offers more flexible ways for routing parameters. There are two main
  * changes. Firstly, inputs are now counted as regular parameters. This means that {@link #getParameterCount()} now
@@ -76,7 +78,8 @@ public final class MappingOperationChain implements Operation {
     public Numeral apply(Numeral source, Numeral ... parameters) {
         if(parameters.length != parameterCount) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "invalid parameter count", IllegalArgumentException::new);
+                    invalidParameterCount(parameterCount, parameters.length),
+                    IllegalArgumentException::new);
         }
         checkSpecial(parameters);
         Numeral[] results = new Numeral[operations.length + 1];
