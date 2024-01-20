@@ -20,13 +20,13 @@ Here are the currently existing and planned modules:
 | Module                       | Status             | Description                                         |
 |------------------------------|--------------------|-----------------------------------------------------|
 | [Collections](collections)   | Done (1.0.0)^1^    | Collections for other modules and general usage     |
-| [Dependencies](dependencies) | Done (1.0.1)       | Data structure dependencies and invalidation        |
-| [Handles API](handles-api)   | Done (1.0.5)       | Interfaces for the Handles module                   |
-| [Handles](handles)           | Done (1.0.5)       | Dynamic enum-like structures for map keys           |
-| [Injector API](injector-api) | Done (1.1.1)       | Annotations for the Injector module                 |
-| [Injector](injector)         | Done (1.1.1)       | A dependency injector                               |
-| [Math API](math-api)         | Done (1.0.1)       | Interfaces for the Math module                      |
-| [Math](math)                 | Done (1.0.3)       | Seamless wrapping and manipulation of number types  |
+| [Dependencies](dependencies) | Done (1.0.2)       | Data structure dependencies and invalidation        |
+| [Handles API](handles-api)   | Done (1.0.6)       | Interfaces for the Handles module                   |
+| [Handles](handles)           | Done (1.0.6)       | Dynamic enum-like structures for map keys           |
+| [Injector API](injector-api) | Done (1.1.2)       | Annotations for the Injector module                 |
+| [Injector](injector)         | Done (1.1.2)       | A dependency injector                               |
+| [Math API](math-api)         | Done (1.0.2)       | Interfaces for the Math module                      |
+| [Math](math)                 | Done (1.0.4)       | Seamless wrapping and manipulation of number types  |
 | [Utils](utils)               | Done (1.0.0)^1^    | Utilities used by other modules                     |
 | [Values API](values-api)     | Done (1.0.0)       | Interfaces for the Values module                    |
 | [Values](values)             | Done (1.0.1)       | Mutable number values and a dynamic modifier system |
