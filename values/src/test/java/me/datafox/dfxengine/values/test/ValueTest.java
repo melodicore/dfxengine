@@ -181,11 +181,11 @@ public class ValueTest {
     public void applyTest() {
         intValue.apply(new ToDoubleTestOperation());
         assertEquals(valueOf(99456.0d), intValue.getBase());
-        intValue.apply(Operations::sqrt, MathContext.builder().convertResultTo(FLOAT));
+        intValue.apply(Operations::sqrt, MathContext.builder().convertResultTo(FLOAT).build());
         assertEquals(valueOf(315.36646f), intValue.getBase());
         intValue.apply(Operations::power, valueOf("1.5"));
         assertEquals(valueOf("5600.454261623189947408056716691534"), intValue.getBase());
-        intValue.apply(Operations::lerp, MathContext.builder().convertResultTo(LONG), valueOf(-1), valueOf(Math.E));
+        intValue.apply(Operations::lerp, MathContext.builder().convertResultTo(LONG).build(), valueOf(-1), valueOf(Math.E));
         assertEquals(valueOf(20823L), intValue.getBase());
     }
 
@@ -252,7 +252,7 @@ public class ValueTest {
         assertFalse(staticValue.convert(DOUBLE));
         assertThrows(UnsupportedOperationException.class, () -> staticValue.convert(INT));
         assertFalse(staticValue.convertIfAllowed(INT));
-        assertTrue(staticValue.convertIfAllowed(DOUBLE));
+        assertFalse(staticValue.convertIfAllowed(DOUBLE));
         assertThrows(UnsupportedOperationException.class, staticValue::toInteger);
         assertFalse(staticValue.toDecimal());
         assertFalse(staticValue.toSmallestType());
