@@ -8,7 +8,6 @@ import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
-import me.datafox.dfxengine.math.utils.Numerals;
 import me.datafox.dfxengine.values.api.Modifier;
 import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.api.comparison.Comparison;
@@ -16,9 +15,10 @@ import me.datafox.dfxengine.values.api.comparison.ComparisonContext;
 import me.datafox.dfxengine.values.api.operation.*;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * A mutable numeric value identified by a {@link Handle} and backed with a {@link Numeral} that supports dynamic
