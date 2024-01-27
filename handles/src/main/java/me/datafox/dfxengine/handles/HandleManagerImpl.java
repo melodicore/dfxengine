@@ -1,9 +1,7 @@
 package me.datafox.dfxengine.handles;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import me.datafox.dfxengine.collections.TreeHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleManager;
@@ -34,21 +32,13 @@ import static me.datafox.dfxengine.handles.HandleConstants.TAGS_ID;
  * @author datafox
  */
 @Component(defaultFor = HandleManager.class)
-@EqualsAndHashCode
-@ToString
 public class HandleManagerImpl implements HandleManager {
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     private final Logger logger;
 
     private final HandleMap<Space> spaces;
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     private final Space spaceSpace;
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     @Getter(AccessLevel.PACKAGE)
     private final Space tagSpace;
 
