@@ -18,8 +18,4 @@ public class NumberUtils {
             return new BigDecimal(number.toString());
         }
     }
-
-    public static int getRandom(int max) {
-        return (int) (Math.random() * max);
-    }
 }

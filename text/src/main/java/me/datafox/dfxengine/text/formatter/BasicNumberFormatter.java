@@ -1,41 +1,58 @@
 package me.datafox.dfxengine.text.formatter;
 
-import me.datafox.dfxengine.text.api.Formatter;
+import me.datafox.dfxengine.injector.api.annotation.Component;
+import me.datafox.dfxengine.injector.api.annotation.Inject;
+import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.text.utils.internal.NumberUtils;
+import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 
+import static me.datafox.dfxengine.text.utils.internal.TextConstants.*;
+
 /**
  * @author datafox
  */
-public class BasicNumberFormatter implements Formatter<Number> {
-    private final MathContext context;
-    private final boolean engineering;
-
-    public BasicNumberFormatter(int digits, boolean engineering) {
-        if(digits <= 0) {
-            throw new IllegalArgumentException("bad digit amount");
-        }
-
-        context = new MathContext(digits);
-        this.engineering = engineering;
+@Component
+public class BasicNumberFormatter extends AbstractNumberFormatter {
+    @Inject
+    private BasicNumberFormatter(Logger logger, TextFactory textFactory) {
+        super(logger, textFactory, BASIC_NUMBER_FORMATTER_HANDLE_ID);
     }
 
     @Override
-    public String format(Number number) {
+    public Details format(Number number, TextFactory.Context context) {
+        int precision = context.getById(
+                BASIC_NUMBER_FORMATTER_PRECISION_HANDLE_ID,
+                BASIC_NUMBER_FORMATTER_PRECISION_DEFAULT);
+
+        boolean scientific = context.getById(
+                NUMBER_FORMATTER_SCIENTIFIC_HANDLE_ID,
+                NUMBER_FORMATTER_SCIENTIFIC_DEFAULT);
+
+        if(precision <= 0) {
+            LogUtils.logExceptionAndGet(logger,
+                    "precision must be a non-zero positive integer",
+                    IllegalArgumentException::new);
+        }
+
         BigDecimal bd = NumberUtils
                 .toBigDecimal(number)
-                .round(context);
+                .round(new MathContext(precision));
 
-        if(engineering) {
-            return bd.toEngineeringString();
+        Details.DetailsBuilder builder = Details
+                .builder()
+                .number(number)
+                .one(bd.compareTo(BigDecimal.ONE) == 0);
+
+        if(scientific) {
+            builder.string(bd.toString());
         } else {
-            return bd.toString();
+            builder.string(bd.toEngineeringString());
         }
-    }
 
-    public enum Type {
-        SCIENTIFIC, ENGINEERING
+        return builder.build();
     }
 }

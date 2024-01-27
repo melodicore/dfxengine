@@ -8,10 +8,9 @@ version = "$textVersion"
 
 dependencies {
     api project(":text-api")
-    api project(":handles-api")
-    api project(":math-api")
-    api project(":values-api")
     implementation project(":utils")
+    implementation project(":collections")
+    implementation project(":injector-api")
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
