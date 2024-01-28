@@ -3,7 +3,6 @@ package me.datafox.dfxengine.text.api;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -11,21 +10,23 @@ import java.util.function.Function;
  * @author datafox
  */
 public interface TextFactory {
-    String build(Context initialContext, TextDefinition definition);
-
-    Space getContextSpace();
+    String build(TextContext initialContext, TextDefinition definition);
 
     Space getNumberFormatterSpace();
 
-    void setDefaultContext(Context context);
+    void setDefaultContext(TextContext context);
 
-    Context getDefaultContext();
+    TextContext getDefaultContext();
 
-    Context createEmptyContext();
+    TextContext createEmptyContext();
 
     <T> void registerName(T object, String singular, String plural);
 
     <T> Name<T> getName(T object);
+
+    <T> void registerNameConverter(NameConverter<T> nameConverter);
+
+    <T> NameConverter<T> getNameConverter(Class<T> type);
 
     void setPluralConverter(Function<String,String> pluralConverter);
 
@@ -41,55 +42,5 @@ public interface TextFactory {
 
     default Optional<NumberFormatter> getNumberFormatterById(String key) {
         return getNumberFormatter(getNumberFormatterSpace().getOrCreateHandle(key));
-    }
-
-    interface Context {
-        TextFactory getFactory();
-
-        Space getSpace();
-
-        Context copy();
-
-        Map<Handle,String> getAll();
-
-        Context setAll(Context other, boolean overwrite);
-
-        String get(Handle key, String defaultValue);
-
-        boolean get(Handle key, boolean defaultValue);
-
-        int get(Handle key, int defaultValue);
-
-        Context set(Handle key, String value);
-
-        Context set(Handle key, boolean value);
-
-        Context set(Handle key, int value);
-
-        boolean isEmpty();
-
-        default String getById(String id, String defaultValue) {
-            return get(getSpace().getOrCreateHandle(id), defaultValue);
-        }
-
-        default boolean getById(String id, boolean defaultValue) {
-            return get(getSpace().getOrCreateHandle(id), defaultValue);
-        }
-
-        default int getById(String id, int defaultValue) {
-            return get(getSpace().getOrCreateHandle(id), defaultValue);
-        }
-
-        default Context setById(String id, String value) {
-            return set(getSpace().getOrCreateHandle(id), value);
-        }
-
-        default Context setById(String id, boolean value) {
-            return set(getSpace().getOrCreateHandle(id), value);
-        }
-
-        default Context setById(String id, int value) {
-            return set(getSpace().getOrCreateHandle(id), value);
-        }
     }
 }

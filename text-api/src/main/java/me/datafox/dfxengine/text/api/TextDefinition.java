@@ -5,5 +5,5 @@ package me.datafox.dfxengine.text.api;
  */
 @FunctionalInterface
 public interface TextDefinition {
-    String getText(TextFactory factory, TextFactory.Context context);
+    String getText(TextFactory factory, TextContext context);
 }

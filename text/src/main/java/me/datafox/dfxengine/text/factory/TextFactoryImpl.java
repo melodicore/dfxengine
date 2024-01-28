@@ -1,7 +1,6 @@
-package me.datafox.dfxengine.text;
+package me.datafox.dfxengine.text.factory;
 
 import lombok.Getter;
-import lombok.Setter;
 import me.datafox.dfxengine.collections.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleManager;
@@ -10,17 +9,17 @@ import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
-import me.datafox.dfxengine.text.api.Name;
-import me.datafox.dfxengine.text.api.NumberFormatter;
-import me.datafox.dfxengine.text.api.TextDefinition;
-import me.datafox.dfxengine.text.api.TextFactory;
+import me.datafox.dfxengine.text.api.*;
 import me.datafox.dfxengine.utils.StringUtils;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
-import static me.datafox.dfxengine.text.utils.internal.TextConstants.*;
+import static me.datafox.dfxengine.text.utils.TextFactoryConstants.TEXT_FACTORY_NUMBER_FORMATTER_SPACE_ID;
 
 /**
  * @author datafox
@@ -32,16 +31,14 @@ public class TextFactoryImpl implements TextFactory {
     private final HandleManager handleManager;
 
     @Getter
-    @Setter
-    private Context defaultContext;
-
-    @Getter
-    private final Space contextSpace;
+    private TextContext defaultContext;
 
     @Getter
     private final Space numberFormatterSpace;
 
     private final Map<Object,Name<?>> names;
+
+    private final Map<Class<?>,NameConverter<?>> nameConverters;
 
     @Getter
     private Function<String,String> pluralConverter;
@@ -53,15 +50,15 @@ public class TextFactoryImpl implements TextFactory {
         this.logger = logger;
         this.handleManager = handleManager;
         defaultContext = createEmptyContext();
-        contextSpace = handleManager.getOrCreateSpace(TEXT_FACTORY_CONTEXT_SPACE_ID);
         numberFormatterSpace = handleManager.getOrCreateSpace(TEXT_FACTORY_NUMBER_FORMATTER_SPACE_ID);
         names = new HashMap<>();
+        nameConverters = new HashMap<>();
         pluralConverter = TextFactoryImpl::defaultPluralConverter;
         numberFormatters = new HashHandleMap<>(numberFormatterSpace);
     }
 
     @Override
-    public String build(Context context, TextDefinition definition) {
+    public String build(TextContext context, TextDefinition definition) {
         if(!defaultContext.isEmpty()) {
             if(context.isEmpty()) {
                 context = defaultContext.copy();
@@ -73,13 +70,20 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     @Override
-    public Context createEmptyContext() {
-        return new ContextImpl();
+    public void setDefaultContext(TextContext context) {
+        defaultContext = Optional
+                .ofNullable(context)
+                .orElse(createEmptyContext());
+    }
+
+    @Override
+    public TextContext createEmptyContext() {
+        return new TextContextImpl(this);
     }
 
     @Override
     public <T> void registerName(T object, String singular, String plural) {
-        names.put(object, new NameImpl<>(object, singular, plural));
+        names.put(object, new Name<>(object, singular, plural));
     }
 
     @SuppressWarnings("unchecked")
@@ -97,7 +101,20 @@ public class TextFactoryImpl implements TextFactory {
             singular = object.toString();
         }
 
-        return new NameImpl<>(object, singular, pluralConverter.apply(singular));
+        return new Name<>(object, singular, pluralConverter.apply(singular));
+    }
+
+    @Override
+    public <T> void registerNameConverter(NameConverter<T> nameConverter) {
+        nameConverters.put(nameConverter.getObjectClass(), nameConverter);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> NameConverter<T> getNameConverter(Class<T> type) {
+        return Optional
+                .ofNullable((NameConverter<T>) nameConverters.get(type))
+                .orElseGet(() -> defaultNameConverter(type));
     }
 
     @Override
@@ -117,6 +134,34 @@ public class TextFactoryImpl implements TextFactory {
         return Optional.ofNullable(numberFormatters.get(key));
     }
 
+    private static <T> NameConverter<T> defaultNameConverter(Class<T> type) {
+        if(Handled.class.isAssignableFrom(type)) {
+            return new NameConverter<>() {
+                @Override
+                public String getName(T value) {
+                    return StringUtils.capitalize(((Handled) value).getHandle().getId());
+                }
+
+                @Override
+                public Class<T> getObjectClass() {
+                    return type;
+                }
+            };
+        } else {
+            return new NameConverter<>() {
+                @Override
+                public String getName(T value) {
+                    return StringUtils.capitalize(value.toString());
+                }
+
+                @Override
+                public Class<T> getObjectClass() {
+                    return type;
+                }
+            };
+        }
+    }
+
     private static String defaultPluralConverter(String str) {
         if(str.matches(".*([sx]|ch)$")) {
             return str + "es";
@@ -125,93 +170,5 @@ public class TextFactoryImpl implements TextFactory {
             return str.substring(0, str.length() - 1) + "ies";
         }
         return str + "s";
-    }
-
-    public class ContextImpl implements Context {
-        private final HandleMap<String> params;
-
-        private ContextImpl() {
-            params = new HashHandleMap<>(contextSpace);
-        }
-
-        @Override
-        public TextFactory getFactory() {
-            return TextFactoryImpl.this;
-        }
-
-        @Override
-        public Space getSpace() {
-            return contextSpace;
-        }
-
-        @Override
-        public Context copy() {
-            return new ContextImpl().setAll(this, true);
-        }
-
-        @Override
-        public Map<Handle,String> getAll() {
-            return Collections.unmodifiableMap(params);
-        }
-
-        @Override
-        public Context setAll(Context other, boolean overwrite) {
-            if(overwrite) {
-                params.putAll(other.getAll());
-            } else {
-                other.getAll().forEach(params::putIfAbsent);
-            }
-            return this;
-        }
-
-        @Override
-        public String get(Handle key, String defaultValue) {
-            return params.getOrDefault(key, defaultValue);
-        }
-
-        @Override
-        public boolean get(Handle key, boolean defaultValue) {
-            String param = params.get(key);
-            if("true".equalsIgnoreCase(param)) {
-                return true;
-            }
-            if("false".equalsIgnoreCase(param)) {
-                return false;
-            }
-            return defaultValue;
-        }
-
-        @Override
-        public int get(Handle key, int defaultValue) {
-            try {
-                return Integer.parseInt(params.get(key));
-            } catch(NumberFormatException e) {
-                return defaultValue;
-            }
-        }
-
-        @Override
-        public Context set(Handle key, String value) {
-            params.put(key, value);
-            return this;
-        }
-
-        @Override
-        public Context set(Handle key, boolean value) {
-            params.put(key, String.valueOf(value));
-            return this;
-
-        }
-
-        @Override
-        public Context set(Handle key, int value) {
-            params.put(key, String.valueOf(value));
-            return this;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return params.isEmpty();
-        }
     }
 }

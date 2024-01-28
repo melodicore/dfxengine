@@ -2,6 +2,7 @@ package me.datafox.dfxengine.text.formatter;
 
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
+import me.datafox.dfxengine.text.api.TextContext;
 import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.text.utils.internal.NumberUtils;
 import me.datafox.dfxengine.utils.LogUtils;
@@ -10,7 +11,7 @@ import org.slf4j.Logger;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
-import static me.datafox.dfxengine.text.utils.internal.TextConstants.*;
+import static me.datafox.dfxengine.text.utils.TextFactoryConstants.*;
 
 /**
  * @author datafox
@@ -23,14 +24,9 @@ public class BasicNumberFormatter extends AbstractNumberFormatter {
     }
 
     @Override
-    public Details format(Number number, TextFactory.Context context) {
-        int precision = context.getById(
-                BASIC_NUMBER_FORMATTER_PRECISION_HANDLE_ID,
-                BASIC_NUMBER_FORMATTER_PRECISION_DEFAULT);
-
-        boolean scientific = context.getById(
-                NUMBER_FORMATTER_SCIENTIFIC_HANDLE_ID,
-                NUMBER_FORMATTER_SCIENTIFIC_DEFAULT);
+    public Details format(Number number, TextContext context) {
+        boolean scientific = context.get(NUMBER_FORMATTER_SCIENTIFIC);
+        int precision = context.get(BASIC_NUMBER_FORMATTER_PRECISION);
 
         if(precision <= 0) {
             LogUtils.logExceptionAndGet(logger,

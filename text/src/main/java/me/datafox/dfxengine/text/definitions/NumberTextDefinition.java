@@ -1,12 +1,12 @@
 package me.datafox.dfxengine.text.definitions;
 
 import me.datafox.dfxengine.handles.api.Handle;
+import me.datafox.dfxengine.text.api.TextContext;
 import me.datafox.dfxengine.text.api.NumberFormatter;
 import me.datafox.dfxengine.text.api.TextDefinition;
 import me.datafox.dfxengine.text.api.TextFactory;
 
-import static me.datafox.dfxengine.text.utils.internal.TextConstants.BASIC_NUMBER_FORMATTER_HANDLE_ID;
-import static me.datafox.dfxengine.text.utils.internal.TextConstants.SINGULAR_HANDLE_ID;
+import static me.datafox.dfxengine.text.utils.TextFactoryConstants.*;
 
 /**
  * @author datafox
@@ -29,12 +29,12 @@ public class NumberTextDefinition implements TextDefinition {
     }
 
     @Override
-    public String getText(TextFactory factory, TextFactory.Context context) {
+    public String getText(TextFactory factory, TextContext context) {
         NumberFormatter.Details details = factory
                 .getNumberFormatterById(numberFormatterId)
                 .orElseThrow()
                 .format(number, context);
-        context.setById(SINGULAR_HANDLE_ID, details.isOne());
+        context.set(details.isOne(), SINGULAR);
         return details.getString();
     }
 }

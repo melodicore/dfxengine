@@ -8,7 +8,7 @@ import me.datafox.dfxengine.handles.api.Handled;
  * @author datafox
  */
 public interface NumberFormatter extends Handled {
-    Details format(Number number, TextFactory.Context context);
+    Details format(Number number, TextContext context);
 
     @Data
     @Builder

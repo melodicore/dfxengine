@@ -15,7 +15,9 @@ module dfxengine.text {
     requires dfxengine.utils;
     requires dfxengine.collections;
 
-    exports me.datafox.dfxengine.text;
     exports me.datafox.dfxengine.text.definitions;
     exports me.datafox.dfxengine.text.formatter;
+    exports me.datafox.dfxengine.text.factory;
+    exports me.datafox.dfxengine.text.utils;
+    exports me.datafox.dfxengine.text.converter;
 }

@@ -1,12 +1,15 @@
 package me.datafox.dfxengine.text.api;
 
+import lombok.Data;
+
 /**
  * @author datafox
  */
-public interface Name<T> {
-    T getOwner();
+@Data
+public final class Name<T> {
+    private final T owner;
 
-    String getSingular();
+    private final String singular;
 
-    String getPlural();
+    private final String plural;
 }
