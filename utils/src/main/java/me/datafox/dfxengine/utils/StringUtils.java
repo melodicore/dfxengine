@@ -1,6 +1,7 @@
 package me.datafox.dfxengine.utils;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,6 +34,20 @@ public class StringUtils {
      */
     public static <T> String className(Class<T> aClass) {
         return aClass.getSimpleName() + ".class";
+    }
+
+    /**
+     * @param type type
+     * @return {@link String} representation of the type in <i>ClassName.class</i> format
+     */
+    public static String typeName(Type type) {
+        String str = type.getTypeName();
+        int i = str.indexOf("<");
+        if(i == -1) {
+            return str.substring(str.lastIndexOf(".") + 1) + ".class";
+        }
+        int j = str.lastIndexOf(".", i);
+        return str.substring(j + 1, i) + ".class";
     }
 
     /**

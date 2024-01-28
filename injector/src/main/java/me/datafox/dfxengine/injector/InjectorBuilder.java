@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import me.datafox.dfxengine.collections.FunctionClassMap;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.annotation.Component;
+import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.injector.exception.CyclicDependencyException;
 import me.datafox.dfxengine.injector.exception.InvalidDefaultTypeException;
@@ -295,6 +296,15 @@ public class InjectorBuilder {
                     }
                 });
 
+        Stream.concat(Arrays.stream(InjectorUtils
+                                .getConstructor(type, logger)
+                                .getGenericParameterTypes()),
+                        ClassUtils
+                                .getMethodsWithAnnotation(type, Initialize.class)
+                                .stream()
+                                .flatMap(method -> Arrays.stream(method.getGenericParameterTypes())))
+                .forEach(aClass -> checkParameterizedDependency(type, aClass));
+
         checkParameterized(type);
     }
 
@@ -313,6 +323,9 @@ public class InjectorBuilder {
                     }
                 });
 
+        Arrays.stream(reference.getMethod().getGenericParameterTypes())
+                .forEach(aClass -> checkParameterizedMethodDependency(reference, aClass));
+
         if(!Modifier.isStatic(reference.getMethod().getModifiers())) {
             checkParameterized(reference.getOwner());
         }
@@ -330,10 +343,44 @@ public class InjectorBuilder {
         if(type.getTypeParameters().length != 0) {
             logger.warn(InjectorStrings.parameterizedType(type));
         }
+    }
 
-        ClassUtils.getSuperclassesFor(type)
-                .filter(Predicate.not(Predicate.isEqual(type)))
-                .forEach(this::checkParameterized);
+    private <T> void checkParameterizedDependency(Class<T> dependent, Type type) {
+        if(!parameterizedWarnings) {
+            return;
+        }
+
+        logger.debug(InjectorStrings.checkingParameterized(type));
+
+        if(!(type instanceof ParameterizedType) ||
+                type.getTypeName().startsWith("java.util.List") ||
+                type.getTypeName().startsWith("me.datafox.dfxengine.injector.InstantiationDetails")) {
+            return;
+        }
+
+        ParameterizedType paramType = (ParameterizedType) type;
+
+        if(paramType.getActualTypeArguments().length != 0) {
+            logger.warn(InjectorStrings.parameterizedTypeDependency(dependent, type));
+        }
+    }
+
+    private <T1, R> void checkParameterizedMethodDependency(MethodReference<T1, R> reference, Type type) {
+        if(!parameterizedWarnings) {
+            return;
+        }
+
+        logger.debug(InjectorStrings.checkingParameterized(type));
+
+        if(!(type instanceof ParameterizedType) ||
+                type.getTypeName().startsWith("java.lang.List") ||
+                type.getTypeName().startsWith("me.datafox.dfxengine.injector.InstantiationDetails")) {
+            return;
+        }
+
+        if(((ParameterizedType) type).getActualTypeArguments().length != 0) {
+            logger.warn(InjectorStrings.parameterizedTypeMethodDependency(reference, type));
+        }
     }
 
     private <T> Dependency<T> createClassDependency(Class<T> type) {

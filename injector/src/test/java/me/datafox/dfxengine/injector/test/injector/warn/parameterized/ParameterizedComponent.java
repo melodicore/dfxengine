@@ -6,5 +6,5 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
  * @author datafox
  */
 @Component
-public class ParameterizedComponent implements ParameterizedInterface<String> {
+public class ParameterizedComponent<T> {
 }

@@ -5,10 +5,7 @@ import me.datafox.dfxengine.injector.InjectorBuilder;
 import me.datafox.dfxengine.injector.InstantiationDetails;
 import me.datafox.dfxengine.utils.StringUtils;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.Collection;
 
 /**
@@ -39,6 +36,10 @@ public class InjectorStrings {
     private static final String CHECKING_PARAMETERIZED = "Checking for parameterized types in %s";
     private static final String PARAMETERIZED_TYPE = "%s has a parameterized type, this is " +
             "not supported and may cause runtime exceptions or other unexpected behavior";
+    private static final String PARAMETERIZED_TYPE_DEPENDENCY = "%s has a parameterized dependency to " +
+            "%s, this is not supported and may cause runtime exceptions or other unexpected behavior";
+    private static final String PARAMETERIZED_TYPE_METHOD_DEPENDENCY = "Method %s in %s has a parameterized " +
+            "dependency to %s, this is not supported and may cause runtime exceptions or other unexpected behavior";
     private static final String COMPONENT_CLASS_FOUND = "Found component %s";
     private static final String INVALID_OVERRIDE_TYPE =
             "Component %s has an override type %s which is not the component's superclass or -interface";
@@ -111,8 +112,20 @@ public class InjectorStrings {
         return forType(CHECKING_PARAMETERIZED, type);
     }
 
+    public static String checkingParameterized(Type type) {
+        return forActualType(CHECKING_PARAMETERIZED, type);
+    }
+
     public static String parameterizedType(Class<?> type) {
         return forType(PARAMETERIZED_TYPE, type);
+    }
+
+    public static String parameterizedTypeDependency(Class<?> dependent, Type type) {
+        return forTypeAndActualType(PARAMETERIZED_TYPE_DEPENDENCY, dependent, type);
+    }
+
+    public static String parameterizedTypeMethodDependency(InjectorBuilder.MethodReference<?,?> reference, Type type) {
+        return forMethodAndTypeAndActualType(PARAMETERIZED_TYPE_METHOD_DEPENDENCY, reference.getMethod(), reference.getOwner(), type);
     }
 
     public static String componentClassFound(Class<?> type) {
@@ -340,5 +353,19 @@ public class InjectorStrings {
     private static String forExecutableAndType(String str, Executable executable, Class<?> owner) {
         return String.format(str, executable.getName(),
                 StringUtils.className(owner));
+    }
+
+    private static String forActualType(String str, Type type) {
+        return String.format(str, StringUtils.typeName(type));
+    }
+
+    private static String forTypeAndActualType(String str, Class<?> type1, Type type2) {
+        return String.format(str, StringUtils.className(type1), StringUtils.typeName(type2));
+    }
+
+    private static String forMethodAndTypeAndActualType(String str, Method method, Class<?> type1, Type type2) {
+        return String.format(str, method.getName(),
+                StringUtils.className(type1),
+                StringUtils.typeName(type2));
     }
 }

@@ -37,10 +37,15 @@ import me.datafox.dfxengine.injector.test.injector.pass.multiple_equals.EqualsCl
 import me.datafox.dfxengine.injector.test.injector.pass.package_blacklist.BlacklistComponentInterface;
 import me.datafox.dfxengine.injector.test.injector.pass.package_blacklist.subpackage.InaccessibleComponent;
 import me.datafox.dfxengine.injector.test.injector.pass.per_instance.RequestingComponent;
-import me.datafox.dfxengine.injector.test.injector.warn.parameterized.ParameterizedInterface;
+import me.datafox.dfxengine.injector.test.injector.warn.parameterized.ParameterizedComponent;
+import me.datafox.dfxengine.injector.test.injector.warn.parameterized.ParameterizedComponentDependency;
+import me.datafox.dfxengine.injector.test.injector.warn.parameterized.ParameterizedComponentInitializer;
+import me.datafox.dfxengine.injector.test.injector.warn.parameterized.ParameterizedComponentMethod;
 import me.datafox.dfxengine.injector.utils.InjectorStrings;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -344,10 +349,22 @@ public class InjectorTest {
 
         var list = appender.getForLevel(Level.WARN);
 
-        assertEquals(1, list.size());
+        assertEquals(7, list.size());
 
-        ILoggingEvent event = list.get(0);
+        ILoggingEvent first = list.get(0);
+        ILoggingEvent second = list.get(1);
+        ILoggingEvent third = list.get(2);
+        ILoggingEvent fourth = list.get(3);
+        ILoggingEvent fifth = list.get(4);
+        ILoggingEvent sixth = list.get(5);
+        ILoggingEvent seventh = list.get(6);
 
-        assertEquals(InjectorStrings.parameterizedType(ParameterizedInterface.class), event.getMessage());
+        assertEquals(InjectorStrings.parameterizedType(ParameterizedComponent.class), first.getMessage());
+        assertEquals(InjectorStrings.parameterizedTypeDependency(ParameterizedComponentDependency.class, ParameterizedComponent.class), second.getMessage());
+        assertEquals(InjectorStrings.parameterizedTypeDependency(ParameterizedComponentInitializer.class, ParameterizedComponent.class), third.getMessage());
+        assertEquals(InjectorStrings.parameterizedType(ParameterizedComponentMethod.class), fourth.getMessage());
+        assertEquals(InjectorStrings.parameterizedType(Optional.class), fifth.getMessage());
+        assertEquals("Method stringComponent in ParameterizedComponentMethod.class has a parameterized dependency to ParameterizedComponent.class, this is not supported and may cause runtime exceptions or other unexpected behavior", sixth.getMessage());
+        assertEquals(InjectorStrings.parameterizedType(ParameterizedComponentMethod.class), seventh.getMessage());
     }
 }
