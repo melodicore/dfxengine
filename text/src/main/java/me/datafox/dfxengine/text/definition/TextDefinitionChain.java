@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.text.definitions;
+package me.datafox.dfxengine.text.definition;
 
 import me.datafox.dfxengine.text.api.TextContext;
 import me.datafox.dfxengine.text.api.TextDefinition;

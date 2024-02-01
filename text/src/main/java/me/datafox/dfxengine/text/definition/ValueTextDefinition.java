@@ -1,11 +1,10 @@
-package me.datafox.dfxengine.text.definitions;
+package me.datafox.dfxengine.text.definition;
 
 import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.math.api.Numeral;
-import me.datafox.dfxengine.text.api.TextContext;
 import me.datafox.dfxengine.text.api.NumberFormatter;
-import me.datafox.dfxengine.text.api.TextDefinition;
+import me.datafox.dfxengine.text.api.TextContext;
 import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.values.api.Value;
 
@@ -14,7 +13,7 @@ import static me.datafox.dfxengine.text.utils.TextFactoryConstants.*;
 /**
  * @author datafox
  */
-public class ValueTextDefinition implements TextDefinition, Dependency {
+public class ValueTextDefinition extends AbstractTextDefinition implements Dependency {
     private final Value value;
     private final String numberFormatterId;
     private Numeral cachedBase;
@@ -38,7 +37,7 @@ public class ValueTextDefinition implements TextDefinition, Dependency {
     }
 
     @Override
-    public String getText(TextFactory factory, TextContext context) {
+    protected String getTextInternal(TextFactory factory, TextContext context) {
         Number number;
         if(context.get(USE_VALUE_BASE)) {
             if(cachedBase == null) {
@@ -55,10 +54,9 @@ public class ValueTextDefinition implements TextDefinition, Dependency {
                 .getNumberFormatterById(numberFormatterId)
                 .orElseThrow()
                 .format(number, context);
-        context.set(details.isOne(), SINGULAR);
+        context.set(SINGULAR, details.isOne());
         return details.getString();
     }
-
 
     @Override
     public void invalidate() {

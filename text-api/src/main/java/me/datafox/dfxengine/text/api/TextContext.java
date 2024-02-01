@@ -16,11 +16,11 @@ public interface TextContext {
 
     Map<String,String> getAll();
 
-    <T> void set(T value, TextContextData<T> data);
+    <T> TextContext set(TextContextData<T> data, T value);
 
     TextContext setAll(TextContext other, boolean overwrite);
 
-    boolean isEmpty();
+    <T> TextContext remove(TextContextData<T> data);
 
-    TextContext clear();
+    boolean isEmpty();
 }

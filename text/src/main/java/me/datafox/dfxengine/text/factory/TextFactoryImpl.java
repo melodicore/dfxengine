@@ -8,15 +8,12 @@ import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.api.collection.HandleMap;
 import me.datafox.dfxengine.injector.api.annotation.Component;
+import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.*;
-import me.datafox.dfxengine.utils.StringUtils;
 import org.slf4j.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 import static me.datafox.dfxengine.text.utils.TextFactoryConstants.TEXT_FACTORY_NUMBER_FORMATTER_SPACE_ID;
@@ -40,6 +37,8 @@ public class TextFactoryImpl implements TextFactory {
 
     private final Map<Class<?>,NameConverter<?>> nameConverters;
 
+    private final SortedSet<TextProcessor> textProcessors;
+
     @Getter
     private Function<String,String> pluralConverter;
 
@@ -53,12 +52,13 @@ public class TextFactoryImpl implements TextFactory {
         numberFormatterSpace = handleManager.getOrCreateSpace(TEXT_FACTORY_NUMBER_FORMATTER_SPACE_ID);
         names = new HashMap<>();
         nameConverters = new HashMap<>();
+        textProcessors = new TreeSet<>();
         pluralConverter = TextFactoryImpl::defaultPluralConverter;
         numberFormatters = new HashHandleMap<>(numberFormatterSpace);
     }
 
     @Override
-    public String build(TextContext context, TextDefinition definition) {
+    public String build(TextDefinition definition, TextContext context) {
         if(!defaultContext.isEmpty()) {
             if(context.isEmpty()) {
                 context = defaultContext.copy();
@@ -93,15 +93,9 @@ public class TextFactoryImpl implements TextFactory {
             return (Name<T>) names.get(object);
         }
 
-        String singular;
+        String name = ((NameConverter<T>) getNameConverter(object.getClass())).getName(object);
 
-        if(object instanceof Handled) {
-            singular = StringUtils.capitalize(((Handled) object).getHandle().getId());
-        } else {
-            singular = object.toString();
-        }
-
-        return new Name<>(object, singular, pluralConverter.apply(singular));
+        return new Name<>(object, name, pluralConverter.apply(name));
     }
 
     @Override
@@ -115,6 +109,16 @@ public class TextFactoryImpl implements TextFactory {
         return Optional
                 .ofNullable((NameConverter<T>) nameConverters.get(type))
                 .orElseGet(() -> defaultNameConverter(type));
+    }
+
+    @Override
+    public void registerTextProcessor(TextProcessor processor) {
+        textProcessors.add(processor);
+    }
+
+    @Override
+    public Collection<TextProcessor> getTextProcessors() {
+        return Collections.unmodifiableSortedSet(textProcessors);
     }
 
     @Override
@@ -134,12 +138,34 @@ public class TextFactoryImpl implements TextFactory {
         return Optional.ofNullable(numberFormatters.get(key));
     }
 
+    @SuppressWarnings("rawtypes")
+    @Initialize
+    private void initialize(List<NameConverter> nameConverters,
+                            List<TextProcessor> textProcessors,
+                            List<NumberFormatter> numberFormatters) {
+        nameConverters.forEach(this::registerNameConverter);
+        textProcessors.forEach(this::registerTextProcessor);
+        numberFormatters.forEach(this::registerNumberFormatter);
+    }
+
     private static <T> NameConverter<T> defaultNameConverter(Class<T> type) {
         if(Handled.class.isAssignableFrom(type)) {
             return new NameConverter<>() {
                 @Override
                 public String getName(T value) {
-                    return StringUtils.capitalize(((Handled) value).getHandle().getId());
+                    return ((Handled) value).getHandle().getId();
+                }
+
+                @Override
+                public Class<T> getObjectClass() {
+                    return type;
+                }
+            };
+        } else if(Handle.class.isAssignableFrom(type)) {
+            return new NameConverter<>() {
+                @Override
+                public String getName(T value) {
+                    return ((Handle) value).getId();
                 }
 
                 @Override
@@ -151,7 +177,7 @@ public class TextFactoryImpl implements TextFactory {
             return new NameConverter<>() {
                 @Override
                 public String getName(T value) {
-                    return StringUtils.capitalize(value.toString());
+                    return value.toString();
                 }
 
                 @Override

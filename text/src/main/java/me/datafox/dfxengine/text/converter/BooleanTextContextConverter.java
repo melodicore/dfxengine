@@ -8,6 +8,9 @@ import me.datafox.dfxengine.text.api.TextContextConverter;
 public class BooleanTextContextConverter implements TextContextConverter<Boolean> {
     @Override
     public String toString(Boolean value) {
+        if(value == null) {
+            return "false";
+        }
         return value.toString();
     }
 
@@ -16,9 +19,6 @@ public class BooleanTextContextConverter implements TextContextConverter<Boolean
         if("true".equalsIgnoreCase(str)) {
             return true;
         }
-        if("false".equalsIgnoreCase(str)) {
-            return false;
-        }
-        return null;
+        return false;
     }
 }

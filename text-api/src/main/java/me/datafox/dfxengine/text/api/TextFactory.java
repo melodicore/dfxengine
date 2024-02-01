@@ -3,6 +3,7 @@ package me.datafox.dfxengine.text.api;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -10,7 +11,7 @@ import java.util.function.Function;
  * @author datafox
  */
 public interface TextFactory {
-    String build(TextContext initialContext, TextDefinition definition);
+    String build(TextDefinition definition, TextContext initialContext);
 
     Space getNumberFormatterSpace();
 
@@ -28,6 +29,10 @@ public interface TextFactory {
 
     <T> NameConverter<T> getNameConverter(Class<T> type);
 
+    void registerTextProcessor(TextProcessor processor);
+
+    Collection<TextProcessor> getTextProcessors();
+
     void setPluralConverter(Function<String,String> pluralConverter);
 
     Function<String,String> getPluralConverter();
@@ -37,7 +42,7 @@ public interface TextFactory {
     Optional<NumberFormatter> getNumberFormatter(Handle key);
 
     default String build(TextDefinition definition) {
-        return build(createEmptyContext(), definition);
+        return build(definition, createEmptyContext());
     }
 
     default Optional<NumberFormatter> getNumberFormatterById(String key) {

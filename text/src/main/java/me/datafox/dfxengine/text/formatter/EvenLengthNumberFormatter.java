@@ -26,8 +26,8 @@ public class EvenLengthNumberFormatter extends AbstractNumberFormatter {
     @Override
     public Details format(Number number, TextContext context) {
         boolean scientific = context.get(NUMBER_FORMATTER_SCIENTIFIC);
+        boolean mantissaPlus = context.get(NUMBER_FORMATTER_USE_MANTISSA_PLUS);
         int characters = context.get(EVEN_LENGTH_NUMBER_FORMATTER_CHARACTERS);
-        boolean mantissaPlus = context.get(EVEN_LENGTH_NUMBER_FORMATTER_USE_MANTISSA_PLUS);
 
         if(characters <= 0) {
             LogUtils.logExceptionAndGet(logger,

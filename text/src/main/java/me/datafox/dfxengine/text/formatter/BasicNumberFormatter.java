@@ -26,6 +26,7 @@ public class BasicNumberFormatter extends AbstractNumberFormatter {
     @Override
     public Details format(Number number, TextContext context) {
         boolean scientific = context.get(NUMBER_FORMATTER_SCIENTIFIC);
+        boolean mantissaPlus = context.get(NUMBER_FORMATTER_USE_MANTISSA_PLUS);
         int precision = context.get(BASIC_NUMBER_FORMATTER_PRECISION);
 
         if(precision <= 0) {
@@ -43,12 +44,20 @@ public class BasicNumberFormatter extends AbstractNumberFormatter {
                 .number(number)
                 .one(bd.compareTo(BigDecimal.ONE) == 0);
 
+        String str;
+
         if(scientific) {
-            builder.string(bd.toString());
+            str = bd.toString();
         } else {
-            builder.string(bd.toEngineeringString());
+            str = bd.toEngineeringString();
         }
 
-        return builder.build();
+        if(!mantissaPlus && str.contains("+")) {
+            str = str.replace("+", "");
+        }
+
+        return builder
+                .string(str)
+                .build();
     }
 }

@@ -16,6 +16,10 @@ public class TextFactoryConstants {
 
     public static final String EVEN_LENGTH_NUMBER_FORMATTER_HANDLE_ID = "evenLength";
 
+    public static final int PLURAL_TEXT_PROCESSOR_PRIORITY = 0;
+
+    public static final int CASE_TEXT_PROCESSOR_PRIORITY = 1000;
+
     public static final TextContextConverter<String> STRING_CONVERTER = new StringTextContextConverter();
 
     public static final TextContextConverter<Boolean> BOOLEAN_CONVERTER = new BooleanTextContextConverter();
@@ -34,13 +38,25 @@ public class TextFactoryConstants {
     public static final TextContextData<Boolean> NUMBER_FORMATTER_SCIENTIFIC =
             new TextContextData<>("numberFormatterScientific", true, BOOLEAN_CONVERTER);
 
+    public static final TextContextData<Boolean> NUMBER_FORMATTER_USE_MANTISSA_PLUS =
+            new TextContextData<>("evenLengthNumberFormatterUseMantissaPlus", false, BOOLEAN_CONVERTER);
+
     public static final TextContextData<Integer> BASIC_NUMBER_FORMATTER_PRECISION =
             new TextContextData<>("basicNumberFormatterPrecision", 4, INTEGER_CONVERTER);
 
     public static final TextContextData<Integer> EVEN_LENGTH_NUMBER_FORMATTER_CHARACTERS =
             new TextContextData<>("evenLengthNumberFormatterCharacters", 7, INTEGER_CONVERTER);
 
-    public static final TextContextData<Boolean> EVEN_LENGTH_NUMBER_FORMATTER_USE_MANTISSA_PLUS =
-            new TextContextData<>("evenLengthNumberFormatterUseMantissaPlus", false, BOOLEAN_CONVERTER);
+    public static final TextContextData<Boolean> PLURAL_TEXT_PROCESSOR_USE =
+            new TextContextData<>("pluralTextProcessorUse", false, BOOLEAN_CONVERTER);
+
+    public static final TextContextData<Boolean> CASE_TEXT_PROCESSOR_UPPERCASE =
+            new TextContextData<>("caseTextProcessorUppercase", false, BOOLEAN_CONVERTER);
+
+    public static final TextContextData<Boolean> CASE_TEXT_PROCESSOR_LOWERCASE =
+            new TextContextData<>("caseTextProcessorLowercase", false, BOOLEAN_CONVERTER);
+
+    public static final TextContextData<Boolean> CASE_TEXT_PROCESSOR_CAPITALIZE =
+            new TextContextData<>("caseTextProcessorCapitalize", false, BOOLEAN_CONVERTER);
 
 }

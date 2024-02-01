@@ -50,8 +50,9 @@ public class TextContextImpl implements TextContext {
     }
 
     @Override
-    public <T> void set(T value, TextContextData<T> data) {
+    public <T> TextContext set(TextContextData<T> data, T value) {
         params.put(data.getId(), data.getConverter().toString(value));
+        return this;
     }
 
     @Override
@@ -65,13 +66,13 @@ public class TextContextImpl implements TextContext {
     }
 
     @Override
-    public boolean isEmpty() {
-        return params.isEmpty();
+    public <T> TextContext remove(TextContextData<T> data) {
+        params.remove(data.getId());
+        return this;
     }
 
     @Override
-    public TextContext clear() {
-        params.clear();
-        return this;
+    public boolean isEmpty() {
+        return params.isEmpty();
     }
 }

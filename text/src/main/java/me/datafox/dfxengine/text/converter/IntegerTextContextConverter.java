@@ -8,6 +8,9 @@ import me.datafox.dfxengine.text.api.TextContextConverter;
 public class IntegerTextContextConverter implements TextContextConverter<Integer> {
     @Override
     public String toString(Integer value) {
+        if(value == null) {
+            return "0";
+        }
         return value.toString();
     }
 
@@ -16,7 +19,7 @@ public class IntegerTextContextConverter implements TextContextConverter<Integer
         try {
             return Integer.parseInt(str);
         } catch(NumberFormatException e) {
-            return null;
+            return 0;
         }
     }
 }

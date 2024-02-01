@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.text.definitions;
+package me.datafox.dfxengine.text.definition;
 
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.math.api.Numeral;
