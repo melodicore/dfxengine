@@ -21,8 +21,9 @@ import java.lang.annotation.Target;
  * a new instance of the component class every time it is injected.
  * </p>
  * <p>
- * If {@link #defaultFor()} is set to true, introducing any component in the same scope that has defaultFor set to false
- * will remove this component from the injectable dependencies.
+ * If {@link #defaultImpl()} is set to {@code true}, this component will be ignored if a single component with its
+ * signature has been requested and other components not marked as default implementations with the same signature are
+ * present.
  * </p>
  *
  * @author datafox
@@ -37,10 +38,8 @@ public @interface Component {
     InstantiationPolicy value() default InstantiationPolicy.ONCE;
 
     /**
-     * If set to other than {@link Object Object.class},
-     *
-     * @return the class of components that should override this component, or {@link Object Object.class} if this
-     * component should not be overridden
+     * @return {@code true} if this component should be ignored if a single component with its signature has been
+     * requested and other components not marked as default implementations with the same signature are present.
      */
-    Class<?> defaultFor() default Object.class;
+    boolean defaultImpl() default false;
 }

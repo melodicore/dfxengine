@@ -1,83 +1,113 @@
 package me.datafox.dfxengine.injector.utils;
 
-import me.datafox.dfxengine.injector.api.annotation.Inject;
-import me.datafox.dfxengine.injector.exception.MultipleInjectConstructorsException;
-import me.datafox.dfxengine.injector.exception.NoValidConstructorException;
-import me.datafox.dfxengine.utils.ClassUtils;
-import me.datafox.dfxengine.utils.LogUtils;
-import org.slf4j.Logger;
+import io.github.classgraph.MethodInfo;
+import me.datafox.dfxengine.injector.internal.ClassReference;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
- * Utilities used internally in this module.
- *
  * @author datafox
  */
 public class InjectorUtils {
-    public static Class<?> getListType(Type type, Logger logger) {
-        if(type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) type;
-
-            if(parameterizedType.getActualTypeArguments().length != 0) {
-                try {
-                    Class<?> classType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-
-                    if(parameterizedType.getActualTypeArguments().length > 1) {
-                        logger.warn(InjectorStrings.maybeOddListType(classType));
-                    }
-
-                    return classType;
-                } catch(ClassCastException ignored) {
-                }
-
-                try {
-                    ParameterizedType parameterizedType1 = (ParameterizedType) parameterizedType.getActualTypeArguments()[0];
-
-                    Class<?> classType = (Class<?>) parameterizedType1.getRawType();
-
-                    logger.warn(InjectorStrings.parameterizedListType(classType));
-
-                    return classType;
-                } catch(ClassCastException ignored) {
-                }
-            }
-        }
-
-        logger.warn(InjectorStrings.ODD_LIST_TYPE);
-
-        return Object.class;
+    public static String getMethodReturnClassName(MethodInfo info) {
+        return parseClass(stripMethodParameters(info
+                    .getTypeSignatureOrTypeDescriptorStr())
+                .split("[;<]", 2)[0]);
     }
 
-    public static <T> Constructor<T> getConstructor(Class<T> type, Logger logger) {
-        logger.debug(InjectorStrings.validConstructors(type));
+    public static String stripMethodParameters(String typeSignature) {
+        if(typeSignature == null) {
+            return null;
+        }
+        return typeSignature
+                .split("\\)", 2)[1];
+    }
 
-        List<Constructor<T>> constructors = ClassUtils.getConstructorsWithAnnotation(type, Inject.class);
+    public static String parseClass(String str) {
+        switch(str.charAt(0)) {
+            case 'Z':
+                return Boolean.class.getName();
+            case 'B':
+                return Byte.class.getName();
+            case 'S':
+                return Short.class.getName();
+            case 'I':
+                return Integer.class.getName();
+            case 'J':
+                return Long.class.getName();
+            case 'F':
+                return Float.class.getName();
+            case 'D':
+                return Double.class.getName();
+            case 'C':
+                return Character.class.getName();
+            case 'L':
+                return str
+                        .substring(1)
+                        .replaceAll("/", ".");
+            default:
+                return Object.class.getName();
+        }
+    }
 
-        if(constructors.isEmpty()) {
-            Constructor<T> constructor;
-            try {
-                constructor = type.getDeclaredConstructor();
-            } catch(NoSuchMethodException e) {
-                throw LogUtils.logExceptionAndGet(logger, InjectorStrings.noValidConstructor(type),
-                        e, NoValidConstructorException::new);
+    public static String getWithin(String str, char start, char end) {
+        int s = -1;
+        int e = -1;
+        int counter = 0;
+        for(int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if(start == c) {
+                counter++;
+                if(s == -1) {
+                    s = i + 1;
+                }
+            } else if(s != -1 && end == c) {
+                counter--;
+                if(counter == 0) {
+                    e = i;
+                    break;
+                }
             }
-            logger.debug(InjectorStrings.DEFAULT_CONSTRUCTOR);
-            return constructor;
         }
-
-        if(constructors.size() != 1) {
-            throw LogUtils.logExceptionAndGet(logger, InjectorStrings.multipleInjectConstructors(type),
-                    MultipleInjectConstructorsException::new);
+        if(s == -1) {
+            return str;
         }
+        if(e == -1) {
+            return str.substring(s);
+        }
+        return str.substring(s, e);
+    }
 
-        Constructor<T> constructor = constructors.get(0);
+    public static String[] splitParameters(String typeParameters) {
+        List<String> list = new ArrayList<>();
+        int counter = 0;
+        int lastSplit = 0;
+        for(int i = 0; i < typeParameters.length(); i++) {
+            if(counter == 0) {
+                if(typeParameters.startsWith(", ", i)) {
+                    list.add(typeParameters.substring(lastSplit, i));
+                    i++;
+                    lastSplit = i + 1;
+                    continue;
+                }
+            }
+            if(typeParameters.charAt(i) == '<') {
+                counter++;
+            } else if(typeParameters.charAt(i) == '>') {
+                counter--;
+            }
+        }
+        list.add(typeParameters.substring(lastSplit));
+        return list.toArray(String[]::new);
+    }
 
-        logger.debug(InjectorStrings.validConstructorFound(constructor));
-
-        return constructor;
+    public static Stream<ClassReference<?>> getSuperclassesRecursive(ClassReference<?> classReference) {
+        return Stream.concat(Stream.of(classReference),
+                classReference
+                        .getSuperclasses()
+                        .stream()
+                        .flatMap(InjectorUtils::getSuperclassesRecursive));
     }
 }

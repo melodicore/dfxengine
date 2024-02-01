@@ -1,461 +1,272 @@
 package me.datafox.dfxengine.injector;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import me.datafox.dfxengine.collections.FunctionClassMap;
-import me.datafox.dfxengine.collections.ObjectClassMap;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.annotation.Component;
-import me.datafox.dfxengine.injector.api.annotation.Initialize;
-import me.datafox.dfxengine.injector.api.annotation.Inject;
-import me.datafox.dfxengine.injector.exception.*;
-import me.datafox.dfxengine.injector.utils.InjectorStrings;
-import me.datafox.dfxengine.injector.utils.InjectorUtils;
-import me.datafox.dfxengine.utils.ClassUtils;
-import me.datafox.dfxengine.utils.LogUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import me.datafox.dfxengine.injector.exception.ComponentWithMultipleOptionsForSingletonDependency;
+import me.datafox.dfxengine.injector.internal.ClassReference;
+import me.datafox.dfxengine.injector.internal.ComponentData;
+import me.datafox.dfxengine.injector.internal.InitializeReference;
+import me.datafox.dfxengine.injector.internal.PrioritizedRunnable;
 
 import java.lang.reflect.*;
-import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * <p>
- * A dependency injector. Instantiates classes and invokes methods. Use {@link InjectorBuilder} to obtain instances of
- * this class.
- * </p>
- * <p>
- * The builder scans all classes and methods annotated with {@link Component}, instantiates/invokes them and registers
- * them as Components. Components may have fields and constructors annotated with {@link Inject}, as well as methods
- * annotated with {@link Initialize}. The parameters of the constructor and the types of the fields are treated as
- * component dependencies and automatically injected. The initializer methods may also have dependency parameters, but
- * those methods are only invoked after all components have been instantiated. This can be used to circumvent cyclic
- * dependencies.
- * </p>
- * <p>
- * Components are referenced by {@link Class}es, and all superclasses and superinterfaces of the specified component are
- * also associated with that Component. Multiple Components of a specified type can exist simultaneously, and a class
- * that is only associated with a single Component is called a singleton. When an injectable constructor parameter or
- * field references a Component, that Component must be a singleton. You can use a {@link List} (or a superclass or
- * superinterface like {@link AbstractList} or {@link Collection}) with the Component's type as the type parameter
- * to inject multiple Components of the same type.
- * </p>
- * <p>
- * <b>Parameterized Components are not supported</b>. A Component may extend or implement a parameterized superclass or
- * superinterface, but the parameterized type will be ignored which may lead to a
- * {@link MultipleValidComponentsException}, a {@link ClassCastException} or other unexpected behavior. A warning
- * will be logged by default when Components or their superclasses or superinterfaces have parameterized types, but this
- * behavior can be disabled with {@link InjectorBuilder#disableParameterizedWarnings}.
- * </p>
- *
  * @author datafox
  */
 public class Injector {
-    private final Logger logger;
-
-    private final ObjectClassMap instantiatedComponents;
-
-    private final FunctionClassMap<PerInstanceReference<?,?>> perInstanceComponents;
-
-    private final List<Runnable> initializers;
-
-    private boolean building;
-
-    Injector(Collection<PerInstanceReference<?,?>> perInstanceComponents) {
-        logger = LoggerFactory.getLogger(getClass());
-        instantiatedComponents = new ObjectClassMap();
-        this.perInstanceComponents = new FunctionClassMap<>(PerInstanceReference::getType);
-        initializers = new ArrayList<>();
-
-        building = true;
-
-        instantiatedComponents.put(this);
-        this.perInstanceComponents.putAll(perInstanceComponents);
-    }
-
-    /**
-     * Instantiates the provided class, with the other provided class referenced as the requester for
-     * {@link InstantiationDetails}. The class must either have a single constructor annotated with {@link Inject} or a
-     * default constructor. Any parameters of the constructor are treated as dependencies and injected during
-     * instantiation. Any non-static and non-final fields annotated with Inject are also injected directly after
-     * instantiation. Finally, any methods annotated with {@link Initialize} are invoked, with their parameters also
-     * treated as dependencies.
-     *
-     * @param type class to be instantiated
-     * @param requestingClass class requesting the instance
-     * @param <T> type to be instantiated
-     * @param <R> type of the requesting class
-     * @return new instance of the provided class
-     *
-     * @throws NoValidConstructorException if no valid constructor is present
-     * @throws MultipleInjectConstructorsException if multiple constructors annotated with {@link Inject} are present
-     * @throws ClassInstantiationException if a component could not be instantiated, for example if its constructor is
-     * not accessible to the injector
-     * @throws FieldInjectionException if a component has fields annotated with {@link Inject} that are not accessible
-     * to the injector
-     * @throws MethodInvocationException if a component has a method or methods annotated with {@link Initialize} that
-     * are not accessible
-     */
-    public <T,R> T newInstance(Class<T> type, Class<R> requestingClass) {
-        logger.info(InjectorStrings.instantiatingComponent(type));
-
-        return instantiateConstructor(type, InjectorUtils.getConstructor(type, logger),
-                InstantiationDetails.of(type, requestingClass));
-    }
-
-    /**
-     * Calls {@link Injector#newInstance(Class, Class)} with a null requesting class.
-     *
-     * @param type class to be instantiated
-     * @param <T> type to be instantiated
-     * @return new instance of the provided class
-     *
-     * @throws NoValidConstructorException if no valid constructor is present
-     * @throws MultipleInjectConstructorsException if multiple constructors annotated with {@link Inject} are present
-     * @throws ClassInstantiationException if a component could not be instantiated, for example if its constructor is
-     * not accessible to the injector
-     * @throws FieldInjectionException if a component has fields annotated with {@link Inject} that are not accessible
-     * to the injector
-     * @throws MethodInvocationException if a component has a method or methods annotated with {@link Initialize} that
-     * are not accessible
-     */
-    public <T> T newInstance(Class<T> type) {
-        return newInstance(type, (Class<?>) null);
-    }
-
-    /**
-     * Returns all {@link Component Components} matching the provided class. If any of those Components are
-     * {@link InstantiationPolicy#PER_INSTANCE}, they are instantiated and the provided requesting class will be used
-     * for any {@link InstantiationDetails} dependencies.
-     *
-     * @param type requested {@link Component} class
-     * @param requestingClass class that is requesting the {@link Component Components}
-     * @param <T> type to be checked for
-     * @param <R> type of the requesting class
-     * @return list of all {@link Component Components} matching the provided class
-     *
-     * @throws ClassInstantiationException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} could not be
-     * instantiated, for example if its constructor is not accessible to the injector
-     * @throws FieldInjectionException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} has fields
-     * annotated with {@link Inject} that are not accessible to the injector
-     * @throws MethodInvocationException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} has a method or
-     * methods annotated with {@link Initialize} that are not accessible
-     */
-    @SuppressWarnings("unchecked")
-    public <T,R> List<T> getComponents(Class<T> type, Class<R> requestingClass) {
-        logger.info(InjectorStrings.fetchingComponents(type));
-
-        List<T> list = new ArrayList<>();
-
-        list.addAll(instantiatedComponents.getAndCast(type));
-
-        list.addAll(perInstanceComponents.get(type)
-                .stream()
-                .map(reference -> instantiatePerInstanceComponent(
-                        (PerInstanceReference<T,?>) reference,
-                        InstantiationDetails.of(type, requestingClass)))
-                .collect(Collectors.toList()));
-
-        return list;
-    }
-
-    /**
-     * Calls {@link #getComponents(Class, Class)} with a {@code null} requesting class.
-     *
-     * @param type {@link Component} class to be checked for
-     * @param <T> type to be checked for
-     * @return list of all {@link Component Components} matching the provided class
-     *
-     * @throws ClassInstantiationException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} could not be
-     * instantiated, for example if its constructor is not accessible to the injector
-     * @throws FieldInjectionException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} has fields
-     * annotated with {@link Inject} that are not accessible to the injector
-     * @throws MethodInvocationException if a {@link InstantiationPolicy#PER_INSTANCE} {@link Component} has a method or
-     * methods annotated with {@link Initialize} that are not accessible
-     */
-    public <T> List<T> getComponents(Class<T> type) {
-        return getComponents(type, null);
-    }
-
-    /**
-     * Checks if only one {@link Component} matches with the provided class and then calls
-     * {@link #getComponents(Class, Class)} and returns the first and only entry in the returned list.
-     *
-     * @param type {@link Component} class to be checked for
-     * @param requestingClass class that is requesting the {@link Component}
-     * @param <T> type to be checked for
-     * @param <R> type of the requesting class
-     * @return {@link Component} matching the provided class
-     *
-     * @throws UnknownComponentException if no {@link Component Components} match the provided class
-     * @throws MultipleValidComponentsException if multiple {@link Component Components} match the provided class
-     */
-    public <T,R> T getSingletonComponent(Class<T> type, Class<R> requestingClass) {
-        logger.info(InjectorStrings.fetchingSingleton(type));
-
-        if(!containsComponents(type)) {
-            throw LogUtils.logExceptionAndGet(logger, InjectorStrings.unknownComponent(type),
-                    UnknownComponentException::new);
-        }
-
-        if(!isSingletonComponent(type)) {
-            throw LogUtils.logExceptionAndGet(logger, InjectorStrings.multipleValidComponents(type),
-                    MultipleValidComponentsException::new);
-        }
-
-        return getComponents(type, requestingClass).get(0);
-    }
-
-
-    /**
-     * Calls {@link #getSingletonComponent(Class, Class)} with a {@code null} requesting class.
-     *
-     * @param type {@link Component} class to be checked for
-     * @param <T> type to be checked for
-     * @return {@link Component} matching the provided class
-     *
-     * @throws UnknownComponentException if no {@link Component Components} match the provided class
-     * @throws MultipleValidComponentsException if multiple {@link Component Components} match the provided class
-     */
-    public <T> T getSingletonComponent(Class<T> type) {
-        return getSingletonComponent(type, null);
-    }
-
-    /**
-     * Checks if any {@link Component Components} are present that match with the provided class.
-     *
-     * @param type {@link Component} class to be checked for
-     * @param <T> type to be checked for
-     * @return {@code true} if one or more {@link Component Components} are present that match with the provided class
-     */
-    public <T> boolean containsComponents(Class<T> type) {
-        return instantiatedComponents.contains(type) || perInstanceComponents.contains(type);
-    }
-
-    /**
-     * Checks if a single {@link Component} is present that matches with the provided class.
-     *
-     * @param type {@link Component} class to be checked for
-     * @param <T> type to be checked for
-     * @return {@code true} if a single {@link Component} is present that matches with the provided class
-     */
-    public <T> boolean isSingletonComponent(Class<T> type) {
-        return instantiatedComponents.isSingleton(type) != perInstanceComponents.isSingleton(type);
-    }
-
-    /**
-     * Registers a singleton {@link Component} to be used with dependency injection. Normally only used by the
-     * {@link InjectorBuilder}.
-     *
-     * @param instance {@link Component} instance
-     * @param <T> type to be checked for
-     */
-    public <T> void addComponent(T instance) {
-        logger.debug(InjectorStrings.registeringComponent(instance.getClass()));
-        instantiatedComponents.put(instance);
-    }
-
-    <T> T invokeMethod(Class<T> type, Method method, Object methodInstance) {
-        return invokeMethod(type, method, methodInstance,
-                InstantiationDetails.of(type, null));
-    }
-
-    void finishBuilding() {
-        building = false;
-
-        if(!initializers.isEmpty()) {
-            logger.info(InjectorStrings.RUNNING_INITIALIZERS);
-            initializers.forEach(Runnable::run);
-            initializers.clear();
-        }
-    }
-
-    private <T,R> T instantiateConstructor(Class<T> type, Constructor<T> constructor,
-                                           InstantiationDetails<T,R> instantiationDetails) {
-        logger.debug(InjectorStrings.instantiatingConstructor(constructor));
-
-        T instance;
-
-        try {
-            constructor.trySetAccessible();
-            instance = constructor.newInstance(
-                    getExecutableDependencies(type, constructor, instantiationDetails));
-        } catch(InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw LogUtils.logExceptionAndGet(logger,
-                    InjectorStrings.couldNotInstantiateConstructor(constructor),
-                    e, ClassInstantiationException::new);
-        }
-
-        return initInstance(type, instance, instantiationDetails);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T,O,R> T instantiatePerInstanceComponent(PerInstanceReference<T,O> reference,
-                                                      InstantiationDetails<T,R> instantiationDetails) {
-        logger.debug(InjectorStrings.instantiatingPerInstance(instantiationDetails));
-
-        if(reference.getExecutable() instanceof Constructor) {
-            return instantiateConstructor(reference.getType(),
-                    (Constructor<T>) reference.getExecutable(), instantiationDetails);
-        }
-
-        if(reference.getExecutable() instanceof Method) {
-            Method method = (Method) reference.getExecutable();
-
-            return invokeMethod(reference.getType(), method,
-                    Modifier.isStatic(method.getModifiers()) ? null :
-                            getSingletonComponent(
-                                    reference.getOwner(),
-                                    reference.getType()),
-                    instantiationDetails);
-        }
-
-        throw LogUtils.logExceptionAndGet(logger,
-                InjectorStrings.executableNotConstructorOrMethod(reference),
-                IllegalArgumentException::new);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T,R> T invokeMethod(Class<T> type, Method method, Object methodInstance,
-                                 InstantiationDetails<T,R> instantiationDetails) {
-        if(methodInstance != null) {
-            logger.debug(InjectorStrings.invokingMethod(method, methodInstance.getClass()));
-        } else {
-            logger.debug(InjectorStrings.invokingStaticMethod(method));
-        }
-
-        T instance;
-
-        try {
-            method.trySetAccessible();
-            instance = (T) method.invoke(methodInstance,
-                    getExecutableDependencies(type, method, instantiationDetails));
-        } catch(InvocationTargetException | IllegalAccessException e) {
-            throw LogUtils.logExceptionAndGet(logger,
-                    InjectorStrings.couldNotInvokeMethod(method, type),
-                    e, MethodInvocationException::new);
-        }
-
-        return initInstance(type, instance, instantiationDetails);
-    }
-
-    private <T,R> Object[] getExecutableDependencies(Class<T> type, Executable executable,
-                                                     InstantiationDetails<T,R> instantiationDetails) {
-        if(executable instanceof Method) {
-            logger.info(InjectorStrings.fetchingMethodDependencies((Method) executable, type));
-        } else if(executable instanceof Constructor) {
-            logger.info(InjectorStrings.fetchingConstructorDependencies((Constructor<?>) executable));
-        }
-
-        Object[] params = new Object[executable.getParameterCount()];
-        for(int i=0;i< params.length;i++) {
-            if(executable.getParameterTypes()[i].equals(InstantiationDetails.class)) {
-                params[i] = instantiationDetails;
-            } else {
-                params[i] = getComponent(type,
-                        executable.getParameterTypes()[i],
-                        executable.getGenericParameterTypes()[i]);
-            }
-        }
-
-        return params;
-    }
-
-    private <T,R> T initInstance(Class<T> type, T instance, InstantiationDetails<T,R> instantiationDetails) {
-        List<Field> fields = ClassUtils.getFieldsWithAnnotation(type, Inject.class);
-
-        if(!fields.isEmpty()) {
-            logger.info(InjectorStrings.initializingFields(type));
-        }
-
-        for(Field field : fields) {
-            logger.debug(InjectorStrings.initializingField(field, type));
-
-            Object dependency;
-            if(field.getType().equals(InstantiationDetails.class)) {
-                dependency = instantiationDetails;
-            } else {
-                dependency = getComponent(type,
-                        field.getType(),
-                        field.getGenericType());
-            }
-            try {
-                field.trySetAccessible();
-                field.set(instance, dependency);
-            } catch(IllegalAccessException e) {
-                throw LogUtils.logExceptionAndGet(logger, InjectorStrings.fieldInaccessible(field, type),
-                        e, FieldInjectionException::new);
-            }
-        }
-
-        List<Method> methods = ClassUtils.getMethodsWithAnnotation(type, Initialize.class);
-
-        if(!fields.isEmpty()) {
-            logger.info(InjectorStrings.registeringMethods(type));
-        }
-
-        for(Method method : methods) {
-            Runnable initializer = () -> {
-                logger.debug(InjectorStrings.invokingMethod(method, type));
-                try {
-                    method.trySetAccessible();
-                    method.invoke(instance,
-                            getExecutableDependencies(type, method, instantiationDetails));
-                } catch(IllegalAccessException | InvocationTargetException e) {
-                    throw LogUtils.logExceptionAndGet(logger,
-                            InjectorStrings.couldNotInvokeMethod(method, type),
-                            e, MethodInvocationException::new);
-                }
-            };
-
-            if(building) {
-                logger.debug(InjectorStrings.methodRegistered(method, type));
-                initializers.add(initializer);
-            } else {
-                initializer.run();
-            }
-        }
-
+    @Component
+    private static Injector getInstance() {
         return instance;
     }
 
-    private <T> Object getComponent(Class<T> type,
-                                    Class<?> dependencyType,
-                                    Type parametricType) {
-        logger.debug(InjectorStrings.fetchingDependency(dependencyType, type));
+    private static Injector instance;
 
-        if(List.class.isAssignableFrom(dependencyType)) {
-            Class<?> listType = InjectorUtils.getListType(parametricType, logger);
+    private final List<ComponentData<?>> componentList;
 
-            logger.debug(InjectorStrings.listDependency(listType));
+    private final List<PrioritizedRunnable> initializerQueue;
 
-            return getComponents(listType, type);
-        }
-
-        return getSingletonComponent(dependencyType, type);
+    Injector(Stream<ComponentData<?>> components) {
+        instance = this;
+        componentList = new ArrayList<>();
+        initializerQueue = new ArrayList<>();
+        components.peek(this::instantiateOnce).forEach(componentList::add);
+        initializerQueue.stream().sorted().forEach(Runnable::run);
     }
 
-    @Data
-    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    @SuppressWarnings("MissingJavadoc")
-    public static class PerInstanceReference<T,O> {
-        private final Class<T> type;
+    public <T> T getComponent(Class<T> type) {
+        return getComponent(type, List.of());
+    }
 
-        private final Class<O> owner;
+    public <T> T getComponent(Class<T> type, List<Parameter<?>> parameters) {
+        return getComponent(type, parameters, null, null);
+    }
 
-        private final Executable executable;
+    public <T,R> T getComponent(Class<T> type, Class<R> requesting) {
+        return getComponent(type, List.of(), requesting, List.of());
+    }
 
-        static <T,O> PerInstanceReference<T,O> of(Class<T> type, Class<O> owner, Executable executable) {
-            return new PerInstanceReference<>(type, owner, executable);
+    public <T,R> T getComponent(Class<T> type, List<Parameter<?>> parameters, Class<R> requesting) {
+        return getComponent(type, parameters, requesting, List.of());
+    }
+
+    public <T,R> T getComponent(Class<T> type, Class<R> requesting, List<Parameter<?>> requestingParameters) {
+        return getComponent(type, List.of(), requesting, requestingParameters);
+    }
+
+    public <T,R> T getComponent(Class<T> type, List<Parameter<?>> parameters, Class<R> requesting, List<Parameter<?>> requestingParameters) {
+        checkParameterCount(type, parameters);
+        if(requesting != null) {
+            checkParameterCount(requesting, requestingParameters);
         }
+        ClassReference<T> reference = getReference(type, parameters);
+        ClassReference<R> requestingReference = getReference(requesting, requestingParameters);
+        return getParameter(reference, reference, requestingReference, List.of(componentList));
+    }
 
-        static <T,O> PerInstanceReference<T,O> of(Class<T> type, Executable executable) {
-            return new PerInstanceReference<>(type, null, executable);
+    public <T> List<T> getComponents(Class<T> type) {
+        return getComponents(type, List.of());
+    }
+
+    public <T> List<T> getComponents(Class<T> type, List<Parameter<?>> parameters) {
+        return getComponents(type, parameters, null, null);
+    }
+
+    public <T,R> List<T> getComponents(Class<T> type, Class<R> requesting) {
+        return getComponents(type, List.of(), requesting, List.of());
+    }
+
+    public <T,R> List<T> getComponents(Class<T> type, List<Parameter<?>> parameters, Class<R> requesting) {
+        return getComponents(type, parameters, requesting, List.of());
+    }
+
+    public <T,R> List<T> getComponents(Class<T> type, Class<R> requesting, List<Parameter<?>> requestingParameters) {
+        return getComponents(type, List.of(), requesting, requestingParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T,R> List<T> getComponents(Class<T> type, List<Parameter<?>> parameters, Class<R> requesting, List<Parameter<?>> requestingParameters) {
+        return getComponent(List.class,Parameter.listOf(type, parameters), requesting, requestingParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> ClassReference<T> getReference(Class<T> type, List<Parameter<?>> parameters) {
+        if(type == null) {
+            return null;
         }
+        ClassReference<T> reference = ClassReference
+                .<T>builder()
+                .type(type)
+                .parameters(parameters)
+                .build();
+        if(List.class.equals(type)) {
+            reference.setList(true);
+            reference.setListReference(ClassReference
+                    .builder()
+                    .type((Class<Object>) parameters.get(0).getType())
+                    .parameters(parameters.get(0).getParameters())
+                    .build());
+        }
+        return reference;
+    }
+
+    private <T> void checkParameterCount(Class<T> type, List<Parameter<?>> parameters) {
+        if(Array.class.equals(type)) {
+            if(parameters.size() != 1) {
+                throw new IllegalArgumentException();
+            }
+            return;
+        }
+        if(type.getTypeParameters().length != parameters.size()) {
+            throw new IllegalArgumentException();
+        }
+        parameters.forEach(param -> checkParameterCount(param.getType(), param.getParameters()));
+    }
+
+    private <T> void instantiateOnce(ComponentData<T> data) {
+        if(!data.getPolicy().equals(InstantiationPolicy.ONCE)) {
+            return;
+        }
+        data.setObjects(instantiate(data, null));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T,R> List<T> instantiate(ComponentData<T> data, ClassReference<R> requesting) {
+        Object[] parameters = new Object[0];
+        if(!data.getParameters().isEmpty()) {
+            parameters = data
+                    .getParameters()
+                    .stream()
+                    .map(reference -> getParameter(reference,
+                            data.getReference().getActualReference(),
+                            requesting,
+                            data.getDependencies()))
+                    .toArray(Object[]::new);
+        }
+        List<T> list;
+        try {
+            data.getExecutable().setAccessible(true);
+            if(data.getExecutable() instanceof Constructor) {
+                list = List.of(((Constructor<T>) data.getExecutable()).newInstance(parameters));
+            } else {
+                Method method = ((Method) data.getExecutable());
+                Object owner = null;
+                if(data.getOwner() != null) {
+                    owner = getParameter(data.getOwner(),
+                            data.getReference().getActualReference(),
+                            requesting,
+                            data.getDependencies());
+                }
+                if(data.getReference().isList()) {
+                    list = (List<T>) method.invoke(owner, parameters);
+                } else {
+                    list = List.of((T) method.invoke(owner, parameters));
+                }
+            }
+        } catch(InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        list.forEach(object -> setFields(data, object, requesting));
+        initializerQueue.addAll(list
+                .stream()
+                .flatMap(object -> data
+                        .getInitializers()
+                        .stream()
+                        .map(init -> PrioritizedRunnable
+                                .builder()
+                                .priority(init.getPriority())
+                                .delegate(() -> initialize(init, object, requesting))
+                                .build())).collect(Collectors.toList()));
+        return list;
+    }
+
+    private <T, R> void initialize(InitializeReference<?> init, T object, ClassReference<R> requesting) {
+        try {
+            init.getMethod().setAccessible(true);
+            init.getMethod().invoke(object, init
+                    .getParameters()
+                    .stream()
+                    .map(reference -> getParameter(reference,
+                            init.getReference().getActualReference(),
+                            requesting, List.of(componentList)))
+                    .toArray(Object[]::new));
+        } catch(IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private <T,R> void setFields(ComponentData<T> data, T object, ClassReference<R> requesting) {
+        data.getFields().forEach(field -> setField(data, field.getField(), field.getReference(), object, requesting));
+    }
+
+    private <C,T,R> void setField(ComponentData<C> data, Field field, ClassReference<T> reference, C object, ClassReference<R> requesting) {
+        try {
+            field.setAccessible(true);
+            T parameter = getParameter(reference, data.getReference(), requesting, data.getDependencies());
+            field.set(object, parameter);
+        } catch(IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T,I,R> T getParameter(ClassReference<T> reference, ClassReference<I> instantiating, ClassReference<R> requesting, List<List<ComponentData<?>>> components) {
+        if(InstantiationDetails.class.equals(reference.getActualReference().getType())) {
+            InstantiationDetails details = InstantiationDetails
+                    .builder()
+                    .type(instantiating.getType())
+                    .parameters(instantiating.getParameters())
+                    .requestingType(requesting != null ? requesting.getType() : null)
+                    .requestingParameters(requesting != null ? requesting.getParameters() : List.of())
+                    .build();
+            if(reference.isList()) {
+                return (T) List.of(details);
+            } else {
+                return (T) details;
+            }
+        }
+        List<?> list = components
+                .stream()
+                .flatMap(List::stream)
+                .filter(data -> reference.getActualReference()
+                        .isAssignableFrom(data.getReference().getActualReference()))
+                .map(data -> getObjects(data, requesting))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        if(reference.isList()) {
+            return (T) list;
+        } else {
+            if(list.size() != 1) {
+                list = components
+                        .stream()
+                        .flatMap(List::stream)
+                        .filter(Predicate.not(ComponentData::isDefaultImpl))
+                        .filter(data -> reference.getActualReference()
+                                .isAssignableFrom(data.getReference().getActualReference()))
+                        .map(ComponentData::getObjects)
+                        .flatMap(List::stream)
+                        .collect(Collectors.toList());
+                if(list.size() != 1) {
+                    throw new ComponentWithMultipleOptionsForSingletonDependency("");
+                }
+            }
+            return (T) list.get(0);
+        }
+    }
+
+    private <T,R> List<T> getObjects(ComponentData<T> data, ClassReference<R> requesting) {
+        if(data.getPolicy().equals(InstantiationPolicy.ONCE)) {
+            return data.getObjects();
+        } else {
+            return instantiate(data, requesting);
+        }
+    }
+
+    public static InjectorBuilder builder() {
+        return new InjectorBuilder();
     }
 }
