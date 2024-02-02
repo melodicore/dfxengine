@@ -16,15 +16,14 @@ this would happen.
 
 ### Special dependencies
 
-* List (java.util.List) is a special dependency that determines that multiple components of the same type are requested.
-The actual type of component requested will be the type parameter of the list. The dependency must declare List
-specifically, any extending interfaces or implementing classes will be treated as regular dependencies.
-* [InstantiationDetails](src/main/java/me/datafox/dfxengine/injector/InstantiationDetails.java) is a special dependency.
-It is automatically instantiated for every component that depends on it, and contains a reference to the class of the
-component and its type parameters. For method components, the class and type parameters are the method's declared type,
-not the type of the object actually returned by the method. If the component's instantiation policy is PER_INSTANCE,
-details will also contain a reference to the class and type parameters of the component that has the first component
-as a dependency.
+* List (java.util.List) determines that multiple components of the same type are requested. The actual type of component
+requested will be the type parameter of the list. The dependency must declare List specifically, any extending 
+interfaces or implementing classes will be treated as regular dependencies.
+* [InstantiationDetails](src/main/java/me/datafox/dfxengine/injector/InstantiationDetails.java) is automatically 
+instantiated for every component that depends on it, and contains a reference to the class of the component and its type
+parameters. For method components, the class and type parameters are the method's declared type, not the type of the
+object actually returned by the method. If the component's instantiation policy is PER_INSTANCE, details will also
+contain a reference to the class and type parameters of the component that has the first component as a dependency.
 
 ### Preset dependencies
 
