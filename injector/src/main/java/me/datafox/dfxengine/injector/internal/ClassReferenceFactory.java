@@ -6,7 +6,7 @@ import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
-import me.datafox.dfxengine.injector.exception.ComponentClassWithUnresolvedTypeParameterException;
+import me.datafox.dfxengine.injector.exception.ComponentWithUnresolvedTypeParameterException;
 import me.datafox.dfxengine.injector.exception.FinalFieldDependencyException;
 import me.datafox.dfxengine.injector.exception.UnknownComponentTypeParameterException;
 import me.datafox.dfxengine.injector.utils.InjectorUtils;
@@ -299,7 +299,7 @@ public class ClassReferenceFactory {
                     break check;
                 }
             }
-            throw new ComponentClassWithUnresolvedTypeParameterException(parameter);
+            throw new ComponentWithUnresolvedTypeParameterException(parameter);
         } else if(name.equals(Object.class.getName())) {
             return Parameter.object();
         }
