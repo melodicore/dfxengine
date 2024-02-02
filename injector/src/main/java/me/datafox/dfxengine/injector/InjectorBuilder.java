@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -43,15 +42,6 @@ public class InjectorBuilder {
         instantiatedComponentMethodClasses.removeAll(componentClasses);
         ClassInfoList instantiatedClasses = new ClassInfoList(componentClasses);
         instantiatedClasses.addAll(instantiatedComponentMethodClasses);
-        Map<ClassInfo,FieldInfoList> injectFieldMap = scan
-                .getClassesWithFieldAnnotation(Inject.class)
-                .stream()
-                .filter(instantiatedClasses::contains)
-                .collect(Collectors.toMap(Function.identity(), info -> info
-                        .getDeclaredFieldInfo()
-                        .stream()
-                        .filter(field -> field.hasAnnotation(Inject.class))
-                        .collect(Collectors.toCollection(FieldInfoList::new))));
 
         MethodInfoList executables = instantiatedClasses
                 .stream()
@@ -65,7 +55,7 @@ public class InjectorBuilder {
                         .stream()
                         .filter(method -> method.hasAnnotation(Component.class)))
                 .collect(Collectors.toList()));
-        ClassReferenceFactory factory = new ClassReferenceFactory(scan.getAllClassesAsMap(), injectFieldMap);
+        ClassReferenceFactory factory = new ClassReferenceFactory(scan.getAllClassesAsMap());
         List<ComponentData<?>> components = executables
                 .stream()
                 .map(factory::buildComponentData)
@@ -80,14 +70,18 @@ public class InjectorBuilder {
     }
 
     private MethodInfo getValidConstructor(ClassInfo info) {
-        MethodInfoList list = info.getDeclaredConstructorInfo().filter(method ->
-                method.getParameterInfo().length == 0 ||
-                        method.hasAnnotation(Inject.class));
+        MethodInfoList list = info
+                .getDeclaredConstructorInfo()
+                .filter(method -> method.hasAnnotation(Inject.class));
 
         if(list.isEmpty()) {
-            throw LogUtils.logExceptionAndGet(logger,
-                    "Class " + info.loadClass() + " has no valid constructors and cannot be instantiated",
-                    ComponentClassWithNoValidConstructorsException::new);
+            list = info.getDeclaredConstructorInfo().filter(method ->
+                method.getParameterInfo().length == 0);
+            if(list.isEmpty()) {
+                throw LogUtils.logExceptionAndGet(logger,
+                        "Class " + info.loadClass() + " has no valid constructors and cannot be instantiated",
+                        ComponentClassWithNoValidConstructorsException::new);
+            }
         }
         if(list.size() > 1) {
             throw LogUtils.logExceptionAndGet(logger,
@@ -124,7 +118,6 @@ public class InjectorBuilder {
     }
 
     private List<ComponentData<?>> parseDependency(ClassReference<?> classReference, List<ComponentData<?>> components) {
-        Class<?> type = classReference.getActualReference().getType();
         return components
                 .stream()
                 .filter(data -> classReference.isAssignableFrom(data.getReference().getActualReference()))

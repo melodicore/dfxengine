@@ -9,8 +9,8 @@ import java.util.function.Function;
 
 /**
  * <p>
- * The function class map is a collection used internally by the Injector module. It stores references to objects in
- * relation to a class hierarchy, determined by a {@link Function}.
+ * The function class map is a collection that was used internally by the Injector module before version 2.0.0. It
+ * stores references to objects in relation to a class hierarchy, determined by a {@link Function}.
  * </p>
  * <p>
  * Whenever a value is added, a type is resolved by the function, and the value is added to a list of values, contained

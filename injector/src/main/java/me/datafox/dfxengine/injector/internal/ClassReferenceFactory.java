@@ -23,18 +23,14 @@ import java.util.stream.Stream;
 public class ClassReferenceFactory {
     private final Map<String,ClassInfo> classInfoMap;
 
-    private final Map<ClassInfo,FieldInfoList> fieldMap;
-
     private boolean buildingParameters;
 
-    public ClassReferenceFactory(Map<String,ClassInfo> classInfoMap, Map<ClassInfo,FieldInfoList> fieldMap) {
+    public ClassReferenceFactory(Map<String,ClassInfo> classInfoMap) {
         this.classInfoMap = classInfoMap;
-        this.fieldMap = fieldMap;
     }
 
     public <T> ComponentData<T> buildComponentData(MethodInfo info) {
         buildingParameters = false;
-        String str = info.toString();
         ComponentData.ComponentDataBuilder<T> builder = ComponentData
                 .builder();
         FieldInfoList fields;
@@ -77,6 +73,7 @@ public class ClassReferenceFactory {
         fields.stream()
                 .map(this::buildFieldReference)
                 .forEach(builder::field);
+        buildingParameters = false;
         initializers.stream()
                 .map(this::buildInitializeReference)
                 .forEach(builder::initializer);
@@ -180,11 +177,9 @@ public class ClassReferenceFactory {
         }
         String superclasses = "";
         if(genericDetails.startsWith(" extends ") || genericDetails.startsWith(" implements ")) {
-            superclasses = Arrays
-                    .stream(genericDetails
-                            .split(" extends | implements ", 2)[1]
-                            .split(" implements "))
-                    .collect(Collectors.joining(", "));
+            superclasses = String.join(", ", genericDetails
+                    .split(" extends | implements ", 2)[1]
+                    .split(" implements "));
         }
         if(!genericDetails.equals(details)) {
             superclasses = injectParameterTypes(typeParameters, classTypeParameters, superclasses);
@@ -377,11 +372,9 @@ public class ClassReferenceFactory {
     }
 
     private String injectParameterTypes(String typeParameters, String genericTypeParameters, String classes) {
-        Map<String,String> map = new HashMap<>();
         String[] keys = InjectorUtils.splitParameters(genericTypeParameters);
         String[] values = InjectorUtils.splitParameters(typeParameters);
         for(int i = 0; i < keys.length; i++) {
-            String key = keys[i].split(" ", 2)[0];
             classes = injectParameterType(classes, keys[i], values[i]);
         }
         return classes;
@@ -415,30 +408,23 @@ public class ClassReferenceFactory {
         return sb.toString();
     }
 
+    @SuppressWarnings("unchecked")
     private <T> void checkAndSetCollection(ClassReference<T> data) {
-        ClassReference<? super T> reference = data;
-        if(List.class.equals(reference.getType())) {
-            String name = reference.getParameterString();
-            String params = "";
-            if(name.contains("<")) {
-                String[] split = name.split("<", 2);
-                name = split[0];
-                params = "<" + split[1];
+        if(List.class.equals(data.getType())) {
+            if(data.getParameters().size() != 1) {
+                throw new IllegalArgumentException();
             }
+            Parameter<?> param = data.getParameters().get(0);
             data.setList(true);
-            if(Object.class.getName().equals(name)) {
+            if(param.getType().equals(Object.class)) {
                 data.setListReference(ClassReference.object());
             } else {
-                data.setListReference(buildClassReference(name, params, params));
-                if(Collection.class.isAssignableFrom(data.getListReference().getType())) {
-                    throw new IllegalArgumentException();
-                }
+                data.setListReference(ClassReference
+                        .builder()
+                        .type((Class<Object>) param.getType())
+                        .parameters(param.getParameters())
+                        .build());
             }
         }
-    }
-
-    private <T> boolean isSupportedCollectionClass(Class<T> type) {
-        return List.class.equals(type) ||
-                Set.class.equals(type);
     }
 }

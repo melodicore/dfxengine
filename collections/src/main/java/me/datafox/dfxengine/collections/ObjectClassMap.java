@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * The object class map is a collection used internally by the Injector module. It is an extension of the
- * {@link FunctionClassMap} where the values are arbitrary objects and the function resolves the type of the object.
- * This ensures that all values in a list represented by a type are assignable to that type.
+ * The object class map is a collection that was used internally by the Injector module before version 2.0.0. It is an
+ * extension of the {@link FunctionClassMap} where the values are arbitrary objects and the function resolves the type
+ * of the object.This ensures that all values in a list represented by a type are assignable to that type.
  * </p>
  * <p>
  * A new method, {@link #getAndCast(Class)}, is also defined, which casts all the objects in the list to the type the

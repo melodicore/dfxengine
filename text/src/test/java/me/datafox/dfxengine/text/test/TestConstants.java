@@ -1,7 +1,6 @@
 package me.datafox.dfxengine.text.test;
 
 import me.datafox.dfxengine.injector.Injector;
-import me.datafox.dfxengine.injector.InjectorBuilder;
 import me.datafox.dfxengine.text.api.TextFactory;
 
 /**
@@ -13,10 +12,10 @@ public class TestConstants {
     public static TextFactory textFactory;
 
     public static void initializeConstants() {
-        injector = InjectorBuilder
-                .create()
+        injector = Injector
+                .builder()
                 .build();
 
-        textFactory = injector.getSingletonComponent(TextFactory.class);
+        textFactory = injector.getComponent(TextFactory.class);
     }
 }

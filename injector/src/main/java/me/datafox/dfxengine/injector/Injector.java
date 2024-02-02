@@ -7,6 +7,8 @@ import me.datafox.dfxengine.injector.internal.ClassReference;
 import me.datafox.dfxengine.injector.internal.ComponentData;
 import me.datafox.dfxengine.injector.internal.InitializeReference;
 import me.datafox.dfxengine.injector.internal.PrioritizedRunnable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.*;
 import java.util.ArrayList;
@@ -24,6 +26,11 @@ public class Injector {
         return instance;
     }
 
+    @Component(value = InstantiationPolicy.PER_INSTANCE, defaultImpl = true)
+    private static Logger getLogger(InstantiationDetails details) {
+        return LoggerFactory.getLogger(details.getRequestingType());
+    }
+
     private static Injector instance;
 
     private final List<ComponentData<?>> componentList;
@@ -35,7 +42,12 @@ public class Injector {
         componentList = new ArrayList<>();
         initializerQueue = new ArrayList<>();
         components.peek(this::instantiateOnce).forEach(componentList::add);
+        runAndClearInitializers();
+    }
+
+    private void runAndClearInitializers() {
         initializerQueue.stream().sorted().forEach(Runnable::run);
+        initializerQueue.clear();
     }
 
     public <T> T getComponent(Class<T> type) {
@@ -65,7 +77,9 @@ public class Injector {
         }
         ClassReference<T> reference = getReference(type, parameters);
         ClassReference<R> requestingReference = getReference(requesting, requestingParameters);
-        return getParameter(reference, reference, requestingReference, List.of(componentList));
+        T object = getParameter(reference, reference, requestingReference, List.of(componentList));
+        runAndClearInitializers();
+        return object;
     }
 
     public <T> List<T> getComponents(Class<T> type) {
@@ -234,7 +248,7 @@ public class Injector {
                 .flatMap(List::stream)
                 .filter(data -> reference.getActualReference()
                         .isAssignableFrom(data.getReference().getActualReference()))
-                .map(data -> getObjects(data, requesting))
+                .map(data -> getObjects(data, instantiating))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
         if(reference.isList()) {
@@ -247,7 +261,7 @@ public class Injector {
                         .filter(Predicate.not(ComponentData::isDefaultImpl))
                         .filter(data -> reference.getActualReference()
                                 .isAssignableFrom(data.getReference().getActualReference()))
-                        .map(ComponentData::getObjects)
+                        .map(data -> getObjects(data, instantiating))
                         .flatMap(List::stream)
                         .collect(Collectors.toList());
                 if(list.size() != 1) {
