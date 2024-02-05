@@ -24,7 +24,7 @@ Here are the currently existing and planned modules:
 | [Handles API](handles-api)   | Done (1.0.6)             | Interfaces for the Handles module                   |
 | [Handles](handles)           | Done (1.0.6)             | Dynamic enum-like structures for map keys           |
 | [Injector API](injector-api) | Done (1.1.2)             | Annotations for the Injector module                 |
-| [Injector](injector_old)         | Done (1.1.2)             | A dependency injector                               |
+| [Injector](injector)         | Done (1.1.2)             | A dependency injector                               |
 | [Math API](math-api)         | Done (1.0.2)             | Interfaces for the Math module                      |
 | [Math](math)                 | Done (1.0.4)             | Seamless wrapping and manipulation of number types  |
 | [Utils](utils)               | Done (1.0.0)<sup>1</sup> | Utilities used by other modules                     |
