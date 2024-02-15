@@ -25,6 +25,13 @@ public class TestValues {
     public static Value doubleValue;
     public static Value bigDecValue;
 
+    public static Value immutableIntValue;
+    public static Value immutableLongValue;
+    public static Value immutableBigIntValue;
+    public static Value immutableFloatValue;
+    public static Value immutableDoubleValue;
+    public static Value immutableBigDecValue;
+
     public static void initializeValues() {
         intNumeral = Numerals.of(99456);
         longNumeral = Numerals.of(47567929325878132L);
@@ -33,11 +40,18 @@ public class TestValues {
         doubleNumeral = Numerals.of(5.1234514e142d);
         bigDecNumeral = Numerals.of("2.68942368927827453664274e+555");
 
-        intValue = Values.of(intHandle, intNumeral);
-        longValue = Values.of(longHandle, longNumeral);
-        bigIntValue = Values.of(bigIntHandle, bigIntNumeral);
-        floatValue = Values.of(floatHandle, floatNumeral);
-        doubleValue = Values.of(doubleHandle, doubleNumeral);
-        bigDecValue = Values.of(bigDecHandle, bigDecNumeral);
+        intValue = Values.mutable(intHandle, intNumeral);
+        longValue = Values.mutable(longHandle, longNumeral);
+        bigIntValue = Values.mutable(bigIntHandle, bigIntNumeral);
+        floatValue = Values.mutable(floatHandle, floatNumeral);
+        doubleValue = Values.mutable(doubleHandle, doubleNumeral);
+        bigDecValue = Values.mutable(bigDecHandle, bigDecNumeral);
+
+        immutableIntValue = Values.immutable(intHandle, intNumeral);
+        immutableLongValue = Values.immutable(longHandle, longNumeral);
+        immutableBigIntValue = Values.immutable(bigIntHandle, bigIntNumeral);
+        immutableFloatValue = Values.immutable(floatHandle, floatNumeral);
+        immutableDoubleValue = Values.immutable(doubleHandle, doubleNumeral);
+        immutableBigDecValue = Values.immutable(bigDecHandle, bigDecNumeral);
     }
 }

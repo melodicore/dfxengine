@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ValueMapTest {
     public static ValueMap valueMap;
+    public static ValueMap immutableValueMap;
 
     @BeforeEach
     public void beforeEach() {
@@ -40,6 +41,15 @@ public class ValueMapTest {
                 .value(bigIntValue)
                 .value(doubleValue)
                 .value(bigDecValue)
+                .modifier(Modifiers.add(0, Values.of(1)))
+                .build();
+
+        immutableValueMap = DelegatedValueMap
+                .builder(space)
+                .value(immutableIntValue)
+                .value(immutableBigIntValue)
+                .value(immutableDoubleValue)
+                .value(immutableBigDecValue)
                 .modifier(Modifiers.add(0, Values.of(1)))
                 .build();
     }
@@ -56,6 +66,11 @@ public class ValueMapTest {
         assertThrows(ExtendedArithmeticException.class, () -> valueMap.convert(Map.of(doubleHandle, FLOAT)));
         valueMap.convert(Map.of(doubleHandle, DOUBLE));
         assertEquals(DOUBLE, valueMap.get(doubleHandle).getValue().getType());
+
+        assertThrows(UnsupportedOperationException.class, () -> immutableValueMap.convert(LONG));
+        assertThrows(UnsupportedOperationException.class, () -> immutableValueMap.convert(BIG_DEC));
+        assertThrows(UnsupportedOperationException.class, () -> immutableValueMap.convert(Set.of(intHandle), LONG));
+        assertThrows(UnsupportedOperationException.class, () -> immutableValueMap.convert(Map.of(intHandle, INT)));
     }
 
     @Test
@@ -65,6 +80,12 @@ public class ValueMapTest {
         assertEquals(FLOAT, valueMap.get(bigIntHandle).getValue().getType());
         assertEquals(DOUBLE, valueMap.get(doubleHandle).getValue().getType());
         assertEquals(BIG_DEC, valueMap.get(bigDecHandle).getValue().getType());
+
+        immutableValueMap.convertAllowed(FLOAT);
+        assertEquals(INT, immutableValueMap.get(intHandle).getValue().getType());
+        assertEquals(BIG_INT, immutableValueMap.get(bigIntHandle).getValue().getType());
+        assertEquals(DOUBLE, immutableValueMap.get(doubleHandle).getValue().getType());
+        assertEquals(BIG_DEC, immutableValueMap.get(bigDecHandle).getValue().getType());
     }
 
     @Test
@@ -74,6 +95,8 @@ public class ValueMapTest {
         assertEquals(BIG_INT, valueMap.get(bigIntHandle).getValue().getType());
         assertEquals(BIG_INT, valueMap.get(doubleHandle).getValue().getType());
         assertEquals(BIG_INT, valueMap.get(bigDecHandle).getValue().getType());
+
+        assertThrows(UnsupportedOperationException.class, immutableValueMap::toInteger);
     }
 
     @Test
@@ -83,18 +106,24 @@ public class ValueMapTest {
         assertEquals(FLOAT, valueMap.get(bigIntHandle).getValue().getType());
         assertEquals(DOUBLE, valueMap.get(doubleHandle).getValue().getType());
         assertEquals(BIG_DEC, valueMap.get(bigDecHandle).getValue().getType());
+
+        assertThrows(UnsupportedOperationException.class, immutableValueMap::toDecimal);
     }
 
     @Test
     public void toSmallestTypeTest() {
-        valueMap.putHandled(Values.of(longHandle, 1000L));
+        valueMap.putHandled(Values.mutable(longHandle, 1000L));
         valueMap.toSmallestType();
         assertEquals(INT, valueMap.get(intHandle).getValue().getType());
         assertEquals(INT, valueMap.get(longHandle).getValue().getType());
-        valueMap.putHandled(Values.of(longHandle, 1000L));
+        valueMap.putHandled(Values.mutable(longHandle, 1000L));
         valueMap.toSmallestType(Set.of(intHandle));
         assertEquals(INT, valueMap.get(intHandle).getValue().getType());
         assertEquals(LONG, valueMap.get(longHandle).getValue().getType());
+
+        immutableValueMap.toSmallestType();
+        immutableValueMap.putHandled(Values.immutable(longHandle, 1000L));
+        assertEquals(LONG, immutableValueMap.get(longHandle).getValue().getType());
     }
 
     @Test
@@ -108,6 +137,10 @@ public class ValueMapTest {
         assertEquals(Numerals.of(4056181923489832L), valueMap.get(longHandle).getValue());
         valueMap.set(Map.of(doubleHandle, Numerals.of(52)));
         assertEquals(Numerals.of(53), valueMap.get(doubleHandle).getValue());
+
+        assertThrows(UnsupportedOperationException.class, () -> immutableValueMap.set(Numerals.of(420L)));
+        assertThrows(UnsupportedOperationException.class, () -> immutableValueMap.set(Set.of(intHandle, longHandle), Numerals.of(5.23e13d)));
+        assertThrows(UnsupportedOperationException.class, () -> immutableValueMap.set(Map.of(doubleHandle, Numerals.of(52))));
     }
 
     @Test
@@ -124,6 +157,8 @@ public class ValueMapTest {
         assertEquals(Numerals.of(3.4770466e25f), valueMap.get(bigIntHandle).getValue());
         assertEquals(Numerals.of(5.1234514e142d), valueMap.get(doubleHandle).getValue());
         assertEquals(Numerals.of("2.689423689278274536642740000000000e555"), valueMap.get(bigDecHandle).getValue());
+
+        assertThrows(UnsupportedOperationException.class, () -> immutableValueMap.apply(Operations::log2));
     }
 
     @Test
@@ -144,5 +179,11 @@ public class ValueMapTest {
         assertNull(map.get(longHandle));
         valueMap.putHandled(longValue);
         assertEquals(Numerals.of(47567929325878133L), map.get(longHandle));
+    }
+
+    @Test
+    public void mutabilityMismatchTest() {
+        assertThrows(IllegalArgumentException.class, () -> valueMap.putHandled(immutableFloatValue));
+        assertThrows(IllegalArgumentException.class, () -> immutableValueMap.putHandled(floatValue));
     }
 }

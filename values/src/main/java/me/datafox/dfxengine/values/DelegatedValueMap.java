@@ -35,6 +35,7 @@ public class DelegatedValueMap implements ValueMap {
     private final Logger logger;
     private final HandleMap<Value> map;
     private final Set<Modifier> modifiers;
+    private final boolean immutable;
 
     private NumeralMap baseNumeralMap;
     private NumeralMap valueNumeralMap;
@@ -42,10 +43,28 @@ public class DelegatedValueMap implements ValueMap {
     /**
      * @param map {@link HandleMap} to back this map with
      */
-    public DelegatedValueMap(HandleMap<Value> map) {
+    public DelegatedValueMap(HandleMap<Value> map, boolean immutable) {
         logger = LoggerFactory.getLogger(getClass());
         this.map = map;
         modifiers = new HashSet<>();
+        this.immutable = immutable;
+
+        if(map.values().stream().anyMatch(Value::isStatic)) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    STATIC_VALUE_IN_MAP,
+                    IllegalArgumentException::new);
+        }
+
+        if(map.values().stream().anyMatch(v -> v.isImmutable() != immutable)) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    immutableValueMismatch(immutable),
+                    IllegalArgumentException::new);
+        }
+    }
+
+    @Override
+    public boolean hasImmutable() {
+        return immutable;
     }
 
     /**
@@ -56,9 +75,11 @@ public class DelegatedValueMap implements ValueMap {
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
      * the elements of {@link NumeralType}. This should never happen
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void convert(NumeralType type) {
+        checkImmutable();
         if(stream().allMatch(val -> val.canConvert(type))) {
             values().forEach(val -> val.convert(type));
         } else {
@@ -78,9 +99,11 @@ public class DelegatedValueMap implements ValueMap {
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
      * the elements of {@link NumeralType}. This should never happen
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void convert(Collection<? extends Handle> handles, NumeralType type) {
+        checkImmutable();
         if(getExisting(handles).allMatch(val -> val.canConvert(type))) {
             getExisting(handles).forEach(val -> val.convert(type));
         } else {
@@ -100,9 +123,11 @@ public class DelegatedValueMap implements ValueMap {
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
      * the elements of {@link NumeralType}. This should never happen
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void convert(Map<? extends Handle,NumeralType> types) {
+        checkImmutable();
         if(getExisting(types.keySet()).allMatch(val -> val.canConvert(types.get(val.getHandle())))) {
             getExisting(types.keySet()).forEach(val -> val.convert(types.get(val.getHandle())));
         } else {
@@ -113,7 +138,8 @@ public class DelegatedValueMap implements ValueMap {
 
     /**
      * Only converts {@link Value Values} of this map that can be converted to the specified type. In other words, calls
-     * {@link Numeral#convertIfAllowed(NumeralType)} on every Value of this map.
+     * {@link Numeral#convertIfAllowed(NumeralType)} on every Value of this map. If this map is for immutable Values,
+     * this method does nothing.
      *
      * @param type {@link NumeralType} for the {@link Value Values} to be converted to
      *
@@ -123,53 +149,66 @@ public class DelegatedValueMap implements ValueMap {
      */
     @Override
     public void convertAllowed(NumeralType type) {
-        values().forEach(val -> val.convertIfAllowed(type));
+        if(!immutable) {
+            values().forEach(val -> val.convertIfAllowed(type));
+        }
     }
 
     /**
      * Converts all {@link Value Values} to the smallest integer type that can hold its represented value. Values that
      * are already integers are not converted.
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void toInteger() {
+        checkImmutable();
         values().forEach(Value::toInteger);
     }
 
     /**
      * Converts all {@link Value Values} to the smallest decimal type that can hold its represented value. Values that
      * are already decimals are not converted.
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void toDecimal() {
+        checkImmutable();
         values().forEach(Value::toDecimal);
     }
 
     /**
      * Converts all {@link Value Values} to the smallest type that can hold its represented value. Will not convert
-     * between integer and decimal representations.
+     * between integer and decimal representations. If this map is for immutable Values, this method does nothing.
      */
     @Override
     public void toSmallestType() {
-        values().forEach(Value::toSmallestType);
+        if(!immutable) {
+            values().forEach(Value::toSmallestType);
+        }
     }
 
     /**
      * Converts specified {@link Value Values} to the smallest type that can hold its represented value. Will not
      * convert between integer and decimal representations. {@link Handle Handles} that are not a part of this map's
-     * associated {@link Space} are ignored.
+     * associated {@link Space} are ignored. If this map is for immutable Values, this method does nothing.
      *
      * @param handles {@link Handle Handles} of the values to be converted
      */
     @Override
     public void toSmallestType(Collection<? extends Handle> handles) {
-        getExisting(handles).forEach(Value::toSmallestType);
+        if(!immutable) {
+            getExisting(handles).forEach(Value::toSmallestType);
+        }
     }
 
     /**
      * @param value {@link Numeral} for all {@link Value Values} of this map to be set to
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void set(Numeral value) {
+        checkImmutable();
         values().forEach(val -> val.set(value));
     }
 
@@ -179,6 +218,8 @@ public class DelegatedValueMap implements ValueMap {
      * @param context {@link MapMathContext} for this operation
      * @param handles {@link Handle Handles} of the values to be changed
      * @param value {@link Numeral} for specified {@link Value Values} of this map to be set to
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void set(MapMathContext context, Collection<? extends Handle> handles, Numeral value) {
@@ -191,6 +232,8 @@ public class DelegatedValueMap implements ValueMap {
      * @param context {@link MapMathContext} for this operation
      * @param values map of {@link Handle Handles} to be changed and {@link Numeral Numerals} for the specified
      * {@link Value Values} to be set to
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void set(MapMathContext context, Map<? extends Handle,Numeral> values) {
@@ -200,6 +243,8 @@ public class DelegatedValueMap implements ValueMap {
     /**
      * @param operation {@link SourceOperation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void apply(SourceOperation operation, MathContext context) {
@@ -212,6 +257,8 @@ public class DelegatedValueMap implements ValueMap {
      * @param operation {@link SourceOperation} to be applied to specified {@link Value Values} of this map
      * @param context {@link MapMathContext} for the operation
      * @param handles {@link Handle Handles} of the {@link Value Values} to be modified
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void apply(SourceOperation operation, MapMathContext context, Collection<? extends Handle> handles) {
@@ -222,6 +269,8 @@ public class DelegatedValueMap implements ValueMap {
      * @param operation {@link SingleParameterOperation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
      * @param parameter parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void apply(SingleParameterOperation operation, MathContext context, Numeral parameter) {
@@ -235,6 +284,8 @@ public class DelegatedValueMap implements ValueMap {
      * @param context {@link MapMathContext} for the operation
      * @param handles {@link Handle Handles} of the {@link Value Values} to be modified
      * @param parameter parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void apply(SingleParameterOperation operation, MapMathContext context,
@@ -249,6 +300,8 @@ public class DelegatedValueMap implements ValueMap {
      * @param context {@link MapMathContext} for the operation
      * @param parameters map of {@link Handle Handles} of the {@link Value Values} to be modified and
      * {@link Numeral Numerals} to be used as parameters for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void apply(SingleParameterOperation operation, MapMathContext context, Map<? extends Handle,Numeral> parameters) {
@@ -260,6 +313,8 @@ public class DelegatedValueMap implements ValueMap {
      * @param context {@link MathContext} for the operation
      * @param parameter1 first parameter for the operation
      * @param parameter2 second parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2) {
@@ -274,6 +329,8 @@ public class DelegatedValueMap implements ValueMap {
      * @param handles {@link Handle Handles} of the {@link Value Values} to be modified
      * @param parameter1 first parameter for the operation
      * @param parameter2 second parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void apply(DualParameterOperation operation, MapMathContext context,
@@ -288,6 +345,7 @@ public class DelegatedValueMap implements ValueMap {
      *
      * @throws IllegalArgumentException if the amount of parameters is not equal to
      * {@link Operation#getParameterCount()}
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void apply(Operation operation, MathContext context, Numeral ... parameters) {
@@ -304,6 +362,7 @@ public class DelegatedValueMap implements ValueMap {
      *
      * @throws IllegalArgumentException if the amount of parameters is not equal to
      * {@link Operation#getParameterCount()}
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void apply(Operation operation, MapMathContext context, Collection<? extends Handle> handles, Numeral ... parameters) {
@@ -320,9 +379,11 @@ public class DelegatedValueMap implements ValueMap {
      *
      * @throws IllegalArgumentException if the amount of parameters is not equal to
      * {@link Operation#getParameterCount()}
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
     public void apply(Operation operation, MapMathContext context, Map<? extends Handle,Numeral[]> parameters) {
+        checkImmutable();
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn(MIDWAY_EXCEPTION);
         }
@@ -501,11 +562,22 @@ public class DelegatedValueMap implements ValueMap {
      * @param value {@link Value} to be associated in this map with its associated {@link Handle} as a key
      * @return the previously associated {@link Value} in this map, or {@code null} if there was no previous association
      *
-     * @throws IllegalArgumentException if the associated {@link Handle} is not contained in the {@link Space}
-     * associated with this map
+     * @throws IllegalArgumentException if the {@link Value} is static, if {@link Value#isImmutable()} is not the same
+     * as {@link #hasImmutable()} or if the associated {@link Handle} is not contained in the {@link Space} associated
+     * with this map
      */
     @Override
     public Value putHandled(Value value) {
+        if(value.isStatic()) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    STATIC_VALUE_IN_MAP,
+                    IllegalArgumentException::new);
+        }
+        if(value.isImmutable() != immutable) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    immutableValueMismatch(immutable),
+                    IllegalArgumentException::new);
+        }
         Value old = map.putHandled(value);
         value.addModifiers(modifiers);
         removeModifiersFrom(old);
@@ -639,6 +711,10 @@ public class DelegatedValueMap implements ValueMap {
      * @param key ignored parameter
      * @param value {@link Value} to be associated with this map
      * @return previously associated {@link Value} in this map, or {@code null} if there was no previous association
+     *
+     * @throws IllegalArgumentException if the {@link Value} is static, if {@link Value#isImmutable()} is not the same
+     * as {@link #hasImmutable()} or if the associated {@link Handle} is not contained in the {@link Space} associated
+     * with this map
      */
     @Override
     public Value put(Handle key, Value value) {
@@ -712,10 +788,11 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     private void createNonExisting(Collection<? extends Handle> handles, Numeral initialValue) {
-        getNonExisting(handles).forEach(handle -> putHandled(new ValueImpl(handle, initialValue)));
+        getNonExisting(handles).forEach(handle -> putHandled(new ValueImpl(handle, initialValue, immutable)));
     }
 
     private void contextOperation(Runnable operation, MathContext context) {
+        checkImmutable();
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn(MIDWAY_EXCEPTION);
         }
@@ -723,6 +800,7 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     private void contextOperation(Consumer<Value> operation, Collection<? extends Handle> handles, MapMathContext context) {
+        checkImmutable();
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn(MIDWAY_EXCEPTION);
         }
@@ -736,6 +814,7 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     private void contextOperation(BiConsumer<Numeral, Value> operation, Map<? extends Handle, Numeral> values, MapMathContext context) {
+        checkImmutable();
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn(MIDWAY_EXCEPTION);
         }
@@ -746,6 +825,14 @@ public class DelegatedValueMap implements ValueMap {
         } else {
             getExisting(values.keySet())
                     .forEach(val -> operation.accept(values.get(val.getHandle()), val));
+        }
+    }
+
+    private void checkImmutable() {
+        if(immutable) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    IMMUTABLE,
+                    UnsupportedOperationException::new);
         }
     }
 
@@ -927,12 +1014,18 @@ public class DelegatedValueMap implements ValueMap {
         private Function<Space, HandleMap<Value>> map;
         private final Set<Value> values;
         private final Set<Modifier> modifiers;
+        private boolean immutable;
+        private boolean forcedImmutable;
+        private boolean determinedImmutable;
 
         private Builder(Space space) {
             this.space = space;
             map = HashHandleMap::new;
             values = new HashSet<>();
             modifiers = new HashSet<>();
+            immutable = false;
+            forcedImmutable = false;
+            determinedImmutable = false;
         }
 
         /**
@@ -945,10 +1038,34 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
+         * @param immutable {@code true} if the map should contain immutable {@link Value Values}
+         * @return this builder
+         *
+         * @throws UnsupportedOperationException if this builder already contains {@link Value Values} that do not have
+         * the specified mutability
+         */
+        public Builder immutable(boolean immutable) {
+            if(forcedImmutable && this.immutable != immutable) {
+                throw new UnsupportedOperationException(immutableValueMismatch(immutable));
+            }
+            this.immutable = immutable;
+            determinedImmutable = true;
+            return this;
+        }
+
+        /**
          * @param value {@link Value} to be associated with the {@link ValueMap}
          * @return this builder
+         *
+         * @throws UnsupportedOperationException if this builder already contains {@link Value Values} or has its
+         * mutability explicitly set, and the mutability does not match the specified Value's mutability
          */
         public Builder value(Value value) {
+            if((forcedImmutable || determinedImmutable) && value.isImmutable() != immutable) {
+                throw new UnsupportedOperationException(immutableValueMismatch(immutable));
+            }
+            immutable = value.isImmutable();
+            forcedImmutable = true;
             values.add(value);
             return this;
         }
@@ -956,9 +1073,12 @@ public class DelegatedValueMap implements ValueMap {
         /**
          * @param values {@link Value Values} to be associated with the {@link ValueMap}
          * @return this builder
+         *
+         * @throws UnsupportedOperationException if this builder already contains {@link Value Values} or has its
+         * mutability explicitly set, and the mutability does not match the specified Value's mutability
          */
         public Builder values(Collection<? extends Value> values) {
-            this.values.addAll(values);
+            values.forEach(this::value);
             return this;
         }
 
@@ -969,6 +1089,7 @@ public class DelegatedValueMap implements ValueMap {
          */
         public Builder clearValues() {
             values.clear();
+            forcedImmutable = false;
             return this;
         }
 
@@ -1004,7 +1125,7 @@ public class DelegatedValueMap implements ValueMap {
          * @return {@link ValueMap} initialized by this builder
          */
         public ValueMap build() {
-            ValueMap map = new DelegatedValueMap(this.map.apply(space));
+            ValueMap map = new DelegatedValueMap(this.map.apply(space), immutable);
             values.forEach(map::putHandled);
             map.addModifiers(modifiers);
             return map;

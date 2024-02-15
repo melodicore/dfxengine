@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import static me.datafox.dfxengine.values.utils.internal.ValuesStrings.IMMUTABLE;
+
 /**
  * A mutable numeric value identified by a {@link Handle} and backed with a {@link Numeral} that supports dynamic
  * {@link Modifier Modifiers}. Each value contains a base Numeral that can be changed with {@link #set(Numeral)} and
@@ -36,6 +38,8 @@ public class ValueImpl extends DependencyDependent implements Value {
 
     private final SortedSet<Modifier> modifiers;
 
+    private final boolean immutable;
+
     private Numeral base;
     private Numeral value;
 
@@ -44,11 +48,13 @@ public class ValueImpl extends DependencyDependent implements Value {
     /**
      * @param handle {@link Handle} identifier for this value
      * @param value {@link Numeral} to initialize this value with
+     * @param immutable {@code true} if this value should be immutable
      */
-    public ValueImpl(Handle handle, Numeral value) {
+    public ValueImpl(Handle handle, Numeral value, boolean immutable) {
         super(LoggerFactory.getLogger(ValueImpl.class));
         this.handle = handle;
         modifiers = new TreeSet<>();
+        this.immutable = immutable;
         base = value;
         this.value = value;
         invalidated = false;
@@ -93,6 +99,14 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * @return {@code true} if this value is immutable
+     */
+    @Override
+    public boolean isImmutable() {
+        return immutable;
+    }
+
+    /**
      * @param type {@link NumeralType} to be checked for
      * @return {@code true} if the base {@link Numeral} of this value can be converted to the specified type
      *
@@ -102,7 +116,7 @@ public class ValueImpl extends DependencyDependent implements Value {
      */
     @Override
     public boolean canConvert(NumeralType type) {
-        return base.canConvert(type);
+        return !immutable && base.canConvert(type);
     }
 
     /**
@@ -114,9 +128,13 @@ public class ValueImpl extends DependencyDependent implements Value {
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
      * the elements of {@link NumeralType}. This should never happen
+     * @throws UnsupportedOperationException if this value is immutable
      */
     @Override
     public boolean convert(NumeralType type) {
+        if(isImmutable()) {
+            throw new UnsupportedOperationException(IMMUTABLE);
+        }
         if(base.getType().equals(type)) {
             return false;
         }
@@ -135,7 +153,7 @@ public class ValueImpl extends DependencyDependent implements Value {
      */
     @Override
     public boolean convertIfAllowed(NumeralType type) {
-        if(base.getType().equals(type)) {
+        if(immutable || base.getType().equals(type)) {
             return false;
         }
         Numeral old = base;
@@ -152,9 +170,14 @@ public class ValueImpl extends DependencyDependent implements Value {
      * for {@link Numeral#getType()}), converts it to the smallest integer type that hold the represented value.
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
+     *
+     * @throws UnsupportedOperationException if this value is immutable
      */
     @Override
     public boolean toInteger() {
+        if(isImmutable()) {
+            throw new UnsupportedOperationException(IMMUTABLE);
+        }
         if(base.getType().isInteger()) {
             return false;
         }
@@ -172,9 +195,14 @@ public class ValueImpl extends DependencyDependent implements Value {
      * for {@link Numeral#getType()}), converts it to the smallest decimal type that hold the represented value.
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
+     *
+     * @throws UnsupportedOperationException if this value is immutable
      */
     @Override
     public boolean toDecimal() {
+        if(isImmutable()) {
+            throw new UnsupportedOperationException(IMMUTABLE);
+        }
         if(base.getType().isDecimal()) {
             return false;
         }
@@ -195,6 +223,9 @@ public class ValueImpl extends DependencyDependent implements Value {
      */
     @Override
     public boolean toSmallestType() {
+        if(isImmutable()) {
+            return false;
+        }
         Numeral old = base;
         base = base.toSmallestType();
         if(base.equals(old)) {
@@ -206,9 +237,14 @@ public class ValueImpl extends DependencyDependent implements Value {
 
     /**
      * @param value value to replace the current base {@link Numeral}
+     *
+     * @throws UnsupportedOperationException if this value is immutable
      */
     @Override
     public void set(Numeral value) {
+        if(isImmutable()) {
+            throw new UnsupportedOperationException(IMMUTABLE);
+        }
         Numeral old = base;
         base = value;
         if(!base.equals(old)) {
@@ -219,9 +255,14 @@ public class ValueImpl extends DependencyDependent implements Value {
     /**
      * @param operation {@link SourceOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
+     *
+     * @throws UnsupportedOperationException if this value is immutable
      */
     @Override
     public void apply(SourceOperation operation, MathContext context) {
+        if(isImmutable()) {
+            throw new UnsupportedOperationException(IMMUTABLE);
+        }
         contextOperation(() -> base = operation.apply(base), context);
     }
 
@@ -229,9 +270,14 @@ public class ValueImpl extends DependencyDependent implements Value {
      * @param operation {@link SingleParameterOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      * @param parameter parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this value is immutable
      */
     @Override
     public void apply(SingleParameterOperation operation, MathContext context, Numeral parameter) {
+        if(isImmutable()) {
+            throw new UnsupportedOperationException(IMMUTABLE);
+        }
         contextOperation(() -> base = operation.apply(base, parameter), context);
     }
 
@@ -240,9 +286,14 @@ public class ValueImpl extends DependencyDependent implements Value {
      * @param context {@link MathContext} for the operation
      * @param parameter1 first parameter for the operation
      * @param parameter2 second parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this value is immutable
      */
     @Override
     public void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2) {
+        if(isImmutable()) {
+            throw new UnsupportedOperationException(IMMUTABLE);
+        }
         contextOperation(() -> base = operation.apply(base, parameter1, parameter2), context);
     }
 
@@ -253,9 +304,13 @@ public class ValueImpl extends DependencyDependent implements Value {
      *
      * @throws IllegalArgumentException if the amount of parameters is not equal to
      * {@link Operation#getParameterCount()}
+     * @throws UnsupportedOperationException if this value is immutable
      */
     @Override
     public void apply(Operation operation, MathContext context, Numeral ... parameters) {
+        if(isImmutable()) {
+            throw new UnsupportedOperationException(IMMUTABLE);
+        }
         contextOperation(() -> base = operation.apply(base, parameters), context);
     }
 
@@ -358,11 +413,11 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
-     * @return {@link String} representation of this value in format <i>Value(base,value)</i>
+     * @return {@link String} representation of this value in format <i>Value(base,value,[mutable/immutable])</i>
      */
     @Override
     public String toString() {
-        return String.format("Value(%s,%s)", getBase(), getValue());
+        return String.format("Value(%s,%s,%smutable)", getBase(), getValue(), isImmutable() ? "im" : "");
     }
 
     private void calculate() {

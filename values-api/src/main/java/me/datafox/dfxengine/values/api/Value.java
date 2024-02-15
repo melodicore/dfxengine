@@ -17,18 +17,25 @@ import java.util.Collection;
 /**
  * <p>
  * A mutable numeric value identified by a {@link Handle} and backed with a {@link Numeral} that supports dynamic
- * {@link Modifier Modifiers}. Each value contains a base Numeral that can be changed with {@link #set(Numeral)} and
- * {@link #apply(Operation, MathContext, Numeral...)} and other {@code apply(...)} methods. Each value also contains a
- * value Numeral, which represents the base Numeral with all the Modifiers applied to it. This value should be lazily
- * calculated when {@link #getValue()} is called, but only when the base Numeral or any of the Modifiers have changed.
- * It is recommended for the implementation to extend {@link DependencyDependent} to simplify invalidating the cached
- * value.
+ * {@link Modifier Modifiers}. Each value contains a base Numeral that can be changed with
+ * {@link #convert(NumeralType)}, {@link #convertIfAllowed(NumeralType)}, {@link #toInteger()}, {@link #toDecimal()},
+ * {@link #set(Numeral)}, {@link #apply(Operation, MathContext, Numeral...)} and other {@code apply(...)} methods. Each
+ * value also contains a value Numeral, which represents the base Numeral with all the Modifiers applied to it. This
+ * Numeral should be lazily calculated when {@link #getValue()} is called, but only when the base Numeral or any of the
+ * Modifiers have changed. It is recommended for the implementation to extend {@link DependencyDependent} to simplify
+ * invalidating the cached value.
+ * </p>
+ * <p>
+ * Values can be immutable. The base Numeral of an immutable value can not be changed, but immutable values can still
+ * have Modifiers. Calling {@link #convert(NumeralType)}, {@link #toInteger()}, {@link #toDecimal()},
+ * {@link #set(Numeral)} or any of the {@code apply(...)} methods should throw {@link UnsupportedOperationException},
+ * and calling {@link #convertIfAllowed(NumeralType)} or {@link #toSmallestType()} should return {@code false} with no
+ * other action.
  * </p>
  * <p>
  * Values can also be considered static. A static value should be immutable, unmodifiable and not identified by a
- * Handle. More specifically, {@link #getHandle()} should return {@code null}, any calls to {@link #set(Numeral)} and
- * all {@code apply(...)} methods should throw {@link UnsupportedOperationException}, and all Modifier-related methods
- * should return {@code false} with no other action.
+ * Handle. In addition to the rules for immutable values, {@link #getHandle()} should return {@code null} and all
+ * Modifier-related methods should return {@code false} with no other action.
  * </p>
  *
  * @author datafox
@@ -56,6 +63,13 @@ public interface Value extends Dependency, Dependent, Handled {
     boolean isStatic();
 
     /**
+     * Static values are always immutable.
+     * 
+     * @return {@code true} if this value is immutable
+     */
+    boolean isImmutable();
+
+    /**
      * @param type {@link NumeralType} to be checked for
      * @return {@code true} if the base {@link Numeral} of this value can be converted to the specified type
      *
@@ -74,8 +88,7 @@ public interface Value extends Dependency, Dependent, Handled {
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
      * the elements of {@link NumeralType}. This should never happen
-     * @throws UnsupportedOperationException if this value is static and the specified type is not the same as the
-     * {@link Numeral} value's type
+     * @throws UnsupportedOperationException if this value is immutable
      */
     boolean convert(NumeralType type);
 
@@ -95,7 +108,7 @@ public interface Value extends Dependency, Dependent, Handled {
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
      *
-     * @throws UnsupportedOperationException if this value is static and the {@link Numeral} value is not an integer
+     * @throws UnsupportedOperationException if this value is immutable
      */
     boolean toInteger();
 
@@ -105,7 +118,7 @@ public interface Value extends Dependency, Dependent, Handled {
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
      *
-     * @throws UnsupportedOperationException if this value is static and the {@link Numeral} value is not a decimal
+     * @throws UnsupportedOperationException if this value is immutable
      */
     boolean toDecimal();
 
@@ -120,7 +133,7 @@ public interface Value extends Dependency, Dependent, Handled {
     /**
      * @param value value to replace the current base {@link Numeral}
      *
-     * @throws UnsupportedOperationException if this value is static
+     * @throws UnsupportedOperationException if this value is immutable
      */
     void set(Numeral value);
 
@@ -128,7 +141,7 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param operation {@link SourceOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      *
-     * @throws UnsupportedOperationException if this value is static
+     * @throws UnsupportedOperationException if this value is immutable
      */
     void apply(SourceOperation operation, MathContext context);
 
@@ -137,7 +150,7 @@ public interface Value extends Dependency, Dependent, Handled {
      * @param context {@link MathContext} for the operation
      * @param parameter parameter for the operation
      *
-     * @throws UnsupportedOperationException if this value is static
+     * @throws UnsupportedOperationException if this value is immutable
      */
     void apply(SingleParameterOperation operation, MathContext context, Numeral parameter);
 
@@ -158,7 +171,7 @@ public interface Value extends Dependency, Dependent, Handled {
      *
      * @throws IllegalArgumentException if the amount of parameters is not equal to
      * {@link Operation#getParameterCount()}
-     * @throws UnsupportedOperationException if this value is static
+     * @throws UnsupportedOperationException if this value is immutable
      */
     void apply(Operation operation, MathContext context, Numeral ... parameters);
 

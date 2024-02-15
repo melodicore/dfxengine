@@ -15,11 +15,16 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * An extension of {@link HandleMap} for storing and manipulating multiple {@link Value Values} simultaneously.
+ * An extension of {@link HandleMap} for storing and manipulating multiple {@link Value Values} simultaneously. A
+ * value map may only contain either only mutable Values or only immutable Values. A value map may not contain static
+ * Values.
  *
  * @author datafox
  */
 public interface ValueMap extends HandleMap<Value> {
+
+    boolean hasImmutable();
+
     /**
      * @param type {@link NumeralType} for the {@link Value Values} to be converted to
      *
@@ -28,6 +33,7 @@ public interface ValueMap extends HandleMap<Value> {
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
      * the elements of {@link NumeralType}. This should never happen
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void convert(NumeralType type);
 
@@ -42,6 +48,7 @@ public interface ValueMap extends HandleMap<Value> {
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
      * the elements of {@link NumeralType}. This should never happen
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void convert(Collection<? extends Handle> handles, NumeralType type);
 
@@ -56,6 +63,7 @@ public interface ValueMap extends HandleMap<Value> {
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
      * the elements of {@link NumeralType}. This should never happen
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void convert(Map<? extends Handle, NumeralType> types);
 
@@ -74,12 +82,16 @@ public interface ValueMap extends HandleMap<Value> {
     /**
      * Converts all {@link Value Values} to the smallest integer type that can hold its represented value. Values that
      * are already integers are not converted.
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void toInteger();
 
     /**
      * Converts all {@link Value Values} to the smallest decimal type that can hold its represented value. Values that
      * are already decimals are not converted.
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void toDecimal();
 
@@ -100,6 +112,8 @@ public interface ValueMap extends HandleMap<Value> {
 
     /**
      * @param value {@link Numeral} for all {@link Value Values} of this map to be set to
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void set(Numeral value);
 
@@ -109,6 +123,8 @@ public interface ValueMap extends HandleMap<Value> {
      * @param context {@link MapMathContext} for this operation
      * @param handles {@link Handle Handles} of the values to be changed
      * @param value {@link Numeral} for specified {@link Value Values} of this map to be set to
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void set(MapMathContext context, Collection<? extends Handle> handles, Numeral value);
 
@@ -118,12 +134,16 @@ public interface ValueMap extends HandleMap<Value> {
      * @param context {@link MapMathContext} for this operation
      * @param values map of {@link Handle Handles} to be changed and {@link Numeral Numerals} for the specified
      * {@link Value Values} to be set to
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void set(MapMathContext context, Map<? extends Handle, Numeral> values);
 
     /**
      * @param operation {@link SourceOperation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void apply(SourceOperation operation, MathContext context);
 
@@ -133,6 +153,8 @@ public interface ValueMap extends HandleMap<Value> {
      * @param operation {@link SourceOperation} to be applied to specified {@link Value Values} of this map
      * @param context {@link MapMathContext} for the operation
      * @param handles {@link Handle Handles} of the {@link Value Values} to be modified
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void apply(SourceOperation operation, MapMathContext context, Collection<? extends Handle> handles);
 
@@ -140,6 +162,8 @@ public interface ValueMap extends HandleMap<Value> {
      * @param operation {@link SingleParameterOperation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
      * @param parameter parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void apply(SingleParameterOperation operation, MathContext context, Numeral parameter);
 
@@ -150,6 +174,8 @@ public interface ValueMap extends HandleMap<Value> {
      * @param context {@link MapMathContext} for the operation
      * @param handles {@link Handle Handles} of the {@link Value Values} to be modified
      * @param parameter parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void apply(SingleParameterOperation operation, MapMathContext context,
                Collection<? extends Handle> handles, Numeral parameter);
@@ -161,6 +187,8 @@ public interface ValueMap extends HandleMap<Value> {
      * @param context {@link MapMathContext} for the operation
      * @param parameters map of {@link Handle Handles} of the {@link Value Values} to be modified and
      * {@link Numeral Numerals} to be used as parameters for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void apply(SingleParameterOperation operation, MapMathContext context, Map<? extends Handle, Numeral> parameters);
 
@@ -169,6 +197,8 @@ public interface ValueMap extends HandleMap<Value> {
      * @param context {@link MathContext} for the operation
      * @param parameter1 first parameter for the operation
      * @param parameter2 second parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2);
 
@@ -180,6 +210,8 @@ public interface ValueMap extends HandleMap<Value> {
      * @param handles {@link Handle Handles} of the {@link Value Values} to be modified
      * @param parameter1 first parameter for the operation
      * @param parameter2 second parameter for the operation
+     *
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void apply(DualParameterOperation operation, MapMathContext context,
                Collection<? extends Handle> handles, Numeral parameter1, Numeral parameter2);
@@ -191,6 +223,7 @@ public interface ValueMap extends HandleMap<Value> {
      *
      * @throws IllegalArgumentException if the amount of parameters is not equal to
      * {@link Operation#getParameterCount()}
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void apply(Operation operation, MathContext context, Numeral ... parameters);
 
@@ -204,6 +237,7 @@ public interface ValueMap extends HandleMap<Value> {
      *
      * @throws IllegalArgumentException if the amount of parameters is not equal to
      * {@link Operation#getParameterCount()}
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void apply(Operation operation, MapMathContext context,
                Collection<? extends Handle> handles, Numeral ... parameters);
@@ -218,6 +252,7 @@ public interface ValueMap extends HandleMap<Value> {
      *
      * @throws IllegalArgumentException if the amount of parameters is not equal to
      * {@link Operation#getParameterCount()}
+     * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     void apply(Operation operation, MapMathContext context, Map<? extends Handle, Numeral[]> parameters);
 

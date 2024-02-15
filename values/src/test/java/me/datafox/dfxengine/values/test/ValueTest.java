@@ -74,6 +74,48 @@ public class ValueTest {
         assertFalse(bigDecValue.canConvert(FLOAT));
         assertFalse(bigDecValue.canConvert(DOUBLE));
         assertTrue(bigDecValue.canConvert(BIG_DEC));
+
+        assertFalse(immutableIntValue.canConvert(INT));
+        assertFalse(immutableIntValue.canConvert(LONG));
+        assertFalse(immutableIntValue.canConvert(BIG_INT));
+        assertFalse(immutableIntValue.canConvert(FLOAT));
+        assertFalse(immutableIntValue.canConvert(DOUBLE));
+        assertFalse(immutableIntValue.canConvert(BIG_DEC));
+
+        assertFalse(immutableLongValue.canConvert(INT));
+        assertFalse(immutableLongValue.canConvert(LONG));
+        assertFalse(immutableLongValue.canConvert(BIG_INT));
+        assertFalse(immutableLongValue.canConvert(FLOAT));
+        assertFalse(immutableLongValue.canConvert(DOUBLE));
+        assertFalse(immutableLongValue.canConvert(BIG_DEC));
+
+        assertFalse(immutableBigIntValue.canConvert(INT));
+        assertFalse(immutableBigIntValue.canConvert(LONG));
+        assertFalse(immutableBigIntValue.canConvert(BIG_INT));
+        assertFalse(immutableBigIntValue.canConvert(FLOAT));
+        assertFalse(immutableBigIntValue.canConvert(DOUBLE));
+        assertFalse(immutableBigIntValue.canConvert(BIG_DEC));
+
+        assertFalse(immutableFloatValue.canConvert(INT));
+        assertFalse(immutableFloatValue.canConvert(LONG));
+        assertFalse(immutableFloatValue.canConvert(BIG_INT));
+        assertFalse(immutableFloatValue.canConvert(FLOAT));
+        assertFalse(immutableFloatValue.canConvert(DOUBLE));
+        assertFalse(immutableFloatValue.canConvert(BIG_DEC));
+
+        assertFalse(immutableDoubleValue.canConvert(INT));
+        assertFalse(immutableDoubleValue.canConvert(LONG));
+        assertFalse(immutableDoubleValue.canConvert(BIG_INT));
+        assertFalse(immutableDoubleValue.canConvert(FLOAT));
+        assertFalse(immutableDoubleValue.canConvert(DOUBLE));
+        assertFalse(immutableDoubleValue.canConvert(BIG_DEC));
+
+        assertFalse(immutableBigDecValue.canConvert(INT));
+        assertFalse(immutableBigDecValue.canConvert(LONG));
+        assertFalse(immutableBigDecValue.canConvert(BIG_INT));
+        assertFalse(immutableBigDecValue.canConvert(FLOAT));
+        assertFalse(immutableBigDecValue.canConvert(DOUBLE));
+        assertFalse(immutableBigDecValue.canConvert(BIG_DEC));
     }
 
     @Test
@@ -99,6 +141,13 @@ public class ValueTest {
         assertEquals(bigDecNumeral, bigDecValue.getBase());
         assertThrows(ExtendedArithmeticException.class, () -> bigDecValue.convert(DOUBLE));
         assertEquals(bigDecNumeral, bigDecValue.getBase());
+
+        assertThrows(UnsupportedOperationException.class, () -> immutableIntValue.convert(INT));
+        assertThrows(UnsupportedOperationException.class, () -> immutableIntValue.convert(LONG));
+        assertThrows(UnsupportedOperationException.class, () -> immutableIntValue.convert(BIG_INT));
+        assertThrows(UnsupportedOperationException.class, () -> immutableIntValue.convert(FLOAT));
+        assertThrows(UnsupportedOperationException.class, () -> immutableIntValue.convert(DOUBLE));
+        assertThrows(UnsupportedOperationException.class, () -> immutableIntValue.convert(BIG_DEC));
     }
 
     @Test
@@ -117,6 +166,13 @@ public class ValueTest {
         assertEquals(Numerals.of("1.6624e+30"), floatValue.getBase());
         assertTrue(floatValue.convertIfAllowed(FLOAT));
         assertEquals(floatNumeral, floatValue.getBase());
+
+        assertFalse(immutableFloatValue.convertIfAllowed(INT));
+        assertFalse(immutableFloatValue.convertIfAllowed(LONG));
+        assertFalse(immutableFloatValue.convertIfAllowed(BIG_INT));
+        assertFalse(immutableFloatValue.convertIfAllowed(FLOAT));
+        assertFalse(immutableFloatValue.convertIfAllowed(DOUBLE));
+        assertFalse(immutableFloatValue.convertIfAllowed(BIG_DEC));
     }
 
     public void toIntegerTest() {
@@ -132,6 +188,13 @@ public class ValueTest {
         assertEquals(Numerals.of("51234514000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"), doubleValue.getBase());
         assertTrue(bigDecValue.toInteger());
         assertEquals(Numerals.of("2689423689278274536642740000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"), bigDecValue.getBase());
+
+        assertThrows(UnsupportedOperationException.class, immutableIntValue::toInteger);
+        assertThrows(UnsupportedOperationException.class, immutableLongValue::toInteger);
+        assertThrows(UnsupportedOperationException.class, immutableBigIntValue::toInteger);
+        assertThrows(UnsupportedOperationException.class, immutableFloatValue::toInteger);
+        assertThrows(UnsupportedOperationException.class, immutableDoubleValue::toInteger);
+        assertThrows(UnsupportedOperationException.class, immutableBigDecValue::toInteger);
     }
 
     public void toDecimalTest() {
@@ -147,6 +210,13 @@ public class ValueTest {
         assertEquals(doubleNumeral, doubleValue.getBase());
         assertFalse(bigDecValue.toDecimal());
         assertEquals(bigDecNumeral, bigDecValue.getBase());
+
+        assertThrows(UnsupportedOperationException.class, immutableIntValue::toDecimal);
+        assertThrows(UnsupportedOperationException.class, immutableLongValue::toDecimal);
+        assertThrows(UnsupportedOperationException.class, immutableBigIntValue::toDecimal);
+        assertThrows(UnsupportedOperationException.class, immutableFloatValue::toDecimal);
+        assertThrows(UnsupportedOperationException.class, immutableDoubleValue::toDecimal);
+        assertThrows(UnsupportedOperationException.class, immutableBigDecValue::toDecimal);
     }
 
     @Test
@@ -168,6 +238,13 @@ public class ValueTest {
         assertEquals(floatNumeral, floatValue.getBase());
         assertTrue(doubleValue.toSmallestType());
         assertEquals(doubleNumeral, doubleValue.getBase());
+
+        assertFalse(immutableFloatValue.toSmallestType());
+        assertFalse(immutableFloatValue.toSmallestType());
+        assertFalse(immutableFloatValue.toSmallestType());
+        assertFalse(immutableFloatValue.toSmallestType());
+        assertFalse(immutableFloatValue.toSmallestType());
+        assertFalse(immutableFloatValue.toSmallestType());
     }
 
     @Test
@@ -176,6 +253,8 @@ public class ValueTest {
         assertEquals(Numerals.of(3742L), intValue.getBase());
         intValue.set(Numerals.of(3.674753e27d));
         assertEquals(Numerals.of(3.674753e27d), intValue.getBase());
+
+        assertThrows(UnsupportedOperationException.class, () -> immutableIntValue.set(Numerals.of(3742L)));
     }
 
     @Test
@@ -188,6 +267,8 @@ public class ValueTest {
         assertEquals(Numerals.of("5600.454261623189947408056716691534"), intValue.getBase());
         intValue.apply(Operations::lerp, MathContext.builder().convertResultTo(LONG).build(), Numerals.of(-1), Numerals.of(Math.E));
         assertEquals(Numerals.of(20823L), intValue.getBase());
+
+        assertThrows(UnsupportedOperationException.class, () -> immutableIntValue.apply(Operations::log));
     }
 
     @Test
@@ -248,14 +329,15 @@ public class ValueTest {
         assertEquals(Numerals.of(9000.0001d), staticValue.getBase());
         assertEquals(Numerals.of(9000.0001d), staticValue.getValue());
         assertTrue(staticValue.isStatic());
+        assertTrue(staticValue.isImmutable());
         assertFalse(staticValue.canConvert(INT));
-        assertTrue(staticValue.canConvert(DOUBLE));
-        assertFalse(staticValue.convert(DOUBLE));
+        assertFalse(staticValue.canConvert(DOUBLE));
+        assertThrows(UnsupportedOperationException.class, () -> staticValue.convert(DOUBLE));
         assertThrows(UnsupportedOperationException.class, () -> staticValue.convert(INT));
         assertFalse(staticValue.convertIfAllowed(INT));
         assertFalse(staticValue.convertIfAllowed(DOUBLE));
         assertThrows(UnsupportedOperationException.class, staticValue::toInteger);
-        assertFalse(staticValue.toDecimal());
+        assertThrows(UnsupportedOperationException.class, staticValue::toDecimal);
         assertFalse(staticValue.toSmallestType());
         assertThrows(UnsupportedOperationException.class, () -> staticValue.set(Numerals.of(345L)));
         assertThrows(UnsupportedOperationException.class, () -> staticValue.apply(Operations::log));

@@ -5,7 +5,6 @@ import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
-import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
 import me.datafox.dfxengine.values.api.Modifier;
 import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.api.comparison.Comparison;
@@ -18,6 +17,8 @@ import me.datafox.dfxengine.values.modifier.OperationModifier;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import static me.datafox.dfxengine.values.utils.internal.ValuesStrings.IMMUTABLE;
 
 /**
  * A numeric value backed with a {@link Numeral}. A static value is immutable, unmodifiable and not identified by a
@@ -77,53 +78,44 @@ public class StaticValue implements Value {
     }
 
     /**
-     * This implementation only returns {@code true} if the {@link Numeral} value has the specified {@link NumeralType}.
+     * This implementation always returns {@code true}.
      *
-     * @param type {@link NumeralType} to be checked for
-     * @return {@code true} if the {@link Numeral} value of this value can be converted to the specified type
-     *
-     * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
-     * the elements of {@link NumeralType}. This should never happen
+     * @return {@code true} if this value is static
      */
     @Override
-    public boolean canConvert(NumeralType type) {
-        return value.getType().equals(type);
-    }
-
-    /**
-     * This implementation always throws {@link UnsupportedOperationException} unless the {@link Numeral} value has the
-     * specified {@link NumeralType}.
-     *
-     * @param type {@link NumeralType} for the base {@link Numeral} of this value to be converted to
-     * @return {@code true} if the base {@link Numeral} of this value was changed as a result of this operation
-     *
-     * @throws ExtendedArithmeticException if the base {@link Numeral} of this value is outside the specified type's
-     * bounds
-     * @throws NullPointerException if the specified type is {@code null}
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
-     * the elements of {@link NumeralType}. This should never happen
-     * @throws UnsupportedOperationException if this value is static and the specified type is not the same as the
-     * {@link Numeral} value's type
-     */
-    @Override
-    public boolean convert(NumeralType type) {
-        if(value.getType().equals(type)) {
-            return false;
-        }
-        throw new UnsupportedOperationException("static value cannot be modified");
+    public boolean isImmutable() {
+        return true;
     }
 
     /**
      * This implementation will always return {@code false}.
      *
-     * @param type {@link NumeralType} for the base {@link Numeral} of this value to be converted to
-     * @return {@code true} if the base {@link Numeral} of this value was changed as a result of this operation
+     * @param type ignored parameter
+     * @return {@code false}
+     */
+    @Override
+    public boolean canConvert(NumeralType type) {
+        return false;
+    }
+
+    /**
+     * This implementation always throws {@link UnsupportedOperationException}.
      *
-     * @throws NullPointerException if the specified type is {@code null}
+     * @param type ignored parameter
+     * @return nothing
      *
-     * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
-     * the elements of {@link NumeralType}. This should never happen
+     * @throws UnsupportedOperationException when called
+     */
+    @Override
+    public boolean convert(NumeralType type) {
+        throw new UnsupportedOperationException(IMMUTABLE);
+    }
+
+    /**
+     * This implementation will always return {@code false}.
+     *
+     * @param type ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean convertIfAllowed(NumeralType type) {
@@ -131,43 +123,33 @@ public class StaticValue implements Value {
     }
 
     /**
-     * This implementation will throw {@link UnsupportedOperationException} if the {@link Numeral} value is not an
-     * integer.
+     * This implementation will always throw {@link UnsupportedOperationException}.
      *
-     * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
+     * @return nothing
      *
-     * @throws UnsupportedOperationException if this value is static and the {@link Numeral} value is not an integer
+     * @throws UnsupportedOperationException when called
      */
     @Override
     public boolean toInteger() {
-        if(value.getType().isInteger()) {
-            return false;
-        }
-
-        throw new UnsupportedOperationException("static value cannot be modified");
+        throw new UnsupportedOperationException(IMMUTABLE);
     }
 
     /**
-     * This implementation will throw {@link UnsupportedOperationException} if the {@link Numeral} value is not a
-     * decimal.
+     * This implementation will always throw {@link UnsupportedOperationException}.
      *
-     * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
+     * @return nothing
      *
-     * @throws UnsupportedOperationException if this value is static and the {@link Numeral} value is not a decimal
+     * @throws UnsupportedOperationException when called
      */
     @Override
     public boolean toDecimal() {
-        if(value.getType().isDecimal()) {
-            return false;
-        }
-
-        throw new UnsupportedOperationException("static value cannot be modified");
+        throw new UnsupportedOperationException(IMMUTABLE);
     }
 
     /**
      * This implementation will always return {@code false}.
      *
-     * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
+     * @return {@code false}
      */
     @Override
     public boolean toSmallestType() {
@@ -179,11 +161,11 @@ public class StaticValue implements Value {
      *
      * @param value ignored parameter
      *
-     * @throws UnsupportedOperationException if this value is static
+     * @throws UnsupportedOperationException when called
      */
     @Override
     public void set(Numeral value) {
-        throw new UnsupportedOperationException("static value cannot be modified");
+        throw new UnsupportedOperationException(IMMUTABLE);
     }
 
     /**
@@ -192,11 +174,11 @@ public class StaticValue implements Value {
      * @param operation ignored parameter
      * @param context ignored parameter
      *
-     * @throws UnsupportedOperationException if this value is static
+     * @throws UnsupportedOperationException when called
      */
     @Override
     public void apply(SourceOperation operation, MathContext context) {
-        throw new UnsupportedOperationException("static value cannot be modified");
+        throw new UnsupportedOperationException(IMMUTABLE);
     }
 
     /**
@@ -206,11 +188,11 @@ public class StaticValue implements Value {
      * @param context ignored parameter
      * @param parameter ignored parameter
      *
-     * @throws UnsupportedOperationException if this value is static
+     * @throws UnsupportedOperationException when called
      */
     @Override
     public void apply(SingleParameterOperation operation, MathContext context, Numeral parameter) {
-        throw new UnsupportedOperationException("static value cannot be modified");
+        throw new UnsupportedOperationException(IMMUTABLE);
     }
 
     /**
@@ -221,11 +203,11 @@ public class StaticValue implements Value {
      * @param parameter1 ignored parameter
      * @param parameter2 ignored parameter
      *
-     * @throws UnsupportedOperationException if this value is static
+     * @throws UnsupportedOperationException when called
      */
     @Override
     public void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2) {
-        throw new UnsupportedOperationException("static value cannot be modified");
+        throw new UnsupportedOperationException(IMMUTABLE);
     }
 
     /**
@@ -235,13 +217,11 @@ public class StaticValue implements Value {
      * @param context ignored parameter
      * @param parameters ignored parameter
      *
-     * @throws IllegalArgumentException if the amount of parameters is not equal to
-     * {@link Operation#getParameterCount()}
-     * @throws UnsupportedOperationException if this value is static
+     * @throws UnsupportedOperationException when called
      */
     @Override
     public void apply(Operation operation, MathContext context, Numeral ... parameters) {
-        throw new UnsupportedOperationException("static value cannot be modified");
+        throw new UnsupportedOperationException(IMMUTABLE);
     }
 
     /**
@@ -258,7 +238,7 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return an empty collection.
      *
-     * @return {@link Modifier Modifiers} associated with this value
+     * @return {@link Set#of()}
      */
     @Override
     public Collection<Modifier> getModifiers() {
@@ -268,8 +248,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param modifier {@link Modifier} to be added
-     * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
+     * @param modifier ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean addModifier(Modifier modifier) {
@@ -279,8 +259,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param modifiers {@link Modifier Modifiers} to be added
-     * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
+     * @param modifiers ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean addModifiers(Collection<? extends Modifier> modifiers) {
@@ -290,8 +270,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param modifier {@link Modifier} to be removed
-     * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
+     * @param modifier ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean removeModifier(Modifier modifier) {
@@ -301,8 +281,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param modifiers {@link Modifier Modifiers} to be removed
-     * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
+     * @param modifiers ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean removeModifiers(Collection<? extends Modifier> modifiers) {
@@ -312,8 +292,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param modifier {@link Modifier} to be checked for
-     * @return {@code true} if the specified {@link Modifier} is associated with this value
+     * @param modifier ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean containsModifier(Modifier modifier) {
@@ -323,8 +303,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param modifiers {@link Modifier Modifiers} to be checked for
-     * @return {@code true} if all of the specified {@link Modifier Modifiers} are associated with this value
+     * @param modifiers ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean containsModifiers(Collection<? extends Modifier> modifiers) {
@@ -340,7 +320,7 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return an empty collection.
      *
-     * @return all {@link Dependency Dependencies} that depend on this value
+     * @return {@link Set#of()}
      */
     @Override
     public Collection<Dependency> getDependencies() {
@@ -358,10 +338,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependency {@link Dependency} that depends on this value
-     * @return {@code true} if the registered {@link Dependency Dependencies} changed as a result of this operation
-     *
-     * @throws IllegalArgumentException if this operation would cause a cyclic dependency
+     * @param dependency ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean addDependency(Dependency dependency) {
@@ -371,10 +349,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependencies {@link Dependency Dependencies} that depend on this value
-     * @return {@code true} if the registered {@link Dependency Dependencies} changed as a result of this operation
-     *
-     * @throws IllegalArgumentException if this operation would cause a cyclic dependency
+     * @param dependencies ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean addDependencies(Collection<? extends Dependency> dependencies) {
@@ -384,8 +360,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependency {@link Dependency} to be removed
-     * @return {@code true} if the registered {@link Dependency Dependencies} changed as a result of this operation
+     * @param dependency ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean removeDependency(Dependency dependency) {
@@ -395,8 +371,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependencies {@link Dependency Dependencies} to be removed
-     * @return {@code true} if the registered {@link Dependency Dependencies} changed as a result of this operation
+     * @param dependencies ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean removeDependencies(Collection<? extends Dependency> dependencies) {
@@ -406,8 +382,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependency {@link Dependency} to be checked for
-     * @return {@code true} if the specified {@link Dependency} is registered to this value
+     * @param dependency ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean containsDependency(Dependency dependency) {
@@ -417,8 +393,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependencies {@link Dependency Dependencies} to be checked for
-     * @return {@code true} if all the specified {@link Dependency Dependencies} are registered to this value
+     * @param dependencies ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean containsDependencies(Collection<? extends Dependency> dependencies) {
@@ -428,9 +404,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependency {@link Dependency} to be checked for
-     * @return {@code true} if the specified {@link Dependency} is registered to this value or any of its Dependencies
-     * that also implement Dependent, recursively
+     * @param dependency ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean containsDependencyRecursive(Dependency dependency) {
@@ -440,9 +415,8 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependencies {@link Dependency Dependencies} to be checked for
-     * @return {@code true} if the specified {@link Dependency Dependencies} are registered to this value or any of its
-     * Dependencies that also implement Dependent, recursively
+     * @param dependencies ignored parameter
+     * @return {@code false}
      */
     @Override
     public boolean containsDependenciesRecursive(Collection<? extends Dependency> dependencies) {
@@ -452,7 +426,7 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return an empty {@link Stream}.
      *
-     * @return {@link Stream} of all {@link Dependency Dependencies} that are registered to this value
+     * @return {@link Stream#empty()}
      */
     @Override
     public Stream<Dependency> dependencyStream() {
@@ -462,8 +436,7 @@ public class StaticValue implements Value {
     /**
      * This implementation will always return an empty {@link Stream}.
      *
-     * @return {@link Stream} of all {@link Dependency Dependencies} that are registered to this value or any of its
-     * Dependencies that also implement Dependent, recursively
+     * @return {@link Stream#empty()}
      */
     @Override
     public Stream<Dependency> recursiveDependencyStream() {
