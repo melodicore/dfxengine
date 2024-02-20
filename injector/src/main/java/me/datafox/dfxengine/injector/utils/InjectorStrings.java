@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
  * @author datafox
  */
 public class InjectorStrings {
+    public static final String NOT_CLOSING_SCAN = "Option set to not close ClassGraph scan. " +
+            "This is not recommended, and only exists for testing purposes where multiple " +
+            "Injector instances need to be created in the same process";
     public static final String SCANNING_CLASSPATH = "Scanning classpath";
     public static final String BUILDING_DEPENDENCY_GRAPH = "Building dependency graph";
     public static final String CHECKING_CYCLIC = "Checking for cyclic dependencies";

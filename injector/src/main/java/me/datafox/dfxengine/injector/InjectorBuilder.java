@@ -24,20 +24,26 @@ import static me.datafox.dfxengine.injector.utils.InjectorStrings.*;
  * @author datafox
  */
 public class InjectorBuilder {
+    private static final ScanResult scan;
+
+    static {
+        scan = new ClassGraph().enableAllInfo().enableSystemJarsAndModules().disableModuleScanning().scan();
+    }
+
     private final Logger logger;
-    private final ClassGraph classGraph;
     private final List<String> packageWhitelist;
     private final List<String> packageBlacklist;
     private final List<String> classWhitelist;
     private final List<String> classBlacklist;
+    private boolean closeScan;
 
     InjectorBuilder() {
         logger = LoggerFactory.getLogger(InjectorBuilder.class);
-        classGraph = new ClassGraph();
         packageWhitelist = new ArrayList<>();
         packageBlacklist = new ArrayList<>();
         classWhitelist = new ArrayList<>();
         classBlacklist = new ArrayList<>();
+        closeScan = true;
     }
 
     /**
@@ -128,11 +134,17 @@ public class InjectorBuilder {
         return this;
     }
 
+    public InjectorBuilder closeScan(boolean close) {
+        if(!close) {
+            logger.warn(NOT_CLOSING_SCAN);
+        }
+        closeScan = close;
+        return this;
+    }
+
     public Injector build() {
         logger.info(SCANNING_CLASSPATH);
         checkAndLogWhitelistAndBlacklist();
-
-        ScanResult scan = classGraph.enableAllInfo().enableSystemJarsAndModules().scan();
 
         ClassInfoList componentClasses = scan
                 .getClassesWithAnnotation(Component.class)
@@ -202,7 +214,9 @@ public class InjectorBuilder {
 
         logComponents(components);
 
-        scan.close();
+        if(closeScan) {
+            scan.close();
+        }
 
         parseDependencies(components);
 
