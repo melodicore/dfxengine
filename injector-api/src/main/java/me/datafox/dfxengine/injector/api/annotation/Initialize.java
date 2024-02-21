@@ -18,5 +18,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Initialize {
+    /**
+     * Used for determining the invocation order of all initialization methods. Lower number means earlier invocation.
+     *
+     * @return {@code int} used for ordering initialization methods
+     */
     int value() default 0;
 }

@@ -12,8 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,7 +47,9 @@ public class Injector {
         logger = LoggerFactory.getLogger(Injector.class);
         componentList = new ArrayList<>();
         initializerQueue = new ArrayList<>();
-        components.peek(this::instantiateOnce).forEach(componentList::add);
+        components.peek(this::instantiateOnce)
+                .sorted(Comparator.comparingInt(ComponentData::getOrder))
+                .forEach(componentList::add);
         runAndClearInitializers();
     }
 
@@ -84,7 +85,11 @@ public class Injector {
         }
         ClassReference<T> reference = getReference(type, parameters);
         ClassReference<R> requestingReference = getReference(requesting, requestingParameters);
-        T object = getParameter(reference, reference, requestingReference, List.of(componentList));
+        Stack<ClassReference<?>> referenceStack = new Stack<>();
+        if(requestingReference != null) {
+            referenceStack.push(requestingReference);
+        }
+        T object = getParameter(reference, reference, referenceStack, List.of(componentList));
         runAndClearInitializers();
         return object;
     }
@@ -152,12 +157,14 @@ public class Injector {
         if(!data.getPolicy().equals(InstantiationPolicy.ONCE)) {
             return;
         }
-        data.setObjects(instantiate(data, null));
+        List<ClassReference<?>> referenceStack = new ArrayList<>();
+        data.setObjects(instantiate(data, referenceStack));
     }
 
     @SuppressWarnings("unchecked")
-    private <T,R> List<T> instantiate(ComponentData<T> data, ClassReference<R> requesting) {
+    private <T> List<T> instantiate(ComponentData<T> data, List<ClassReference<?>> requesting) {
         Object[] parameters = new Object[0];
+        requesting.add(data.getReference().getActualReference());
         if(!data.getParameters().isEmpty()) {
             parameters = data
                     .getParameters()
@@ -200,12 +207,13 @@ public class Injector {
                         .map(init -> PrioritizedRunnable
                                 .builder()
                                 .priority(init.getPriority())
-                                .delegate(() -> initialize(init, object, requesting))
+                                .delegate(() -> initialize(init, object, new ArrayList<>(requesting)))
                                 .build())).collect(Collectors.toList()));
+        requesting.remove(requesting.size() - 1);
         return list;
     }
 
-    private <T, R> void initialize(InitializeReference<?> init, T object, ClassReference<R> requesting) {
+    private <T> void initialize(InitializeReference<?> init, T object, List<ClassReference<?>> requesting) {
         try {
             init.getMethod().setAccessible(true);
             init.getMethod().invoke(object, init
@@ -220,11 +228,11 @@ public class Injector {
         }
     }
 
-    private <T,R> void setFields(ComponentData<T> data, T object, ClassReference<R> requesting) {
+    private <T> void setFields(ComponentData<T> data, T object, List<ClassReference<?>> requesting) {
         data.getFields().forEach(field -> setField(data, field.getField(), field.getReference(), object, requesting));
     }
 
-    private <C,T,R> void setField(ComponentData<C> data, Field field, ClassReference<T> reference, C object, ClassReference<R> requesting) {
+    private <C,T> void setField(ComponentData<C> data, Field field, ClassReference<T> reference, C object, List<ClassReference<?>> requesting) {
         try {
             field.setAccessible(true);
             T parameter = getParameter(reference, data.getReference(), requesting, data.getDependencies());
@@ -235,14 +243,14 @@ public class Injector {
     }
 
     @SuppressWarnings("unchecked")
-    private <T,I,R> T getParameter(ClassReference<T> reference, ClassReference<I> instantiating, ClassReference<R> requesting, List<List<ComponentData<?>>> components) {
+    private <T,I> T getParameter(ClassReference<T> reference, ClassReference<I> instantiating, List<ClassReference<?>> requesting, List<List<ComponentData<?>>> components) {
         if(InstantiationDetails.class.equals(reference.getActualReference().getType())) {
             InstantiationDetails details = InstantiationDetails
                     .builder()
                     .type(instantiating.getType())
                     .parameters(instantiating.getParameters())
-                    .requestingType(requesting != null ? requesting.getType() : null)
-                    .requestingParameters(requesting != null ? requesting.getParameters() : List.of())
+                    .requestingType(requesting.size() < 2 ? null : requesting.get(requesting.size() - 2).getType())
+                    .requestingParameters(requesting.size() < 2 ? List.of() : requesting.get(requesting.size() - 2).getParameters())
                     .build();
             if(reference.isList()) {
                 return (T) List.of(details);
@@ -263,26 +271,34 @@ public class Injector {
             return (T) list;
         } else {
             if(list.size() != 1) {
-                list = components
+                List<ComponentData<?>> componentList = components
                         .stream()
                         .flatMap(List::stream)
                         .filter(Predicate.not(ComponentData::isDefaultImpl))
                         .filter(data -> reference.getActualReference()
                                 .isAssignableFrom(data.getReference().getActualReference()))
+                        .sorted(Comparator.comparingInt(ComponentData::getOrder))
+                        .collect(Collectors.toList());
+                list = componentList.stream()
                         .map(data -> getObjects(data, requesting))
                         .flatMap(List::stream)
                         .collect(Collectors.toList());
                 if(list.size() != 1) {
-                    throw LogUtils.logExceptionAndGet(logger,
-                            "Singleton component requested but multiple are present",
-                            ComponentWithMultipleOptionsForSingletonDependency::new);
+                    if(componentList.size() > 1 && componentList.get(0).getOrder() != componentList.get(1).getOrder()) {
+                        list = getObjects(componentList.get(0), requesting);
+                    }
+                    if(list.size() != 1) {
+                        throw LogUtils.logExceptionAndGet(logger,
+                                "Singleton component requested but multiple are present",
+                                ComponentWithMultipleOptionsForSingletonDependency::new);
+                    }
                 }
             }
             return (T) list.get(0);
         }
     }
 
-    private <T,R> List<T> getObjects(ComponentData<T> data, ClassReference<R> requesting) {
+    private <T> List<T> getObjects(ComponentData<T> data, List<ClassReference<?>> requesting) {
         if(data.getPolicy().equals(InstantiationPolicy.ONCE)) {
             return data.getObjects();
         } else {

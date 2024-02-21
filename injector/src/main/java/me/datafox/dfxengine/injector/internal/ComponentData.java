@@ -18,6 +18,8 @@ public class ComponentData<T> {
 
     private final boolean defaultImpl;
 
+    private final int order;
+
     private final ClassReference<?> owner;
 
     private final Executable executable;

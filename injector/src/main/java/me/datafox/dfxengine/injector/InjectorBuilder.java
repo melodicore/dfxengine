@@ -27,7 +27,7 @@ public class InjectorBuilder {
     private static final ScanResult scan;
 
     static {
-        scan = new ClassGraph().enableAllInfo().enableSystemJarsAndModules().disableModuleScanning().scan();
+        scan = new ClassGraph().enableAllInfo().enableSystemJarsAndModules().scan();
     }
 
     private final Logger logger;

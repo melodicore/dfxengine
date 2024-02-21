@@ -73,10 +73,12 @@ public class ClassReferenceFactory {
         }
         if(component != null) {
             builder.policy(component.value())
-                    .defaultImpl(component.defaultImpl());
+                    .defaultImpl(component.defaultImpl())
+                    .order(component.order());
         } else {
             builder.policy(InstantiationPolicy.ONCE)
-                    .defaultImpl(false);
+                    .defaultImpl(false)
+                    .order(0);
         }
         buildingParameters = true;
         Arrays.stream(info.getParameterInfo())

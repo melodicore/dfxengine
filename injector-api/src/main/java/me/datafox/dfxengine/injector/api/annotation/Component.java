@@ -33,13 +33,29 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Component {
     /**
+     * {@link InstantiationPolicy#ONCE} means that this component will be instantiated once.
+     * {@link InstantiationPolicy#PER_INSTANCE} means that this component will be instantiated for every other component
+     * that requests it.
+     *
      * @return the associated {@link InstantiationPolicy}
      */
     InstantiationPolicy value() default InstantiationPolicy.ONCE;
 
     /**
-     * @return {@code true} if this component should be ignored if a single component with its signature has been
-     * requested and other components not marked as default implementations with the same signature are present.
+     * A default implementation means that this component should be ignored if a single component with its signature has
+     * been requested and other components not marked as default implementations with the same signature are present
+     *
+     * @return {@code true} if this component is a default implementation
      */
     boolean defaultImpl() default false;
+
+    /**
+     * The order affects both the order of components in the list when multiple components with this component's
+     * signature are requested, and the priority when a single component with this component's signature has been
+     * requested and multiple non-default components with the same signature are present. Lower number means higher
+     * priority.
+     *
+     * @return {@code int} used for ordering components
+     */
+    int order() default 0;
 }
