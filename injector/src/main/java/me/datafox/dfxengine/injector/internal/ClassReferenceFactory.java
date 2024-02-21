@@ -9,10 +9,15 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.injector.exception.ComponentWithUnresolvedTypeParameterException;
 import me.datafox.dfxengine.injector.exception.FinalFieldDependencyException;
 import me.datafox.dfxengine.injector.exception.UnknownComponentTypeParameterException;
+import me.datafox.dfxengine.injector.utils.InjectorStrings;
 import me.datafox.dfxengine.injector.utils.InjectorUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,11 +26,14 @@ import java.util.stream.Stream;
  * @author datafox
  */
 public class ClassReferenceFactory {
+    private final Logger logger;
+
     private final Map<String,ClassInfo> classInfoMap;
 
     private boolean buildingParameters;
 
     public ClassReferenceFactory(Map<String,ClassInfo> classInfoMap) {
+        logger = LoggerFactory.getLogger(getClass());
         this.classInfoMap = classInfoMap;
     }
 
@@ -37,6 +45,8 @@ public class ClassReferenceFactory {
         MethodInfoList initializers;
         Component component;
         if(info.isConstructor()) {
+            logger.debug(InjectorStrings.buildingComponentClassData(
+                    info.getClassInfo(), info));
             builder.reference(buildClassReference(info.getClassInfo()))
                     .executable(info.loadClassAndGetConstructor());
             component = info.getClassInfo().loadClass().getAnnotation(Component.class);
@@ -46,10 +56,12 @@ public class ClassReferenceFactory {
                     .getDeclaredMethodInfo()
                     .filter(method -> method.hasAnnotation(Initialize.class));
         } else {
+            ClassInfo classInfo = classInfoMap.get(info.getTypeDescriptor().toString().split(" ", 2)[0]);
+            logger.debug(InjectorStrings.buildingComponentMethodData(
+                    classInfo, info));
             builder.reference(buildClassReference(info))
                     .executable(info.loadClassAndGetMethod());
             component = info.loadClassAndGetMethod().getAnnotation(Component.class);
-            ClassInfo classInfo = classInfoMap.get(info.getTypeDescriptor().toString().split(" ", 2)[0]);
             fields = classInfo.getDeclaredFieldInfo()
                     .filter(field -> field.hasAnnotation(Inject.class));
             initializers = classInfo
@@ -159,8 +171,11 @@ public class ClassReferenceFactory {
         className = getBoxedPrimitiveName(className);
         split = info.split(Pattern.quote(className), 2);
         String details = split.length == 1 ? "" : split[1];
-        ClassInfo classInfo = classInfoMap.get(className);
-        String classDetails = classInfo.toString().split(Pattern.quote(className), 2)[1];
+        String classDetails = "";
+        if(!className.contains("[]")) {
+            ClassInfo classInfo = classInfoMap.get(className);
+            classDetails = classInfo.toString().split(Pattern.quote(className), 2)[1];
+        }
         return buildClassReference(namePrefix + className, details, classDetails);
     }
 
@@ -191,6 +206,9 @@ public class ClassReferenceFactory {
 
     @SuppressWarnings("unchecked")
     public <T> ClassReference<T> buildClassReference(String name, String[] parameters, String[] superclasses) {
+        if(name.contains("[]")) {
+            throw new IllegalArgumentException();
+        }
         ClassInfo info = classInfoMap.get(name);
         if(info == null) {
             if(name.startsWith("?")) {

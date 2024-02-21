@@ -79,11 +79,15 @@ public class StringUtils {
      * @return {@link String} of the elements joined together
      */
     public static String joining(Collection<? extends CharSequence> elements, String separator, String lastSeparator) {
-        String result = elements
-                .stream()
-                .collect(Collectors.joining(separator));
+        if(elements.isEmpty()) {
+            return "";
+        } else if(elements.size() == 1) {
+            return elements.iterator().next().toString();
+        }
 
-        if(lastSeparator == null) {
+        String result = String.join(separator, elements);
+
+        if(lastSeparator == null || separator.equals(lastSeparator)) {
             return result;
         }
 

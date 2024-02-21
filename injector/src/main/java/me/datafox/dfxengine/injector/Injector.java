@@ -7,6 +7,7 @@ import me.datafox.dfxengine.injector.internal.ClassReference;
 import me.datafox.dfxengine.injector.internal.ComponentData;
 import me.datafox.dfxengine.injector.internal.InitializeReference;
 import me.datafox.dfxengine.injector.internal.PrioritizedRunnable;
+import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,10 +29,15 @@ public class Injector {
 
     @Component(value = InstantiationPolicy.PER_INSTANCE, defaultImpl = true)
     private static Logger getLogger(InstantiationDetails details) {
+        if(details.getRequestingType() == null) {
+            return LoggerFactory.getLogger(Object.class);
+        }
         return LoggerFactory.getLogger(details.getRequestingType());
     }
 
     private static Injector instance;
+
+    private final Logger logger;
 
     private final List<ComponentData<?>> componentList;
 
@@ -39,6 +45,7 @@ public class Injector {
 
     Injector(Stream<ComponentData<?>> components) {
         instance = this;
+        logger = LoggerFactory.getLogger(Injector.class);
         componentList = new ArrayList<>();
         initializerQueue = new ArrayList<>();
         components.peek(this::instantiateOnce).forEach(componentList::add);
@@ -246,9 +253,10 @@ public class Injector {
         List<?> list = components
                 .stream()
                 .flatMap(List::stream)
+                .distinct()
                 .filter(data -> reference.getActualReference()
                         .isAssignableFrom(data.getReference().getActualReference()))
-                .map(data -> getObjects(data, instantiating))
+                .map(data -> getObjects(data, requesting))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
         if(reference.isList()) {
@@ -261,11 +269,13 @@ public class Injector {
                         .filter(Predicate.not(ComponentData::isDefaultImpl))
                         .filter(data -> reference.getActualReference()
                                 .isAssignableFrom(data.getReference().getActualReference()))
-                        .map(data -> getObjects(data, instantiating))
+                        .map(data -> getObjects(data, requesting))
                         .flatMap(List::stream)
                         .collect(Collectors.toList());
                 if(list.size() != 1) {
-                    throw new ComponentWithMultipleOptionsForSingletonDependency("");
+                    throw LogUtils.logExceptionAndGet(logger,
+                            "Singleton component requested but multiple are present",
+                            ComponentWithMultipleOptionsForSingletonDependency::new);
                 }
             }
             return (T) list.get(0);

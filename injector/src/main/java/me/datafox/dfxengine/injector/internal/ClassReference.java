@@ -59,11 +59,18 @@ public class ClassReference<T> {
         return true;
     }
 
+    public String getName() {
+        return type.getName() + getParameterString();
+    }
+
     public String getParameterString() {
-        return parameters
+        if(parameters.isEmpty()) {
+            return "";
+        }
+        return "<" + parameters
                 .stream()
                 .map(Parameter::toString)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining(", ")) + ">";
     }
 
     public static ClassReference<Object> object() {
