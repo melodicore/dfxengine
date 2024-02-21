@@ -3,11 +3,17 @@ package me.datafox.dfxengine.injector.test;
 import me.datafox.dfxengine.injector.Injector;
 import me.datafox.dfxengine.injector.Parameter;
 import me.datafox.dfxengine.injector.exception.ComponentWithMultipleOptionsForSingletonDependency;
+import me.datafox.dfxengine.injector.test.classes.pass.array.NonComponentClass3;
+import me.datafox.dfxengine.injector.test.classes.pass.array.ParametricClass2;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.ComponentClass;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.ComponentMethodClass;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.NonComponentClass;
+import me.datafox.dfxengine.injector.test.classes.pass.basic.StaticNonComponentClass;
+import me.datafox.dfxengine.injector.test.classes.pass.default_impl.ComponentInterface;
+import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithInitializerClass;
 import me.datafox.dfxengine.injector.test.classes.pass.list.MultipleComponentClass;
 import me.datafox.dfxengine.injector.test.classes.pass.list.MultipleDependComponentClass;
+import me.datafox.dfxengine.injector.test.classes.pass.order.ComponentClass2;
 import me.datafox.dfxengine.injector.test.classes.pass.parametric.ExtendingParametricComponentClass;
 import me.datafox.dfxengine.injector.test.classes.pass.parametric.ParametricClass;
 import me.datafox.dfxengine.injector.test.classes.pass.per_instance.NonComponentClass2;
@@ -15,6 +21,7 @@ import me.datafox.dfxengine.injector.test.classes.pass.per_instance.PerInstanceC
 import me.datafox.dfxengine.injector.test.classes.pass.per_instance.RequestingComponentClass;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -47,10 +54,15 @@ public class InjectorTest {
         var cc = assertDoesNotThrow(() -> injector.getComponent(ComponentClass.class));
         var cmc = assertDoesNotThrow(() -> injector.getComponent(ComponentMethodClass.class));
         var ncc = assertDoesNotThrow(() -> injector.getComponent(NonComponentClass.class));
+        var sncc = assertDoesNotThrow(() -> injector.getComponent(StaticNonComponentClass.class));
 
         assertNotNull(cc);
         assertNotNull(cmc);
         assertNotNull(ncc);
+        assertNotNull(sncc);
+        assertEquals(ncc, cc.getNonComponentClass());
+        assertEquals(cmc, cc.getComponentMethodClass());
+        assertEquals(sncc, ComponentClass.getStaticNonComponentClass());
     }
 
     @Test
@@ -98,5 +110,45 @@ public class InjectorTest {
         assertEquals(NonComponentClass2.class, ncc.getPerInstanceComponent().getRequester());
         assertEquals(PerInstanceComponentClass.class, rcc.getPicc().getChainedPerInstanceComponent().getRequester());
         assertEquals(PerInstanceComponentClass.class, ncc.getPerInstanceComponent().getChainedPerInstanceComponent().getRequester());
+    }
+
+    @Test
+    public void defaultImplTest() {
+        var injector = injector(ComponentInterface.class);
+
+        var c = assertDoesNotThrow(() -> injector.getComponent(ComponentInterface.class));
+        var l = assertDoesNotThrow(() -> injector.getComponents(ComponentInterface.class));
+
+        assertTrue(l.contains(c));
+        assertEquals(2, l.size());
+    }
+
+    @Test
+    public void orderTest() {
+        var injector = injector(ComponentClass2.class);
+
+        var c = assertDoesNotThrow(() -> injector.getComponent(ComponentClass2.class));
+        var l = assertDoesNotThrow(() -> injector.getComponents(ComponentClass2.class));
+
+        assertEquals(3, l.size());
+        assertEquals(c, l.get(0));
+    }
+
+    @Test
+    public void initializeTest() {
+        var injector = injector(ComponentWithInitializerClass.class);
+
+        var l = assertDoesNotThrow(() -> injector.getComponent(ComponentWithInitializerClass.class).getList());
+
+        assertEquals(List.of("first", "second", "third"), l);
+    }
+
+    @Test
+    public void arrayParameterTest() {
+        var injector = injector(ParametricClass2.class);
+
+        var c1 = assertDoesNotThrow(() -> injector.getComponent(ParametricClass2.class, Parameter.listOf(int[].class)));
+
+        var c2 = assertDoesNotThrow(() -> injector.getComponent(ParametricClass2.class, Parameter.listOf(Array.class, Parameter.of(NonComponentClass3.class))));
     }
 }

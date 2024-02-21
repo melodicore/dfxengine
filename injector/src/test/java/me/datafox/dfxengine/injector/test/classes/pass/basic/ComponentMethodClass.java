@@ -10,4 +10,9 @@ public class ComponentMethodClass {
     private NonComponentClass nonComponentClass() {
         return new NonComponentClass();
     }
+
+    @Component
+    private StaticNonComponentClass staticNonComponentClass() {
+        return new StaticNonComponentClass();
+    }
 }

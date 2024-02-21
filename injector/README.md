@@ -41,6 +41,16 @@ or components during runtime by using the `getComponent()` and `getComponents()`
 and uses the requesting class parameter of `InstantiationDetails` as a parameter to `LoggerFactory.getLogger()` 
 internally to get the appropriate logger.
 
+### Arrays
+
+Arrays are not allowed to be components, and trying to create one with component methods will throw an error, but they 
+are supported as parametric types. Internally, references to primitive arrays are stored as is, but references to object
+arrays are not stored with `java.lang.Object[].class` or equivalent, but instead as `java.lang.reflect.Array.class` with
+the object's class as a parameter. So if you are requesting components manually:
+
+* Do: `Injector.getComponent(Component.class, Parameter.listOf(Array.class, Parameter.of(String.class)))`
+* Do not: `Injector.getComponent(Component.class, Parameter.listOf(String[].class))`
+
 ## Annotations
 
 ### [`@Component`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/annotation/Component.java)
@@ -56,26 +66,29 @@ If a component method's declared return type is `List`, the list's type paramete
 instead and the method will effectively return multiple components. The method must declare List specifically, any 
 extending interfaces or implementing classes will be treated as regular dependencies.
 
-The `@Component` annotation has two parameters. The value parameter determines the 
+The `@Component` annotation has three parameters. The value parameter determines the 
 [`InstantiationPolicy`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/InstantiationPolicy.java). The
 default value is `ONCE`, which means that the component will be instantiated at build time and the instance will be used
 for all components that depend on it. If the value is set to `PER_INSTANCE`, the component will instead be instantiated
-for every component that depends on it. The other parameter is `defaultImpl`, a boolean normally set to `false`. If it 
+for every component that depends on it. The second parameter is `defaultImpl`, a boolean normally set to `false`. If it 
 is set to `true`, the component will be flagged as a default implementation. Whenever a single component is requested as
 a dependency but multiple are present, the default implementation components are filtered out and if one remains, that 
-will be used as the dependency.
+will be used as the dependency. The third parameter is `order`, an integer normally set to `0`. It determines the order
+of components in a list when multiple components are requested. It also prioritises components when a single component
+is requested and multiple non-default components are present, where lower value means higher priority. An exception is 
+thrown if multiple components have the same lowest value for `order`.
 
 ### [`@Inject`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/annotation/Inject.java)
 
 The `@Inject` annotation can be used for both constructors and fields.
 
-Any class that is instantiated by the injector (by having the `@Component` annotation (either on the class itself or on
-any declared non-static method) must have a valid constructor. A valid constructor is any constructor that is annotated
-with `@Inject` and only contains parameters that are valid dependencies. There may be only one injected constructor, and
-an exception is thrown if multiple are present. If none are present, the presence of a default constructor is checked 
-for instead to be invoked, and if that is not present either an exception is thrown.
+Any class that is instantiated by the injector (by having the `@Component` annotation either on the class itself or on
+any declared method) must have a valid constructor. A valid constructor is any constructor that is annotated with 
+`@Inject` and only contains parameters that are valid dependencies. There may be only one injected constructor, and an 
+exception is thrown if multiple are present. If none are present, the presence of a default constructor is checked for 
+instead to be invoked, and if that is not present either an exception is thrown.
 
-Any non-final field annotated with `@Inject` on a component class will be treated as a dependency, and will be injected 
+Any non-static field annotated with `@Inject` on a component class will be treated as a dependency, and will be injected 
 right after the component in question is instantiated or invoked. This includes the declaring classes of non-static 
 component methods, and the class of a component method's declared type, but not the class of the object the method
 actually returns. If an injectable field is present that is final, an exception is thrown.

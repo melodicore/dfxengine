@@ -142,10 +142,13 @@ public class Injector {
 
     private <T> void checkParameterCount(Class<T> type, List<Parameter<?>> parameters) {
         if(Array.class.equals(type)) {
-            if(parameters.size() != 1) {
-                throw new IllegalArgumentException();
+            if(parameters.isEmpty()) {
+                return;
             }
-            return;
+            if(parameters.size() == 1) {
+                return;
+            }
+            throw new IllegalArgumentException();
         }
         if(type.getTypeParameters().length != parameters.size()) {
             throw new IllegalArgumentException();
