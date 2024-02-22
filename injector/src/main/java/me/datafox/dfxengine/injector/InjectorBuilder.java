@@ -173,6 +173,7 @@ public class InjectorBuilder {
 
         warnNonComponentClassesWithAnnotation(scan
                 .getAllClasses()
+                .filter(this::whitelistBlacklistFilter)
                 .filter(this::hasInjectOrInitializeAnnotation)
                 .filter(info -> !instantiatedClasses.contains(info) &&
                         componentMethodClasses
