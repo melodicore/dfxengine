@@ -7,7 +7,7 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
  * @author datafox
  */
 @Component
-public class ComponentClass3 {
+public class Component3 {
     @Inject
-    private ComponentWithInitializerClass componentClassWithInitializer;
+    private ComponentWithInitializer componentClassWithInitializer;
 }

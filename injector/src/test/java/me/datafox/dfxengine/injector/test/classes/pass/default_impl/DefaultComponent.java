@@ -6,5 +6,5 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
  * @author datafox
  */
 @Component(defaultImpl = true)
-public class DefaultComponentClass implements ComponentInterface {
+public class DefaultComponent implements ComponentInterface {
 }

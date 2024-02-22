@@ -48,9 +48,17 @@ public class InjectorStrings {
             "as a component but has a field %s annotated with @Inject. This field will be ignored";
     private static final String NON_COMPONENT_CLASS_WITH_INITIALIZE_METHOD = "Class %s is not recognised " +
             "as a component but has a method %s annotated with @Initialize. This method will be ignored";
+    private static final String MULTIPLE_CONSTRUCTORS =
+            "Class %s has multiple constructors annotated with @Inject and cannot be instantiated: %s";
+    private static final String NO_CONSTRUCTOR =
+            "Class %s has no default constructor or a constructor annotated with @Inject and cannot be instantiated";
     private static final String BUILDING_COMPONENT_CLASS_DATA =
             "Building component data for class %s using constructor %s";
     private static final String BUILDING_COMPONENT_METHOD_DATA = "Building component data for class %s using method %s";
+    private static final String FINAL_FIELD_DEPENDENCY =
+            "Field %s in class %s is annotated with @Inject but is final, only non-final fields can be injected";
+    private static final String ARRAY_COMPONENT =
+            "Component method %s in class %s returns an array, array components are not permitted";
     private static final String CYCLIC_DEPENDENCY_DETECTED = "Detected a cyclic dependency: %s";
 
     public static String packageWhitelistPresent(int rules) {
@@ -152,26 +160,42 @@ public class InjectorStrings {
     }
 
     public static String nonComponentClassWithInjectConstructor(MethodInfo constructor) {
-        return forClassInfoAndMethod(NON_COMPONENT_CLASS_WITH_INJECT_CONSTRUCTOR,
+        return forClassAndMethodInfo(NON_COMPONENT_CLASS_WITH_INJECT_CONSTRUCTOR,
                 constructor.getClassInfo(), constructor);
     }
 
     public static String nonComponentClassWithInjectField(FieldInfo field) {
-        return forClassInfoAndField(NON_COMPONENT_CLASS_WITH_INJECT_FIELD,
+        return forClassAndFieldInfo(NON_COMPONENT_CLASS_WITH_INJECT_FIELD,
                 field.getClassInfo(), field);
     }
 
     public static String nonComponentClassWithInitializeMethod(MethodInfo method) {
-        return forClassInfoAndMethod(NON_COMPONENT_CLASS_WITH_INITIALIZE_METHOD,
+        return forClassAndMethodInfo(NON_COMPONENT_CLASS_WITH_INITIALIZE_METHOD,
                 method.getClassInfo(), method);
     }
 
+    public static String multipleConstructors(ClassInfo info, MethodInfoList constructors) {
+        return forClassInfoAndMethodInfoList(MULTIPLE_CONSTRUCTORS, info, constructors);
+    }
+
+    public static String noConstructor(ClassInfo info) {
+        return forClassInfo(NO_CONSTRUCTOR, info);
+    }
+
     public static String buildingComponentClassData(ClassInfo info, MethodInfo constructor) {
-        return forClassInfoAndMethod(BUILDING_COMPONENT_CLASS_DATA, info, constructor);
+        return forClassAndMethodInfo(BUILDING_COMPONENT_CLASS_DATA, info, constructor);
     }
 
     public static String buildingComponentMethodData(ClassInfo info, MethodInfo method) {
-        return forClassInfoAndMethod(BUILDING_COMPONENT_METHOD_DATA, info, method);
+        return forClassAndMethodInfo(BUILDING_COMPONENT_METHOD_DATA, info, method);
+    }
+
+    public static String arrayComponent(MethodInfo method, ClassInfo info) {
+        return forMethodAndClassInfo(ARRAY_COMPONENT, method, info);
+    }
+
+    public static String finalFieldDependency(FieldInfo field) {
+        return forFieldAndClassInfo(FINAL_FIELD_DEPENDENCY, field, field.getClassInfo());
     }
 
     public static String cyclicDependencyDetected(ComponentData<?> current, Stack<ComponentData<?>> visited) {
@@ -226,12 +250,32 @@ public class InjectorStrings {
         return String.format(str, integer);
     }
 
-    private static String forClassInfoAndMethod(String str, ClassInfo info, MethodInfo method) {
+    private static String forClassInfo(String str, ClassInfo info) {
+        return String.format(str, info.getName());
+    }
+
+    private static String forClassAndMethodInfo(String str, ClassInfo info, MethodInfo method) {
         return String.format(str, info.getName(), getMethodParameterString(method));
     }
 
-    private static String forClassInfoAndField(String str, ClassInfo info, FieldInfo field) {
+    private static String forClassInfoAndMethodInfoList(String str, ClassInfo info, MethodInfoList methods) {
+        return String.format(str, info.getName(),
+                StringUtils.joining(methods
+                        .stream()
+                        .map(InjectorStrings::getMethodParameterString)
+                        .collect(Collectors.toList()), ", ", " and "));
+    }
+
+    private static String forMethodAndClassInfo(String str, MethodInfo method, ClassInfo info) {
+        return String.format(str, getMethodParameterString(method), info.getName());
+    }
+
+    private static String forClassAndFieldInfo(String str, ClassInfo info, FieldInfo field) {
         return String.format(str, info.getName(), getFieldParameterString(field));
+    }
+
+    private static String forFieldAndClassInfo(String str, FieldInfo field, ClassInfo info) {
+        return String.format(str, getFieldParameterString(field), info.getName());
     }
 
     private static String getMethodParameterString(MethodInfo method) {

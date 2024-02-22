@@ -6,11 +6,13 @@ import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
+import me.datafox.dfxengine.injector.exception.ArrayComponentException;
 import me.datafox.dfxengine.injector.exception.ComponentWithUnresolvedTypeParameterException;
 import me.datafox.dfxengine.injector.exception.FinalFieldDependencyException;
 import me.datafox.dfxengine.injector.exception.UnknownComponentTypeParameterException;
 import me.datafox.dfxengine.injector.utils.InjectorStrings;
 import me.datafox.dfxengine.injector.utils.InjectorUtils;
+import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +41,7 @@ public class ClassReferenceFactory {
 
     public <T> ComponentData<T> buildComponentData(MethodInfo info) {
         buildingParameters = false;
-        ComponentData.ComponentDataBuilder<T> builder = ComponentData
-                .builder();
+        ComponentData.ComponentDataBuilder<T> builder = ComponentData.builder();
         FieldInfoList fields;
         MethodInfoList initializers;
         Component component;
@@ -59,8 +60,14 @@ public class ClassReferenceFactory {
             ClassInfo classInfo = classInfoMap.get(info.getTypeDescriptor().toString().split(" ", 2)[0]);
             logger.debug(InjectorStrings.buildingComponentMethodData(
                     classInfo, info));
-            builder.reference(buildClassReference(info))
-                    .executable(info.loadClassAndGetMethod());
+            try {
+                builder.reference(buildClassReference(info));
+            } catch(ArrayComponentException e) {
+                throw LogUtils.logExceptionAndGet(logger,
+                        InjectorStrings.arrayComponent(info, classInfo),
+                        e, ArrayComponentException::new);
+            }
+            builder.executable(info.loadClassAndGetMethod());
             component = info.loadClassAndGetMethod().getAnnotation(Component.class);
             fields = classInfo.getDeclaredFieldInfo()
                     .filter(field -> field.hasAnnotation(Inject.class));
@@ -125,7 +132,9 @@ public class ClassReferenceFactory {
 
     private <T> FieldReference<T> buildFieldReference(FieldInfo info) {
         if(info.isFinal()) {
-            throw new FinalFieldDependencyException(info.toString());
+            throw LogUtils.logExceptionAndGet(logger,
+                    InjectorStrings.finalFieldDependency(info),
+                    FinalFieldDependencyException::new);
         }
         return FieldReference
                 .<T>builder()
@@ -209,7 +218,7 @@ public class ClassReferenceFactory {
     @SuppressWarnings("unchecked")
     public <T> ClassReference<T> buildClassReference(String name, String[] parameters, String[] superclasses) {
         if(name.contains("[]")) {
-            throw new IllegalArgumentException();
+            throw new ArrayComponentException(name);
         }
         ClassInfo info = classInfoMap.get(name);
         if(info == null) {
@@ -275,7 +284,7 @@ public class ClassReferenceFactory {
                     } else if(parameter.startsWith("? super ")) {
                         str = parameter.substring(8);
                     } else {
-                        throw new IllegalArgumentException();
+                        throw new ComponentWithUnresolvedTypeParameterException(parameter);
                     }
                     typeParameters = typeParameters.replaceAll(str, parameter);
                 }

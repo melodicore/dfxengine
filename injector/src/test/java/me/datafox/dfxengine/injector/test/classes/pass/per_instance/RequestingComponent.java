@@ -9,11 +9,11 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
  */
 @Getter
 @Component
-public class RequestingComponentClass {
-    private final PerInstanceComponentClass picc;
+public class RequestingComponent {
+    private final PerInstanceComponent picc;
 
     @Inject
-    private RequestingComponentClass(PerInstanceComponentClass perInstanceComponent) {
+    private RequestingComponent(PerInstanceComponent perInstanceComponent) {
         this.picc = perInstanceComponent;
     }
 }

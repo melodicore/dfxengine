@@ -11,12 +11,12 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
  */
 @Getter
 @Component(InstantiationPolicy.PER_INSTANCE)
-public class PerInstanceComponentClass {
+public class PerInstanceComponent {
     private final Class<?> requester;
-    private final ChainedPerInstanceComponentClass chainedPerInstanceComponent;
+    private final ChainedPerInstanceComponent chainedPerInstanceComponent;
 
     @Inject
-    public PerInstanceComponentClass(InstantiationDetails details, ChainedPerInstanceComponentClass chainedPerInstanceComponent) {
+    public PerInstanceComponent(InstantiationDetails details, ChainedPerInstanceComponent chainedPerInstanceComponent) {
         requester = details.getRequestingType();
         this.chainedPerInstanceComponent = chainedPerInstanceComponent;
     }

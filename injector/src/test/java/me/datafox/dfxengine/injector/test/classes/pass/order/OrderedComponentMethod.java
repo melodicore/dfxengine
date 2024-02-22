@@ -5,13 +5,13 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
 /**
  * @author datafox
  */
-public class OrderedComponentMethodClass {
+public class OrderedComponentMethod {
     @Component(order = -5)
-    private ComponentClass2 getFirstComponent() {
-        return new ComponentClass2();
+    private Component2 getFirstComponent() {
+        return new Component2();
     }
     @Component(order = 5)
-    private ComponentClass2 getSecondComponent() {
-        return new ComponentClass2();
+    private Component2 getSecondComponent() {
+        return new Component2();
     }
 }

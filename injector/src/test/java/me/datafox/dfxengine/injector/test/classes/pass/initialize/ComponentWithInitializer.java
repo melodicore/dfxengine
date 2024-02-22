@@ -12,10 +12,10 @@ import java.util.List;
  */
 @Getter
 @Component
-public class ComponentWithInitializerClass {
+public class ComponentWithInitializer {
     private final List<String> list;
 
-    public ComponentWithInitializerClass() {
+    public ComponentWithInitializer() {
         list = new ArrayList<>();
     }
 
@@ -30,7 +30,7 @@ public class ComponentWithInitializerClass {
     }
 
     @Initialize(5)
-    private void initialize3(ComponentClass3 componentClass3) {
+    private void initialize3(Component3 componentClass3) {
         list.add("third");
     }
 }

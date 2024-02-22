@@ -350,13 +350,13 @@ public class InjectorBuilder {
                 method.getParameterInfo().length == 0);
             if(list.isEmpty()) {
                 throw LogUtils.logExceptionAndGet(logger,
-                        "Class " + info.loadClass() + " has no valid constructors and cannot be instantiated",
+                        noConstructor(info),
                         ComponentClassWithNoValidConstructorsException::new);
             }
         }
         if(list.size() > 1) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "Class " + info.loadClass() + " has multiple valid constructors " + list + " and cannot be instantiated",
+                    multipleConstructors(info, list),
                     ComponentClassWithMultipleValidConstructorsException::new);
         }
         return list.get(0);
@@ -417,12 +417,12 @@ public class InjectorBuilder {
             if(dependency.isEmpty()) {
                 throw LogUtils.logExceptionAndGet(logger,
                         data.getExecutable() + " depends on " + reference + " but none are found",
-                        ComponentWithUnresolvedDependency::new);
+                        ComponentWithUnresolvedDependencyException::new);
             } else if(dependency.size() > 1 && !reference.isList()) {
                 if(dependency.stream().filter(Predicate.not(ComponentData::isDefaultImpl)).count() != 1) {
                     throw LogUtils.logExceptionAndGet(logger,
                             data.getExecutable() + " depends on single " + reference + " but many were found",
-                            ComponentWithMultipleOptionsForSingletonDependency::new);
+                            MultipleComponentsForSingletonDependencyException::new);
                 }
             }
         }

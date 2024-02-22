@@ -2,7 +2,7 @@ package me.datafox.dfxengine.injector;
 
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.annotation.Component;
-import me.datafox.dfxengine.injector.exception.ComponentWithMultipleOptionsForSingletonDependency;
+import me.datafox.dfxengine.injector.exception.MultipleComponentsForSingletonDependencyException;
 import me.datafox.dfxengine.injector.internal.ClassReference;
 import me.datafox.dfxengine.injector.internal.ComponentData;
 import me.datafox.dfxengine.injector.internal.InitializeReference;
@@ -293,7 +293,7 @@ public class Injector {
                     if(list.size() != 1) {
                         throw LogUtils.logExceptionAndGet(logger,
                                 "Singleton component requested but multiple are present",
-                                ComponentWithMultipleOptionsForSingletonDependency::new);
+                                MultipleComponentsForSingletonDependencyException::new);
                     }
                 }
             }

@@ -3,5 +3,5 @@ package me.datafox.dfxengine.injector.test.classes.pass.list;
 /**
  * @author datafox
  */
-public class NonComponentClass {
+public class NonComponent {
 }

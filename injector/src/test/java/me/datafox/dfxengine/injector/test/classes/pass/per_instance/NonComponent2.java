@@ -6,10 +6,10 @@ import lombok.Getter;
  * @author datafox
  */
 @Getter
-public class NonComponentClass2 {
-    private final PerInstanceComponentClass perInstanceComponent;
+public class NonComponent2 {
+    private final PerInstanceComponent perInstanceComponent;
 
-    public NonComponentClass2(PerInstanceComponentClass perInstanceComponent) {
+    public NonComponent2(PerInstanceComponent perInstanceComponent) {
         this.perInstanceComponent = perInstanceComponent;
     }
 }

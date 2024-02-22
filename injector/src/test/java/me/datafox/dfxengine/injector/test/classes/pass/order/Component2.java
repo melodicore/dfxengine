@@ -6,5 +6,5 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
  * @author datafox
  */
 @Component(order = 5)
-public class ComponentClass2 {
+public class Component2 {
 }

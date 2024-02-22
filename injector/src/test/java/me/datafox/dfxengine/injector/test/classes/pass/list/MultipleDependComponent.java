@@ -11,10 +11,10 @@ import java.util.List;
  */
 @Component
 @Getter
-public class MultipleDependComponentClass {
+public class MultipleDependComponent {
     @Inject
-    private List<NonComponentClass> components;
+    private List<NonComponent> components;
 
     @Inject
-    private List<MultipleComponentClass> someComponents;
+    private List<MultipleComponent> someComponents;
 }
