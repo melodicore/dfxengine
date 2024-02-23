@@ -2,11 +2,20 @@ package me.datafox.dfxengine.injector.test;
 
 import me.datafox.dfxengine.injector.Injector;
 import me.datafox.dfxengine.injector.Parameter;
-import me.datafox.dfxengine.injector.exception.ComponentClassWithMultipleValidConstructorsException;
-import me.datafox.dfxengine.injector.exception.ComponentClassWithNoValidConstructorsException;
-import me.datafox.dfxengine.injector.exception.MultipleComponentsForSingletonDependencyException;
-import me.datafox.dfxengine.injector.test.classes.fail.multiple_constructors.ComponentWithMultipleConstructors;
-import me.datafox.dfxengine.injector.test.classes.fail.no_constructor.ComponentWithNoConstructor;
+import me.datafox.dfxengine.injector.exception.*;
+import me.datafox.dfxengine.injector.test.classes.fail.array.constructor.ConstructorArrayComponent;
+import me.datafox.dfxengine.injector.test.classes.fail.array.field.FieldArrayComponent;
+import me.datafox.dfxengine.injector.test.classes.fail.array.initialize.InitializeArrayComponent;
+import me.datafox.dfxengine.injector.test.classes.fail.array.object.ObjectArrayMethodComponent;
+import me.datafox.dfxengine.injector.test.classes.fail.array.primitive.PrimitiveArrayMethodComponent;
+import me.datafox.dfxengine.injector.test.classes.fail.constructor.multiple.ComponentWithMultipleConstructors;
+import me.datafox.dfxengine.injector.test.classes.fail.constructor.none.ComponentWithNoConstructor;
+import me.datafox.dfxengine.injector.test.classes.fail.dependency.cyclic.CyclicComponent1;
+import me.datafox.dfxengine.injector.test.classes.fail.dependency.invalid.ComponentWithInvalidDependency;
+import me.datafox.dfxengine.injector.test.classes.fail.dependency.multiple.ComponentMethod2;
+import me.datafox.dfxengine.injector.test.classes.fail.final_field.ComponentWithFinalFieldDependency;
+import me.datafox.dfxengine.injector.test.classes.fail.parametric.unresolved_class.UnresolvedParameterComponent;
+import me.datafox.dfxengine.injector.test.classes.fail.parametric.unresolved_method.UnresolvedParameterComponentMethod;
 import me.datafox.dfxengine.injector.test.classes.pass.array.NonComponent3;
 import me.datafox.dfxengine.injector.test.classes.pass.array.Parametric2;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.Component;
@@ -14,7 +23,8 @@ import me.datafox.dfxengine.injector.test.classes.pass.basic.ComponentMethod;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.NonComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.StaticNonComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.default_impl.ComponentInterface;
-import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithInitializer;
+import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithInitialize;
+import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithStaticInitialize;
 import me.datafox.dfxengine.injector.test.classes.pass.list.MultipleComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.list.MultipleDependComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.order.Component2;
@@ -23,6 +33,8 @@ import me.datafox.dfxengine.injector.test.classes.pass.parametric.Parametric;
 import me.datafox.dfxengine.injector.test.classes.pass.per_instance.NonComponent2;
 import me.datafox.dfxengine.injector.test.classes.pass.per_instance.PerInstanceComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.per_instance.RequestingComponent;
+import me.datafox.dfxengine.injector.test.classes.pass.primitive.PrimitiveComponentMethod;
+import me.datafox.dfxengine.injector.test.classes.pass.primitive.PrimitiveDependencyComponent;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Array;
@@ -140,11 +152,12 @@ public class InjectorTest {
 
     @Test
     public void initializeTest() {
-        var injector = assertDoesNotThrow(() -> injector(ComponentWithInitializer.class));
+        var injector = assertDoesNotThrow(() -> injector(ComponentWithInitialize.class));
 
-        var l = assertDoesNotThrow(() -> injector.getComponent(ComponentWithInitializer.class).getList());
+        var l = assertDoesNotThrow(() -> injector.getComponent(ComponentWithInitialize.class).getList());
 
         assertEquals(List.of("first", "second", "third"), l);
+        assertEquals("success", ComponentWithStaticInitialize.getStr());
     }
 
     @Test
@@ -160,12 +173,47 @@ public class InjectorTest {
     }
 
     @Test
-    public void multipleConstructorsTest() {
-        assertThrows(ComponentClassWithMultipleValidConstructorsException.class, () -> injector(ComponentWithMultipleConstructors.class));
+    public void primitiveTest() {
+        var injector = assertDoesNotThrow(() -> injector(PrimitiveComponentMethod.class));
+
+        var c = assertDoesNotThrow(() -> injector.getComponent(PrimitiveDependencyComponent.class));
+        var i = assertDoesNotThrow(() -> injector.getComponent(Integer.class));
+
+        assertEquals(5, i);
+        assertEquals(5, c.getPrimitive());
+        assertEquals(5, c.getBoxed());
     }
 
     @Test
-    public void noConstructorTest() {
+    public void constructorTest() {
+        assertThrows(ComponentClassWithMultipleValidConstructorsException.class, () -> injector(ComponentWithMultipleConstructors.class));
         assertThrows(ComponentClassWithNoValidConstructorsException.class, () -> injector(ComponentWithNoConstructor.class));
+    }
+
+    @Test
+    public void arrayTest() {
+        assertThrows(ArrayComponentException.class, () -> injector(PrimitiveArrayMethodComponent.class));
+        assertThrows(ArrayComponentException.class, () -> injector(ObjectArrayMethodComponent.class));
+        assertThrows(ArrayComponentException.class, () -> injector(ConstructorArrayComponent.class));
+        assertThrows(ArrayComponentException.class, () -> injector(FieldArrayComponent.class));
+        assertThrows(ArrayComponentException.class, () -> injector(InitializeArrayComponent.class));
+    }
+
+    @Test
+    public void finalFieldTest() {
+        assertThrows(FinalFieldDependencyException.class, () -> injector(ComponentWithFinalFieldDependency.class));
+    }
+
+    @Test
+    public void dependencyTest() {
+        assertThrows(ComponentWithUnresolvedDependencyException.class, () -> injector(ComponentWithInvalidDependency.class));
+        assertThrows(MultipleComponentsForSingletonDependencyException.class, () -> injector(ComponentMethod2.class));
+        assertThrows(CyclicDependencyException.class, () -> injector(CyclicComponent1.class));
+    }
+
+    @Test
+    public void parameterTest() {
+        assertThrows(ComponentWithUnresolvedTypeParameterException.class, () -> injector(UnresolvedParameterComponent.class));
+        assertThrows(ComponentWithUnresolvedTypeParameterException.class, () -> injector(UnresolvedParameterComponentMethod.class));
     }
 }

@@ -5,7 +5,7 @@ import me.datafox.dfxengine.injector.internal.ClassReference;
 import me.datafox.dfxengine.injector.internal.ComponentData;
 import me.datafox.dfxengine.utils.StringUtils;
 
-import java.lang.reflect.Constructor;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,8 +57,16 @@ public class InjectorStrings {
     private static final String BUILDING_COMPONENT_METHOD_DATA = "Building component data for class %s using method %s";
     private static final String FINAL_FIELD_DEPENDENCY =
             "Field %s in class %s is annotated with @Inject but is final, only non-final fields can be injected";
+    private static final String UNRESOLVED_TYPE_PARAMETER =
+            "Component %s has unresolved type parameter %s, unresolved type parameters cannot be injected";
+    private static final String NO_DEPENDENCIES = "Component %s depends on %s but none are present";
+    private static final String MULTIPLE_DEPENDENCIES = "Component %s depends on single %s but multiple are present";
     private static final String ARRAY_COMPONENT =
             "Component method %s in class %s returns an array, array components are not permitted";
+    private static final String ARRAY_DEPENDENCY =
+            "Component %s depends on an array, array components are not permitted";
+    private static final String ARRAY_FIELD_DEPENDENCY =
+            "Class %s has field %s annotated with @Inject, array components are not permitted";
     private static final String CYCLIC_DEPENDENCY_DETECTED = "Detected a cyclic dependency: %s";
 
     public static String packageWhitelistPresent(int rules) {
@@ -190,12 +198,32 @@ public class InjectorStrings {
         return forClassAndMethodInfo(BUILDING_COMPONENT_METHOD_DATA, info, method);
     }
 
+    public static String noDependencies(Executable executable, ClassReference<?> reference) {
+        return forExecutableAndReference(NO_DEPENDENCIES, executable, reference);
+    }
+
+    public static String multipleDependencies(Executable executable, ClassReference<?> reference) {
+        return forExecutableAndReference(MULTIPLE_DEPENDENCIES, executable, reference);
+    }
+
     public static String arrayComponent(MethodInfo method, ClassInfo info) {
         return forMethodAndClassInfo(ARRAY_COMPONENT, method, info);
     }
 
+    public static String arrayDependency(MethodParameterInfo info) {
+        return forMethodInfo(ARRAY_DEPENDENCY, info.getMethodInfo());
+    }
+
+    public static String arrayFieldDependency(FieldInfo info) {
+        return forClassAndFieldInfo(ARRAY_FIELD_DEPENDENCY, info.getClassInfo(), info);
+    }
+
     public static String finalFieldDependency(FieldInfo field) {
         return forFieldAndClassInfo(FINAL_FIELD_DEPENDENCY, field, field.getClassInfo());
+    }
+
+    public static String unresolvedTypeParameter(MethodInfo info, String parameter) {
+        return forMethodComponentAndString(UNRESOLVED_TYPE_PARAMETER, info, parameter);
     }
 
     public static String cyclicDependencyDetected(ComponentData<?> current, Stack<ComponentData<?>> visited) {
@@ -254,6 +282,10 @@ public class InjectorStrings {
         return String.format(str, info.getName());
     }
 
+    private static String forMethodInfo(String str, MethodInfo info) {
+        return String.format(str, getMethodParameterString(info));
+    }
+
     private static String forClassAndMethodInfo(String str, ClassInfo info, MethodInfo method) {
         return String.format(str, info.getName(), getMethodParameterString(method));
     }
@@ -278,10 +310,34 @@ public class InjectorStrings {
         return String.format(str, getFieldParameterString(field), info.getName());
     }
 
+    private static String forMethodComponentAndString(String str, MethodInfo info, String string) {
+        return String.format(str, getMethodComponentString(info), string);
+    }
+
+    private static String forExecutableAndReference(String str, Executable executable, ClassReference<?> reference) {
+        return String.format(str, getExecutableString(executable), reference.getName());
+    }
+
     private static String getMethodParameterString(MethodInfo method) {
         String prefix = method.getClassName();
         if(!method.isConstructor()) {
             prefix += "." + method.getName();
+        }
+        return prefix +
+                "(" +
+                Arrays.stream(method.getParameterInfo())
+                        .map(MethodParameterInfo::getTypeSignatureOrTypeDescriptor)
+                        .map(TypeSignature::toString)
+                        .collect(Collectors.joining(", ")) +
+                ")";
+    }
+
+    private static String getMethodComponentString(MethodInfo method) {
+        String prefix;
+        if(method.isConstructor()) {
+            prefix = method.getClassInfo().getTypeSignatureOrTypeDescriptor().toString().split(" class | interface ",2)[1];
+        } else {
+            prefix = method.getTypeSignatureOrTypeDescriptor().getResultType().toString() + " " + method.getClassName() + "." + method.getName();
         }
         return prefix +
                 "(" +
@@ -310,8 +366,15 @@ public class InjectorStrings {
     private static String getFieldParameterString(FieldInfo field) {
         return field.getTypeSignatureOrTypeDescriptor() +
                 " " +
-                field.getClassName() +
-                "." +
                 field.getName();
+    }
+
+    private static String getExecutableString(Executable executable) {
+        if(executable instanceof Method) {
+            Method method = (Method) executable;
+            return method.getReturnType().getName() + " " + method.getDeclaringClass().getName() + "." + method.getName() + "(" + Arrays.stream(method.getParameters()).map(Parameter::getParameterizedType).map(Type::getTypeName).collect(Collectors.joining(", ")) + ")";
+        } else {
+            return executable.getName();
+        }
     }
 }

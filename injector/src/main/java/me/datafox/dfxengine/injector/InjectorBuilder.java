@@ -416,12 +416,12 @@ public class InjectorBuilder {
             List<ComponentData<?>> dependency = data.getDependencies().get(i);
             if(dependency.isEmpty()) {
                 throw LogUtils.logExceptionAndGet(logger,
-                        data.getExecutable() + " depends on " + reference + " but none are found",
+                        noDependencies(data.getExecutable(), reference),
                         ComponentWithUnresolvedDependencyException::new);
             } else if(dependency.size() > 1 && !reference.isList()) {
                 if(dependency.stream().filter(Predicate.not(ComponentData::isDefaultImpl)).count() != 1) {
                     throw LogUtils.logExceptionAndGet(logger,
-                            data.getExecutable() + " depends on single " + reference + " but many were found",
+                            multipleDependencies(data.getExecutable(), reference),
                             MultipleComponentsForSingletonDependencyException::new);
                 }
             }

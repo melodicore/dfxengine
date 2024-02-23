@@ -36,17 +36,17 @@ contain a reference to the class and type parameters of the component that has t
 The injector module currently declares two preset components to be used as dependencies.
 
 * [`Injector`](src/main/java/me/datafox/dfxengine/injector/Injector.java) can be used to request any arbitrary component
-or components during runtime by using the `getComponent()` and `getComponents()` methods.
+or components during runtime by using the `getComponent(...)` and `getComponents(...)` methods.
 * `Logger` (`org.slf4j.Logger`) can be used to request a slf4j logger. It has the `PER_INSTANCE` instantiation policy 
 and uses the requesting class parameter of `InstantiationDetails` as a parameter to `LoggerFactory.getLogger()` 
 internally to get the appropriate logger.
 
 ### Arrays
 
-Arrays are not allowed to be components, and trying to create one with component methods will throw an error, but they 
-are supported as parametric types. Internally, references to primitive arrays are stored as is, but references to object
-arrays are not stored with `java.lang.Object[].class` or equivalent, but instead as `java.lang.reflect.Array.class` with
-the object's class as a parameter. So if you are requesting components manually:
+Arrays are not allowed as components, and trying to create one with component methods will throw an error, but they are
+allowed as parametric types. Internally, references to primitive arrays are stored as is, but references to object 
+arrays are not stored as `Object[].class` or equivalent, but instead as `java.lang.reflect.Array.class` with the 
+object's class as a parameter. So if you are requesting components manually:
 
 * Do: `Injector.getComponent(Component.class, Parameter.listOf(Array.class, Parameter.of(String.class)))`
 * Do not: `Injector.getComponent(Component.class, Parameter.listOf(String[].class))`

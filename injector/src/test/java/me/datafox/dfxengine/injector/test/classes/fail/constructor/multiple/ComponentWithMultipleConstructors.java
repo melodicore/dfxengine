@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.injector.test.classes.fail.multiple_constructors;
+package me.datafox.dfxengine.injector.test.classes.fail.constructor.multiple;
 
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;

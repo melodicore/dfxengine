@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.injector.test.classes.fail.no_constructor;
+package me.datafox.dfxengine.injector.test.classes.fail.constructor.none;
 
 import me.datafox.dfxengine.injector.api.annotation.Component;
 

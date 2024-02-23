@@ -7,4 +7,8 @@ public class ComponentWithUnresolvedTypeParameterException extends RuntimeExcept
     public ComponentWithUnresolvedTypeParameterException(String message) {
         super(message);
     }
+
+    public ComponentWithUnresolvedTypeParameterException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

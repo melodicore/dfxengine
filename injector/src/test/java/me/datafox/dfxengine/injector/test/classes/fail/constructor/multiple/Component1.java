@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.injector.test.classes.fail.multiple_constructors;
+package me.datafox.dfxengine.injector.test.classes.fail.constructor.multiple;
 
 import me.datafox.dfxengine.injector.api.annotation.Component;
 
@@ -6,5 +6,5 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
  * @author datafox
  */
 @Component
-public class Component2 {
+public class Component1 {
 }

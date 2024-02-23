@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.injector.test.classes.pass.initialize;
+package me.datafox.dfxengine.injector.test.classes.fail.dependency.cyclic;
 
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
@@ -7,7 +7,7 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
  * @author datafox
  */
 @Component
-public class Component3 {
+public class CyclicComponent2 {
     @Inject
-    private ComponentWithInitialize componentClassWithInitializer;
+    private CyclicComponent3 cyclicComponent3;
 }
