@@ -1,7 +1,7 @@
 package me.datafox.dfxengine.injector.internal;
 
 import io.github.classgraph.*;
-import me.datafox.dfxengine.injector.Parameter;
+import me.datafox.dfxengine.injector.TypeRef;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
@@ -233,13 +233,12 @@ public class ClassReferenceFactory {
         if(!genericDetails.equals(details)) {
             superclasses = injectParameterTypes(typeParameters, classTypeParameters, superclasses);
         }
-        return buildClassReference(name,
-                InjectorUtils.splitParameters(typeParameters),
+        return buildClassReference(name, typeParameters,
                 InjectorUtils.splitParameters(superclasses));
     }
 
     @SuppressWarnings("unchecked")
-    public <T> ClassReference<T> buildClassReference(String name, String[] parameters, String[] superclasses) {
+    public <T> ClassReference<T> buildClassReference(String name, String parameters, String[] superclasses) {
         ClassInfo info = classInfoMap.get(name);
         if(info == null) {
             if(name.startsWith("?")) {
@@ -258,14 +257,7 @@ public class ClassReferenceFactory {
         }
         ClassReference.ClassReferenceBuilder<T,?,?> builder = ClassReference
                 .<T>builder()
-                .type((Class<T>) info.loadClass());
-
-        for(String parameter : parameters) {
-            if(parameter.isBlank()) {
-                continue;
-            }
-            builder.parameter(parseParameter(parameter));
-        }
+                .typeRef((TypeRef<T>) parseTypeRef(name + (parameters.isBlank() ? "" : "<" + parameters + ">")));
 
         for(String superclass : superclasses) {
             if(superclass.isBlank()) {
@@ -296,7 +288,7 @@ public class ClassReferenceFactory {
             if(superclassString.contains("<")) {
                 genericTypeParameters = InjectorUtils.getWithin(superclassString, '<', '>');
             }
-            for(String parameter : parameters) {
+            for(String parameter : InjectorUtils.splitParameters(parameters)) {
                 if(parameter.startsWith("?") && !typeParameters.contains(parameter)) {
                     String str;
                     if(parameter.startsWith("? extends ")) {
@@ -318,55 +310,48 @@ public class ClassReferenceFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private Parameter<?> parseParameter(String parameter) {
+    private TypeRef<?> parseTypeRef(String parameter) {
         if(parameter.endsWith("[]")) {
             parameter = parameter.substring(0, parameter.length() - 2);
             Class<?> type = getPrimitiveArray(parameter);
             if(type != null) {
-                return Parameter
-                        .builder()
-                        .type((Class<Object>) type)
-                        .build();
+                return TypeRef.of(type);
             } else {
-                return Parameter
-                        .<Array>builder()
-                        .type(Array.class)
-                        .parameter(parseParameter(parameter))
-                        .build();
+                return TypeRef.of(Array.class, parseTypeRef(parameter));
             }
         }
         String[] split = parameter.split("<", 2);
         String name = split[0];
         if(name.startsWith("?")) {
             if(name.equals("?")) {
-                return Parameter.object();
+                return TypeRef.object();
             } if(buildingParameters) {
                 if(name.startsWith("? super ")) {
-                    return Parameter.object();
+                    return TypeRef.object();
                 } else if(name.startsWith("? extends ")) {
                     name = name.substring(10);
                 }
             }
         } else if(name.equals(Object.class.getName())) {
-            return Parameter.object();
+            return TypeRef.object();
         }
         ClassInfo info = classInfoMap.get(name);
         if(info == null) {
             throw new ComponentWithUnresolvedTypeParameterException(split[0]);
         }
         Class<?> type = info.loadClass();
-        Parameter.ParameterBuilder<?> builder = Parameter
+        TypeRef.TypeRefBuilder<?> builder = TypeRef
                 .builder()
                 .type((Class<Object>) type);
 
         if(split.length > 1) {
             Arrays.stream(InjectorUtils.splitParameters(
                     split[1].substring(0, split[1].length() - 1)))
-                    .map(this::parseParameter)
+                    .map(this::parseTypeRef)
                     .forEach(builder::parameter);
         } else if(type.getTypeParameters().length != 0) {
             for(int i = 0; i < type.getTypeParameters().length; i++) {
-                builder.parameter(Parameter.object());
+                builder.parameter(TypeRef.object());
             }
         }
         return builder.build();
@@ -457,19 +442,15 @@ public class ClassReferenceFactory {
 
     @SuppressWarnings("unchecked")
     private <T> void checkAndSetCollection(ClassReference<T> data) {
-        if(List.class.equals(data.getType())) {
-            if(data.getParameters().size() != 1) {
-                throw new IllegalArgumentException();
-            }
-            Parameter<?> param = data.getParameters().get(0);
+        if(List.class.equals(data.getTypeRef().getType())) {
+            TypeRef<?> param = data.getTypeRef().getParameters().get(0);
             data.setList(true);
             if(param.getType().equals(Object.class)) {
                 data.setListReference(ClassReference.object());
             } else {
                 data.setListReference(ClassReference
                         .builder()
-                        .type((Class<Object>) param.getType())
-                        .parameters(param.getParameters())
+                        .typeRef((TypeRef<Object>) param)
                         .build());
             }
         }

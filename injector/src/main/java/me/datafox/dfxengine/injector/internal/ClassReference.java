@@ -2,10 +2,9 @@ package me.datafox.dfxengine.injector.internal;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import me.datafox.dfxengine.injector.Parameter;
+import me.datafox.dfxengine.injector.TypeRef;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -14,10 +13,7 @@ import java.util.stream.Collectors;
 @Data
 @SuperBuilder
 public class ClassReference<T> {
-    private final Class<T> type;
-
-    @Singular
-    private final List<Parameter<?>> parameters;
+    private final TypeRef<T> typeRef;
 
     @EqualsAndHashCode.Exclude
     @Singular
@@ -40,42 +36,22 @@ public class ClassReference<T> {
     }
 
     public boolean isAssignableFrom(ClassReference<?> other) {
-        if(Object.class.equals(type)) {
+        if(typeRef.equals(other.typeRef)) {
             return true;
         }
-        if(!type.isAssignableFrom(other.type)) {
-            return false;
-        } if(!type.equals(other.type)) {
-            return other.superclasses.stream().anyMatch(this::isAssignableFrom);
+        if(typeRef.isAssignableFrom(other.typeRef)) {
+            return true;
         }
-        if(parameters.size() != other.parameters.size()) {
-            return false;
-        }
-        for(int i = 0; i < parameters.size(); i++) {
-            if(!parameters.get(i).isAssignableFrom(other.parameters.get(i))) {
-                return false;
-            }
-        }
-        return true;
+        return other.superclasses.stream().anyMatch(this::isAssignableFrom);
     }
 
     public String getName() {
-        return type.getName() + getParameterString();
-    }
-
-    public String getParameterString() {
-        if(parameters.isEmpty()) {
-            return "";
-        }
-        return "<" + parameters
-                .stream()
-                .map(Parameter::toString)
-                .collect(Collectors.joining(", ")) + ">";
+        return typeRef.toString();
     }
 
     public static ClassReference<Object> object() {
         return builder()
-                .type(Object.class)
+                .typeRef(TypeRef.object())
                 .build();
     }
 }

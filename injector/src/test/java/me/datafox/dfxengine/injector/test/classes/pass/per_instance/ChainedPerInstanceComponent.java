@@ -16,6 +16,6 @@ public class ChainedPerInstanceComponent {
 
     @Inject
     public ChainedPerInstanceComponent(InstantiationDetails details) {
-        requester = details.getRequestingType();
+        requester = details.getRequesting().getType();
     }
 }

@@ -68,6 +68,10 @@ public class InjectorStrings {
     private static final String ARRAY_FIELD_DEPENDENCY =
             "Class %s has field %s annotated with @Inject, array components are not permitted";
     private static final String CYCLIC_DEPENDENCY_DETECTED = "Detected a cyclic dependency: %s";
+    private static final String TYPE_PARAMETER_MISMATCH_SS = "Class %s has %s type parameter but %s was provided";
+    private static final String TYPE_PARAMETER_MISMATCH_SP = "Class %s has %s type parameter but %s were provided";
+    private static final String TYPE_PARAMETER_MISMATCH_PS = "Class %s has %s type parameters but %s was provided";
+    private static final String TYPE_PARAMETER_MISMATCH_PP = "Class %s has %s type parameters but %s were provided";
 
     public static String packageWhitelistPresent(int rules) {
         return forTwoStringsAndInt(rules == 1 ?
@@ -241,6 +245,18 @@ public class InjectorStrings {
                 .collect(Collectors.joining(" -> ")));
     }
 
+    public static String typeParameterMismatch(Class<?> type, int expected, int actual) {
+        String str = TYPE_PARAMETER_MISMATCH_PP;
+        if(expected == 1 && actual == 1) {
+            str = TYPE_PARAMETER_MISMATCH_SS;
+        } else if(expected == 1) {
+            str = TYPE_PARAMETER_MISMATCH_SP;
+        } else if(actual == 1) {
+            str = TYPE_PARAMETER_MISMATCH_PS;
+        }
+        return forClassAndTwoInts(str, type, expected, actual);
+    }
+
     private static String forTwoStringsAndInt(String str, String string1, String string2, int integer) {
         return String.format(str, string1, string2, integer);
     }
@@ -316,6 +332,10 @@ public class InjectorStrings {
 
     private static String forExecutableAndReference(String str, Executable executable, ClassReference<?> reference) {
         return String.format(str, getExecutableString(executable), reference.getName());
+    }
+
+    private static String forClassAndTwoInts(String str, Class<?> type, int int1, int int2) {
+        return String.format(str, type.getName(), int1, int2);
     }
 
     private static String getMethodParameterString(MethodInfo method) {

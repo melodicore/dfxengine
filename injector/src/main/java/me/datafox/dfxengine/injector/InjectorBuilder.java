@@ -410,7 +410,7 @@ public class InjectorBuilder {
                 }
                 reference = data.getFields().get(index).getReference();
             }
-            if(InstantiationDetails.class.equals(reference.getActualReference().getType())) {
+            if(InstantiationDetails.class.equals(reference.getActualReference().getTypeRef().getType())) {
                 continue;
             }
             List<ComponentData<?>> dependency = data.getDependencies().get(i);

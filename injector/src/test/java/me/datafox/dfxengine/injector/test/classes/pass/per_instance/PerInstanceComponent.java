@@ -17,7 +17,7 @@ public class PerInstanceComponent {
 
     @Inject
     public PerInstanceComponent(InstantiationDetails details, ChainedPerInstanceComponent chainedPerInstanceComponent) {
-        requester = details.getRequestingType();
+        requester = details.getRequesting().getType();
         this.chainedPerInstanceComponent = chainedPerInstanceComponent;
     }
 }

@@ -1,7 +1,7 @@
 package me.datafox.dfxengine.injector.test;
 
 import me.datafox.dfxengine.injector.Injector;
-import me.datafox.dfxengine.injector.Parameter;
+import me.datafox.dfxengine.injector.TypeRef;
 import me.datafox.dfxengine.injector.exception.*;
 import me.datafox.dfxengine.injector.test.classes.fail.array.constructor.ConstructorArrayComponent;
 import me.datafox.dfxengine.injector.test.classes.fail.array.field.FieldArrayComponent;
@@ -39,6 +39,9 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Array;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -99,13 +102,13 @@ public class InjectorTest {
     public void parametricTest() {
         var injector = assertDoesNotThrow(() -> injector(Parametric.class));
 
-        var c1 = assertDoesNotThrow(() -> injector.getComponent(Parametric.class,
-                List.of(Parameter.of(Number.class), Parameter.of(String.class))));
-        var c2 = assertDoesNotThrow(() -> injector.getComponent(Parametric.class,
-                List.of(Parameter.of(Number.class), Parameter.of(StringBuilder.class))));
+        var c1 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric.class,
+                TypeRef.of(Number.class), TypeRef.of(String.class))));
+        var c2 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric.class,
+                TypeRef.of(Number.class), TypeRef.of(StringBuilder.class))));
         var c3 = assertDoesNotThrow(() -> injector.getComponent(ExtendingParametricComponent.class));
-        var l = assertDoesNotThrow(() -> injector.getComponents(Parametric.class,
-                List.of(Parameter.of(Number.class), Parameter.of(CharSequence.class))));
+        var l = assertDoesNotThrow(() -> injector.getComponents(TypeRef.of(Parametric.class,
+                TypeRef.of(Number.class), TypeRef.of(CharSequence.class))));
 
         assertEquals(c1, c3);
         assertEquals(2, l.size());
@@ -164,8 +167,8 @@ public class InjectorTest {
     public void arrayParameterTest() {
         var injector = assertDoesNotThrow(() -> injector(Parametric2.class));
 
-        var c1 = assertDoesNotThrow(() -> injector.getComponent(Parametric2.class, Parameter.listOf(int[].class)));
-        var c2 = assertDoesNotThrow(() -> injector.getComponent(Parametric2.class, Parameter.listOf(Array.class, Parameter.of(NonComponent3.class))));
+        var c1 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric2.class, TypeRef.of(int[].class))));
+        var c2 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric2.class, TypeRef.of(Array.class, TypeRef.of(NonComponent3.class)))));
 
         assertNotNull(c1);
         assertNotNull(c2);
@@ -215,5 +218,13 @@ public class InjectorTest {
     public void parameterTest() {
         assertThrows(ComponentWithUnresolvedTypeParameterException.class, () -> injector(UnresolvedParameterComponent.class));
         assertThrows(ComponentWithUnresolvedTypeParameterException.class, () -> injector(UnresolvedParameterComponentMethod.class));
+    }
+
+    @Test
+    public void getComponentParameterTest() {
+        var injector = emptyInjector();
+
+        assertThrows(IllegalArgumentException.class, () -> injector.getComponent(TypeRef.of(Function.class, TypeRef.of(String.class))));
+        assertThrows(IllegalArgumentException.class, () -> injector.getComponent(TypeRef.of(Supplier.class, TypeRef.of(Consumer.class))));
     }
 }
