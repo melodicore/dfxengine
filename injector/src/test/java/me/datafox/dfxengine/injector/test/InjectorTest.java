@@ -16,6 +16,7 @@ import me.datafox.dfxengine.injector.test.classes.fail.dependency.multiple.Compo
 import me.datafox.dfxengine.injector.test.classes.fail.final_field.ComponentWithFinalFieldDependency;
 import me.datafox.dfxengine.injector.test.classes.fail.parametric.unresolved_class.UnresolvedParameterComponent;
 import me.datafox.dfxengine.injector.test.classes.fail.parametric.unresolved_method.UnresolvedParameterComponentMethod;
+import me.datafox.dfxengine.injector.test.classes.fail.parametric.unresolved_method_class.unresolved_method.UnresolvedParameterComponentMethodClass;
 import me.datafox.dfxengine.injector.test.classes.pass.array.NonComponent3;
 import me.datafox.dfxengine.injector.test.classes.pass.array.Parametric2;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.Component;
@@ -221,13 +222,14 @@ public class InjectorTest {
     public void parameterTest() {
         assertThrows(UnresolvedOrUnknownTypeException.class, () -> injector(UnresolvedParameterComponent.class));
         assertThrows(UnresolvedOrUnknownTypeException.class, () -> injector(UnresolvedParameterComponentMethod.class));
+        assertThrows(UnresolvedOrUnknownTypeException.class, () -> injector(UnresolvedParameterComponentMethodClass.class));
     }
 
     @Test
     public void getComponentParameterTest() {
         var injector = emptyInjector();
 
-        assertThrows(IllegalArgumentException.class, () -> injector.getComponent(TypeRef.of(Function.class, TypeRef.of(String.class))));
-        assertThrows(IllegalArgumentException.class, () -> injector.getComponent(TypeRef.of(Supplier.class, TypeRef.of(Consumer.class))));
+        assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(TypeRef.of(Function.class, TypeRef.of(String.class))));
+        assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(TypeRef.of(Supplier.class, TypeRef.of(Consumer.class))));
     }
 }

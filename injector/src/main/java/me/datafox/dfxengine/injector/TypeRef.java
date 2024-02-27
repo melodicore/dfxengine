@@ -3,6 +3,7 @@ package me.datafox.dfxengine.injector;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
+import me.datafox.dfxengine.injector.exception.ParameterCountMismatchException;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static me.datafox.dfxengine.injector.utils.InjectorStrings.typeParameterMismatch;
+import static me.datafox.dfxengine.injector.utils.InjectorStrings.parameterCountMismatch;
 
 /**
  * Represents a type. This class is used when requesting components by generic superclasses or -interfaces.
@@ -30,8 +31,8 @@ public class TypeRef<T> {
         if((!Array.class.equals(type) || parameters.size() != 1) &&
                 type.getTypeParameters().length != parameters.size()) {
             throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(TypeRef.class),
-                    typeParameterMismatch(type, type.getTypeParameters().length, parameters.size()),
-                    IllegalArgumentException::new);
+                    parameterCountMismatch(type, type.getTypeParameters().length, parameters.size()),
+                    ParameterCountMismatchException::new);
         }
         this.type = type;
         this.parameters = parameters;

@@ -245,7 +245,7 @@ public class InjectorStrings {
                 .collect(Collectors.joining(" -> ")));
     }
 
-    public static String typeParameterMismatch(Class<?> type, int expected, int actual) {
+    public static String parameterCountMismatch(Class<?> type, int expected, int actual) {
         String str = TYPE_PARAMETER_MISMATCH_PP;
         if(expected == 1 && actual == 1) {
             str = TYPE_PARAMETER_MISMATCH_SS;
