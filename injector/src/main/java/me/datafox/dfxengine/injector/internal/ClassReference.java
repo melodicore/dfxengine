@@ -1,7 +1,6 @@
 package me.datafox.dfxengine.injector.internal;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import me.datafox.dfxengine.injector.TypeRef;
 
 import java.util.List;
@@ -11,14 +10,14 @@ import java.util.List;
  * @author datafox
  */
 @Data
-@SuperBuilder
+@Builder
 public class ClassReference<T> {
     private final TypeRef<T> typeRef;
 
     @EqualsAndHashCode.Exclude
     @Singular
     @ToString.Exclude
-    private final List<ClassReference<? super T>> superclasses;
+    private final List<TypeRef<? super T>> superclasses;
 
     @Builder.Default
     @EqualsAndHashCode.Exclude
@@ -42,7 +41,7 @@ public class ClassReference<T> {
         if(typeRef.isAssignableFrom(other.typeRef)) {
             return true;
         }
-        return other.superclasses.stream().anyMatch(this::isAssignableFrom);
+        return other.superclasses.stream().anyMatch(getTypeRef()::isAssignableFrom);
     }
 
     public String getName() {

@@ -1,9 +1,7 @@
 package me.datafox.dfxengine.injector.utils;
 
-import io.github.classgraph.MethodInfo;
-import me.datafox.dfxengine.injector.internal.ClassReference;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -11,85 +9,17 @@ import java.util.stream.Stream;
  * @author datafox
  */
 public class InjectorUtils {
-    public static String getMethodReturnClassName(MethodInfo info) {
-        return parseClass(stripMethodParameters(info
-                    .getTypeSignatureOrTypeDescriptorStr())
-                .split("[;<]", 2)[0]);
-    }
-
-    public static String stripMethodParameters(String typeSignature) {
-        if(typeSignature == null) {
-            return null;
-        }
-        return typeSignature
-                .split("\\)", 2)[1];
-    }
-
-    public static String parseClass(String str) {
-        switch(str.charAt(0)) {
-            case 'Z':
-                return Boolean.class.getName();
-            case 'B':
-                return Byte.class.getName();
-            case 'S':
-                return Short.class.getName();
-            case 'I':
-                return Integer.class.getName();
-            case 'J':
-                return Long.class.getName();
-            case 'F':
-                return Float.class.getName();
-            case 'D':
-                return Double.class.getName();
-            case 'C':
-                return Character.class.getName();
-            case 'L':
-                return str
-                        .substring(1)
-                        .replaceAll("/", ".");
-            default:
-                return Object.class.getName();
-        }
-    }
-
-    public static String getWithin(String str, char start, char end) {
-        int s = -1;
-        int e = -1;
-        int counter = 0;
-        for(int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
-            if(start == c) {
-                counter++;
-                if(s == -1) {
-                    s = i + 1;
-                }
-            } else if(s != -1 && end == c) {
-                counter--;
-                if(counter == 0) {
-                    e = i;
-                    break;
-                }
-            }
-        }
-        if(s == -1) {
-            return str;
-        }
-        if(e == -1) {
-            return str.substring(s);
-        }
-        return str.substring(s, e);
-    }
-
-    public static String[] splitParameters(String typeParameters) {
+    public static List<String> splitParameters(String typeParameters) {
         List<String> list = new ArrayList<>();
         int counter = 0;
-        int lastSplit = 0;
+        int start = 0;
+        int end = typeParameters.length();
         for(int i = 0; i < typeParameters.length(); i++) {
             if(counter == 0) {
                 if(typeParameters.startsWith(", ", i)) {
-                    list.add(typeParameters.substring(lastSplit, i));
+                    list.add(typeParameters.substring(start, i));
                     i++;
-                    lastSplit = i + 1;
+                    start = i + 1;
                     continue;
                 }
             }
@@ -97,17 +27,60 @@ public class InjectorUtils {
                 counter++;
             } else if(typeParameters.charAt(i) == '>') {
                 counter--;
+                if(counter < 0) {
+                    end = i;
+                    break;
+                }
             }
         }
-        list.add(typeParameters.substring(lastSplit));
-        return list.toArray(String[]::new);
+        list.add(typeParameters.substring(start, end));
+        return list;
     }
 
-    public static Stream<ClassReference<?>> getSuperclassesRecursive(ClassReference<?> classReference) {
-        return Stream.concat(Stream.of(classReference),
-                classReference
-                        .getSuperclasses()
-                        .stream()
-                        .flatMap(InjectorUtils::getSuperclassesRecursive));
+    public static Stream<String> getSuperclasses(String string) {
+        if(!string.contains("<")) {
+            return Arrays.stream(string.split(" extends | implements ", 2)[1].split(" extends | implements ")).map(InjectorUtils::splitParameters).flatMap(List::stream);
+        }
+        List<String> superclasses = new ArrayList<>();
+        int withinParams = 0;
+        int start = 0;
+        for(int i = 0; i < string.length(); i++) {
+            if(string.charAt(i) == '<') {
+                withinParams++;
+                continue;
+            }
+            if(string.charAt(i) == '>') {
+                withinParams--;
+                continue;
+            }
+            if(withinParams == 0) {
+                if(string.startsWith(", ", i) || string.startsWith(" extends ", i) || string.startsWith( " implements ", i)) {
+                    superclasses.add(string.substring(start, i));
+                    if(string.startsWith(", ", i)) {
+                        i++;
+                    } else if(string.startsWith(" extends ", i)) {
+                        i += 8;
+                    } else {
+                        i += 11;
+                    }
+                    start = i + 1;
+                }
+            }
+        }
+        superclasses.add(string.substring(start));
+        if(superclasses.size() == 1) {
+            return Stream.empty();
+        } else {
+            return superclasses.subList(1, superclasses.size()).stream();
+        }
+    }
+
+    public static String stripKeywords(String string) {
+        for(String str : new String[] {" public ", " abstract "}) {
+            while(string.contains(str)) {
+                string = string.substring(0, string.indexOf(str)) + string.substring(string.indexOf(str) + str.length() - 1);
+            }
+        }
+        return string;
     }
 }

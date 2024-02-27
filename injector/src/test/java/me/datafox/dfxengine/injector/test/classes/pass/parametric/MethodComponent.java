@@ -10,4 +10,9 @@ public class MethodComponent {
     private Parametric<Number,StringBuilder> getParametricClass() {
         return new Parametric<>();
     }
+
+    @Component
+    private Parametric<? ,? super StringBuilder> getVagueParametricClass() {
+        return new Parametric<>();
+    }
 }

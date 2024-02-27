@@ -5,5 +5,5 @@ import java.io.Serializable;
 /**
  * @author datafox
  */
-public class Parametric<T extends Serializable, E extends CharSequence> implements ParametricInterface<T> {
+public interface ParametricInterface<E extends Serializable> {
 }

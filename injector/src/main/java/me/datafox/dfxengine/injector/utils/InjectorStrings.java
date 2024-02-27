@@ -194,12 +194,12 @@ public class InjectorStrings {
         return forClassInfo(NO_CONSTRUCTOR, info);
     }
 
-    public static String buildingComponentClassData(ClassInfo info, MethodInfo constructor) {
-        return forClassAndMethodInfo(BUILDING_COMPONENT_CLASS_DATA, info, constructor);
+    public static String buildingComponentClassData(String classString, MethodInfo constructor) {
+        return forStringAndMethodInfo(BUILDING_COMPONENT_CLASS_DATA, classString, constructor);
     }
 
-    public static String buildingComponentMethodData(ClassInfo info, MethodInfo method) {
-        return forClassAndMethodInfo(BUILDING_COMPONENT_METHOD_DATA, info, method);
+    public static String buildingComponentMethodData(String classString, MethodInfo method) {
+        return forStringAndMethodInfo(BUILDING_COMPONENT_METHOD_DATA, classString, method);
     }
 
     public static String noDependencies(Executable executable, ClassReference<?> reference) {
@@ -304,6 +304,10 @@ public class InjectorStrings {
 
     private static String forClassAndMethodInfo(String str, ClassInfo info, MethodInfo method) {
         return String.format(str, info.getName(), getMethodParameterString(method));
+    }
+
+    private static String forStringAndMethodInfo(String str, String string, MethodInfo method) {
+        return String.format(str, string, getMethodParameterString(method));
     }
 
     private static String forClassInfoAndMethodInfoList(String str, ClassInfo info, MethodInfoList methods) {

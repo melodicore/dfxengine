@@ -1,6 +1,9 @@
 package me.datafox.dfxengine.injector.internal;
 
-import io.github.classgraph.*;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.FieldInfo;
+import io.github.classgraph.MethodInfo;
+import io.github.classgraph.MethodParameterInfo;
 import me.datafox.dfxengine.injector.TypeRef;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.annotation.Component;
@@ -9,7 +12,6 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.injector.exception.ArrayComponentException;
 import me.datafox.dfxengine.injector.exception.ComponentWithUnresolvedTypeParameterException;
 import me.datafox.dfxengine.injector.exception.FinalFieldDependencyException;
-import me.datafox.dfxengine.injector.exception.UnknownClassException;
 import me.datafox.dfxengine.injector.utils.InjectorStrings;
 import me.datafox.dfxengine.injector.utils.InjectorUtils;
 import me.datafox.dfxengine.utils.LogUtils;
@@ -20,7 +22,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,7 +34,7 @@ public class ClassReferenceFactory {
 
     private final Map<String,ClassInfo> classInfoMap;
 
-    private boolean buildingParameters;
+    private MethodInfo currentInfo;
 
     public ClassReferenceFactory(Map<String,ClassInfo> classInfoMap) {
         logger = LoggerFactory.getLogger(getClass());
@@ -40,321 +42,287 @@ public class ClassReferenceFactory {
     }
 
     public <T> ComponentData<T> buildComponentData(MethodInfo info) {
-        buildingParameters = false;
+        currentInfo = info;
+        Component annotation = null;
         ComponentData.ComponentDataBuilder<T> builder = ComponentData.builder();
-        FieldInfoList fields;
-        MethodInfoList initializers;
-        Component component;
-        try {
-            if(info.isConstructor()) {
-                logger.debug(InjectorStrings.buildingComponentClassData(
-                        info.getClassInfo(), info));
-                builder.reference(buildClassReference(info.getClassInfo()))
-                        .executable(info.loadClassAndGetConstructor());
-                component = info.getClassInfo().loadClass().getAnnotation(Component.class);
-                fields = info.getClassInfo().getDeclaredFieldInfo()
-                        .filter(field -> field.hasAnnotation(Inject.class));
-                initializers = info.getClassInfo()
-                        .getDeclaredMethodInfo()
-                        .filter(method -> method.hasAnnotation(Initialize.class));
-            } else {
-                String infoString = info.getTypeDescriptor().toString().split(" ", 2)[0];
-                ClassInfo classInfo = classInfoMap.get(infoString);
-                if(classInfo == null) {
-                    if(infoString.contains("[]")) {
-                        throw LogUtils.logExceptionAndGet(logger,
-                                InjectorStrings.arrayComponent(info, info.getClassInfo()),
-                                ArrayComponentException::new);
-                    }
-                    infoString = getBoxedPrimitiveName(infoString);
-                    classInfo = classInfoMap.get(infoString);
-                    if(classInfo == null) {
-                        throw new UnknownClassException();
-                    }
-                }
-                logger.debug(InjectorStrings.buildingComponentMethodData(
-                        classInfo, info));
-                    builder.reference(buildClassReference(info));
-                builder.executable(info.loadClassAndGetMethod());
-                component = info.loadClassAndGetMethod().getAnnotation(Component.class);
-                fields = classInfo.getDeclaredFieldInfo()
-                        .filter(field -> field.hasAnnotation(Inject.class));
-                initializers = classInfo
-                        .getDeclaredMethodInfo()
-                        .filter(method -> method.hasAnnotation(Initialize.class));
-                if(!info.isStatic()) {
-                    builder.owner(buildClassReference(info.getClassInfo()));
-                }
+        if(info.isConstructor()) {
+            String classString = getClassString(info.getClassInfo());
+            logger.debug(InjectorStrings.buildingComponentClassData(classString, info));
+            ClassReference<T> reference = buildClassReference(
+                    classString,
+                    getSuperStrings(info.getClassInfo()));
+            builder.reference(reference)
+                    .executable(info.loadClassAndGetConstructor());
+            if(info.getClassInfo().hasAnnotation(Component.class)) {
+                annotation = (Component) info.getClassInfo().getAnnotationInfo(Component.class).loadClassAndInstantiate();
             }
-        } catch(ComponentWithUnresolvedTypeParameterException e) {
-            throw LogUtils.logExceptionAndGet(logger,
-                    InjectorStrings.unresolvedTypeParameter(info, e.getMessage()),
-                    e, ComponentWithUnresolvedTypeParameterException::new);
+            for(FieldInfo field : info.getClassInfo().getDeclaredFieldInfo().filter(f -> f.hasAnnotation(Inject.class))) {
+                if(field.isFinal()) {
+                    throw LogUtils.logExceptionAndGet(logger,
+                            InjectorStrings.finalFieldDependency(field),
+                            FinalFieldDependencyException::new);
+                }
+                if(InstantiationPolicy.class.getName().equals(getClassString(field))) {
+                    continue;
+                }
+                builder.field(FieldReference
+                        .builder()
+                        .field(field.loadClassAndGetField())
+                        .reference(buildClassReference(getClassString(field), getSuperStrings(field)))
+                        .build());
+            }
+            for(MethodInfo method : info.getClassInfo().getDeclaredMethodInfo().filter(m -> m.hasAnnotation(Initialize.class))) {
+                Initialize initialize = (Initialize) method.getAnnotationInfo(Initialize.class).loadClassAndInstantiate();
+                InitializeReference.InitializeReferenceBuilder<T> initBuilder = InitializeReference
+                        .<T>builder()
+                        .priority(initialize.value())
+                        .reference(reference)
+                        .method(method.loadClassAndGetMethod());
+                for(MethodParameterInfo param : method.getParameterInfo()) {
+                    if(InstantiationPolicy.class.getName().equals(getClassString(param))) {
+                        continue;
+                    }
+                    initBuilder.parameter(buildClassReference(getClassString(param), getSuperStrings(param)));
+                }
+                builder.initializer(initBuilder.build());
+            }
+        } else {
+            String classString = getClassString(info);
+            logger.debug(InjectorStrings.buildingComponentMethodData(classString, info));
+            builder.reference(buildClassReference(
+                            classString,
+                            getSuperStrings(info)))
+                    .executable(info.loadClassAndGetMethod());
+            if(!info.isStatic()) {
+                builder.owner(buildClassReference(
+                        getClassString(info.getClassInfo()),
+                        getSuperStrings(info.getClassInfo())));
+            }
+            if(info.hasAnnotation(Component.class)) {
+                annotation = (Component) info.getAnnotationInfo(Component.class).loadClassAndInstantiate();
+            }
         }
-        if(component != null) {
-            builder.policy(component.value())
-                    .defaultImpl(component.defaultImpl())
-                    .order(component.order());
+        if(annotation != null) {
+            builder.policy(annotation.value())
+                    .defaultImpl(annotation.defaultImpl())
+                    .order(annotation.order());
         } else {
             builder.policy(InstantiationPolicy.ONCE)
                     .defaultImpl(false)
                     .order(0);
         }
-        buildingParameters = true;
-        Arrays.stream(info.getParameterInfo())
-                .map(this::buildClassReference)
-                .forEach(builder::parameter);
-        fields.stream()
-                .map(this::buildFieldReference)
-                .forEach(builder::field);
-        buildingParameters = false;
-        initializers.stream()
-                .map(this::buildInitializeReference)
-                .forEach(builder::initializer);
-        ComponentData<T> data = builder.build();
-
-        Stream<ClassReference<?>> stream1 = Stream.concat(
-                Stream.of(data.getReference()),
-                data.getParameters().stream());
-
-        Stream<ClassReference<?>> stream2 = Stream.concat(
-                data.getFields().stream().map(FieldReference::getReference),
-                data.getInitializers().stream().map(InitializeReference::getReference));
-
-        Stream.concat(Stream.concat(stream1, stream2), data
-                        .getInitializers()
-                        .stream()
-                        .map(InitializeReference::getParameters)
-                        .flatMap(List::stream))
-                .forEach(this::checkAndSetCollection);
-
-        return data;
+        for(MethodParameterInfo param : info.getParameterInfo()) {
+            if(InstantiationPolicy.class.getName().equals(getClassString(param))) {
+                continue;
+            }
+            builder.parameter(buildClassReference(getClassString(param), getSuperStrings(param)));
+        }
+        return builder.build();
     }
 
-    public <T> ClassReference<T> buildClassReference(ClassInfo info) {
-        return buildClassReference(info.getTypeDescriptor().toString(), info.toString());
+    private String getClassString(ClassInfo info) {
+        return info
+                .getTypeSignatureOrTypeDescriptor()
+                .toString()
+                .split(" class | interface ", 2)[1]
+                .split(" extends | implements ")[0];
     }
 
-    public <T> ClassReference<T> buildClassReference(MethodInfo info) {
-        return buildClassReference(info.getTypeDescriptor().toString(), info.toString());
+    private String getClassString(MethodInfo info) {
+        if(info.getTypeDescriptor().toString().contains("[]")) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    InjectorStrings.arrayComponent(info, info.getClassInfo()),
+                    ArrayComponentException::new);
+        }
+        String str = info.getTypeSignatureOrTypeDescriptor().toString();
+        if(str.startsWith("<")) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    InjectorStrings.unresolvedTypeParameter(info, InjectorUtils.splitParameters(str).get(0)),
+                    ComponentWithUnresolvedTypeParameterException::new);
+        }
+        return info
+                .getTypeSignatureOrTypeDescriptor()
+                .toString()
+                .split(" \\(", 2)[0];
     }
 
-    public <T> ClassReference<T> buildClassReference(MethodParameterInfo info) {
+    private String getClassString(MethodParameterInfo info) {
         if(info.getTypeDescriptor().toString().contains("[]")) {
             throw LogUtils.logExceptionAndGet(logger,
                     InjectorStrings.arrayDependency(info),
                     ArrayComponentException::new);
         }
-        return buildClassReference(info.getTypeDescriptor().toString(), info.toString());
+        return info
+                .getTypeSignatureOrTypeDescriptor()
+                .toString();
     }
 
-    private <T> FieldReference<T> buildFieldReference(FieldInfo info) {
+    private String getClassString(FieldInfo info) {
         if(info.getTypeDescriptor().toString().contains("[]")) {
             throw LogUtils.logExceptionAndGet(logger,
                     InjectorStrings.arrayFieldDependency(info),
                     ArrayComponentException::new);
         }
-        if(info.isFinal()) {
-            throw LogUtils.logExceptionAndGet(logger,
-                    InjectorStrings.finalFieldDependency(info),
-                    FinalFieldDependencyException::new);
+        return info
+                .getTypeSignatureOrTypeDescriptor()
+                .toString();
+    }
+
+    private List<String> getSuperStrings(ClassInfo info) {
+        String[] split = info
+                .getTypeSignatureOrTypeDescriptor()
+                .toString()
+                .split(" extends | implements ", 2);
+        if(split.length == 1) {
+            return List.of();
         }
-        return FieldReference
+        return Arrays.stream(split[1].split(" implements "))
+                .map(InjectorUtils::splitParameters)
+                .flatMap(List::stream)
+                .flatMap(this::parseSupers)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getSuperStrings(MethodInfo info) {
+        List<String> list = parseSupers(getClassString(info))
+                .distinct()
+                .collect(Collectors.toList());
+        return list.subList(1, list.size());
+    }
+
+    private List<String> getSuperStrings(MethodParameterInfo info) {
+        List<String> list = parseSupers(getClassString(info))
+                .distinct()
+                .collect(Collectors.toList());
+        return list.subList(1, list.size());
+    }
+
+    private List<String> getSuperStrings(FieldInfo info) {
+        List<String> list = parseSupers(getClassString(info))
+                .distinct()
+                .collect(Collectors.toList());
+        return list.subList(1, list.size());
+    }
+
+    private Stream<String> parseSupers(String classString) {
+        String[] base = classString.split("<", 2);
+        Stream<String> stream = Stream.of(classString);
+        ClassInfo info = classInfoMap.get(base[0]);
+        if(info == null) {
+            info = classInfoMap.get(getBoxedPrimitiveName(base[0]));
+        }
+        List<String> params;
+        List<String> genericParams;
+        if(base.length == 1) {
+            params = List.of();
+            genericParams = List.of();
+        } else {
+            params = InjectorUtils.splitParameters(base[1].substring(0, base[1].length() - 1));
+            genericParams = InjectorUtils
+                    .splitParameters(info
+                            .getTypeSignatureOrTypeDescriptor()
+                            .toString()
+                            .split("<", 2)[1])
+                    .stream()
+                    .map(type -> type.split(" extends | super ", 2)[0])
+                    .collect(Collectors.toList());
+        }
+        return Stream.concat(stream, Optional
+                .of(info)
+                .stream()
+                .flatMap(this::getSuperclassStrings)
+                .map(superclass -> replaceParams(superclass, params, genericParams))
+                .flatMap(this::parseSupers));
+    }
+
+    private Stream<String> getSuperclassStrings(ClassInfo original) {
+        if(!original.getTypeDescriptor().toString().contains(" extends ") && !original.getTypeDescriptor().toString().contains(" implements ")) {
+            return Stream.empty();
+        }
+        return InjectorUtils.getSuperclasses(InjectorUtils.stripKeywords(original.toString()));
+    }
+
+    private String replaceParams(String superclass, List<String> params, List<String> genericParams) {
+        if(params.isEmpty() || !superclass.contains("<")) {
+            return superclass;
+        }
+        String[] split = superclass.split("<", 2);
+        List<String> superParams = InjectorUtils.splitParameters(split[1]);
+        StringBuilder sb = new StringBuilder(split[0]).append("<");
+        String prefix = "";
+        for(String s : superParams) {
+            sb.append(prefix).append(params.get(genericParams.indexOf(s)));
+            prefix = ", ";
+        }
+        sb.append(">");
+        return sb.toString();
+    }
+
+    private <T> ClassReference<T> buildClassReference(String classString, List<String> superStrings) {
+        ClassReference<T> reference = ClassReference
                 .<T>builder()
-                .field(info.loadClassAndGetField())
-                .reference(buildClassReference(info.getTypeDescriptor().toString(), info.toString()))
+                .typeRef(buildTypeRef(classString))
+                .superclasses(superStrings
+                        .stream()
+                        .map(this::buildTypeRef)
+                        .collect(Collectors.toList()))
                 .build();
-    }
-
-    private <T> InitializeReference<T> buildInitializeReference(MethodInfo info) {
-        InitializeReference.InitializeReferenceBuilder<T> builder = InitializeReference
-                .<T>builder()
-                .priority(info
-                        .loadClassAndGetMethod()
-                        .getAnnotation(Initialize.class)
-                        .value())
-                .reference(buildClassReference(info.getClassInfo()))
-                .method(info.loadClassAndGetMethod());
-        buildingParameters = true;
-        builder = builder.parameters(Arrays
-                .stream(info.getParameterInfo())
-                .map(this::buildClassReference)
-                .collect(Collectors.toList()));
-        buildingParameters = false;
-        return builder.build();
+        checkAndSetCollection(reference);
+        return reference;
     }
 
     @SuppressWarnings("unchecked")
-    private <T> ClassReference<T> buildClassReference(String descriptor, String info) {
-        if(Object.class.getName().equals(info)) {
-            if("?".equals(descriptor)) {
-                return (ClassReference<T>) ClassReference.object();
+    private <T> TypeRef<T> buildTypeRef(String classString) {
+        String[] split = classString.split("<", 2);
+        Class<T> type = null;
+        if(split[0].endsWith("[]")) {
+            String str = split[0].substring(0, split[0].length() - 2);
+            type = (Class<T>) getPrimitiveArray(str);
+            if(type == null) {
+                return buildArrayTypeRef(str);
             }
-        }
-        String[] split = descriptor.split(" class | interface ",2);
-        String namePrefix = "";
-        if(descriptor.startsWith("? super ")) {
-            namePrefix = "? super ";
-            descriptor = descriptor.substring(8);
-        } else if(descriptor.startsWith("? extends ")) {
-            namePrefix = "? extends ";
-            descriptor = descriptor.substring(10);
-        }
-        descriptor = split.length == 1 ? descriptor : split[1].split(" extends | implements", 2)[0];
-        String className = descriptor.split("[ <]", 2)[0];
-        className = getBoxedPrimitiveName(className);
-        split = info.split(Pattern.quote(className), 2);
-        String details = split.length == 1 ? "" : split[1];
-        String classDetails = "";
-        if(!className.contains("[]")) {
-            ClassInfo classInfo = classInfoMap.get(className);
-            classDetails = classInfo.toString().split(Pattern.quote(className), 2)[1];
-        }
-        return buildClassReference(namePrefix + className, details, classDetails);
-    }
-
-    private <T> ClassReference<T> buildClassReference(String name, String details, String genericDetails) {
-        String typeParameters = "";
-        if(details.startsWith("<")) {
-            typeParameters = InjectorUtils.getWithin(details, '<', '>');
-            details = details.substring(typeParameters.length() + 2);
-        }
-        String classTypeParameters = "";
-        if(genericDetails.startsWith("<")) {
-            classTypeParameters = InjectorUtils.getWithin(genericDetails, '<', '>');
-            genericDetails = genericDetails.substring(classTypeParameters.length() + 2);
-        }
-        String superclasses = "";
-        if(genericDetails.startsWith(" extends ") || genericDetails.startsWith(" implements ")) {
-            superclasses = String.join(", ", genericDetails
-                    .split(" extends | implements ", 2)[1]
-                    .split(" implements "));
-        }
-        if(!genericDetails.equals(details)) {
-            superclasses = injectParameterTypes(typeParameters, classTypeParameters, superclasses);
-        }
-        return buildClassReference(name, typeParameters,
-                InjectorUtils.splitParameters(superclasses));
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> ClassReference<T> buildClassReference(String name, String parameters, String[] superclasses) {
-        ClassInfo info = classInfoMap.get(name);
-        if(info == null) {
-            if(name.startsWith("?")) {
-                if(name.startsWith("? super ")) {
-                    name = name.substring(8);
-                } else if(name.startsWith("? extends ")) {
-                    name = name.substring(10);
-                } else {
-                    name = Object.class.getName();
-                }
-            }
-            info = classInfoMap.get(name);
+        } else {
+            ClassInfo info = classInfoMap.get(split[0]);
             if(info == null) {
-                throw new UnknownClassException();
-            }
-        }
-        ClassReference.ClassReferenceBuilder<T,?,?> builder = ClassReference
-                .<T>builder()
-                .typeRef((TypeRef<T>) parseTypeRef(name + (parameters.isBlank() ? "" : "<" + parameters + ">")));
-
-        for(String superclass : superclasses) {
-            if(superclass.isBlank()) {
-                continue;
-            }
-            String typeParameters = "";
-            if(superclass.contains("<")) {
-                typeParameters = InjectorUtils.getWithin(superclass, '<', '>');
-            }
-            ClassInfo superclassInfo = classInfoMap.get(superclass);
-            if(superclassInfo == null) {
-                if(superclass.startsWith("public ")) {
-                    superclass = superclass.substring(7);
-                }
-                if(superclass.startsWith("abstract ")) {
-                    superclass = superclass.substring(9);
-                }
-                if(superclass.contains("<")) {
-                    superclass = superclass.split("<", 2)[0];
-                }
-                superclassInfo = classInfoMap.get(superclass);
-                if(superclassInfo == null) {
-                    throw new UnknownClassException();
-                }
-            }
-            String superclassString = superclassInfo.toString();
-            String genericTypeParameters = "";
-            if(superclassString.contains("<")) {
-                genericTypeParameters = InjectorUtils.getWithin(superclassString, '<', '>');
-            }
-            for(String parameter : InjectorUtils.splitParameters(parameters)) {
-                if(parameter.startsWith("?") && !typeParameters.contains(parameter)) {
-                    String str;
-                    if(parameter.startsWith("? extends ")) {
-                        str = parameter.substring(10);
-                    } else if(parameter.startsWith("? super ")) {
-                        str = parameter.substring(8);
+                if(split[0].startsWith("?")) {
+                    if(split[0].startsWith("? extends ")) {
+                        info = classInfoMap.get(split[0].substring(10));
                     } else {
-                        throw new ComponentWithUnresolvedTypeParameterException(parameter);
+                        type = (Class<T>) Object.class;
                     }
-                    typeParameters = typeParameters.replaceAll(str, parameter);
+                } else {
+                    info = classInfoMap.get(getBoxedPrimitiveName(split[0]));
                 }
             }
-            builder.superclass(buildClassReference(superclass,
-                    injectParameterTypes(typeParameters, genericTypeParameters, superclassString)));
-
+            if(type == null) {
+                if(info == null) {
+                    throw LogUtils.logExceptionAndGet(logger,
+                            InjectorStrings.unresolvedTypeParameter(currentInfo, classString),
+                            ComponentWithUnresolvedTypeParameterException::new);
+                }
+                type = (Class<T>) info.loadClass();
+            }
         }
-
+        TypeRef.TypeRefBuilder<T> builder = TypeRef.<T>builder()
+                .type(type);
+        if(split.length != 1) {
+            builder.parameters(InjectorUtils
+                    .splitParameters(split[1])
+                    .stream()
+                    .map(this::buildTypeRef)
+                    .collect(Collectors.toList()));
+        }
         return builder.build();
     }
 
     @SuppressWarnings("unchecked")
-    private TypeRef<?> parseTypeRef(String parameter) {
-        if(parameter.endsWith("[]")) {
-            parameter = parameter.substring(0, parameter.length() - 2);
-            Class<?> type = getPrimitiveArray(parameter);
-            if(type != null) {
-                return TypeRef.of(type);
-            } else {
-                return TypeRef.of(Array.class, parseTypeRef(parameter));
-            }
-        }
-        String[] split = parameter.split("<", 2);
-        String name = split[0];
-        if(name.startsWith("?")) {
-            if(name.equals("?")) {
-                return TypeRef.object();
-            } if(buildingParameters) {
-                if(name.startsWith("? super ")) {
-                    return TypeRef.object();
-                } else if(name.startsWith("? extends ")) {
-                    name = name.substring(10);
-                }
-            }
-        } else if(name.equals(Object.class.getName())) {
-            return TypeRef.object();
-        }
-        ClassInfo info = classInfoMap.get(name);
-        if(info == null) {
-            throw new ComponentWithUnresolvedTypeParameterException(split[0]);
-        }
-        Class<?> type = info.loadClass();
-        TypeRef.TypeRefBuilder<?> builder = TypeRef
-                .builder()
-                .type((Class<Object>) type);
-
-        if(split.length > 1) {
-            Arrays.stream(InjectorUtils.splitParameters(
-                    split[1].substring(0, split[1].length() - 1)))
-                    .map(this::parseTypeRef)
-                    .forEach(builder::parameter);
-        } else if(type.getTypeParameters().length != 0) {
-            for(int i = 0; i < type.getTypeParameters().length; i++) {
-                builder.parameter(TypeRef.object());
-            }
-        }
-        return builder.build();
+    private <T> TypeRef<T> buildArrayTypeRef(String classString) {
+        return TypeRef
+                .<T>builder()
+                .type((Class<T>) Array.class)
+                .parameter(buildTypeRef(classString))
+                .build();
     }
 
     public String getBoxedPrimitiveName(String className) {
@@ -401,43 +369,6 @@ public class ClassReferenceFactory {
             default:
                 return null;
         }
-    }
-
-    private String injectParameterTypes(String typeParameters, String genericTypeParameters, String classes) {
-        String[] keys = InjectorUtils.splitParameters(genericTypeParameters);
-        String[] values = InjectorUtils.splitParameters(typeParameters);
-        for(int i = 0; i < keys.length; i++) {
-            classes = injectParameterType(classes, keys[i], values[i]);
-        }
-        return classes;
-    }
-
-    private static String injectParameterType(String classes, String key, String value) {
-        StringBuilder sb = new StringBuilder();
-        for(int j = 0; j < classes.length(); j++) {
-            if(classes.charAt(j) == '<') {
-                sb.append('<');
-                j++;
-            } else if(classes.startsWith(", ", j)) {
-                sb.append(", ");
-                j += 2;
-            } else {
-                sb.append(classes.charAt(j));
-                continue;
-            }
-            if(classes.startsWith(key, j)) {
-                j += key.length();
-                if(classes.charAt(j) == '>' || classes.startsWith(", ", j)) {
-                    sb.append(value);
-                } else {
-                    sb.append(key);
-                }
-                sb.append(classes.charAt(j));
-            } else {
-                j--;
-            }
-        }
-        return sb.toString();
     }
 
     @SuppressWarnings("unchecked")

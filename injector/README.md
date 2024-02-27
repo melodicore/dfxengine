@@ -88,19 +88,20 @@ any declared method) must have a valid constructor. A valid constructor is any c
 exception is thrown if multiple are present. If none are present, the presence of a default constructor is checked for 
 instead to be invoked, and if that is not present either an exception is thrown.
 
-Any non-static field annotated with `@Inject` on a component class will be treated as a dependency, and will be injected 
-right after the component in question is instantiated or invoked. This includes the declaring classes of non-static 
-component methods, and the class of a component method's declared type, but not the class of the object the method
-actually returns. If an injectable field is present that is final, an exception is thrown.
+Any non-static field annotated with `@Inject` on a class annotated with or containing non-static methods annotated with 
+`@Component` will be treated as a dependency, and will be injected right after the component in question is 
+instantiated. This includes the declaring classes of non-static component methods. If an injectable field is present
+that is final, an exception is thrown.
 
 `@Inject` annotations on classes that are not components or otherwise instantiated by the Injector are ignored.
 
 ### [`@Initialize`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/annotation/Initialize.java)
 
-The `@Initialize` annotation can be used for methods. All initializer methods declared on components will be invoked, 
-but only after all components have been instantiated, and their parameters will be treated as dependencies and injected. 
-This is especially useful when avoiding cyclic dependencies would be problematic, as the parameters can be any 
-components, even the ones that depend on the component declaring the method.
+The `@Initialize` annotation can be used for methods. All initializer methods declared on classes annotated with or
+containing non-static methods annotated with `@Component` will be invoked and their parameters will be treated as
+dependencies and injected, but only after all components have been instantiated. This is especially useful when avoiding 
+cyclic dependencies would be problematic, as the parameters can be any components, even the ones that depend on the 
+component declaring the method.
 
 The `@Initialize` annotation has one parameter, `value`, which is an integer that determines the invocation order of the 
 methods. A lower value means the method is invoked sooner, and the default value is `0`.
