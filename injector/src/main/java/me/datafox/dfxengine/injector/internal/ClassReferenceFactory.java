@@ -10,7 +10,7 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.injector.exception.ArrayComponentException;
-import me.datafox.dfxengine.injector.exception.ComponentWithUnresolvedTypeParameterException;
+import me.datafox.dfxengine.injector.exception.UnresolvedOrUnknownTypeException;
 import me.datafox.dfxengine.injector.exception.FinalFieldDependencyException;
 import me.datafox.dfxengine.injector.utils.InjectorStrings;
 import me.datafox.dfxengine.injector.utils.InjectorUtils;
@@ -138,7 +138,7 @@ public class ClassReferenceFactory {
         if(str.startsWith("<")) {
             throw LogUtils.logExceptionAndGet(logger,
                     InjectorStrings.unresolvedTypeParameter(info, InjectorUtils.splitParameters(str).get(0)),
-                    ComponentWithUnresolvedTypeParameterException::new);
+                    UnresolvedOrUnknownTypeException::new);
         }
         return info
                 .getTypeSignatureOrTypeDescriptor()
@@ -299,7 +299,7 @@ public class ClassReferenceFactory {
                 if(info == null) {
                     throw LogUtils.logExceptionAndGet(logger,
                             InjectorStrings.unresolvedTypeParameter(currentInfo, classString),
-                            ComponentWithUnresolvedTypeParameterException::new);
+                            UnresolvedOrUnknownTypeException::new);
                 }
                 type = (Class<T>) info.loadClass();
             }

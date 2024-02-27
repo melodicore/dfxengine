@@ -219,8 +219,8 @@ public class InjectorTest {
 
     @Test
     public void parameterTest() {
-        assertThrows(ComponentWithUnresolvedTypeParameterException.class, () -> injector(UnresolvedParameterComponent.class));
-        assertThrows(ComponentWithUnresolvedTypeParameterException.class, () -> injector(UnresolvedParameterComponentMethod.class));
+        assertThrows(UnresolvedOrUnknownTypeException.class, () -> injector(UnresolvedParameterComponent.class));
+        assertThrows(UnresolvedOrUnknownTypeException.class, () -> injector(UnresolvedParameterComponentMethod.class));
     }
 
     @Test
