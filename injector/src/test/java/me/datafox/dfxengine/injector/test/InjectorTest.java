@@ -94,9 +94,6 @@ public class InjectorTest {
         assertEquals(4, c.getComponents().size());
         assertEquals(2, c.getSomeComponents().size());
         assertTrue(c.getComponents().containsAll(c.getSomeComponents()));
-
-        assertThrows(MultipleComponentsForSingletonDependencyException.class,
-                () -> injector.getComponent(MultipleComponent.class));
     }
 
     @Test
@@ -213,9 +210,11 @@ public class InjectorTest {
 
     @Test
     public void dependencyTest() {
-        assertThrows(ComponentWithUnresolvedDependencyException.class, () -> injector(ComponentWithInvalidDependency.class));
-        assertThrows(MultipleComponentsForSingletonDependencyException.class, () -> injector(ComponentMethod2.class));
+        assertThrows(NoDependenciesPresentException.class, () -> injector(ComponentWithInvalidDependency.class));
+        assertThrows(MultipleDependenciesPresentException.class, () -> injector(ComponentMethod2.class));
         assertThrows(CyclicDependencyException.class, () -> injector(CyclicComponent1.class));
+        assertThrows(NoDependenciesPresentException.class, () -> emptyInjector().getComponent(Component.class));
+        assertThrows(MultipleDependenciesPresentException.class, () -> injector(MultipleDependComponent.class).getComponent(MultipleComponent.class));
     }
 
     @Test

@@ -6,6 +6,8 @@ import lombok.Data;
 import java.lang.reflect.Field;
 
 /**
+ * A reference to a {@link Field} and its type, used internally by this module.
+ *
  * @author datafox
  */
 @Builder

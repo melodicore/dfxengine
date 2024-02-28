@@ -10,6 +10,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Contains all string literals used for logging in this module.
+ *
  * @author datafox
  */
 public class InjectorStrings {
@@ -59,8 +61,9 @@ public class InjectorStrings {
             "Field %s in class %s is annotated with @Inject but is final, only non-final fields can be injected";
     private static final String UNRESOLVED_TYPE_PARAMETER =
             "Component %s has unresolved type parameter %s, unresolved type parameters cannot be injected";
-    private static final String NO_DEPENDENCIES = "Component %s depends on %s but none are present";
-    private static final String MULTIPLE_DEPENDENCIES = "Component %s depends on single %s but multiple are present";
+    private static final String NO_DEPENDENCIES = "A single Component %s was requested but none are present";
+    private static final String MULTIPLE_DEPENDENCIES =
+            "A single Component %s was requested but multiple are present";
     private static final String ARRAY_COMPONENT =
             "Component method %s in class %s returns an array, array components are not permitted";
     private static final String ARRAY_DEPENDENCY =
@@ -202,12 +205,12 @@ public class InjectorStrings {
         return forStringAndMethodInfo(BUILDING_COMPONENT_METHOD_DATA, classString, method);
     }
 
-    public static String noDependencies(Executable executable, ClassReference<?> reference) {
-        return forExecutableAndReference(NO_DEPENDENCIES, executable, reference);
+    public static String noDependenciesRuntime(ClassReference<?> reference) {
+        return forReference(NO_DEPENDENCIES, reference);
     }
 
-    public static String multipleDependencies(Executable executable, ClassReference<?> reference) {
-        return forExecutableAndReference(MULTIPLE_DEPENDENCIES, executable, reference);
+    public static String multipleDependenciesRuntime(ClassReference<?> reference) {
+        return forReference(MULTIPLE_DEPENDENCIES, reference);
     }
 
     public static String arrayComponent(MethodInfo method, ClassInfo info) {
@@ -230,7 +233,7 @@ public class InjectorStrings {
         return forMethodComponentAndString(UNRESOLVED_TYPE_PARAMETER, info, parameter);
     }
 
-    public static String cyclicDependencyDetected(ComponentData<?> current, Stack<ComponentData<?>> visited) {
+    public static String cyclicDependencyDetected(ComponentData<?> current, Deque<ComponentData<?>> visited) {
         List<ComponentData<?>> list = new ArrayList<>(visited);
         int i = list.indexOf(current);
         if(i < 0) {
@@ -241,7 +244,7 @@ public class InjectorStrings {
         return String.format(CYCLIC_DEPENDENCY_DETECTED, list.stream()
                 .map(ComponentData::getReference)
                 .map(ClassReference::getActualReference)
-                .map(ClassReference::getName)
+                .map(ClassReference::getSignature)
                 .collect(Collectors.joining(" -> ")));
     }
 
@@ -334,8 +337,8 @@ public class InjectorStrings {
         return String.format(str, getMethodComponentString(info), string);
     }
 
-    private static String forExecutableAndReference(String str, Executable executable, ClassReference<?> reference) {
-        return String.format(str, getExecutableString(executable), reference.getName());
+    private static String forReference(String str, ClassReference<?> reference) {
+        return String.format(str, reference.getSignature());
     }
 
     private static String forClassAndTwoInts(String str, Class<?> type, int int1, int int2) {
@@ -374,15 +377,15 @@ public class InjectorStrings {
 
     private static String getComponentString(ComponentData<?> component) {
         if(component.getExecutable() instanceof Constructor) {
-            return component.getReference().getName();
+            return component.getReference().getSignature();
         }
-        return component.getReference().getName() +
+        return component.getReference().getSignature() +
                 " " + component.getExecutable().getDeclaringClass().getName() +
                 "." + component.getExecutable().getName() +
                 "(" + component
                         .getParameters()
                         .stream()
-                        .map(ClassReference::getName)
+                        .map(ClassReference::getSignature)
                         .collect(Collectors.joining(", ")) +
                 ")";
     }
@@ -391,14 +394,5 @@ public class InjectorStrings {
         return field.getTypeSignatureOrTypeDescriptor() +
                 " " +
                 field.getName();
-    }
-
-    private static String getExecutableString(Executable executable) {
-        if(executable instanceof Method) {
-            Method method = (Method) executable;
-            return method.getReturnType().getName() + " " + method.getDeclaringClass().getName() + "." + method.getName() + "(" + Arrays.stream(method.getParameters()).map(Parameter::getParameterizedType).map(Type::getTypeName).collect(Collectors.joining(", ")) + ")";
-        } else {
-            return executable.getName();
-        }
     }
 }

@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
+ * A wrapper for {@link Runnable} that is {@link Comparable} for sorting.
+ *
  * @author datafox
  */
 @Builder

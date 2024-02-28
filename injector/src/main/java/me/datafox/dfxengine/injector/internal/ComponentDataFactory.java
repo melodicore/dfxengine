@@ -27,20 +27,28 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * Factory that builds {@link ComponentData} instances and by extension {@link ClassReference} and {@link TypeRef}
+ * instances.
+ *
  * @author datafox
  */
-public class ClassReferenceFactory {
+public class ComponentDataFactory {
     private final Logger logger;
 
     private final Map<String,ClassInfo> classInfoMap;
 
     private MethodInfo currentInfo;
 
-    public ClassReferenceFactory(Map<String,ClassInfo> classInfoMap) {
+    public ComponentDataFactory(Map<String,ClassInfo> classInfoMap) {
         logger = LoggerFactory.getLogger(getClass());
         this.classInfoMap = classInfoMap;
     }
 
+    /**
+     * @param info constructor or method of a component
+     * @return {@link ComponentData} for the specified constructor or method
+     * @param <T> type of the component
+     */
     public <T> ComponentData<T> buildComponentData(MethodInfo info) {
         currentInfo = info;
         Component annotation = null;

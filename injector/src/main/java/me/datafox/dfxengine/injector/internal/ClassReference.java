@@ -7,6 +7,8 @@ import java.util.List;
 
 
 /**
+ * A reference to a {@link Class} used internally by this module.
+ *
  * @author datafox
  */
 @Data
@@ -34,6 +36,13 @@ public class ClassReference<T> {
         }
     }
 
+    /**
+     * This method is equivalent to {@link Class#isAssignableFrom(Class)} but takes type parameters into account.
+     *
+     * @param other class reference to compare to
+     * @return {@code true} if this class reference is assignable from the other class reference
+     * @see TypeRef#isAssignableFrom(TypeRef) 
+     */
     public boolean isAssignableFrom(ClassReference<?> other) {
         if(typeRef.equals(other.typeRef)) {
             return true;
@@ -44,10 +53,16 @@ public class ClassReference<T> {
         return other.superclasses.stream().anyMatch(getTypeRef()::isAssignableFrom);
     }
 
-    public String getName() {
+    /**
+     * @return signature of this class reference
+     */
+    public String getSignature() {
         return typeRef.toString();
     }
 
+    /**
+     * @return class reference for {@link Object}
+     */
     public static ClassReference<Object> object() {
         return builder()
                 .typeRef(TypeRef.object())

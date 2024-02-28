@@ -2,7 +2,7 @@ package me.datafox.dfxengine.injector;
 
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.annotation.Component;
-import me.datafox.dfxengine.injector.exception.MultipleComponentsForSingletonDependencyException;
+import me.datafox.dfxengine.injector.exception.*;
 import me.datafox.dfxengine.injector.internal.ClassReference;
 import me.datafox.dfxengine.injector.internal.ComponentData;
 import me.datafox.dfxengine.injector.internal.InitializeReference;
@@ -18,15 +18,36 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Stack;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static me.datafox.dfxengine.injector.utils.InjectorStrings.*;
+
 /**
+ * <p>
+ * A dependency injector. For general information, see
+ * <a href="https://github.com/melodicore/dfxengine/blob/master/injector/README.md">README.md</a> on GitHub. Use
+ * {@link #builder()} to build.
+ * </p>
+ * <p>
+ * {@link #getComponent(Class)}, {@link #getComponent(TypeRef)}, {@link #getComponent(Class, Class)},
+ * {@link #getComponent(TypeRef, TypeRef)}, {@link #getComponents(Class)}, {@link #getComponents(TypeRef)},
+ * {@link #getComponents(Class, Class)} and {@link #getComponents(TypeRef, TypeRef)} can be used to retrieve components.
+ * The {@code requesting} parameter is only relevant when requesting components that have
+ * {@link InstantiationPolicy#PER_INSTANCE}.
+ * </p>
+ *
  * @author datafox
  */
 public class Injector {
+    /**
+     * @return {@link InjectorBuilder} instance
+     */
+    public static InjectorBuilder builder() {
+        return new InjectorBuilder();
+    }
+
     @Component
     private static Injector getInstance() {
         return instance;
@@ -64,42 +85,154 @@ public class Injector {
         initializerQueue.clear();
     }
 
+    /**
+     * Returns a single {@link Component} of the specified type. If the {@link Class} has type parameters, use
+     * {@link #getComponent(TypeRef)} instead. Otherwise, or if multiple Components or no Components are present, an
+     * exception is thrown.
+     *
+     * @param type type of the {@link Component} to be requested
+     * @return {@link Component} of the specified type
+     * @param <T> type of the {@link Component} to be requested
+     *
+     * @throws ParameterCountMismatchException if the {@link Class} has type parameters
+     * @throws MultipleDependenciesPresentException if multiple {@link Component Components} with the specified type are
+     * present
+     * @throws NoDependenciesPresentException if no {@link Component Components} with the specified type are present
+     */
     public <T> T getComponent(Class<T> type) {
         return getComponent(TypeRef.of(type));
     }
 
+    /**
+     * Returns a single {@link Component} of the specified type. If multiple Components or no Components are present, an
+     * exception is thrown.
+     *
+     * @param type type of the {@link Component} to be requested
+     * @return {@link Component} of the specified type
+     * @param <T> type of the {@link Component} to be requested
+     *
+     * @throws ParameterCountMismatchException if the {@link TypeRef#getType()} has a different amount of type
+     * parameters than {@link TypeRef#getParameters()}
+     * @throws MultipleDependenciesPresentException if multiple {@link Component Components} with the specified type are
+     * present
+     * @throws NoDependenciesPresentException if no {@link Component Components} with the specified type are present
+     */
     public <T> T getComponent(TypeRef<T> type) {
         return getComponent(type, null);
     }
 
+    /**
+     * Returns a single {@link Component} of the specified type. If the Component has
+     * {@link InstantiationPolicy#PER_INSTANCE} and depends on {@link InstantiationDetails}, the {@code requesting}
+     * parameter will be used for {@link InstantiationDetails#getRequesting()}. If the {@link Class} has type
+     * parameters, use {@link #getComponent(TypeRef)} instead. Otherwise, or if multiple Components or no Components are
+     * present, an exception is thrown.
+     *
+     * @param type type of the {@link Component} to be requested
+     * @param requesting type of the object requesting the {@link Component}
+     * @return {@link Component} of the specified type
+     * @param <T> type of the {@link Component} to be requested
+     * @param <R> type of the object requesting the {@link Component}
+     *
+     * @throws ParameterCountMismatchException if the type or requesting {@link Class} has type parameters
+     * @throws MultipleDependenciesPresentException if multiple {@link Component Components} with the specified type are
+     * present
+     * @throws NoDependenciesPresentException if no {@link Component Components} with the specified type are present
+     */
     public <T,R> T getComponent(Class<T> type, Class<R> requesting) {
         return getComponent(TypeRef.of(type), TypeRef.of(requesting));
     }
 
+    /**
+     * Returns a single {@link Component} of the specified type. If the Component has
+     * {@link InstantiationPolicy#PER_INSTANCE} and depends on {@link InstantiationDetails}, the {@code requesting}
+     * parameter will be used for {@link InstantiationDetails#getRequesting()}. If multiple Components or no Components
+     * are present, an exception is thrown.
+     *
+     * @param type type of the {@link Component} to be requested
+     * @param requesting type of the object requesting the {@link Component}
+     * @return {@link Component} of the specified type
+     * @param <T> type of the {@link Component} to be requested
+     * @param <R> type of the object requesting the {@link Component}
+     *
+     * @throws ParameterCountMismatchException if the type or requesting {@link TypeRef#getType()} has a different
+     * amount of type parameters than {@link TypeRef#getParameters()}
+     * @throws MultipleDependenciesPresentException if multiple {@link Component Components} with the specified type are
+     * present
+     * @throws NoDependenciesPresentException if no {@link Component Components} with the specified type are present
+     */
     public <T,R> T getComponent(TypeRef<T> type, TypeRef<R> requesting) {
         ClassReference<T> reference = getReference(type);
         ClassReference<R> requestingReference = getReference(requesting);
-        Stack<ClassReference<?>> referenceStack = new Stack<>();
+        List<ClassReference<?>> referenceStack = new ArrayList<>();
         if(requestingReference != null) {
-            referenceStack.push(requestingReference);
+            referenceStack.add(requestingReference);
         }
         T object = getParameter(reference, reference, referenceStack, List.of(componentList));
         runAndClearInitializers();
         return object;
     }
 
+    /**
+     * Returns {@link Component Components} of the specified type. If the {@link Class} has type parameters, use
+     * {@link #getComponents(TypeRef)} instead. Otherwise, an exception is thrown.
+     *
+     * @param type type of the {@link Component Components} to be requested
+     * @return {@link List} of {@link Component Components} of the specified type
+     * @param <T> type of the {@link Component Components} to be requested
+     *
+     * @throws ParameterCountMismatchException if the {@link Class} has type parameters
+     */
     public <T> List<T> getComponents(Class<T> type) {
         return getComponents(TypeRef.of(type));
     }
 
+    /**
+     * Returns {@link Component Components} of the specified type.
+     *
+     * @param type type of the {@link Component Components} to be requested
+     * @return {@link List} of {@link Component Components} of the specified type
+     * @param <T> type of the {@link Component Components} to be requested
+     *
+     * @throws ParameterCountMismatchException if the {@link TypeRef#getType()} has a different amount of type
+     * parameters than {@link TypeRef#getParameters()}
+     */
     public <T> List<T> getComponents(TypeRef<T> type) {
         return getComponents(type, null);
     }
 
+    /**
+     * Returns {@link Component Components} of the specified type. If any of the Components have
+     * {@link InstantiationPolicy#PER_INSTANCE} and depend on {@link InstantiationDetails}, the {@code requesting}
+     * parameter will be used for {@link InstantiationDetails#getRequesting()}. If the {@link Class} has type
+     * parameters, use {@link #getComponent(TypeRef)} instead. Otherwise, an exception is thrown.
+     *
+     * @param type type of the {@link Component Components} to be requested
+     * @param requesting type of the object requesting the {@link Component Components}
+     * @return {@link List} of {@link Component Components} of the specified type
+     * @param <T> type of the {@link Component Components} to be requested
+     * @param <R> type of the object requesting the {@link Component Components}
+     *
+     * @throws ParameterCountMismatchException if the type or requesting {@link Class} has type parameters
+     */
     public <T,R> List<T> getComponents(Class<T> type, Class<R> requesting) {
         return getComponents(TypeRef.of(type), TypeRef.of(requesting));
     }
 
+    /**
+     * Returns {@link Component Components} of the specified type. If any of the Components hav
+     * {@link InstantiationPolicy#PER_INSTANCE} and depend on {@link InstantiationDetails}, the {@code requesting}
+     * parameter will be used for {@link InstantiationDetails#getRequesting()}.
+     *
+     * @param type type of the {@link Component Components} to be requested
+     * @param requesting type of the object requesting the {@link Component Components}
+     * @return {@link List} of {@link Component Components} of the specified type
+     * @param <T> type of the {@link Component Components} to be requested
+     * @param <R> type of the object requesting the {@link Component Components}
+     *
+     * @throws ParameterCountMismatchException if the type or requesting {@link TypeRef#getType()} has a different
+     * amount of type parameters than {@link TypeRef#getParameters()}
+     */
     @SuppressWarnings("unchecked")
     public <T,R> List<T> getComponents(TypeRef<T> type, TypeRef<R> requesting) {
         return getComponent(TypeRef.of(List.class, type), requesting);
@@ -253,10 +386,15 @@ public class Injector {
                     if(componentList.size() > 1 && componentList.get(0).getOrder() != componentList.get(1).getOrder()) {
                         list = getObjects(componentList.get(0), requesting);
                     }
-                    if(list.size() != 1) {
+                    if(list.isEmpty()) {
                         throw LogUtils.logExceptionAndGet(logger,
-                                "Singleton component requested but multiple are present",
-                                MultipleComponentsForSingletonDependencyException::new);
+                                noDependenciesRuntime(reference),
+                                NoDependenciesPresentException::new);
+                    }
+                    if(list.size() > 1) {
+                        throw LogUtils.logExceptionAndGet(logger,
+                                multipleDependenciesRuntime(reference),
+                                MultipleDependenciesPresentException::new);
                     }
                 }
             }
@@ -270,9 +408,5 @@ public class Injector {
         } else {
             return instantiate(data, requesting);
         }
-    }
-
-    public static InjectorBuilder builder() {
-        return new InjectorBuilder();
     }
 }

@@ -2,11 +2,14 @@ package me.datafox.dfxengine.injector.internal;
 
 import lombok.*;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 import java.lang.reflect.Executable;
 import java.util.List;
 
 /**
+ * A reference to a {@link Component} used internally by this module.
+ *
  * @author datafox
  */
 @Builder

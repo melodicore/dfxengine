@@ -6,26 +6,34 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
+ * Contains various utilities used internally by this module.
+ *
  * @author datafox
  */
 public class InjectorUtils {
-    public static List<String> splitParameters(String typeParameters) {
+    /**
+     * Splits a string by the delimiter "{@code , }", but only if the delimiter is not within angle brackets.
+     *
+     * @param parameters parameters to split
+     * @return list of split parameters
+     */
+    public static List<String> splitParameters(String parameters) {
         List<String> list = new ArrayList<>();
         int counter = 0;
         int start = 0;
-        int end = typeParameters.length();
-        for(int i = 0; i < typeParameters.length(); i++) {
+        int end = parameters.length();
+        for(int i = 0; i < parameters.length(); i++) {
             if(counter == 0) {
-                if(typeParameters.startsWith(", ", i)) {
-                    list.add(typeParameters.substring(start, i));
+                if(parameters.startsWith(", ", i)) {
+                    list.add(parameters.substring(start, i));
                     i++;
                     start = i + 1;
                     continue;
                 }
             }
-            if(typeParameters.charAt(i) == '<') {
+            if(parameters.charAt(i) == '<') {
                 counter++;
-            } else if(typeParameters.charAt(i) == '>') {
+            } else if(parameters.charAt(i) == '>') {
                 counter--;
                 if(counter < 0) {
                     end = i;
@@ -33,10 +41,14 @@ public class InjectorUtils {
                 }
             }
         }
-        list.add(typeParameters.substring(start, end));
+        list.add(parameters.substring(start, end));
         return list;
     }
 
+    /**
+     * @param string class signature to resolve
+     * @return resolved superclasses and interfaces from the class signature
+     */
     public static Stream<String> getSuperclasses(String string) {
         if(!string.contains("<")) {
             return Arrays.stream(string.split(" extends | implements ", 2)[1].split(" extends | implements ")).map(InjectorUtils::splitParameters).flatMap(List::stream);
@@ -75,6 +87,11 @@ public class InjectorUtils {
         }
     }
 
+    /**
+     *
+     * @param string signature from which keywords should be stripped
+     * @return specified signature with keywords stripped
+     */
     public static String stripKeywords(String string) {
         for(String str : new String[] {" public ", " abstract "}) {
             while(string.contains(str)) {

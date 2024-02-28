@@ -4,10 +4,12 @@ import io.github.classgraph.*;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
-import me.datafox.dfxengine.injector.exception.*;
+import me.datafox.dfxengine.injector.exception.ComponentClassWithMultipleValidConstructorsException;
+import me.datafox.dfxengine.injector.exception.ComponentClassWithNoValidConstructorsException;
+import me.datafox.dfxengine.injector.exception.CyclicDependencyException;
 import me.datafox.dfxengine.injector.internal.ClassReference;
-import me.datafox.dfxengine.injector.internal.ClassReferenceFactory;
 import me.datafox.dfxengine.injector.internal.ComponentData;
+import me.datafox.dfxengine.injector.internal.ComponentDataFactory;
 import me.datafox.dfxengine.injector.internal.FieldReference;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
@@ -21,6 +23,9 @@ import java.util.stream.Collectors;
 import static me.datafox.dfxengine.injector.utils.InjectorStrings.*;
 
 /**
+ * Builder for the {@link Injector}. For general information, see
+ * <a href="https://github.com/melodicore/dfxengine/blob/master/injector/README.md">README.md</a> on GitHub.
+ *
  * @author datafox
  */
 public class InjectorBuilder {
@@ -134,6 +139,14 @@ public class InjectorBuilder {
         return this;
     }
 
+    /**
+     * If {@code close} is set to {@link false}, {@link ScanResult#close()} will never be called on the static
+     * {@link ScanResult} instance. This is not recommended, and the only purpose for this option is to allow multiple
+     * {@link Injector} instances to be built within the same process during testing.
+     *
+     * @param close {@code false} if {@link ScanResult#close()} should not be called
+     * @return builder
+     */
     public InjectorBuilder closeScan(boolean close) {
         if(!close) {
             logger.warn(NOT_CLOSING_SCAN);
@@ -142,6 +155,11 @@ public class InjectorBuilder {
         return this;
     }
 
+    /**
+     * Builds the {@link Injector} according to the scan done at compile time.
+     *
+     * @return the {@link Injector}
+     */
     public Injector build() {
         logger.info(SCANNING_CLASSPATH);
         checkAndLogWhitelistAndBlacklist();
@@ -206,7 +224,7 @@ public class InjectorBuilder {
         MethodInfoList executables = new MethodInfoList(constructors);
         executables.addAll(methods);
 
-        ClassReferenceFactory factory = new ClassReferenceFactory(scan.getAllClassesAsMap());
+        ComponentDataFactory factory = new ComponentDataFactory(scan.getAllClassesAsMap());
 
         List<ComponentData<?>> components = executables
                 .stream()
@@ -414,28 +432,17 @@ public class InjectorBuilder {
                 continue;
             }
             List<ComponentData<?>> dependency = data.getDependencies().get(i);
-            if(dependency.isEmpty()) {
-                throw LogUtils.logExceptionAndGet(logger,
-                        noDependencies(data.getExecutable(), reference),
-                        ComponentWithUnresolvedDependencyException::new);
-            } else if(dependency.size() > 1 && !reference.isList()) {
-                if(dependency.stream().filter(Predicate.not(ComponentData::isDefaultImpl)).count() != 1) {
-                    throw LogUtils.logExceptionAndGet(logger,
-                            multipleDependencies(data.getExecutable(), reference),
-                            MultipleComponentsForSingletonDependencyException::new);
-                }
-            }
         }
     }
 
     private void checkCyclicDependencies(List<ComponentData<?>> components) {
         logger.info(CHECKING_CYCLIC);
         for(ComponentData<?> component : components) {
-            checkCyclicDependencies(new Stack<>(), component);
+            checkCyclicDependencies(new ArrayDeque<>(), component);
         }
     }
 
-    private void checkCyclicDependencies(Stack<ComponentData<?>> visited, ComponentData<?> current) {
+    private void checkCyclicDependencies(Deque<ComponentData<?>> visited, ComponentData<?> current) {
         if(visited.contains(current)) {
             throw LogUtils.logExceptionAndGet(logger,
                     cyclicDependencyDetected(current, visited),
