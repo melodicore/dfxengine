@@ -23,7 +23,7 @@ import me.datafox.dfxengine.injector.test.classes.pass.basic.Component;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.ComponentMethod;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.NonComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.StaticNonComponent;
-import me.datafox.dfxengine.injector.test.classes.pass.default_impl.ComponentInterface;
+import me.datafox.dfxengine.injector.test.classes.pass.inheritance_order.ComponentInterface;
 import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithInitialize;
 import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithStaticInitialize;
 import me.datafox.dfxengine.injector.test.classes.pass.list.MultipleComponent;
@@ -135,17 +135,6 @@ public class InjectorTest {
     }
 
     @Test
-    public void defaultImplTest() {
-        var injector = assertDoesNotThrow(() -> injector(ComponentInterface.class));
-
-        var c = assertDoesNotThrow(() -> injector.getComponent(ComponentInterface.class));
-        var l = assertDoesNotThrow(() -> injector.getComponents(ComponentInterface.class));
-
-        assertTrue(l.contains(c));
-        assertEquals(2, l.size());
-    }
-
-    @Test
     public void orderTest() {
         var injector = assertDoesNotThrow(() -> injector(Component2.class));
 
@@ -154,6 +143,17 @@ public class InjectorTest {
 
         assertEquals(3, l.size());
         assertEquals(c, l.get(0));
+    }
+
+    @Test
+    public void inheritanceOrderTest() {
+        var injector = assertDoesNotThrow(() -> injector(ComponentInterface.class));
+
+        var c = assertDoesNotThrow(() -> injector.getComponent(ComponentInterface.class));
+        var l = assertDoesNotThrow(() -> injector.getComponents(ComponentInterface.class));
+
+        assertTrue(l.contains(c));
+        assertEquals(2, l.size());
     }
 
     @Test

@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.injector.test.classes.pass.default_impl;
+package me.datafox.dfxengine.injector.test.classes.pass.inheritance_order;
 
 import me.datafox.dfxengine.injector.api.annotation.Component;
 
