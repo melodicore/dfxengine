@@ -21,7 +21,7 @@ import static me.datafox.dfxengine.text.utils.TextFactoryConstants.TEXT_FACTORY_
 /**
  * @author datafox
  */
-@Component(defaultImpl = true)
+@Component(order = Integer.MAX_VALUE)
 public class TextFactoryImpl implements TextFactory {
     private final Logger logger;
 

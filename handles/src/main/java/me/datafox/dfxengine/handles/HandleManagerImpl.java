@@ -31,7 +31,7 @@ import static me.datafox.dfxengine.handles.HandleConstants.TAGS_ID;
  * </p>
  * @author datafox
  */
-@Component(defaultImpl = true)
+@Component(order = Integer.MAX_VALUE)
 public class HandleManagerImpl implements HandleManager {
     private final Logger logger;
 
