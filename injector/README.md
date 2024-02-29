@@ -85,7 +85,7 @@ any declared method) must have a valid constructor. A valid constructor is any c
 exception is thrown if multiple are present. If none are present, the presence of a default constructor is checked for 
 instead to be invoked, and if that is not present either an exception is thrown.
 
-Any non-static field annotated with `@Inject` on a class annotated with or containing non-static methods annotated with 
+Any non-final field annotated with `@Inject` on a class annotated with or containing non-static methods annotated with 
 `@Component` will be treated as a dependency, and will be injected right after the component in question is 
 instantiated. This includes the declaring classes of non-static component methods. If an injectable field is present
 that is final, an exception is thrown.
