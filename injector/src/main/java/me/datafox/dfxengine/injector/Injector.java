@@ -2,7 +2,9 @@ package me.datafox.dfxengine.injector;
 
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.annotation.Component;
-import me.datafox.dfxengine.injector.exception.*;
+import me.datafox.dfxengine.injector.exception.MultipleDependenciesPresentException;
+import me.datafox.dfxengine.injector.exception.NoDependenciesPresentException;
+import me.datafox.dfxengine.injector.exception.ParameterCountMismatchException;
 import me.datafox.dfxengine.injector.internal.ClassReference;
 import me.datafox.dfxengine.injector.internal.ComponentData;
 import me.datafox.dfxengine.injector.internal.InitializeReference;
@@ -18,11 +20,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static me.datafox.dfxengine.injector.utils.InjectorStrings.*;
+import static me.datafox.dfxengine.injector.utils.InjectorStrings.multipleDependenciesRuntime;
+import static me.datafox.dfxengine.injector.utils.InjectorStrings.noDependenciesRuntime;
 
 /**
  * <p>
@@ -53,7 +55,7 @@ public class Injector {
         return instance;
     }
 
-    @Component(value = InstantiationPolicy.PER_INSTANCE, defaultImpl = true)
+    @Component(value = InstantiationPolicy.PER_INSTANCE, order = Integer.MAX_VALUE)
     private static Logger getLogger(InstantiationDetails details) {
         if(details.getRequesting() == null) {
             return LoggerFactory.getLogger(Object.class);
@@ -377,25 +379,18 @@ public class Injector {
             return (T) list;
         } else {
             if(list.size() != 1) {
-                list = componentList.stream()
-                        .filter(Predicate.not(ComponentData::isDefaultImpl))
-                        .map(data -> getObjects(data, requesting))
-                        .flatMap(List::stream)
-                        .collect(Collectors.toList());
-                if(list.size() != 1) {
-                    if(componentList.size() > 1 && componentList.get(0).getOrder() != componentList.get(1).getOrder()) {
-                        list = getObjects(componentList.get(0), requesting);
-                    }
-                    if(list.isEmpty()) {
-                        throw LogUtils.logExceptionAndGet(logger,
-                                noDependenciesRuntime(reference),
-                                NoDependenciesPresentException::new);
-                    }
-                    if(list.size() > 1) {
-                        throw LogUtils.logExceptionAndGet(logger,
-                                multipleDependenciesRuntime(reference),
-                                MultipleDependenciesPresentException::new);
-                    }
+                if(componentList.size() > 1 && componentList.get(0).getOrder() != componentList.get(1).getOrder()) {
+                    list = getObjects(componentList.get(0), requesting);
+                }
+                if(list.isEmpty()) {
+                    throw LogUtils.logExceptionAndGet(logger,
+                            noDependenciesRuntime(reference),
+                            NoDependenciesPresentException::new);
+                }
+                if(list.size() > 1) {
+                    throw LogUtils.logExceptionAndGet(logger,
+                            multipleDependenciesRuntime(reference),
+                            MultipleDependenciesPresentException::new);
                 }
             }
             return (T) list.get(0);

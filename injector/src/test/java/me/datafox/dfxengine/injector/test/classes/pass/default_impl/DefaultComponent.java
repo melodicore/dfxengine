@@ -5,6 +5,6 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
 /**
  * @author datafox
  */
-@Component(defaultImpl = true)
+@Component(order = Integer.MAX_VALUE)
 public class DefaultComponent implements ComponentInterface {
 }

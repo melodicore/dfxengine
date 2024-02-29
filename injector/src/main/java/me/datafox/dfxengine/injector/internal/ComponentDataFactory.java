@@ -112,11 +112,9 @@ public class ComponentDataFactory {
         }
         if(annotation != null) {
             builder.policy(annotation.value())
-                    .defaultImpl(annotation.defaultImpl())
                     .order(annotation.order());
         } else {
             builder.policy(InstantiationPolicy.ONCE)
-                    .defaultImpl(false)
                     .order(0);
         }
         for(MethodParameterInfo param : info.getParameterInfo()) {

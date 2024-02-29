@@ -6,6 +6,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.List;
 
 /**
  * <p>
@@ -16,14 +17,14 @@ import java.lang.annotation.Target;
  * that are injected right after instantiation. Likewise, a component method may have other dependencies as parameters.
  * </p>
  * <p>
- * The {@link #value()} determines how the component is instantiated. {@link InstantiationPolicy#ONCE} creates a
- * singleton instance of the component class at build time, while {@link InstantiationPolicy#PER_INSTANCE} instantiates
- * a new instance of the component class every time it is injected.
+ * {@link #value()} determines how the component is instantiated. {@link InstantiationPolicy#ONCE} creates a singleton
+ * instance of the component class at build time, while {@link InstantiationPolicy#PER_INSTANCE} instantiates a new
+ * instance of the component class for every component that depends on it.
  * </p>
  * <p>
- * If {@link #defaultImpl()} is set to {@code true}, this component will be ignored if a single component with its
- * signature has been requested and other components not marked as default implementations with the same signature are
- * present.
+ * {@link #order()} determines the priority of components. If a single component is requested but multiple are present,
+ * the highest priority component will be used. Only if multiple components with the same priority exist, an exception
+ * will be thrown. This also affects the order of components in the {@link List} when multiple components are requested.
  * </p>
  *
  * @author datafox
@@ -42,18 +43,9 @@ public @interface Component {
     InstantiationPolicy value() default InstantiationPolicy.ONCE;
 
     /**
-     * A default implementation means that this component should be ignored if a single component with its signature has
-     * been requested and other components not marked as default implementations with the same signature are present
-     *
-     * @return {@code true} if this component is a default implementation
-     */
-    boolean defaultImpl() default false;
-
-    /**
      * The order affects both the order of components in the list when multiple components with this component's
      * signature are requested, and the priority when a single component with this component's signature has been
-     * requested and multiple non-default components with the same signature are present. Lower number means higher
-     * priority.
+     * requested and multiple components with the same signature are present. Lower number means higher priority.
      *
      * @return {@code int} used for ordering components
      */

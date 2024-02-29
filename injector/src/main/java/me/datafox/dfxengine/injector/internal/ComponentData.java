@@ -19,8 +19,6 @@ public class ComponentData<T> {
 
     private final InstantiationPolicy policy;
 
-    private final boolean defaultImpl;
-
     private final int order;
 
     private final ClassReference<?> owner;
