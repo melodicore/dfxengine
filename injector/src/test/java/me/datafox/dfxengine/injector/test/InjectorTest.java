@@ -28,6 +28,8 @@ import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithI
 import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithStaticInitialize;
 import me.datafox.dfxengine.injector.test.classes.pass.list.MultipleComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.list.MultipleDependComponent;
+import me.datafox.dfxengine.injector.test.classes.pass.method_field.Component4;
+import me.datafox.dfxengine.injector.test.classes.pass.method_field.NonComponent4;
 import me.datafox.dfxengine.injector.test.classes.pass.order.Component2;
 import me.datafox.dfxengine.injector.test.classes.pass.parametric.ExtendingParametricComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.parametric.Parametric;
@@ -186,6 +188,17 @@ public class InjectorTest {
         assertEquals(5, i);
         assertEquals(5, c.getPrimitive());
         assertEquals(5, c.getBoxed());
+    }
+
+    @Test
+    public void methodFieldTest() {
+        var injector = assertDoesNotThrow(() -> injector(Component4.class));
+
+        var c1 = assertDoesNotThrow(() -> injector.getComponent(Component4.class));
+        var c2 = assertDoesNotThrow(() -> injector.getComponent(NonComponent4.class));
+
+        assertNotNull(c1);
+        assertEquals(c1, c2.getComponent());
     }
 
     @Test
