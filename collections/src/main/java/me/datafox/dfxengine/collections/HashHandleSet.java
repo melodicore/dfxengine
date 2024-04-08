@@ -14,11 +14,17 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
+ * <p>
  * An extension of {@link HashSet} that can only contain {@link Handle Handles} of the {@link Space} associated with
  * this set. Implements {@link HandleSet} for various helper methods related to Handles.
+ * </p>
+ * <p>
+ * The collections module has been deprecated, and the collections are now in the respective modules that use them
+ * </p>
  *
  * @author datafox
  */
+@Deprecated
 public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     private final Logger logger;
 

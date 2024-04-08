@@ -7,6 +7,7 @@ import me.datafox.dfxengine.handles.api.collection.HandleMap;
 /**
  * @author datafox
  */
+@Deprecated
 public class HashHandleMapTest extends AbstractHandleMapTest {
     @Override
     protected HandleMap<Object> getMap(Space space) {

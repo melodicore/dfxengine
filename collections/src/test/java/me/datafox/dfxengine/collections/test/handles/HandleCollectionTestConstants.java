@@ -3,6 +3,7 @@ package me.datafox.dfxengine.collections.test.handles;
 /**
  * @author datafox
  */
+@Deprecated
 public class HandleCollectionTestConstants {
     static final String TEST_SPACE = "testSpace";
     static final String TEST_HANDLE = "testHandle";

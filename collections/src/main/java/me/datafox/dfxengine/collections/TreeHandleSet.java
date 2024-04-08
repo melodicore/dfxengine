@@ -14,11 +14,17 @@ import java.util.Map;
 import java.util.TreeSet;
 
 /**
+ * <p>
  * An extension of {@link TreeSet} that can only contain {@link Handle Handles} of the {@link Space} associated with
  * this set. Implements {@link HandleSet} for various helper methods related to Handles.
+ * </p>
+ * <p>
+ * The collections module has been deprecated, and the collections are now in the respective modules that use them
+ * </p>
  *
  * @author datafox
  */
+@Deprecated
 public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
     private final Logger logger;
 

@@ -13,6 +13,7 @@ import static me.datafox.dfxengine.collections.test.handles.HandleCollectionTest
 /**
  * @author datafox
  */
+@Deprecated
 public abstract class AbstractHandleCollectionTest {
     protected static HandleManager handleManager;
 

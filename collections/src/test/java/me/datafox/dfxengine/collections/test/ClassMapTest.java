@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author datafox
  */
+@Deprecated
 public class ClassMapTest {
     @Test
     public void functionClassMap() {

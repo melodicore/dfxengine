@@ -14,9 +14,13 @@ import java.util.stream.Collectors;
  * A new method, {@link #getAndCast(Class)}, is also defined, which casts all the objects in the list to the type the
  * list was retrieved with.
  * </p>
+ * <p>
+ * The collections module has been deprecated, and the collections are now in the respective modules that use them
+ * </p>
  *
  * @author datafox
  */
+@Deprecated
 public class ObjectClassMap extends FunctionClassMap<Object> {
     /**
      * Constructor for ObjectClassMap

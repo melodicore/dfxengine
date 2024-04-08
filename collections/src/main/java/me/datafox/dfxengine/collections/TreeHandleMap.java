@@ -15,11 +15,17 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
+ * <p>
  * An extension of {@link TreeMap} that can only use {@link Handle Handles} of the {@link Space} associated with this
  * map as its keys. Implements {@link HandleMap} for various helper methods related to Handles.
+ * </p>
+ * <p>
+ * The collections module has been deprecated, and the collections are now in the respective modules that use them
+ * </p>
  *
  * @author datafox
  */
+@Deprecated
 public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> {
     private final Logger logger;
 

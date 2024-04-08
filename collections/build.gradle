@@ -7,14 +7,14 @@ plugins {
 version = "$collectionsVersion"
 
 dependencies {
-    api project(":handles-api")
-    implementation project(":utils")
-    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    api "me.datafox.dfxengine:handles-api:1.0.6"
+    implementation "me.datafox.dfxengine:utils:1.0.0"
+    implementation "org.slf4j:slf4j-api:2.0.11"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
-    testImplementation project(":handles")
+    testImplementation "me.datafox.dfxengine:handles:1.0.6"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"

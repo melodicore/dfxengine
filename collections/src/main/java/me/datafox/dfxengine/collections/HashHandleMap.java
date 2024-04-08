@@ -14,11 +14,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * <p>
  * An extension of {@link HashMap} that can only use {@link Handle Handles} of the {@link Space} associated with this
  * map as its keys. Implements {@link HandleMap} for various helper methods related to Handles.
+ * </p>
+ * <p>
+ * The collections module has been deprecated, and the collections are now in the respective modules that use them
+ * </p>
  *
  * @author datafox
  */
+@Deprecated
 public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> {
     private final Logger logger;
 

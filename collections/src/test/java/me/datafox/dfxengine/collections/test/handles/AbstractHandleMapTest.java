@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author datafox
  */
+@Deprecated
 public abstract class AbstractHandleMapTest extends AbstractHandleCollectionTest {
     protected HandleMap<Object> testMap;
 

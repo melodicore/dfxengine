@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author datafox
  */
+@Deprecated
 public abstract class AbstractHandleSetTest extends AbstractHandleCollectionTest {
     protected HandleSet testSet;
 

@@ -21,9 +21,13 @@ import java.util.function.Function;
  * This data structure ensures that whenever {@link #get(Class)} is called, the retrieved list contains all values which
  * are represented by the type or a descendant of the type the method was called with.
  * </p>
+ * <p>
+ * The collections module has been deprecated, and the collections are now in the respective modules that use them
+ * </p>
  *
  * @author datafox
  */
+@Deprecated
 @EqualsAndHashCode
 public class FunctionClassMap<T> {
     /**

@@ -7,6 +7,7 @@ import me.datafox.dfxengine.handles.api.collection.HandleSet;
 /**
  * @author datafox
  */
+@Deprecated
 public class TreeHandleSetTest extends AbstractHandleSetTest {
     @Override
     protected HandleSet getSet(Space space) {
