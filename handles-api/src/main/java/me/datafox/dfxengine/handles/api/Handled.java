@@ -1,13 +1,13 @@
 package me.datafox.dfxengine.handles.api;
 
 /**
- * An interface denoting that an implementing class is associated with a {@link Handle}.
+ * An interface determining that any class implementing it should be identified with a {@link Handle}.
  *
  * @author datafox
  */
 public interface Handled {
     /**
-     * @return {@link Handle} associated with this class
+     * @return identifying {@link Handle} of this object
      */
     Handle getHandle();
 }
