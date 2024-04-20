@@ -4,8 +4,9 @@ package me.datafox.dfxengine.handles.api;
  * <p>
  * A handle is an identifier used for various objects. It contains a {@link String} id, an integer index and an
  * arbitrary number of tags, which are also handles. A handle is always contained in a single {@link Space}, and may
- * belong to one or more {@link Group Groups} within that Space. A handle's id may consist of printable ASCII
- * characters, with the exception of the colon ({@code :}) which is reserved as a separator for subhandles.
+ * belong to one or more {@link Group Groups} within that Space. A handle's id may not be empty or blank and may consist
+ * of printable ASCII characters, with the exception of the colon ({@code :}) which is reserved as a separator for
+ * subhandles.
  * </p>
  * <p>
  * A handle may have any number of subhandles. The ids of subhandles are in the format {@code handle:subhandle}. A
@@ -50,30 +51,38 @@ public interface Handle extends Comparable<Handle> {
     int getSubIndex();
 
     /**
-     * @return {@link Group Groups} containing this handle
-     */
-    HandleMap<Group> getGroups();
-
-    /**
      * @return subhandles contained in this handle
      */
     HandleSet getSubHandles();
 
     /**
+     * Creates a new subhandle. Throws {@link UnsupportedOperationException} if this handle is a subhandle or is
+     * associated with a {@link Space} (subhandles for space handles are used exclusively for {@link Group Groups},
+     * use {@link Space#createGroup(String)} instead).
+     *
      * @param id {@link String} id for the new subhandle
      * @return created subhandle
-     * @throws IllegalArgumentException if the id is {@code null}, contains non-ASCII or non-printable characters or the
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or the
      * colon ({@code :}), or if a subhandle with the given id already exists in this handle
+     * @throws UnsupportedOperationException if this handle is a subhandle or if this handle is associated with a
+     * {@link Space}
      */
     Handle createSubHandle(String id);
 
     /**
      * Creates a subhandle with the specified id if it does not already exist and returns the subhandle with that id.
+     * Throws {@link UnsupportedOperationException} if this handle is a subhandle or is associated with a {@link Space}
+     * (subhandles for space handles are used exclusively for {@link Group Groups}) and a subhandle with the specified
+     * id is not present. Use {@link Space#getOrCreateGroup(String)}.
      *
      * @param id {@link String} id for the subhandle
      * @return created or pre-existing subhandle
-     * @throws IllegalArgumentException if the id is {@code null}, contains non-ASCII or non-printable characters or the
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or the
      * colon ({@code :})
+     * @throws UnsupportedOperationException if this handle is a subhandle or if this handle is associated with a
+     * {@link Space} and a subhandle with the specified id is not present
      */
     Handle getOrCreateSubHandle(String id);
 

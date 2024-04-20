@@ -28,6 +28,18 @@ public interface HandleSet extends Set<Handle> {
     Handle get(String id);
 
     /**
+     * Creates a {@link Handle} with the specified id if one does not already exist and adds it to this set.
+     *
+     * @param id id for the new {@link Handle}
+     * @return created or pre-existing {@link Handle}
+     * @throws UnsupportedOperationException if the {@code add} operation is not supported by this set
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or
+     * more than one colon ({@code :})
+     */
+    Handle add(String id);
+
+    /**
      * Returns an unmodifiable version of this set. All changes made to the original set will be reflected in the
      * returned one.
      *

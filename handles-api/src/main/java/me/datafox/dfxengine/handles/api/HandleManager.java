@@ -25,7 +25,8 @@ public interface HandleManager {
     /**
      * @param id {@link String} id for the new {@link Space}
      * @return created {@link Space}
-     * @throws IllegalArgumentException if the id is {@code null}, contains non-ASCII or non-printable characters or the
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or the
      * colon ({@code :}), or if a {@link Space} with the given id already exists
      */
     Space createSpace(String id);
@@ -35,7 +36,8 @@ public interface HandleManager {
      *
      * @param id {@link String} id for the {@link Space}
      * @return created or pre-existing {@link Space}
-     * @throws IllegalArgumentException if the id is {@code null}, contains non-ASCII or non-printable characters or the
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or the
      * colon ({@code :})
      */
     Space getOrCreateSpace(String id);
