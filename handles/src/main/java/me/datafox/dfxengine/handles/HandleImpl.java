@@ -1,270 +1,163 @@
 package me.datafox.dfxengine.handles;
 
-import lombok.*;
-import me.datafox.dfxengine.collections.HashHandleSet;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleManager;
+import me.datafox.dfxengine.handles.api.HandleSet;
 import me.datafox.dfxengine.handles.api.Space;
-import me.datafox.dfxengine.handles.api.collection.HandleSet;
+import me.datafox.dfxengine.handles.utils.HandleUtils;
+import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.Logger;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import static me.datafox.dfxengine.handles.utils.HandleStrings.*;
 
 /**
- * An identifier class with a tagging system. A handle in its most bare-bones understanding contains a {@link String}
- * id, a {@link Space} which is a namespace for ids, and zero or more tags, which are also handles. In practice a handle
- * also contains an index used for ordering, and a reference to a {@link HandleManager} which is used to manipulate
- * handles and Spaces, including tags. Handles are primarily designed to be used as map keys and for other identifying
- * purposes.
- *
  * @author datafox
  */
-@Data
-public final class HandleImpl implements Handle {
-    @EqualsAndHashCode.Exclude
-    @NonNull
+@Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class HandleImpl implements Handle {
+    @EqualsAndHashCode.Include
     private final HandleManager handleManager;
-
-    @NonNull
+    private final Logger logger;
+    @EqualsAndHashCode.Include
     private final Space space;
-
-    @EqualsAndHashCode.Exclude
-    @NonNull
     private final String id;
-
-    private final long index;
-
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
+    private final int index;
+    @EqualsAndHashCode.Include
+    private final int subIndex;
+    private final HandleSet subHandles;
     private final HandleSet tags;
 
-    @Builder
-    private HandleImpl(@NonNull Space space, @NonNull String id, long index, @Singular Collection<Handle> tags) {
-        super();
+    HandleImpl(Space space, String id, int index, int subIndex) {
         handleManager = space.getHandleManager();
+        logger = ((HandleManagerImpl) handleManager).getLogger();
+        HandleManagerConfiguration conf = ((HandleManagerImpl) handleManager).getConfiguration();
         this.space = space;
         this.id = id;
         this.index = index;
-        this.tags = new HashHandleSet(((HandleManagerImpl) handleManager).getTagSpace(), tags);
-    }
-
-    HandleImpl(@NonNull Space space, @NonNull String id, long index) {
-        handleManager = space.getHandleManager();
-        this.space = space;
-        this.id = id;
-        this.index = index;
-        tags = null;
-    }
-
-    /**
-     * @return {@link HandleManager} associated with this handle
-     */
-    @Override
-    public HandleManager getHandleManager() {
-        return handleManager;
+        this.subIndex = subIndex;
+        subHandles = conf.isOrderedSubHandles() ?
+                new TreeHandleSet(space, logger) :
+                new HashHandleSet(space, logger);
+        tags = conf.isOrderedTags() ?
+                new TreeHandleSet(handleManager.getTagSpace(), logger) :
+                new HashHandleSet(handleManager.getTagSpace(), logger);
     }
 
     /**
-     * @return {@link Space} containing this handle
-     */
-    @Override
-    public Space getSpace() {
-        return space;
-    }
-
-    /**
-     * @return {@link String} id of this handle
-     */
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * The index value used for ordering handles within a {@link Space}.
+     * {@inheritDoc}
      *
-     * @return index of this handle
+     * @return {@inheritDoc}
      */
     @Override
-    public long getIndex() {
-        return index;
+    public HandleSet getSubHandles() {
+        return subHandles.unmodifiable();
     }
 
     /**
-     * @param id id to be checked for
-     * @return {@code true} if the specified id matches the id of this handle
-     */
-    @Override
-    public boolean isId(String id) {
-        return this.id.equals(id);
-    }
-
-    /**
-     * @return all tags associated with this handle
-     */
-    @Override
-    public Collection<Handle> getTags() {
-        return Collections.unmodifiableSet(tags);
-    }
-
-    /**
-     * @param tag handle to be added as a tag
-     * @return {@code true} if the tags of this handle changed as a result of this action
+     * {@inheritDoc}
      *
-     * @throws IllegalArgumentException when the specified handle is not a part of the tags {@link Space}. Details for
-     * hardcoded Spaces are documented in {@link HandleManager}
+     * @param id {@inheritDoc}
+     * @return {@inheritDoc}
+     * @throws NullPointerException {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws UnsupportedOperationException {@inheritDoc}
      */
     @Override
-    public boolean addTag(Handle tag) {
-        return tags.add(tag);
+    public Handle createSubHandle(String id) {
+        checkSubHandle();
+        HandleUtils.checkId(SUBHANDLE, id, logger);
+        checkSubHandleId(id);
+        id = this.id + ":" + id;
+        if(subHandles.contains(id)) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    unavailableId(SUBHANDLE, id),
+                    IllegalArgumentException::new);
+        }
+        return createSubHandleInternal(id);
     }
 
     /**
-     * Adds a tag based on the specified id for the tag. If a tag with the specified id does not exist in the tags
-     * {@link Space}, one is automatically created. Details for hardcoded Spaces are documented in
-     * {@link HandleManager}.
+     * {@inheritDoc}
      *
-     * @param id id of the handle to be added as a tag
-     * @return {@code true} if the tags of this handle changed as a result of this action
+     * @param id {@inheritDoc}
+     * @return {@inheritDoc}
+     * @throws NullPointerException {@inheritDoc}
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws UnsupportedOperationException {@inheritDoc}
      */
     @Override
-    public boolean addTagById(String id) {
-        return addTag(tags.getSpace().getOrCreateHandle(id));
+    public Handle getOrCreateSubHandle(String id) {
+        checkSubHandle();
+        HandleUtils.checkId(SUBHANDLE, id, logger);
+        checkSubHandleId(id);
+        id = this.id + ":" + id;
+        if(subHandles.contains(id)) {
+            return subHandles.get(id);
+        }
+        return createSubHandleInternal(id);
     }
 
     /**
-     * @param tags handles to be added as a tags
-     * @return {@code true} if the tags of this handle changed as a result of this action
+     * {@inheritDoc}
      *
-     * @throws IllegalArgumentException when any of the specified handles are not a part of the tags {@link Space}.
-     * Details for hardcoded Spaces are documented in {@link HandleManager}
+     * @return {@inheritDoc}
      */
     @Override
-    public boolean addTags(Collection<Handle> tags) {
-        return this.tags.addAll(tags);
+    public boolean isSubHandle() {
+        return subIndex != -1;
     }
 
     /**
-     * Adds tags based on the specified ids for the tags. If a tag with the specified id does not exist in the tags
-     * {@link Space}, one is automatically created. Details for hardcoded Spaces are documented in
-     * {@link HandleManager}.
+     * Compares this handle with the specified handle for order. Returns a negative integer, zero, or a positive integer
+     * as this handle is less than, equal to, or greater than the specified handle. The order of handles is specified by
+     * three things. If the {@link Space Spaces} of the handles are different, comparison is done with the space's
+     * handle. If the spaces are the same, comparison is done with the index, using the sub-index if the indices are
+     * also the same.
      *
-     * @param ids ids for the handles to be added as a tags
-     * @return {@code true} if the tags of this handle changed as a result of this action
+     * @param o handle to be compared.
+     * @return negative integer, zero, or a positive integer as this handle is less than, equal to, or greater than the
+     * specified handle
+     * @throws NullPointerException if the specified handle is {@code null}
      */
     @Override
-    public boolean addTagsById(Collection<String> ids) {
-        return addTags(ids.stream()
-                .map(tags.getSpace()::getOrCreateHandle)
-                .collect(Collectors.toSet()));
+    public int compareTo(Handle o) {
+        if(!space.equals(o.getSpace())) {
+            return space.getHandle().compareTo(o.getSpace().getHandle());
+        }
+        if(index != o.getIndex()) {
+            return Integer.compare(index, o.getIndex());
+        }
+        return Integer.compare(subIndex, o.getSubIndex());
     }
 
-    /**
-     * @param tag tag to be checked for
-     * @return {@code true} if this handle contains the specified tag
-     */
-    @Override
-    public boolean containsTag(Handle tag) {
-        return tags.contains(tag);
-    }
-
-    /**
-     * @param id id of a tag to be checked for
-     * @return {@code true} if this handle contains a tag with the specified id
-     */
-    @Override
-    public boolean containsTagById(String id) {
-        return tags.containsById(id);
-    }
-
-    /**
-     * @param tags tags to be checked for
-     * @return {@code true} if this handle contains all the specified tags
-     */
-    @Override
-    public boolean containsTags(Collection<Handle> tags) {
-        return this.tags.containsAll(tags);
-    }
-
-    /**
-     * @param ids ids for the tags to be checked for
-     * @return {@code true} if this handle contains tags with all the specified ids
-     */
-    @Override
-    public boolean containsTagsById(Collection<String> ids) {
-        return tags.containsAllById(ids);
-    }
-
-    /**
-     * @param tag tag to be removed
-     * @return {@code true} if the tags of this handle changed as a result of this action
-     */
-    @Override
-    public boolean removeTag(Handle tag) {
-        return tags.remove(tag);
-    }
-
-    /**
-     * @param id id of a tag to be removed
-     * @return {@code true} if the tags of this handle changed as a result of this action
-     */
-    @Override
-    public boolean removeTagById(String id) {
-        return tags.removeById(id);
-    }
-
-    /**
-     * @param tags tags to be removed
-     * @return {@code true} if the tags of this handle changed as a result of this action
-     */
-    @Override
-    public boolean removeTags(Collection<Handle> tags) {
-        return this.tags.removeAll(tags);
-    }
-
-    /**
-     * @param ids ids of the tags to be removed
-     * @return {@code true} if the tags of this handle changed as a result of this action
-     */
-    @Override
-    public boolean removeTagsById(Collection<String> ids) {
-        return tags.removeAllById(ids);
-    }
-
-    /**
-     * @return {@link Stream} of the tags present in this handle
-     */
-    @Override
-    public Stream<Handle> tagStream() {
-        return tags.stream();
-    }
-
-    /**
-     * Clears all tags from this handle.
-     */
-    @Override
-    public void clearTags() {
-        tags.clear();
-    }
-
-    /**
-     * @return {@link String} representation of this handle in format <i>spaceId:handleId</i>
-     */
     @Override
     public String toString() {
-        return String.format("%s:%s", space.getHandle().getId(), getId());
+        return String.format("%s > %s", space.getHandle().getId(), getId());
     }
 
-    void bootstrap(Space tagSpace) {
-        try {
-            Field f = HandleImpl.class.getDeclaredField("tags");
-            f.trySetAccessible();
-            f.set(this, new HashHandleSet(tagSpace));
-        } catch(NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+    private void checkSubHandle() {
+        if(isSubHandle()) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    SUBHANDLE_SUBHANDLE,
+                    UnsupportedOperationException::new);
         }
+    }
+
+    private void checkSubHandleId(String id) {
+        if(id.contains(":")) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    SUBHANDLE_ID,
+                    IllegalArgumentException::new);
+        }
+    }
+
+    private Handle createSubHandleInternal(String id) {
+        Handle handle = new HandleImpl(space, id, index, subHandles.size());
+        subHandles.add(handle);
+        return handle;
     }
 }
