@@ -17,27 +17,29 @@ that are supported by Android's
 
 Here are the currently existing and planned modules:
 
-| Module                                                              | Status                            | Description                                         |
-|---------------------------------------------------------------------|-----------------------------------|-----------------------------------------------------|
-| [Dependencies](dependencies)                                        | Done (1.0.2)                      | Data structure dependencies and invalidation        |
-| [Handles API](handles-api)                                          | Done (1.0.6) \[2.0.0]<sup>2</sup> | Interfaces for the Handles module                   |
-| [Handles](handles)                                                  | Done (1.0.6) \[2.0.0]<sup>2</sup> | Dynamic enum-like structures for map keys           |
-| [Injector API](injector-api)                                        | Done (1.1.2) \[2.0.0]<sup>2</sup> | Annotations for the Injector module                 |
-| [Injector](injector)                                                | Done (1.1.2) \[2.0.0]<sup>2</sup> | A dependency injector                               |
-| [Math API](math-api)                                                | Done (1.0.2)                      | Interfaces for the Math module                      |
-| [Math](math)                                                        | Done (1.0.4)                      | Seamless wrapping and manipulation of number types  |
-| [Utils](utils)<sup>1</sup>                                          | Done (1.0.0) \[1.0.1]<sup>2</sup> | Utilities used by other modules                     |
-| [Values API](values-api)                                            | Done (1.0.0) \[1.1.0]<sup>2</sup> | Interfaces for the Values module                    |
-| [Values](values)                                                    | Done (1.0.1) \[1.1.0]<sup>2</sup> | Mutable number values and a dynamic modifier system |
-| [Text API](text-api)                                                | Under Construction                | Interfaces for the Text module                      |
-| [Text](text)                                                        | Under Construction                | Text handling and representation                    |
-| Entities                                                            | Not yet started                   | Data-oriented entity system                         |
-| Serialization                                                       | Not yet started                   | Serialization for other modules                     |
-| [Collections](collections)<sup>1</sup> (Deprecated in next release) | Done (1.0.0) \[1.0.2]<sup>2</sup> | Collections for other modules and general usage     |
+| Module                                   | Status                            | Description                                         |
+|------------------------------------------|-----------------------------------|-----------------------------------------------------|
+| [Dependencies](dependencies)             | Done (1.0.2)                      | Data structure dependencies and invalidation        |
+| [Handles API](handles-api)               | Done (1.0.6) \[2.0.0]<sup>2</sup> | Interfaces for the Handles module                   |
+| [Handles](handles)                       | Done (1.0.6) \[2.0.0]<sup>2</sup> | Dynamic enum-like structures for map keys           |
+| [Injector API](injector-api)             | Done (1.1.2) \[2.0.0]<sup>2</sup> | Annotations for the Injector module                 |
+| [Injector](injector)                     | Done (1.1.2) \[2.0.0]<sup>2</sup> | A dependency injector                               |
+| [Math API](math-api)                     | Done (1.0.2)                      | Interfaces for the Math module                      |
+| [Math](math)                             | Done (1.0.4)                      | Seamless wrapping and manipulation of number types  |
+| [Utils](utils)<sup>1</sup>               | Done (1.0.0) \[1.0.1]<sup>2</sup> | Utilities used by other modules                     |
+| [Values API](values-api)                 | Done (1.0.0) \[1.1.0]<sup>2</sup> | Interfaces for the Values module                    |
+| [Values](values)                         | Done (1.0.1) \[1.1.0]<sup>2</sup> | Mutable number values and a dynamic modifier system |
+| [Text API](text-api)                     | Under Construction                | Interfaces for the Text module                      |
+| [Text](text)                             | Under Construction                | Text handling and representation                    |
+| Entities                                 | Not yet started                   | Data-oriented entity system                         |
+| Serialization                            | Not yet started                   | Serialization for other modules                     |
+| [Collections](collections)<sup>1,3</sup> | Done (1.0.0) \[1.0.2]<sup>2</sup> | Collections for other modules and general usage     |
 
 1: These modules will get more features as they are required by other modules
 
 2: This is the upcoming version in the current code base, the first version number reflects final releases on Maven
+
+3: This module will be deprecated in the next release
 
 There are four possible statuses for modules.
 
