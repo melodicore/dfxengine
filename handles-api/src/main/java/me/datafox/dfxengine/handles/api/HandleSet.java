@@ -23,7 +23,7 @@ public interface HandleSet extends Set<Handle> {
      *
      * @param id {@link String} id of a {@link Handle}
      * @return {@link Handle} with the given id, or {@code null} if none is present
-     * @throws NullPointerException  if the specified {@link Handle} is {@code null}
+     * @throws NullPointerException  if the specified id is {@code null}
      */
     Handle get(String id);
 
@@ -65,8 +65,9 @@ public interface HandleSet extends Set<Handle> {
      *
      * @param tags tag {@link Handle Handles} or their {@link String} ids
      * @return all {@link Handle Handles} in this set containing the specified tags
-     * @throws ClassCastException if any of the tags are not {@link Handle Handles} or a {@link String Strings}
-     * @throws NullPointerException if any of the tags is {@code null}
+     * @throws ClassCastException if any of the tags is not a {@link Handle} or a {@link String}
+     * @throws NullPointerException if the specified collection contains one or more {@code null} elements or if the
+     * collection itself is {@code null}
      * @throws IllegalArgumentException if any of the {@link Handle Handles} is not a tag
      */
     Collection<Handle> getByTags(Collection<?> tags);
@@ -77,7 +78,7 @@ public interface HandleSet extends Set<Handle> {
      *
      * @param o {@link Handle} element or its {@link String} id whose presence in this set is to be tested
      * @return {@code true} if this set contains the specified element
-     * @throws ClassCastException if the type of the specified element is incompatible with this set
+     * @throws ClassCastException if the object is of not a {@link Handle} or a {@link String}
      * @throws NullPointerException if the specified element is {@code null}
      */
     @Override
@@ -90,7 +91,6 @@ public interface HandleSet extends Set<Handle> {
      * @param handle element to be added to this set
      * @return {@code true} if this set did not already contain the specified element
      * @throws UnsupportedOperationException if the {@code add} operation is not supported by this set
-     * @throws ClassCastException if the type of the specified element is incompatible with this set
      * @throws NullPointerException if the specified element is {@code null}
      * @throws IllegalArgumentException if the {@link Handle} element is not present in this set's associated
      * {@link Space}
@@ -105,7 +105,7 @@ public interface HandleSet extends Set<Handle> {
      * @param o {@link Handle} element or its {@link String} id to be removed from this set, if present
      * @return {@code true} if this set contained the specified element
      * @throws UnsupportedOperationException if the {@code remove} operation is not supported by this set
-     * @throws ClassCastException if the type of the specified element is incompatible with this set
+     * @throws ClassCastException if the object is of not a {@link Handle} or a {@link String}
      * @throws NullPointerException if the specified element is {@code null}
      */
     @Override
@@ -117,8 +117,9 @@ public interface HandleSet extends Set<Handle> {
      *
      * @param c {@link Handle} elements or their {@link String} ids to be checked for containment in this set
      * @return {@code true} if this set contains all elements of the specified collection
-     * @throws ClassCastException if the type of a specified element is incompatible with this set
-     * @throws NullPointerException if the specified collection contains one or more {@code null} elements
+     * @throws ClassCastException if any of the elements is not a {@link Handle} or a {@link String}
+     * @throws NullPointerException if the specified collection contains one or more {@code null} elements or if the
+     * collection itself is {@code null}
      */
     @Override
     boolean containsAll(Collection<?> c);
@@ -130,8 +131,8 @@ public interface HandleSet extends Set<Handle> {
      * @param c collection containing elements to be added to this set
      * @return {@code true} if this set changed as a result of the call
      * @throws UnsupportedOperationException if the {@code addAll} operation is not supported by this set
-     * @throws ClassCastException if the type of a specified element is incompatible with this set
-     * @throws NullPointerException if the specified collection contains one or more {@code null} elements
+     * @throws NullPointerException if the specified collection contains one or more {@code null} elements or if the
+     * collection itself is {@code null}
      * @throws IllegalArgumentException if any of the {@link Handle} elements is not present within this set's
      * associated {@link Space}
      */
@@ -145,8 +146,9 @@ public interface HandleSet extends Set<Handle> {
      * @param c collection containing elements to be retained in this set
      * @return {@code true} if this set changed as a result of the call
      * @throws UnsupportedOperationException if the {@code retainAll} operation is not supported by this set
-     * @throws ClassCastException if the type of an element in the specified collection is incompatible with this set
-     * @throws NullPointerException if the specified collection contains a {@code null} element
+     * @throws ClassCastException if any of the elements is not a {@link Handle} or a {@link String}
+     * @throws NullPointerException if the specified collection contains one or more {@code null} elements or if the
+     * collection itself is {@code null}
      */
     @Override
     boolean retainAll(Collection<?> c);
@@ -158,8 +160,9 @@ public interface HandleSet extends Set<Handle> {
      * @param c collection containing elements to be removed from this set
      * @return {@code true} if this set changed as a result of the call
      * @throws UnsupportedOperationException if the {@code removeAll} operation is not supported by this set
-     * @throws ClassCastException if the type of an element in the specified collection is incompatible with this set
-     * @throws NullPointerException if the specified collection contains a {@code null} element
+     * @throws ClassCastException if any of the elements is not a {@link Handle} or a {@link String}
+     * @throws NullPointerException if the specified collection contains one or more {@code null} elements or if the
+     * collection itself is {@code null}
      */
     @Override
     boolean removeAll(Collection<?> c);

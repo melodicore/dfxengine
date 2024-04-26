@@ -109,7 +109,6 @@ public interface HandleMap<T> extends Map<Handle, T> {
      * @param value value to be associated with the specified key
      * @return the previous value associated with the key, or {@code null} if none was present
      * @throws UnsupportedOperationException if the {@code put} operation is not supported by this map
-     * @throws ClassCastException if the key or value is of an inappropriate type for this map
      * @throws NullPointerException if the specified key or value is {@code null}
      * @throws IllegalArgumentException if the {@link Handle} key is not present in this map's associated {@link Space}
      */
@@ -124,7 +123,7 @@ public interface HandleMap<T> extends Map<Handle, T> {
      * @param key {@link Handle} key or its {@link String} id whose mapping is to be removed from this map
      * @return the previous value associated with {@code key}, or {@code null} if none was present
      * @throws UnsupportedOperationException if the {@code remove} operation is not supported by this map
-     * @throws ClassCastException if the key is of an inappropriate type for this map
+     * @throws ClassCastException if the key is of not a {@link Handle} or a {@link String}
      * @throws NullPointerException if the specified key is {@code null}
      */
     @Override
@@ -137,7 +136,6 @@ public interface HandleMap<T> extends Map<Handle, T> {
      *
      * @param map mappings to be stored in this map
      * @throws UnsupportedOperationException if the {@code putAll} operation is not supported by this map
-     * @throws ClassCastException if a key or value is of an inappropriate type for this map
      * @throws NullPointerException if the specified map is {@code null} or contains {@code null} keys or values
      * @throws IllegalArgumentException if the specified map contains a {@link Handle} key that is not present in this
      * map's associated {@link Space}
@@ -153,7 +151,7 @@ public interface HandleMap<T> extends Map<Handle, T> {
      * @param defaultValue the default mapping of the key
      * @return the value to which the specified key is mapped, or the specified default value if this map contains no
      * mapping for the key
-     * @throws ClassCastException if the key is of an inappropriate type for this map
+     * @throws ClassCastException if the key is of not a {@link Handle} or a {@link String}
      * @throws NullPointerException if the specified key is {@code null}
      */
     @Override
@@ -167,7 +165,6 @@ public interface HandleMap<T> extends Map<Handle, T> {
      * @param value value to be associated with the specified key
      * @return the previous value associated with the specified key, or {@code null} if there was no mapping for the key
      * @throws UnsupportedOperationException if the {@code put} operation is not supported by this map
-     * @throws ClassCastException if the key or value is of an inappropriate type for this map
      * @throws NullPointerException if the specified key or value is {@code null}
      * @throws IllegalArgumentException if the {@link Handle} key is not present in this map's associated {@link Space}
      */
@@ -182,7 +179,7 @@ public interface HandleMap<T> extends Map<Handle, T> {
      * @param value value expected to be associated with the specified key
      * @return {@code true} if the value was removed
      * @throws UnsupportedOperationException if the {@code remove} operation is not supported by this map
-     * @throws ClassCastException if the key or value is of an inappropriate type for this map
+     * @throws ClassCastException if the key is of not a {@link Handle} or a {@link String}
      * @throws NullPointerException if the specified key or value is {@code null}
      */
     @Override

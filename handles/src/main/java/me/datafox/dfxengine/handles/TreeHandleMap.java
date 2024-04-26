@@ -14,6 +14,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static me.datafox.dfxengine.handles.utils.HandleStrings.notHandled;
+import static me.datafox.dfxengine.handles.utils.HandleUtils.checkNullAndType;
+import static me.datafox.dfxengine.handles.utils.HandleUtils.checkTag;
 
 /**
  * An ordered implementation of {@link HandleMap} backed with a {@link TreeMap}.
@@ -46,7 +48,7 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
         keys.forEach(key -> HandleUtils.checkNullAndType(key, logger));
         return keys.stream()
                 .map(this::containsKeyInternal)
-                .reduce(false, Boolean::logicalOr);
+                .reduce(true, Boolean::logicalAnd);
     }
 
     /**
@@ -90,11 +92,13 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      */
     @Override
     public Collection<T> getByTag(Object tag) {
+        checkNullAndType(tag, logger);
+        checkTag(tag, logger);
         return keySet()
                 .stream()
                 .filter(h -> h.getTags().contains(tag))
                 .map(this::get)
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /**
@@ -108,11 +112,13 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      */
     @Override
     public Collection<T> getByTags(Collection<?> tags) {
+        tags.forEach(handle -> checkNullAndType(handle, logger));
+        tags.forEach(handle -> checkTag(handle, logger));
         return keySet()
                 .stream()
                 .filter(h -> h.getTags().containsAll(tags))
                 .map(this::get)
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /**
@@ -154,7 +160,6 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      * @param value value to be associated with the specified key
      * @return the previous value associated with the key, or {@code null} if none was present
      * @throws UnsupportedOperationException if the {@code put} operation is not supported by this map
-     * @throws ClassCastException if the key or value is of an inappropriate type for this map
      * @throws NullPointerException if the specified key or value is {@code null}
      * @throws IllegalArgumentException if the {@link Handle} key is not present in this map's associated {@link Space}
      */
@@ -173,7 +178,7 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      * @param key {@link Handle} key or its {@link String} id whose mapping is to be removed from this map
      * @return the previous value associated with {@code key}, or {@code null} if none was present
      * @throws UnsupportedOperationException if the {@code remove} operation is not supported by this map
-     * @throws ClassCastException if the key is of an inappropriate type for this map
+     * @throws ClassCastException if the key is of not a {@link Handle} or a {@link String}
      * @throws NullPointerException if the specified key is {@code null}
      */
     @Override
@@ -189,7 +194,6 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      *
      * @param map mappings to be stored in this map
      * @throws UnsupportedOperationException if the {@code putAll} operation is not supported by this map
-     * @throws ClassCastException if a key or value is of an inappropriate type for this map
      * @throws NullPointerException if the specified map is {@code null} or contains {@code null} keys or values
      * @throws IllegalArgumentException if the specified map contains a {@link Handle} key that is not present in this
      * map's associated {@link Space}
@@ -209,7 +213,7 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      * @param defaultValue the default mapping of the key
      * @return the value to which the specified key is mapped, or the specified default value if this map contains no
      * mapping for the key
-     * @throws ClassCastException if the key is of an inappropriate type for this map
+     * @throws ClassCastException if the key is of not a {@link Handle} or a {@link String}
      * @throws NullPointerException if the specified key is {@code null}
      */
     @Override
@@ -227,7 +231,6 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      * @param value value to be associated with the specified key
      * @return the previous value associated with the specified key, or {@code null} if there was no mapping for the key
      * @throws UnsupportedOperationException if the {@code put} operation is not supported by this map
-     * @throws ClassCastException if the key or value is of an inappropriate type for this map
      * @throws NullPointerException if the specified key or value is {@code null}
      * @throws IllegalArgumentException if the {@link Handle} key is not present in this map's associated {@link Space}
      */
@@ -249,7 +252,7 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
      * @param value value expected to be associated with the specified key
      * @return {@code true} if the value was removed
      * @throws UnsupportedOperationException if the {@code remove} operation is not supported by this map
-     * @throws ClassCastException if the key or value is of an inappropriate type for this map
+     * @throws ClassCastException if the key is of not a {@link Handle} or a {@link String}
      * @throws NullPointerException if the specified key or value is {@code null}
      */
     @Override

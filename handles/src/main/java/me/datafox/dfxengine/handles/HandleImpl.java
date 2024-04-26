@@ -136,7 +136,7 @@ public class HandleImpl implements Handle {
 
     @Override
     public String toString() {
-        return String.format("%s > %s", space.getHandle().getId(), getId());
+        return String.format("%s@%s", getId(), space.getHandle().getId());
     }
 
     private void checkSubHandle() {

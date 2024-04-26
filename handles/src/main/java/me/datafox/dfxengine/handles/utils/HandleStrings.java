@@ -44,6 +44,7 @@ public class HandleStrings {
             "but was attempted to add into a collection associated with space \"%s\"";
     private static final String KEY_TYPE = "Key %s of class " +
             "%s does not extend Handle and is not a String";
+    private static final String NOT_TAG = "Handle %s is not a tag";
     private static final String ORDERED_SPACES = "Spaces are %s";
     private static final String ORDERED_HANDLES_SPACES = "Handles in spaces are %s";
     private static final String ORDERED_HANDLES_GROUPS = "Handles in groups are %s";
@@ -56,70 +57,58 @@ public class HandleStrings {
             "does not extend Handled, use HandleMap.put(Handle,T) instead";
 
     public static String nullId(String name) {
-        return forString(NULL_ID, name);
+        return String.format(NULL_ID, name);
     }
 
     public static String blankId(String name) {
-        return forString(BLANK_ID, name);
+        return String.format(BLANK_ID, name);
     }
 
     public static String illegalId(String name, String id) {
-        return forTwoStrings(ILLEGAL_ID, name, id);
+        return String.format(ILLEGAL_ID, name, id);
     }
 
     public static String spaceMismatch(Handle handle, Space space) {
-        return forThreeStrings(SPACE_MISMATCH, handle.getId(), handle.getSpace().getHandle().getId(), space.getHandle().getId());
+        return String.format(SPACE_MISMATCH, handle.getId(), handle.getSpace().getHandle().getId(), space.getHandle().getId());
     }
 
     public static String keyType(Object o) {
-        return forObjectAndClass(KEY_TYPE, o, o.getClass());
+        return String.format(KEY_TYPE, o, o.getClass().getSimpleName());
+    }
+
+    public static String notTag(Handle handle) {
+        return String.format(NOT_TAG, handle);
     }
 
     public static String unavailableId(String name, String id) {
-        return forTwoStrings(UNAVAILABLE_ID, name, id);
+        return String.format(UNAVAILABLE_ID, name, id);
     }
 
     public static String spaceConfiguration(boolean ordered) {
-        return forString(ORDERED_SPACES, ordered ? ORDERED : UNORDERED);
+        return String.format(ORDERED_SPACES, ordered ? ORDERED : UNORDERED);
     }
 
     public static String handleInSpaceConfiguration(boolean ordered) {
-        return forString(ORDERED_HANDLES_SPACES, ordered ? ORDERED : UNORDERED);
+        return String.format(ORDERED_HANDLES_SPACES, ordered ? ORDERED : UNORDERED);
     }
 
     public static String handleInGroupConfiguration(boolean ordered) {
-        return forString(ORDERED_HANDLES_GROUPS, ordered ? ORDERED : UNORDERED);
+        return String.format(ORDERED_HANDLES_GROUPS, ordered ? ORDERED : UNORDERED);
     }
 
     public static String groupConfiguration(boolean ordered) {
-        return forString(ORDERED_GROUPS, ordered ? ORDERED : UNORDERED);
+        return String.format(ORDERED_GROUPS, ordered ? ORDERED : UNORDERED);
     }
 
     public static String subhandleConfiguration(boolean ordered) {
-        return forString(ORDERED_SUBHANDLES, ordered ? ORDERED : UNORDERED);
+        return String.format(ORDERED_SUBHANDLES, ordered ? ORDERED : UNORDERED);
     }
 
     public static String tagConfiguration(boolean ordered) {
-        return forString(ORDERED_TAGS, ordered ? ORDERED : UNORDERED);
+        return String.format(ORDERED_TAGS, ordered ? ORDERED : UNORDERED);
     }
 
     public static String notHandled(Object o) {
-        return forObjectAndClass(NOT_HANDLED, o, o.getClass());
-    }
-
-    private static String forString(String str, String string) {
-        return String.format(str, string);
-    }
-
-    private static String forTwoStrings(String str, String string1, String string2) {
-        return String.format(str, string1, string2);
-    }
-
-    private static String forThreeStrings(String str, String string1, String string2, String string3) {
-        return String.format(str, string1, string2, string3);
-    }
-
-    private static String forObjectAndClass(String str, Object o, Class<?> aClass) {
-        return String.format(str, o, aClass.getSimpleName());
+        return String.format(NOT_HANDLED, o, o.getClass().getSimpleName());
     }
 }

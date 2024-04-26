@@ -57,6 +57,22 @@ public class HandleUtils {
         }
     }
 
+    public static void checkNull(Object o, Logger logger) {
+        if(o == null) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    NULL_KEY,
+                    NullPointerException::new);
+        }
+    }
+
+    public static void checkTag(Object o, Logger logger) {
+        if(o instanceof Handle && !TAG_SPACE_ID.equals(((Handle) o).getSpace().getHandle().getId())) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    notTag((Handle) o),
+                    IllegalArgumentException::new);
+        }
+    }
+
     public static void checkNullValue(Object value, Logger logger) {
         if(value == null) {
             throw LogUtils.logExceptionAndGet(logger,

@@ -9,7 +9,6 @@ version = "$handlesVersion"
 dependencies {
     api project(":handles-api")
     implementation project(":utils")
-    implementation project(":collections")
     implementation project(":injector-api")
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
@@ -20,6 +19,9 @@ dependencies {
     testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
 }
 
 test {
