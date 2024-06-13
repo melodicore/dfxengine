@@ -13,6 +13,8 @@ import static me.datafox.dfxengine.handles.utils.HandleStrings.*;
 import static me.datafox.dfxengine.handles.utils.HandleUtils.checkId;
 
 /**
+ * Implementation of {@link Space}.
+ *
  * @author datafox
  */
 @Getter

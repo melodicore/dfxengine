@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import java.util.stream.Collectors;
 
 /**
+ * Implementation of {@link Group}.
+ *
  * @author datafox
  */
 @Getter

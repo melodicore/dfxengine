@@ -14,6 +14,8 @@ import java.lang.reflect.Field;
 import static me.datafox.dfxengine.handles.utils.HandleStrings.*;
 
 /**
+ * Implementation of {@link HandleManager}.
+ *
  * @author datafox
  */
 @Component(order = Integer.MAX_VALUE)
@@ -28,6 +30,10 @@ public class HandleManagerImpl implements HandleManager {
     @Getter(AccessLevel.PACKAGE)
     private final HandleManagerConfiguration configuration;
 
+    /**
+     * @param logger {@link Logger} for the handle manager
+     * @param configuration {@link HandleManagerConfiguration} for the handle manager
+     */
     @Inject
     public HandleManagerImpl(Logger logger, HandleManagerConfiguration configuration) {
         logger.info(INITIALIZING);

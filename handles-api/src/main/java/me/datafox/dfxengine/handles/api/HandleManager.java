@@ -1,7 +1,7 @@
 package me.datafox.dfxengine.handles.api;
 
 /**
- * A singleton class that manages {@link Space Spaces} and {@link Handle Handkes}. Contains two hardcoded spaces, one
+ * A singleton class that manages {@link Space Spaces} and {@link Handle Handles}. Contains two hardcoded spaces, one
  * for the handles used to identify spaces themselves, and one for tag handles.
  *
  * @author datafox

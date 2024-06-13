@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import static me.datafox.dfxengine.handles.utils.HandleStrings.*;
 
 /**
+ * Implementation of {@link Handle}.
+ *
  * @author datafox
  */
 @Getter
