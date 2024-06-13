@@ -10,14 +10,13 @@ dependencies {
     api project(":values-api")
     api project(":handles-api")
     api project(":math")
-    implementation project(":collections")
+    implementation project(":handles")
     implementation project(":utils")
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
-    testImplementation project(":handles")
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"

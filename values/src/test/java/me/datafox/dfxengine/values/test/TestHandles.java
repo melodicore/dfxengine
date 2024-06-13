@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.values.test;
 
+import me.datafox.dfxengine.handles.HandleManagerConfiguration;
 import me.datafox.dfxengine.handles.HandleManagerImpl;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleManager;
@@ -21,7 +22,8 @@ public class TestHandles {
     public static Handle bigDecHandle;
 
     public static void initializeHandles() {
-        handleManager = new HandleManagerImpl(LoggerFactory.getLogger(HandleManager.class));
+        handleManager = new HandleManagerImpl(LoggerFactory.getLogger(HandleManager.class),
+                HandleManagerConfiguration.defaultConfiguration());
         space = handleManager.createSpace("test");
         handle = space.createHandle("handle");
         intHandle = space.createHandle("int");

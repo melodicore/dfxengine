@@ -1,9 +1,9 @@
 package me.datafox.dfxengine.values;
 
-import me.datafox.dfxengine.collections.HashHandleMap;
+import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
+import me.datafox.dfxengine.handles.api.HandleMap;
 import me.datafox.dfxengine.handles.api.Space;
-import me.datafox.dfxengine.handles.api.collection.HandleMap;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
@@ -43,8 +43,8 @@ public class DelegatedValueMap implements ValueMap {
     /**
      * @param map {@link HandleMap} to back this map with
      */
-    public DelegatedValueMap(HandleMap<Value> map, boolean immutable) {
-        logger = LoggerFactory.getLogger(getClass());
+    public DelegatedValueMap(HandleMap<Value> map, boolean immutable, Logger logger) {
+        this.logger = logger;
         this.map = map;
         modifiers = new HashSet<>();
         this.immutable = immutable;
@@ -80,7 +80,7 @@ public class DelegatedValueMap implements ValueMap {
     @Override
     public void convert(NumeralType type) {
         checkImmutable();
-        if(stream().allMatch(val -> val.canConvert(type))) {
+        if(values().stream().allMatch(val -> val.canConvert(type))) {
             values().forEach(val -> val.convert(type));
         } else {
             throw LogUtils.logExceptionAndGet(logger, OVERFLOW,
@@ -405,7 +405,7 @@ public class DelegatedValueMap implements ValueMap {
      */
     @Override
     public boolean compare(Comparison comparison, ComparisonContext context, Numeral other) {
-        return stream().allMatch(comparison.predicate(context, other));
+        return values().stream().allMatch(comparison.predicate(context, other));
     }
 
     /**
@@ -548,11 +548,28 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Returns the {@link Space} associated with this map. All {@link Handle} keys present in this map must be
+     * associated with this space.
+     *
      * @return {@link Space} associated with this map
      */
     @Override
     public Space getSpace() {
         return map.getSpace();
+    }
+
+    /**
+     * Returns {@code true} if this map contains a mapping for all the specified keys. The keys may either be
+     * {@link Handle Handles} or their {@link String} ids.
+     *
+     * @param keys {@link Handle} keys or their {@link String} ids whose presence in this map is to be tested
+     * @return {@code true} if this map contains a mapping for all the specified keys
+     * @throws ClassCastException   if any of the keys are of an inappropriate type for this map
+     * @throws NullPointerException if any of the keys is {@code null}
+     */
+    @Override
+    public boolean containsKeys(Collection<?> keys) {
+        return map.containsKeys(keys);
     }
 
     /**
@@ -585,80 +602,44 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * @param id id of the {@link Value} to be checked for
-     * @return {@code true} if this map contains a {@link Value} with the specified id
+     * Returns an unmodifiable version of this map. All changes made to the original map will be reflected in the
+     * returned one.
+     *
+     * @return unmodifiable version of this map
      */
     @Override
-    public boolean containsById(String id) {
-        return map.containsById(id);
+    public HandleMap<Value> unmodifiable() {
+        return map.unmodifiable();
     }
 
     /**
-     * @param handles {@link Value Values} to be checked for
-     * @return {@code true} if this map contains all the specified {@link Value Values}
+     * Returns all values mapped to keys containing the specified tag. The tag may be a {@link Handle} or its
+     * {@link String} id.
+     *
+     * @param tag tag {@link Handle} or its {@link String} id
+     * @return all values mapped to keys containing the specified tag
+     * @throws ClassCastException       if the tag is not a {@link Handle} or a {@link String}
+     * @throws NullPointerException     if the tag is {@code null}
+     * @throws IllegalArgumentException if the {@link Handle} is not a tag
      */
     @Override
-    public boolean containsAll(Collection<? extends Handle> handles) {
-        return map.containsAll(handles);
+    public Collection<Value> getByTag(Object tag) {
+        return map.getByTag(tag);
     }
 
     /**
-     * @param ids ids of the {@link Value Values} to be checked for
-     * @return {@code true} if this map contains all {@link Value Values} with the specified ids
+     * Returns all values mapped to keys containing the specified tag. The tags may be {@link Handle Handles} or their
+     * {@link String} ids.
+     *
+     * @param tags tag {@link Handle Handles} or their {@link String} ids
+     * @return all values mapped to keys containing the specified tags
+     * @throws ClassCastException       if any of the tags are not {@link Handle Handles} or a {@link String Strings}
+     * @throws NullPointerException     if any of the tags is {@code null}
+     * @throws IllegalArgumentException if any of the {@link Handle Handles} is not a tag
      */
     @Override
-    public boolean containsAllById(Collection<String> ids) {
-        return map.containsAllById(ids);
-    }
-
-    /**
-     * @param id id of the requested {@link Value}
-     * @return {@link Value} with the specified id, or {@code null} if none are present
-     */
-    @Override
-    public Value getById(String id) {
-        return map.getById(id);
-    }
-
-    /**
-     * @param id id of the {@link Value} to be removed
-     * @return {@link Value} with the specified id, or {@code null} if none were present
-     */
-    @Override
-    public Value removeById(String id) {
-        Value old = map.removeById(id);
-        removeModifiersFrom(old);
-        return old;
-    }
-
-    /**
-     * @param handles {@link Handle Handles} of the {@link Value Values }to be removed
-     * @return {@code true} if the contents of this map changed as a result of this action
-     */
-    @Override
-    public boolean removeAll(Collection<? extends Handle> handles) {
-        boolean changed = false;
-        for(Handle handle : handles) {
-            if(remove(handle) != null) {
-                changed = true;
-            }
-        }
-        return changed;
-    }
-
-    /**
-     * @param ids ids of the {@link Value Values} to be removed
-     * @return {@code true} if the contents of this map changed as a result of this action
-     */
-    @Override
-    public boolean removeAllById(Collection<String> ids) {
-        boolean changed = false;
-        for(String id : ids) {
-            if(removeById(id) != null) {
-                changed = true;
-            }
-        }
-        return changed;
+    public Collection<Value> getByTags(Collection<?> tags) {
+        return map.getByTags(tags);
     }
 
     /**
@@ -739,6 +720,55 @@ public class DelegatedValueMap implements ValueMap {
     @Override
     public void putAll(Map<? extends Handle, ? extends Value> m) {
         m.forEach(this::put);
+    }
+
+    /**
+     * Returns {@code true} if this map contains a mapping for the specified key, or the specified default value if none
+     * is present. The key may either be a {@link Handle} or its {@link String} id.
+     *
+     * @param key          {@link Handle} key or its {@link String} id whose associated value is to be returned
+     * @param defaultValue the default mapping of the key
+     * @return the value to which the specified key is mapped, or the specified default value if this map contains no
+     * mapping for the key
+     * @throws ClassCastException   if the key is of an inappropriate type for this map
+     * @throws NullPointerException if the specified key is {@code null}
+     */
+    @Override
+    public Value getOrDefault(Object key, Value defaultValue) {
+        return map.getOrDefault(key, defaultValue);
+    }
+
+    /**
+     * Associates the specified key with the specified value and returns {@code null} if the specified key is not
+     * already associated with a value, otherwise returns the current value.
+     *
+     * @param key   {@link Handle} key with which the specified value is to be associated with
+     * @param value value to be associated with the specified key
+     * @return the previous value associated with the specified key, or {@code null} if there was no mapping for the key
+     * @throws UnsupportedOperationException if the {@code put} operation is not supported by this map
+     * @throws ClassCastException            if the key or value is of an inappropriate type for this map
+     * @throws NullPointerException          if the specified key or value is {@code null}
+     * @throws IllegalArgumentException      if the {@link Handle} key is not present in this map's associated {@link Space}
+     */
+    @Override
+    public Value putIfAbsent(Handle key, Value value) {
+        return map.putIfAbsent(key, value);
+    }
+
+    /**
+     * Removes the entry for the specified key only if it is currently mapped to the specified value. The key may either
+     * be a {@link Handle} or its {@link String} id.
+     *
+     * @param key   {@link Handle} key or its {@link String} id with which the specified value is associated
+     * @param value value expected to be associated with the specified key
+     * @return {@code true} if the value was removed
+     * @throws UnsupportedOperationException if the {@code remove} operation is not supported by this map
+     * @throws ClassCastException            if the key or value is of an inappropriate type for this map
+     * @throws NullPointerException          if the specified key or value is {@code null}
+     */
+    @Override
+    public boolean remove(Object key, Object value) {
+        return map.remove(key, value);
     }
 
     /**
@@ -907,7 +937,7 @@ public class DelegatedValueMap implements ValueMap {
          */
         @Override
         public boolean containsValue(Object value) {
-            return DelegatedValueMap.this.stream().map(this::getInternal).anyMatch(Predicate.isEqual(value));
+            return DelegatedValueMap.this.values().stream().map(this::getInternal).anyMatch(Predicate.isEqual(value));
         }
 
         /**
@@ -974,7 +1004,7 @@ public class DelegatedValueMap implements ValueMap {
          */
         @Override
         public Collection<Numeral> values() {
-            return DelegatedValueMap.this.stream().map(this::getInternal).collect(Collectors.toList());
+            return DelegatedValueMap.this.values().stream().map(this::getInternal).collect(Collectors.toList());
         }
 
         /**
@@ -1011,7 +1041,8 @@ public class DelegatedValueMap implements ValueMap {
      */
     public static class Builder {
         private final Space space;
-        private Function<Space, HandleMap<Value>> map;
+        private Logger logger;
+        private BiFunction<Space, Logger, HandleMap<Value>> map;
         private final Set<Value> values;
         private final Set<Modifier> modifiers;
         private boolean immutable;
@@ -1020,6 +1051,7 @@ public class DelegatedValueMap implements ValueMap {
 
         private Builder(Space space) {
             this.space = space;
+            logger = LoggerFactory.getLogger(DelegatedValueMap.class);
             map = HashHandleMap::new;
             values = new HashSet<>();
             modifiers = new HashSet<>();
@@ -1029,11 +1061,20 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * @param map {@link Function} to initialize the backing {@link HandleMap}
+         * @param map {@link BiFunction} to initialize the backing {@link HandleMap}
          * @return this builder
          */
-        public Builder map(Function<Space, HandleMap<Value>> map) {
+        public Builder map(BiFunction<Space, Logger, HandleMap<Value>> map) {
             this.map = map;
+            return this;
+        }
+
+        /**
+         * @param logger {@link Logger} for this map
+         * @return this builder
+         */
+        public Builder logger(Logger logger) {
+            this.logger = logger;
             return this;
         }
 
@@ -1125,7 +1166,7 @@ public class DelegatedValueMap implements ValueMap {
          * @return {@link ValueMap} initialized by this builder
          */
         public ValueMap build() {
-            ValueMap map = new DelegatedValueMap(this.map.apply(space), immutable);
+            ValueMap map = new DelegatedValueMap(this.map.apply(space, logger), immutable, logger);
             values.forEach(map::putHandled);
             map.addModifiers(modifiers);
             return map;

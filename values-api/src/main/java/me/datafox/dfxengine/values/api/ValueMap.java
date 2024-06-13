@@ -1,8 +1,8 @@
 package me.datafox.dfxengine.values.api;
 
 import me.datafox.dfxengine.handles.api.Handle;
+import me.datafox.dfxengine.handles.api.HandleMap;
 import me.datafox.dfxengine.handles.api.Space;
-import me.datafox.dfxengine.handles.api.collection.HandleMap;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.math.api.exception.ExtendedArithmeticException;
