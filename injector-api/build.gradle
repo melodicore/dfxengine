@@ -6,6 +6,11 @@ plugins {
 
 version = "$injectorApiVersion"
 
+dependencies {
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {

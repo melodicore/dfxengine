@@ -4,7 +4,7 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
 import io.github.classgraph.MethodInfo;
 import io.github.classgraph.MethodParameterInfo;
-import me.datafox.dfxengine.injector.TypeRef;
+import me.datafox.dfxengine.injector.api.TypeRef;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;

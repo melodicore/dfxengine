@@ -1,10 +1,13 @@
 package me.datafox.dfxengine.injector;
 
+import me.datafox.dfxengine.injector.api.Injector;
+import me.datafox.dfxengine.injector.api.InstantiationDetails;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
+import me.datafox.dfxengine.injector.api.TypeRef;
 import me.datafox.dfxengine.injector.api.annotation.Component;
+import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
 import me.datafox.dfxengine.injector.exception.MultipleDependenciesPresentException;
 import me.datafox.dfxengine.injector.exception.NoDependenciesPresentException;
-import me.datafox.dfxengine.injector.exception.ParameterCountMismatchException;
 import me.datafox.dfxengine.injector.internal.ClassReference;
 import me.datafox.dfxengine.injector.internal.ComponentData;
 import me.datafox.dfxengine.injector.internal.InitializeReference;
@@ -42,7 +45,7 @@ import static me.datafox.dfxengine.injector.utils.InjectorStrings.noDependencies
  *
  * @author datafox
  */
-public class Injector {
+public class InjectorImpl implements Injector {
     /**
      * @return {@link InjectorBuilder} instance
      */
@@ -51,7 +54,7 @@ public class Injector {
     }
 
     @Component
-    private static Injector getInstance() {
+    private static InjectorImpl getInstance() {
         return instance;
     }
 
@@ -63,7 +66,7 @@ public class Injector {
         return LoggerFactory.getLogger(details.getRequesting().getType());
     }
 
-    private static Injector instance;
+    private static InjectorImpl instance;
 
     private final Logger logger;
 
@@ -71,9 +74,9 @@ public class Injector {
 
     private final List<PrioritizedRunnable> initializerQueue;
 
-    Injector(Stream<ComponentData<?>> components) {
+    InjectorImpl(Stream<ComponentData<?>> components) {
         instance = this;
-        logger = LoggerFactory.getLogger(Injector.class);
+        logger = LoggerFactory.getLogger(InjectorImpl.class);
         componentList = new ArrayList<>();
         initializerQueue = new ArrayList<>();
         components.peek(this::instantiateOnce)
@@ -88,21 +91,25 @@ public class Injector {
     }
 
     /**
-     * Returns a single {@link Component} of the specified type. If the {@link Class} has type parameters, use
-     * {@link #getComponent(TypeRef)} instead. Otherwise, or if multiple Components or no Components are present, an
+     * {@inheritDoc} Otherwise, or if multiple Components or no Components are present, an
      * exception is thrown.
      *
-     * @param type type of the {@link Component} to be requested
-     * @return {@link Component} of the specified type
-     * @param <T> type of the {@link Component} to be requested
+     * @param type {@inheritDoc}
+     * @return {@inheritDoc}
+     * @param <T> {@inheritDoc}
      *
-     * @throws ParameterCountMismatchException if the {@link Class} has type parameters
+     * @throws ParameterCountMismatchException {@inheritDoc}
      * @throws MultipleDependenciesPresentException if multiple {@link Component Components} with the specified type are
      * present
      * @throws NoDependenciesPresentException if no {@link Component Components} with the specified type are present
      */
+    @Override
     public <T> T getComponent(Class<T> type) {
-        return getComponent(TypeRef.of(type));
+        try {
+            return getComponent(TypeRef.of(type));
+        } catch(ParameterCountMismatchException e) {
+            throw LogUtils.logExceptionAndGet(logger, e.getMessage(), ParameterCountMismatchException::new);
+        }
     }
 
     /**
@@ -113,12 +120,11 @@ public class Injector {
      * @return {@link Component} of the specified type
      * @param <T> type of the {@link Component} to be requested
      *
-     * @throws ParameterCountMismatchException if the {@link TypeRef#getType()} has a different amount of type
-     * parameters than {@link TypeRef#getParameters()}
      * @throws MultipleDependenciesPresentException if multiple {@link Component Components} with the specified type are
      * present
      * @throws NoDependenciesPresentException if no {@link Component Components} with the specified type are present
      */
+    @Override
     public <T> T getComponent(TypeRef<T> type) {
         return getComponent(type, null);
     }
@@ -141,8 +147,13 @@ public class Injector {
      * present
      * @throws NoDependenciesPresentException if no {@link Component Components} with the specified type are present
      */
+    @Override
     public <T,R> T getComponent(Class<T> type, Class<R> requesting) {
-        return getComponent(TypeRef.of(type), TypeRef.of(requesting));
+        try {
+            return getComponent(TypeRef.of(type), TypeRef.of(requesting));
+        } catch(ParameterCountMismatchException e) {
+            throw LogUtils.logExceptionAndGet(logger, e.getMessage(), ParameterCountMismatchException::new);
+        }
     }
 
     /**
@@ -157,12 +168,11 @@ public class Injector {
      * @param <T> type of the {@link Component} to be requested
      * @param <R> type of the object requesting the {@link Component}
      *
-     * @throws ParameterCountMismatchException if the type or requesting {@link TypeRef#getType()} has a different
-     * amount of type parameters than {@link TypeRef#getParameters()}
      * @throws MultipleDependenciesPresentException if multiple {@link Component Components} with the specified type are
      * present
      * @throws NoDependenciesPresentException if no {@link Component Components} with the specified type are present
      */
+    @Override
     public <T,R> T getComponent(TypeRef<T> type, TypeRef<R> requesting) {
         ClassReference<T> reference = getReference(type);
         ClassReference<R> requestingReference = getReference(requesting);
@@ -185,8 +195,13 @@ public class Injector {
      *
      * @throws ParameterCountMismatchException if the {@link Class} has type parameters
      */
+    @Override
     public <T> List<T> getComponents(Class<T> type) {
-        return getComponents(TypeRef.of(type));
+        try {
+            return getComponents(TypeRef.of(type));
+        } catch(ParameterCountMismatchException e) {
+            throw LogUtils.logExceptionAndGet(logger, e.getMessage(), ParameterCountMismatchException::new);
+        }
     }
 
     /**
@@ -195,10 +210,8 @@ public class Injector {
      * @param type type of the {@link Component Components} to be requested
      * @return {@link List} of {@link Component Components} of the specified type
      * @param <T> type of the {@link Component Components} to be requested
-     *
-     * @throws ParameterCountMismatchException if the {@link TypeRef#getType()} has a different amount of type
-     * parameters than {@link TypeRef#getParameters()}
      */
+    @Override
     public <T> List<T> getComponents(TypeRef<T> type) {
         return getComponents(type, null);
     }
@@ -217,8 +230,13 @@ public class Injector {
      *
      * @throws ParameterCountMismatchException if the type or requesting {@link Class} has type parameters
      */
+    @Override
     public <T,R> List<T> getComponents(Class<T> type, Class<R> requesting) {
-        return getComponents(TypeRef.of(type), TypeRef.of(requesting));
+        try {
+            return getComponents(TypeRef.of(type), TypeRef.of(requesting));
+        } catch(ParameterCountMismatchException e) {
+            throw LogUtils.logExceptionAndGet(logger, e.getMessage(), ParameterCountMismatchException::new);
+        }
     }
 
     /**
@@ -231,11 +249,9 @@ public class Injector {
      * @return {@link List} of {@link Component Components} of the specified type
      * @param <T> type of the {@link Component Components} to be requested
      * @param <R> type of the object requesting the {@link Component Components}
-     *
-     * @throws ParameterCountMismatchException if the type or requesting {@link TypeRef#getType()} has a different
-     * amount of type parameters than {@link TypeRef#getParameters()}
      */
     @SuppressWarnings("unchecked")
+    @Override
     public <T,R> List<T> getComponents(TypeRef<T> type, TypeRef<R> requesting) {
         return getComponent(TypeRef.of(List.class, type), requesting);
     }

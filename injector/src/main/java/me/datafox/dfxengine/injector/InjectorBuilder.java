@@ -1,6 +1,7 @@
 package me.datafox.dfxengine.injector;
 
 import io.github.classgraph.*;
+import me.datafox.dfxengine.injector.api.InstantiationDetails;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 import static me.datafox.dfxengine.injector.utils.InjectorStrings.*;
 
 /**
- * Builder for the {@link Injector}. For general information, see
+ * Builder for the {@link InjectorImpl}. For general information, see
  * <a href="https://github.com/melodicore/dfxengine/blob/master/injector/README.md">README.md</a> on GitHub.
  *
  * @author datafox
@@ -142,7 +143,7 @@ public class InjectorBuilder {
     /**
      * If {@code close} is set to {@link false}, {@link ScanResult#close()} will never be called on the static
      * {@link ScanResult} instance. This is not recommended, and the only purpose for this option is to allow multiple
-     * {@link Injector} instances to be built within the same process during testing.
+     * {@link InjectorImpl} instances to be built within the same process during testing.
      *
      * @param close {@code false} if {@link ScanResult#close()} should not be called
      * @return builder
@@ -156,11 +157,11 @@ public class InjectorBuilder {
     }
 
     /**
-     * Builds the {@link Injector} according to the scan done at compile time.
+     * Builds the {@link InjectorImpl} according to the scan done at compile time.
      *
-     * @return the {@link Injector}
+     * @return the {@link InjectorImpl}
      */
-    public Injector build() {
+    public InjectorImpl build() {
         logger.info(SCANNING_CLASSPATH);
         checkAndLogWhitelistAndBlacklist();
 
@@ -243,7 +244,7 @@ public class InjectorBuilder {
 
         Map<ComponentData<?>,Integer> orderMap = getOrder(components);
 
-        return new Injector(components.stream()
+        return new InjectorImpl(components.stream()
                 .sorted(Comparator.comparing(orderMap::get)));
     }
 
@@ -251,7 +252,7 @@ public class InjectorBuilder {
         if(!packageWhitelist.isEmpty()) {
             logger.info(packageWhitelistPresent(packageWhitelist.size()));
             logger.debug(whitelistOrBlacklistRules(packageWhitelist));
-            packageWhitelist.add(Pattern.quote(Injector.class.getPackageName()));
+            packageWhitelist.add(Pattern.quote(InjectorImpl.class.getPackageName()));
         }
 
         if(!packageBlacklist.isEmpty()) {
@@ -262,7 +263,7 @@ public class InjectorBuilder {
         if(!classWhitelist.isEmpty()) {
             logger.info(classWhitelistPresent(classWhitelist.size()));
             logger.debug(whitelistOrBlacklistRules(classWhitelist));
-            classWhitelist.add(Pattern.quote(Injector.class.getName()));
+            classWhitelist.add(Pattern.quote(InjectorImpl.class.getName()));
         }
 
         if(!classBlacklist.isEmpty()) {

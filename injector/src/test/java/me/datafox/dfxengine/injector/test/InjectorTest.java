@@ -1,7 +1,8 @@
 package me.datafox.dfxengine.injector.test;
 
-import me.datafox.dfxengine.injector.Injector;
-import me.datafox.dfxengine.injector.TypeRef;
+import me.datafox.dfxengine.injector.InjectorImpl;
+import me.datafox.dfxengine.injector.api.TypeRef;
+import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
 import me.datafox.dfxengine.injector.exception.*;
 import me.datafox.dfxengine.injector.test.classes.fail.array.constructor.ConstructorArrayComponent;
 import me.datafox.dfxengine.injector.test.classes.fail.array.field.FieldArrayComponent;
@@ -53,16 +54,16 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author datafox
  */
 public class InjectorTest {
-    private static Injector emptyInjector() {
-        return Injector
+    private static InjectorImpl emptyInjector() {
+        return InjectorImpl
                 .builder()
                 .whitelistPackage("me.datafox.dfxengine.injector.test.classes.empty")
                 .closeScan(false)
                 .build();
     }
 
-    private static Injector injector(Class<?> classFromPackageToWhitelist) {
-        return Injector
+    private static InjectorImpl injector(Class<?> classFromPackageToWhitelist) {
+        return InjectorImpl
                 .builder()
                 .whitelistPackageRegex(Pattern.quote(classFromPackageToWhitelist.getPackageName()) + ".*")
                 .closeScan(false)
@@ -243,5 +244,6 @@ public class InjectorTest {
 
         assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(TypeRef.of(Function.class, TypeRef.of(String.class))));
         assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(TypeRef.of(Supplier.class, TypeRef.of(Consumer.class))));
+        assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(Supplier.class));
     }
 }

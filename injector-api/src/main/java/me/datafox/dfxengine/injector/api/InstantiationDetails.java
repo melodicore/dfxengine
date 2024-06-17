@@ -1,8 +1,7 @@
-package me.datafox.dfxengine.injector;
+package me.datafox.dfxengine.injector.api;
 
 import lombok.Builder;
 import lombok.Data;
-import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 
 /**

@@ -1,7 +1,7 @@
 package me.datafox.dfxengine.injector.internal;
 
 import lombok.*;
-import me.datafox.dfxengine.injector.TypeRef;
+import me.datafox.dfxengine.injector.api.TypeRef;
 
 import java.util.List;
 

@@ -1,19 +1,15 @@
-package me.datafox.dfxengine.injector;
+package me.datafox.dfxengine.injector.api;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 import me.datafox.dfxengine.injector.api.annotation.Component;
-import me.datafox.dfxengine.injector.exception.ParameterCountMismatchException;
-import me.datafox.dfxengine.utils.LogUtils;
-import org.slf4j.LoggerFactory;
+import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static me.datafox.dfxengine.injector.utils.InjectorStrings.parameterCountMismatch;
 
 /**
  * Represents a type with parameters. This class is used when requesting {@link Component Components} from the
@@ -26,7 +22,7 @@ import static me.datafox.dfxengine.injector.utils.InjectorStrings.parameterCount
  */
 @Builder
 @Data
-public class TypeRef<T> {
+public final class TypeRef<T> {
     private final Class<T> type;
 
     @Singular
@@ -44,9 +40,19 @@ public class TypeRef<T> {
     public TypeRef(Class<T> type, List<TypeRef<?>> parameters) {
         if((!Array.class.equals(type) || parameters.size() != 1) &&
                 type.getTypeParameters().length != parameters.size()) {
-            throw LogUtils.logExceptionAndGet(LoggerFactory.getLogger(TypeRef.class),
-                    parameterCountMismatch(type, type.getTypeParameters().length, parameters.size()),
-                    ParameterCountMismatchException::new);
+            StringBuilder sb = new StringBuilder();
+            sb.append("Class ").append(type.getName()).append(" has ").append(type.getTypeParameters().length).append(" type parameter");
+            if(type.getTypeParameters().length != 1) {
+                sb.append("s");
+            }
+            sb.append(" but ").append(parameters.size());
+            if(parameters.size() == 1) {
+                sb.append(" was");
+            } else {
+                sb.append(" were");
+            }
+            sb.append(" provided");
+            throw new ParameterCountMismatchException(sb.toString());
         }
         this.type = type;
         this.parameters = parameters;
@@ -114,7 +120,7 @@ public class TypeRef<T> {
      * @return type reference for the specified parameters
      * @param <T> type for the type reference
      */
-    public static <T> TypeRef<T> of(Class<T> type, TypeRef<?>... parameters) {
+    public static <T> TypeRef<T> of(Class<T> type, TypeRef<?> ... parameters) {
         return of(type, Arrays.asList(parameters));
     }
 }
