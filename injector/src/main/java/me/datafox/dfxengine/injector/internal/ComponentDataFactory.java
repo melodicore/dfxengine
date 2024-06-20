@@ -19,10 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -182,12 +180,23 @@ public class ComponentDataFactory {
         if(split.length == 1) {
             return List.of();
         }
-        return Arrays.stream(split[1].split(" implements "))
+        return removeParametricDistinct(Arrays.stream(split[1].split(" implements "))
                 .map(InjectorUtils::splitParameters)
                 .flatMap(List::stream)
                 .flatMap(this::parseSupers)
                 .distinct()
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+    }
+
+    private List<String> removeParametricDistinct(List<String> list) {
+        List<String> withoutParams = list.stream().map(s -> s.split("<", 2)[0]).collect(Collectors.toList());
+        Set<String> different = new HashSet<>();
+        for(int i = 0; i < list.size(); i++) {
+            if(!list.get(i).equals(withoutParams.get(i))) {
+                different.add(withoutParams.get(i));
+            }
+        }
+        return list.stream().filter(Predicate.not(different::contains)).collect(Collectors.toList());
     }
 
     private List<String> getSuperStrings(MethodInfo info) {
@@ -246,7 +255,7 @@ public class ComponentDataFactory {
         if(!original.getTypeDescriptor().toString().contains(" extends ") && !original.getTypeDescriptor().toString().contains(" implements ")) {
             return Stream.empty();
         }
-        return InjectorUtils.getSuperclasses(InjectorUtils.stripKeywords(original.toString()));
+        return InjectorUtils.getSuperclasses(InjectorUtils.stripKeywords(original.toString().replaceAll(" +", " ")));
     }
 
     private String replaceParams(String superclass, List<String> params, List<String> genericParams) {

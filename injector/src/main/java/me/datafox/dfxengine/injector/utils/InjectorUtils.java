@@ -93,7 +93,7 @@ public class InjectorUtils {
      * @return specified signature with keywords stripped
      */
     public static String stripKeywords(String string) {
-        for(String str : new String[] {" public ", " abstract "}) {
+        for(String str : new String[] {" public ", " abstract ", " interface "}) {
             while(string.contains(str)) {
                 string = string.substring(0, string.indexOf(str)) + string.substring(string.indexOf(str) + str.length() - 1);
             }
