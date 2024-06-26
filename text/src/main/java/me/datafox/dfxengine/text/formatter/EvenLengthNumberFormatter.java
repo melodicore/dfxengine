@@ -24,6 +24,12 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
     public static final ConfigurationKey<Integer> LENGTH = ConfigurationKey.of(8);
 
     /**
+     * Minimum absolute exponent to be formatted with a suffix. It must be smaller than or equal to {@link #LENGTH}.
+     * The default value is {@code 3}.
+     */
+    public static final ConfigurationKey<Integer> MIN_EXPONENT = ConfigurationKey.of(3);
+
+    /**
      * If {@code true}, the number will be padded with zeros to keep the length of all numbers the same. Otherwise, the
      * output may be shorter than the configured length. The default value is {@code true}.
      */
@@ -42,6 +48,7 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
     @Override
     public String format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
         int length = configuration.get(LENGTH);
+        int minExp = configuration.get(MIN_EXPONENT);
         NumberSuffixFactory suffixFactory = factory.getNumberSuffixFactory(configuration);
         int exponent = BigDecimalMath.exponent(number);
         int absExponent = Math.abs(exponent);
@@ -50,9 +57,9 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
         if(number.signum() == -1) {
             length--;
         }
-        if(exponent == length - 1) {
+        if(exponent == length - 1 && length == minExp) {
             out = getNumberString(number, length);
-        } else if(absExponent >= length || (exponent < 0 && absExponent >= length - 1)) {
+        } else if(absExponent >= minExp || (exponent < 0 && absExponent >= minExp - 1)) {
             NumberSuffixFactory.Output output = suffixFactory.format(number, factory, configuration);
             suffix = output.getSuffix();
             int exp = Math.abs(BigDecimalMath.exponent(output.getScaled()));
