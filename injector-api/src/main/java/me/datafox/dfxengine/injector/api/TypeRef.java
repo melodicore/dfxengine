@@ -80,7 +80,31 @@ public final class TypeRef<T> {
     }
 
     /**
-     * @return String representation of this type reference in the format "{@code Type<Parameter, Other<Child>>}"
+     * @return String representation of this type reference in the format "{@code Type<Parameter,Other<Child>>}"
+     * without packages
+     */
+    public String toStringWithoutPackage() {
+        return type.getSimpleName() + (parameters.isEmpty() ? "" :
+                "<" + (parameters
+                        .stream()
+                        .map(TypeRef::toStringWithoutPackage)
+                        .collect(Collectors.joining(",")) + ">"));
+    }
+
+    /**
+     * @return String representation of this type reference in the format "{@code Type<Parameter,Other<Child>>}"
+     * with the parameters without packages
+     */
+    public String toStringParametersWithoutPackage() {
+        return type.getName() + (parameters.isEmpty() ? "" :
+                "<" + (parameters
+                        .stream()
+                        .map(TypeRef::toStringWithoutPackage)
+                        .collect(Collectors.joining(",")) + ">"));
+    }
+
+    /**
+     * @return String representation of this type reference in the format "{@code Type<Parameter,Other<Child>>}"
      */
     @Override
     public String toString() {
@@ -88,7 +112,7 @@ public final class TypeRef<T> {
                 "<" + (parameters
                         .stream()
                         .map(TypeRef::toString)
-                        .collect(Collectors.joining(", ")) + ">"));
+                        .collect(Collectors.joining(",")) + ">"));
     }
 
     /**
