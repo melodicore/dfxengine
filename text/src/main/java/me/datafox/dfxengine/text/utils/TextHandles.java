@@ -20,6 +20,7 @@ public class TextHandles {
     private final Space numberSuffixFactories;
     private final Handle exponentSuffixFactory;
     private final Handle namedSuffixFactory;
+    private final Handle charDigitSuffixFactory;
 
     @Inject
     public TextHandles(HandleManager handleManager) {
@@ -30,5 +31,6 @@ public class TextHandles {
         numberSuffixFactories = handleManager.getOrCreateSpace("numberSuffixFactories");
         exponentSuffixFactory = numberSuffixFactories.getOrCreateHandle("exponentSuffixFactory");
         namedSuffixFactory = numberSuffixFactories.getOrCreateHandle("namedSuffixFactory");
+        charDigitSuffixFactory = numberSuffixFactories.getOrCreateHandle("charDigitNumberFormatter");
     }
 }
