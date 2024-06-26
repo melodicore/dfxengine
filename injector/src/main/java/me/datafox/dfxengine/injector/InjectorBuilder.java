@@ -43,7 +43,10 @@ public class InjectorBuilder {
     private final List<String> classBlacklist;
     private boolean closeScan;
 
-    InjectorBuilder() {
+    /**
+     * Constructor for the builder
+     */
+    public InjectorBuilder() {
         logger = LoggerFactory.getLogger(InjectorBuilder.class);
         packageWhitelist = new ArrayList<>();
         packageBlacklist = new ArrayList<>();

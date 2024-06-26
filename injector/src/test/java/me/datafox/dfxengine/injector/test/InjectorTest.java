@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.injector.test;
 
+import me.datafox.dfxengine.injector.InjectorBuilder;
 import me.datafox.dfxengine.injector.InjectorImpl;
 import me.datafox.dfxengine.injector.api.TypeRef;
 import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
@@ -55,16 +56,14 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class InjectorTest {
     private static InjectorImpl emptyInjector() {
-        return InjectorImpl
-                .builder()
+        return new InjectorBuilder()
                 .whitelistPackage("me.datafox.dfxengine.injector.test.classes.empty")
                 .closeScan(false)
                 .build();
     }
 
     private static InjectorImpl injector(Class<?> classFromPackageToWhitelist) {
-        return InjectorImpl
-                .builder()
+        return new InjectorBuilder()
                 .whitelistPackageRegex(Pattern.quote(classFromPackageToWhitelist.getPackageName()) + ".*")
                 .closeScan(false)
                 .build();

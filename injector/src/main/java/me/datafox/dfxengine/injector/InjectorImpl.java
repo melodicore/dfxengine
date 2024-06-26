@@ -46,22 +46,28 @@ import static me.datafox.dfxengine.injector.utils.InjectorStrings.noDependencies
  * @author datafox
  */
 public class InjectorImpl implements Injector {
-    /**
-     * @return {@link InjectorBuilder} instance
-     */
-    public static InjectorBuilder builder() {
-        return new InjectorBuilder();
-    }
-
     @Component
     private static InjectorImpl getInstance() {
         return instance;
     }
 
+    @Component(order = Integer.MAX_VALUE)
+    private static LoggerType getLoggerType() {
+        return LoggerType.PARAMETERS;
+    }
+
     @Component(value = InstantiationPolicy.PER_INSTANCE, order = Integer.MAX_VALUE)
-    private static Logger getLogger(InstantiationDetails details) {
+    private static Logger getLogger(LoggerType type, InstantiationDetails details) {
         if(details.getRequesting() == null) {
             return LoggerFactory.getLogger(Object.class);
+        }
+        switch(type) {
+            case CLASSIC:
+                return LoggerFactory.getLogger(details.getRequesting().getType());
+            case PARAMETERS:
+                return LoggerFactory.getLogger(details.getRequesting().toStringParametersWithoutPackage());
+            case FULL_PARAMETERS:
+                return LoggerFactory.getLogger(details.getRequesting().toString());
         }
         return LoggerFactory.getLogger(details.getRequesting().getType());
     }
@@ -404,5 +410,11 @@ public class InjectorImpl implements Injector {
         } else {
             return instantiate(data, requesting);
         }
+    }
+
+    public enum LoggerType {
+        CLASSIC,
+        PARAMETERS,
+        FULL_PARAMETERS
     }
 }
