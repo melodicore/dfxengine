@@ -10,6 +10,7 @@ dependencies {
     api project(":handles-api")
     api project(":math-api")
     api project(":values-api")
+    api project(":injector-api")
     api project(":dependencies")
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"

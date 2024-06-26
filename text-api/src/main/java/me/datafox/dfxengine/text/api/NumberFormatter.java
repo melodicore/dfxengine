@@ -1,22 +1,12 @@
 package me.datafox.dfxengine.text.api;
 
-import lombok.Builder;
-import lombok.Data;
 import me.datafox.dfxengine.handles.api.Handled;
+
+import java.math.BigDecimal;
 
 /**
  * @author datafox
  */
 public interface NumberFormatter extends Handled {
-    Details format(Number number, TextContext context);
-
-    @Data
-    @Builder
-    class Details {
-        private final Number number;
-
-        private final String string;
-
-        private final boolean one;
-    }
+    String format(BigDecimal number, TextFactory factory, TextConfiguration configuration);
 }

@@ -1,51 +1,53 @@
 package me.datafox.dfxengine.text.api;
 
 import me.datafox.dfxengine.handles.api.Handle;
-import me.datafox.dfxengine.handles.api.Space;
+import me.datafox.dfxengine.handles.api.HandleManager;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.function.Function;
+import java.util.List;
 
 /**
  * @author datafox
  */
 public interface TextFactory {
-    String build(TextDefinition definition, TextContext initialContext);
+    String build(List<Text> texts);
 
-    Space getNumberFormatterSpace();
+    HandleManager getHandleManager();
 
-    void setDefaultContext(TextContext context);
+    <T> Name<T> createName(T object, String name);
 
-    TextContext getDefaultContext();
+    <T> Name<T> createName(T object, String singular, String plural);
 
-    TextContext createEmptyContext();
-
-    <T> void registerName(T object, String singular, String plural);
+    <T> Name<T> addName(Name<T> name);
 
     <T> Name<T> getName(T object);
 
-    <T> void registerNameConverter(NameConverter<T> nameConverter);
+    <T> String getName(T object, boolean plural);
 
-    <T> NameConverter<T> getNameConverter(Class<T> type);
+    <T> void addNameConverter(NameConverter<T> converter);
 
-    void registerTextProcessor(TextProcessor processor);
+    <T> NameConverter<? super T> getNameConverter(Class<T> type);
 
-    Collection<TextProcessor> getTextProcessors();
+    void addNumberFormatter(NumberFormatter formatter);
 
-    void setPluralConverter(Function<String,String> pluralConverter);
+    NumberFormatter getNumberFormatter(Handle handle);
 
-    Function<String,String> getPluralConverter();
+    NumberFormatter getNumberFormatter(TextConfiguration configuration);
 
-    void registerNumberFormatter(NumberFormatter numberFormatter);
+    void addNumberSuffixFactory(NumberSuffixFactory factory);
 
-    Optional<NumberFormatter> getNumberFormatter(Handle key);
+    NumberSuffixFactory getNumberSuffixFactory(Handle handle);
 
-    default String build(TextDefinition definition) {
-        return build(definition, createEmptyContext());
-    }
+    NumberSuffixFactory getNumberSuffixFactory(TextConfiguration configuration);
 
-    default Optional<NumberFormatter> getNumberFormatterById(String key) {
-        return getNumberFormatter(getNumberFormatterSpace().getOrCreateHandle(key));
-    }
+    void setDefaultNumberSuffixFactory(NumberSuffixFactory factory);
+
+    NumberSuffixFactory getDefaultNumberSuffixFactory();
+
+    void setConfiguration(TextConfiguration configuration);
+
+    TextConfiguration getConfiguration();
+
+    void setPluralConverter(PluralConverter converter);
+
+    PluralConverter getPluralConverter();
 }
