@@ -61,9 +61,6 @@ public class CharDigitSuffixFactory implements NumberSuffixFactory {
         }
         StringBuilder sb = new StringBuilder();
         while(true) {
-            System.out.println(index);
-            System.out.println(characters.length);
-            System.out.println(characters[(index - 1) % characters.length]);
             sb.insert(0, characters[(index - 1) % characters.length]);
             if(index <= characters.length) {
                 break;
