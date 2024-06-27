@@ -9,6 +9,7 @@ import me.datafox.dfxengine.handles.utils.HandleUtils;
 import me.datafox.dfxengine.handles.utils.UnmodifiableHandleMap;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,11 +32,24 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
     private final Space space;
     private final Map<String,Handle> ids;
 
+    /**
+     * @param space {@link Space} to be associated with this map
+     * @param logger {@link Logger} for this map
+     */
     public HashHandleMap(Space space, Logger logger) {
         super();
         this.logger = logger;
         this.space = space;
         ids = new HashMap<>();
+    }
+
+    /**
+     * Uses {@link LoggerFactory#getLogger(Class)} with {@link HashHandleMap HashHandleMap.class}.
+     *
+     * @param space {@link Space} to be associated with this map
+     */
+    public HashHandleMap(Space space) {
+        this(space, LoggerFactory.getLogger(HashHandleMap.class));
     }
 
     /**

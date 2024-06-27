@@ -7,6 +7,7 @@ import me.datafox.dfxengine.handles.api.HandleSet;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.handles.utils.UnmodifiableHandleSet;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,11 +26,24 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
     private final Space space;
     private final Map<String,Handle> ids;
 
+    /**
+     * @param space {@link Space} to be associated with this set
+     * @param logger {@link Logger} for this set
+     */
     public TreeHandleSet(Space space, Logger logger) {
         super();
         this.logger = logger;
         this.space = space;
         ids = new HashMap<>();
+    }
+
+    /**
+     * Uses {@link LoggerFactory#getLogger(Class)} with {@link TreeHandleSet TreeHandleSet.class}.
+     *
+     * @param space {@link Space} to be associated with this set
+     */
+    public TreeHandleSet(Space space) {
+        this(space, LoggerFactory.getLogger(HashHandleMap.class));
     }
 
     /**
