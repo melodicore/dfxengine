@@ -13,7 +13,8 @@ import java.math.MathContext;
 /**
  * A {@link NumberFormatter} that formats a number in a natural form. The precision of the number can be configured with
  * {@link #PRECISION}, and the minimum absolute exponent when a {@link NumberSuffixFormatter} will be used can be
- * configured with {@link #MIN_EXPONENT}. The minimum exponent must be smaller than or equal to the precision.
+ * configured with {@link #MIN_EXPONENT}. The minimum exponent must be smaller than or equal to the precision. Any
+ * trailing zeros in the decimal part of the number can be stripped, configured by {@link #STRIP_ZEROS}.
  *
  * @author datafox
  */
@@ -30,6 +31,13 @@ public class SimpleNumberFormatter implements NumberFormatter {
      * The default value is {@code 3}.
      */
     public static final ConfigurationKey<Integer> MIN_EXPONENT = ConfigurationKey.of(3);
+
+    /**
+     * If {@code true}, the number will be stripped of any trailing zeros in the decimal part of the number before
+     * formatting. The default value is
+     * {@code true}.
+     */
+    public static final ConfigurationKey<Boolean> STRIP_ZEROS = ConfigurationKey.of(true);
 
     private final Handle handle;
 
@@ -60,6 +68,9 @@ public class SimpleNumberFormatter implements NumberFormatter {
         if(Math.abs(output.getExponent()) >= minExponent) {
             number = output.getScaled();
             suffix = output.getSuffix();
+        }
+        if(configuration.get(STRIP_ZEROS)) {
+            number = number.stripTrailingZeros();
         }
         return number.round(new MathContext(precision)).toPlainString() + suffix;
     }
