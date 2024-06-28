@@ -19,6 +19,8 @@ dependencies {
 
     testImplementation project(":injector")
     testImplementation project(":handles")
+    testImplementation project(":math")
+    testImplementation project(":values")
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
