@@ -9,7 +9,7 @@ package me.datafox.dfxengine.text.api;
 public interface PluralConverter {
     /**
      * @param singular singular form of a noun
-     * @return plural form of the provided noun
+     * @return plural form of the provided noun, or {@code null} if the singular is {@code null}
      */
     String convert(String singular);
 }

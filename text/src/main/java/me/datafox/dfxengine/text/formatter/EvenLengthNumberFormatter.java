@@ -6,7 +6,9 @@ import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.*;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.TextHandles;
+import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 
 import java.math.BigDecimal;
@@ -61,11 +63,17 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
      * @param factory {@inheritDoc}
      * @param configuration {@inheritDoc}
      * @return {@inheritDoc}
+     *
+     * @throws TextConfigurationException {@inheritDoc}
      */
     @Override
     public String format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
+        if(number == null) {
+            number = BigDecimal.ZERO;
+        }
         int length = configuration.get(LENGTH);
-        int minExp = configuration.get(MIN_EXPONENT);
+        int minExponent = configuration.get(MIN_EXPONENT);
+        validateConfiguration(length, minExponent);
         NumberSuffixFormatter suffixFactory = factory.getNumberSuffixFormatter(configuration);
         int exponent = BigDecimalMath.exponent(number);
         int absExponent = Math.abs(exponent);
@@ -74,9 +82,9 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
         if(number.signum() == -1) {
             length--;
         }
-        if(exponent == length - 1 && length == minExp) {
+        if(exponent == length - 1 && length == minExponent) {
             out = getNumberString(number, length);
-        } else if(absExponent >= minExp || (exponent < 0 && absExponent >= minExp - 1)) {
+        } else if(absExponent >= minExponent || (exponent < 0 && absExponent >= minExponent - 1)) {
             NumberSuffixFormatter.Output output = suffixFactory.format(number, factory, configuration);
             suffix = output.getSuffix();
             int exp = Math.abs(BigDecimalMath.exponent(output.getScaled()));
@@ -103,6 +111,24 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
             }
         }
         return out + suffix;
+    }
+
+    private void validateConfiguration(int length, int minExponent) {
+        if(length < 1) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "length must be positive and non-zero",
+                    TextConfigurationException::new);
+        }
+        if(minExponent < 0) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "minimum exponent must be positive",
+                    TextConfigurationException::new);
+        }
+        if(length < minExponent) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "minimum exponent must be smaller than or equal to the length",
+                    TextConfigurationException::new);
+        }
     }
 
     private String getNumberString(BigDecimal number, BigDecimal original, int precision) {

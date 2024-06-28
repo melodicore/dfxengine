@@ -1,6 +1,7 @@
 package me.datafox.dfxengine.text.text;
 
 import me.datafox.dfxengine.text.api.*;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,8 @@ public abstract class AbstractText implements Text {
      * @param factory {@inheritDoc}
      * @param configuration {@inheritDoc}
      * @return {@inheritDoc}
+     *
+     * @throws TextConfigurationException {@inheritDoc}
      */
     @Override
     public String get(TextFactory factory, TextConfiguration configuration) {
@@ -49,6 +52,8 @@ public abstract class AbstractText implements Text {
      * @param factory {@link TextFactory} for generation
      * @param configuration {@link TextConfiguration} for generation
      * @return generated {@link String}
+     *
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
      */
     protected abstract String generate(TextFactory factory, TextConfiguration configuration);
 }

@@ -11,4 +11,5 @@ open module dfxengine.text.api {
     requires dfxengine.dependencies;
 
     exports me.datafox.dfxengine.text.api;
+    exports me.datafox.dfxengine.text.api.exception;
 }

@@ -19,6 +19,9 @@ public class DefaultPluralConverter implements PluralConverter {
      */
     @Override
     public String convert(String singular) {
+        if(singular == null) {
+            return null;
+        }
         if(singular.matches(".*([sx]|ch)")) {
             return singular + "es";
         }

@@ -2,6 +2,7 @@ package me.datafox.dfxengine.text.api;
 
 import lombok.Data;
 import me.datafox.dfxengine.handles.api.Handled;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 
 import java.math.BigDecimal;
 
@@ -18,6 +19,8 @@ public interface NumberSuffixFormatter extends Handled {
      * @return {@link Output} containing the scaled number, a suffix and the exponent scale of the original number, or
      * the {@link Output} of {@link TextFactory#getDefaultNumberSuffixFormatter()} if the number cannot be formatted by
      * this factory
+     *
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this formatter
      */
     Output format(BigDecimal number, TextFactory factory, TextConfiguration configuration);
 

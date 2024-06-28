@@ -5,7 +5,10 @@ import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.*;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.TextHandles;
+import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -18,7 +21,6 @@ import java.math.MathContext;
  *
  * @author datafox
  */
-@Getter
 @Component
 public class SimpleNumberFormatter implements NumberFormatter {
     /**
@@ -39,13 +41,17 @@ public class SimpleNumberFormatter implements NumberFormatter {
      */
     public static final ConfigurationKey<Boolean> STRIP_ZEROS = ConfigurationKey.of(true);
 
+    private final Logger logger;
+    @Getter
     private final Handle handle;
 
     /**
+     * @param logger {@link Logger} for this formatter
      * @param handles {@link TextHandles} to be used for this formatter's {@link Handle}
      */
     @Inject
-    public SimpleNumberFormatter(TextHandles handles) {
+    public SimpleNumberFormatter(Logger logger, TextHandles handles) {
+        this.logger = logger;
         handle = handles.getSimpleNumberFormatter();
     }
 
@@ -54,11 +60,17 @@ public class SimpleNumberFormatter implements NumberFormatter {
      * @param factory {@inheritDoc}
      * @param configuration {@inheritDoc}
      * @return {@inheritDoc}
+     *
+     * @throws TextConfigurationException {@inheritDoc}
      */
     @Override
     public String format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
+        if(number == null) {
+            number = BigDecimal.ZERO;
+        }
         int precision = configuration.get(PRECISION);
         int minExponent = configuration.get(MIN_EXPONENT);
+        validateConfiguration(precision, minExponent);
         NumberSuffixFormatter suffixFactory = factory.getNumberSuffixFormatter(configuration);
         if(suffixFactory == null) {
             suffixFactory = factory.getDefaultNumberSuffixFormatter();
@@ -73,5 +85,23 @@ public class SimpleNumberFormatter implements NumberFormatter {
             number = number.stripTrailingZeros();
         }
         return number.round(new MathContext(precision)).toPlainString() + suffix;
+    }
+
+    private void validateConfiguration(int precision, int minExponent) {
+        if(precision < 1) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "precision must be positive and non-zero",
+                    TextConfigurationException::new);
+        }
+        if(minExponent < 0) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "minimum exponent must be positive",
+                    TextConfigurationException::new);
+        }
+        if(precision < minExponent) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "minimum exponent must be smaller than or equal to the precision",
+                    TextConfigurationException::new);
+        }
     }
 }

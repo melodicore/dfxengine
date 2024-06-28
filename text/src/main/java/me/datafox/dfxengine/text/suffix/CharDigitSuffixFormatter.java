@@ -6,7 +6,10 @@ import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.*;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.TextHandles;
+import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.Logger;
 
 import java.math.BigDecimal;
 
@@ -18,7 +21,6 @@ import java.math.BigDecimal;
  *
  * @author datafox
  */
-@Getter
 @Component
 public class CharDigitSuffixFormatter implements NumberSuffixFormatter {
     /**
@@ -44,13 +46,17 @@ public class CharDigitSuffixFormatter implements NumberSuffixFormatter {
      */
     public static final ConfigurationKey<Boolean> EXPONENT_PLUS = ConfigurationKey.of(false);
 
+    private final Logger logger;
+    @Getter
     private final Handle handle;
 
     /**
+     * @param logger {@link Logger} for this formatter
      * @param handles {@link TextHandles} to be used for this formatter's {@link Handle}
      */
     @Inject
-    public CharDigitSuffixFormatter(TextHandles handles) {
+    public CharDigitSuffixFormatter(Logger logger, TextHandles handles) {
+        this.logger = logger;
         handle = handles.getCharDigitSuffixFormatter();
     }
 
@@ -59,11 +65,16 @@ public class CharDigitSuffixFormatter implements NumberSuffixFormatter {
      * @param factory {@inheritDoc}
      * @param configuration {@inheritDoc}
      * @return {@inheritDoc}
+     *
+     * @throws TextConfigurationException {@inheritDoc}
      */
     @Override
     public Output format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
-        char[] characters = configuration.get(CHARACTERS);
+        if(number == null) {
+            number = BigDecimal.ZERO;
+        }
         int interval = configuration.get(INTERVAL);
+        validateConfiguration(interval);
         int shift = 0;
         int exponent = BigDecimalMath.exponent(number);
         boolean negativeExponent = exponent < 0;
@@ -82,6 +93,7 @@ public class CharDigitSuffixFormatter implements NumberSuffixFormatter {
             return new Output(mantissa, "", exponent);
         }
         StringBuilder sb = new StringBuilder();
+        char[] characters = configuration.get(CHARACTERS);
         while(true) {
             sb.insert(0, characters[(index - 1) % characters.length]);
             if(index <= characters.length) {
@@ -103,5 +115,13 @@ public class CharDigitSuffixFormatter implements NumberSuffixFormatter {
     @Override
     public boolean isInfinite() {
         return true;
+    }
+
+    private void validateConfiguration(int interval) {
+        if(interval <= 0) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "interval must be positive and non-zero",
+                    TextConfigurationException::new);
+        }
     }
 }

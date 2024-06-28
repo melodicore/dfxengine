@@ -10,7 +10,10 @@ import me.datafox.dfxengine.text.api.ConfigurationKey;
 import me.datafox.dfxengine.text.api.NumberSuffixFormatter;
 import me.datafox.dfxengine.text.api.TextConfiguration;
 import me.datafox.dfxengine.text.api.TextFactory;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.TextHandles;
+import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.Logger;
 
 import java.math.BigDecimal;
 
@@ -24,7 +27,6 @@ import java.math.BigDecimal;
  *
  * @author datafox
  */
-@Getter
 @Component
 public class NamedSuffixFormatter implements NumberSuffixFormatter {
     /**
@@ -71,13 +73,17 @@ public class NamedSuffixFormatter implements NumberSuffixFormatter {
      */
     public static final ConfigurationKey<Integer> INTERVAL = ConfigurationKey.of(3);
 
+    private final Logger logger;
+    @Getter
     private final Handle handle;
 
     /**
+     * @param logger {@link Logger} for this formatter
      * @param handles {@link TextHandles} to be used for this formatter's {@link Handle}
      */
     @Inject
-    public NamedSuffixFormatter(TextHandles handles) {
+    public NamedSuffixFormatter(Logger logger, TextHandles handles) {
+        this.logger = logger;
         handle = handles.getNamedSuffixFormatter();
     }
 
@@ -89,7 +95,11 @@ public class NamedSuffixFormatter implements NumberSuffixFormatter {
      */
     @Override
     public Output format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
+        if(number == null) {
+            number = BigDecimal.ZERO;
+        }
         int interval = configuration.get(INTERVAL);
+        validateConfiguration(interval);
         int exponent = BigDecimalMath.exponent(number);
         int index = Math.floorDiv(exponent, interval);
         String[] suffixes = configuration.get(SUFFIXES);
@@ -107,9 +117,19 @@ public class NamedSuffixFormatter implements NumberSuffixFormatter {
 
     /**
      * @return {@inheritDoc}. Always returns {@code false}
+     *
+     * @throws TextConfigurationException {@inheritDoc}
      */
     @Override
     public boolean isInfinite() {
         return false;
+    }
+
+    private void validateConfiguration(int interval) {
+        if(interval <= 0) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "interval must be positive and non-zero",
+                    TextConfigurationException::new);
+        }
     }
 }

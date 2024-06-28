@@ -6,9 +6,11 @@ import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.*;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
 import me.datafox.dfxengine.text.utils.TextHandles;
 import me.datafox.dfxengine.text.utils.TextUtils;
+import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 
 import java.math.BigDecimal;
@@ -109,10 +111,16 @@ public class SplittingNumberFormatter implements NumberFormatter {
      * @param factory {@inheritDoc}
      * @param configuration {@inheritDoc}
      * @return {@inheritDoc}
+     *
+     * @throws TextConfigurationException {@inheritDoc}
      */
     @Override
     public String format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
+        if(number == null) {
+            number = BigDecimal.ZERO;
+        }
         Split[] splits = configuration.get(SPLITS);
+        validateConfiguration(splits);
         NumberFormatter delegate = factory.getNumberFormatter(configuration.get(FORMATTER));
         if(delegate == null) {
             logger.warn("Invalid number formatter configuration, using BigDecimal.toString()");
@@ -149,6 +157,20 @@ public class SplittingNumberFormatter implements NumberFormatter {
                     configuration.get(LIST_LAST_DELIMITER), out);
         } else {
             return String.join(configuration.get(DELIMITER), out);
+        }
+    }
+
+    private void validateConfiguration(Split[] splits) {
+        BigDecimal last = null;
+        for(Split split : splits) {
+            if(last != null) {
+                if(last.compareTo(split.getMultiplier()) >= 0) {
+                    throw LogUtils.logExceptionAndGet(logger,
+                            "split multipliers are not in ascending order",
+                            TextConfigurationException::new);
+                }
+            }
+            last = split.getMultiplier();
         }
     }
 

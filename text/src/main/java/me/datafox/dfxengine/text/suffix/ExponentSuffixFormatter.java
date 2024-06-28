@@ -9,7 +9,10 @@ import me.datafox.dfxengine.text.api.ConfigurationKey;
 import me.datafox.dfxengine.text.api.NumberSuffixFormatter;
 import me.datafox.dfxengine.text.api.TextConfiguration;
 import me.datafox.dfxengine.text.api.TextFactory;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.TextHandles;
+import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.Logger;
 
 import java.math.BigDecimal;
 
@@ -21,7 +24,6 @@ import java.math.BigDecimal;
  *
  * @author datafox
  */
-@Getter
 @Component(order = -1)
 public class ExponentSuffixFormatter implements NumberSuffixFormatter {
     /**
@@ -35,13 +37,17 @@ public class ExponentSuffixFormatter implements NumberSuffixFormatter {
      */
     public static final ConfigurationKey<Boolean> EXPONENT_PLUS = ConfigurationKey.of(false);
 
+    private final Logger logger;
+    @Getter
     private final Handle handle;
 
     /**
+     * @param logger {@link Logger} for this formatter
      * @param handles {@link TextHandles} to be used for this formatter's {@link Handle}
      */
     @Inject
-    public ExponentSuffixFormatter(TextHandles handles) {
+    public ExponentSuffixFormatter(Logger logger, TextHandles handles) {
+        this.logger = logger;
         handle = handles.getExponentSuffixFormatter();
     }
 
@@ -50,10 +56,16 @@ public class ExponentSuffixFormatter implements NumberSuffixFormatter {
      * @param factory {@inheritDoc}
      * @param configuration {@inheritDoc}
      * @return {@inheritDoc}
+     *
+     * @throws TextConfigurationException {@inheritDoc}
      */
     @Override
     public Output format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
+        if(number == null) {
+            number = BigDecimal.ZERO;
+        }
         int interval = configuration.get(INTERVAL);
+        validateConfiguration(interval);
         int shift = 0;
         int exponent = BigDecimalMath.exponent(number);
         if(interval != 1) {
@@ -77,5 +89,13 @@ public class ExponentSuffixFormatter implements NumberSuffixFormatter {
     @Override
     public boolean isInfinite() {
         return true;
+    }
+
+    private void validateConfiguration(int interval) {
+        if(interval <= 0) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "interval must be positive and non-zero",
+                    TextConfigurationException::new);
+        }
     }
 }

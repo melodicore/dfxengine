@@ -1,5 +1,7 @@
 package me.datafox.dfxengine.text.api;
 
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
+
 /**
  * A {@link String} generation interface. {@link #get(TextFactory, TextConfiguration)} should use the provided
  * {@link TextConfiguration} and not {@link TextFactory#getConfiguration()}. The reference to {@link TextFactory} is
@@ -17,6 +19,8 @@ public interface Text {
      * @param factory {@link TextFactory} for generation
      * @param configuration {@link TextConfiguration} for generation
      * @return generated {@link String}
+     *
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
      */
     String get(TextFactory factory, TextConfiguration configuration);
 }
