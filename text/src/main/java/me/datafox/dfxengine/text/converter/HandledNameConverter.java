@@ -5,6 +5,8 @@ import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.text.api.NameConverter;
 
+import java.util.Optional;
+
 /**
  * A {@link NameConverter} that uses {@link Handled#getHandle()} followed by {@link Handle#getId()} as the singular
  * form. It is not capable of generating the plural form on its own.
@@ -35,7 +37,10 @@ public class HandledNameConverter implements NameConverter<Handled> {
      */
     @Override
     public String convert(Handled object) {
-        return object.getHandle().getId();
+        return Optional.ofNullable(object)
+                .map(Handled::getHandle)
+                .map(Handle::getId)
+                .orElse("null");
     }
 
     /**
