@@ -119,9 +119,9 @@ public class SplittingNumberFormatter implements NumberFormatter {
         if(number == null) {
             number = BigDecimal.ZERO;
         }
-        Split[] splits = configuration.get(SPLITS);
-        validateConfiguration(splits);
         NumberFormatter delegate = factory.getNumberFormatter(configuration.get(FORMATTER));
+        Split[] splits = configuration.get(SPLITS);
+        validateConfiguration(delegate, splits);
         if(delegate == null) {
             logger.warn("Invalid number formatter configuration, using BigDecimal.toString()");
             delegate = DEFAULT_DELEGATE;
@@ -160,7 +160,12 @@ public class SplittingNumberFormatter implements NumberFormatter {
         }
     }
 
-    private void validateConfiguration(Split[] splits) {
+    private void validateConfiguration(NumberFormatter delegate, Split[] splits) {
+        if(getHandle().equals(delegate.getHandle()) || delegate instanceof SplittingNumberFormatter) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "delegate formatter cannot be a SplittingNumberFormatter",
+                    TextConfigurationException::new);
+        }
         BigDecimal last = null;
         for(Split split : splits) {
             if(last != null) {
