@@ -29,8 +29,8 @@ Here are the currently existing and planned modules:
 | [Utils](utils)<sup>1</sup>               | Done (1.0.0) \[1.0.1]<sup>2</sup> | Utilities used by other modules                     |
 | [Values API](values-api)                 | Done (1.0.0) \[1.1.0]<sup>2</sup> | Interfaces for the Values module                    |
 | [Values](values)                         | Done (1.0.1) \[1.1.0]<sup>2</sup> | Mutable number values and a dynamic modifier system |
-| [Text API](text-api)                     | Under Construction                | Interfaces for the Text module                      |
-| [Text](text)                             | Under Construction                | Text handling and representation                    |
+| [Text API](text-api)                     | Functional                        | Interfaces for the Text module                      |
+| [Text](text)                             | Functional                        | Text handling and representation                    |
 | Entities                                 | Not yet started                   | Data-oriented entity system                         |
 | Serialization                            | Not yet started                   | Serialization for other modules                     |
 | [Collections](collections)<sup>1,3</sup> | Done (1.0.0) \[1.0.2]<sup>2</sup> | Collections for other modules and general usage     |
