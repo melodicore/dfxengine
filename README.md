@@ -19,13 +19,13 @@ Here are the currently existing and planned modules:
 
 | Module                                   | Status                            | Description                                         |
 |------------------------------------------|-----------------------------------|-----------------------------------------------------|
-| [Dependencies](dependencies)             | Done (1.0.2)                      | Data structure dependencies and invalidation        |
+| [Dependencies](dependencies)             | Done (1.0.2) \[1.0.3]<sup>2</sup> | Data structure dependencies and invalidation        |
 | [Handles API](handles-api)               | Done (1.0.6) \[2.0.0]<sup>2</sup> | Interfaces for the Handles module                   |
 | [Handles](handles)                       | Done (1.0.6) \[2.0.0]<sup>2</sup> | Dynamic enum-like structures for map keys           |
 | [Injector API](injector-api)             | Done (1.1.2) \[2.0.0]<sup>2</sup> | Annotations for the Injector module                 |
 | [Injector](injector)                     | Done (1.1.2) \[2.0.0]<sup>2</sup> | A dependency injector                               |
-| [Math API](math-api)                     | Done (1.0.2)                      | Interfaces for the Math module                      |
-| [Math](math)                             | Done (1.0.4)                      | Seamless wrapping and manipulation of number types  |
+| [Math API](math-api)                     | Done (1.0.2) \[1.0.3]<sup>2</sup> | Interfaces for the Math module                      |
+| [Math](math)                             | Done (1.0.4) \[1.0.5]<sup>2</sup> | Seamless wrapping and manipulation of number types  |
 | [Utils](utils)<sup>1</sup>               | Done (1.0.0) \[1.0.1]<sup>2</sup> | Utilities used by other modules                     |
 | [Values API](values-api)                 | Done (1.0.0) \[1.1.0]<sup>2</sup> | Interfaces for the Values module                    |
 | [Values](values)                         | Done (1.0.1) \[1.1.0]<sup>2</sup> | Mutable number values and a dynamic modifier system |
