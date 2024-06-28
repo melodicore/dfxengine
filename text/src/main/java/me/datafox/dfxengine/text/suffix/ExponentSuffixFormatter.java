@@ -68,6 +68,9 @@ public class ExponentSuffixFormatter implements NumberSuffixFormatter {
         validateConfiguration(interval);
         int shift = 0;
         int exponent = BigDecimalMath.exponent(number);
+        if(Math.abs(exponent) < interval) {
+            return new Output(number, "");
+        }
         if(interval != 1) {
             shift = Math.floorMod(exponent, interval);
             exponent = Math.floorDiv(exponent, interval) * interval;
@@ -80,7 +83,7 @@ public class ExponentSuffixFormatter implements NumberSuffixFormatter {
         if(configuration.get(EXPONENT_PLUS) && exponent >= 0) {
             plus = "+";
         }
-        return new Output(mantissa, String.format("e%s%s", plus, exponent), exponent);
+        return new Output(mantissa, String.format("e%s%s", plus, exponent));
     }
 
     /**

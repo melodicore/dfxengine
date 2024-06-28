@@ -16,9 +16,8 @@ public interface NumberSuffixFormatter extends Handled {
      * @param number number to format
      * @param factory {@link TextFactory} for formatting
      * @param configuration {@link TextConfiguration} for formatting
-     * @return {@link Output} containing the scaled number, a suffix and the exponent scale of the original number, or
-     * the {@link Output} of {@link TextFactory#getDefaultNumberSuffixFormatter()} if the number cannot be formatted by
-     * this factory
+     * @return {@link Output} containing the scaled number and a suffix, or the {@link Output} of
+     * {@link TextFactory#getDefaultNumberSuffixFormatter()} if the number cannot be formatted by this formatter
      *
      * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this formatter
      */
@@ -43,10 +42,5 @@ public interface NumberSuffixFormatter extends Handled {
          * Suffix for the number.
          */
         private final String suffix;
-
-        /**
-         * Exponent scale of the original number.
-         */
-        private final int exponent;
     }
 }

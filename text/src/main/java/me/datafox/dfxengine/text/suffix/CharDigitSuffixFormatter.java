@@ -5,13 +5,18 @@ import lombok.Getter;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
-import me.datafox.dfxengine.text.api.*;
+import me.datafox.dfxengine.text.api.ConfigurationKey;
+import me.datafox.dfxengine.text.api.NumberSuffixFormatter;
+import me.datafox.dfxengine.text.api.TextConfiguration;
+import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.TextHandles;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A {@link NumberSuffixFormatter} that generates an exponential suffix in an arbitrary base with an arbitrary set of
@@ -74,7 +79,8 @@ public class CharDigitSuffixFormatter implements NumberSuffixFormatter {
             number = BigDecimal.ZERO;
         }
         int interval = configuration.get(INTERVAL);
-        validateConfiguration(interval);
+        char[] characters = configuration.get(CHARACTERS);
+        validateConfiguration(interval, characters);
         int shift = 0;
         int exponent = BigDecimalMath.exponent(number);
         boolean negativeExponent = exponent < 0;
@@ -90,10 +96,9 @@ public class CharDigitSuffixFormatter implements NumberSuffixFormatter {
             mantissa = mantissa.movePointRight(shift);
         }
         if(index == 0) {
-            return new Output(mantissa, "", exponent);
+            return new Output(mantissa, "");
         }
         StringBuilder sb = new StringBuilder();
-        char[] characters = configuration.get(CHARACTERS);
         while(true) {
             sb.insert(0, characters[(index - 1) % characters.length]);
             if(index <= characters.length) {
@@ -106,7 +111,7 @@ public class CharDigitSuffixFormatter implements NumberSuffixFormatter {
         } else if(configuration.get(EXPONENT_PLUS)) {
             sb.insert(0, '+');
         }
-        return new Output(mantissa, sb.toString(), exponent);
+        return new Output(mantissa, sb.toString());
     }
 
     /**
@@ -117,11 +122,23 @@ public class CharDigitSuffixFormatter implements NumberSuffixFormatter {
         return true;
     }
 
-    private void validateConfiguration(int interval) {
+    private void validateConfiguration(int interval, char[] characters) {
         if(interval <= 0) {
             throw LogUtils.logExceptionAndGet(logger,
                     "interval must be positive and non-zero",
                     TextConfigurationException::new);
+        }
+        if(characters.length == 0) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    "character array must not be empty",
+                    TextConfigurationException::new);
+        }
+        Set<Character> visited = new HashSet<>();
+        for(char c : characters) {
+            if(!visited.add(c)) {
+                logger.warn("character array has the same element multiple times");
+                break;
+            }
         }
     }
 }

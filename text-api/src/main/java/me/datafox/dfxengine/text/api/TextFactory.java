@@ -14,6 +14,12 @@ import java.util.List;
  */
 public interface TextFactory {
     /**
+     * @param text {@link Text} object to build
+     * @return {@link String} representation of the text
+     */
+    String build(Text text);
+
+    /**
      * @param texts {@link Text} objects to build
      * @return {@link String} representation of the texts
      */
@@ -85,7 +91,7 @@ public interface TextFactory {
      * @return {@link NameConverter} associated with the type or any of its interfaces or superclasses
      * @param <T> type of the object to be named
      */
-    <T> NameConverter<? super T> getNameConverter(Class<T> type);
+    <T> NameConverter<T> getNameConverter(Class<T> type);
 
     /**
      * @param formatter {@link NumberFormatter} to be registered

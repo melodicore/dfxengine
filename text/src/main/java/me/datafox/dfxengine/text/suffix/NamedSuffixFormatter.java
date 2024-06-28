@@ -39,7 +39,7 @@ public class NamedSuffixFormatter implements NumberSuffixFormatter {
      * Array of abbreviated names of the short scale powers of 3 to be used as number suffixes.
      */
     public static final String[] SHORT = new String[] {
-            "", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No",
+            "", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No",
             "Dc", "UDc", "DDc", "TDc", "QaDc", "QiDc", "SxDc", "SpDc", "ODc", "NDc",
             "Vi", "UVi", "DVi", "TVi", "QaVi", "QiVi", "SxVi", "SpVi", "OVi", "NVi",
             "Tg", "UTg", "DTg", "TTg", "QaTg", "QiTg", "SxTg", "SpTg", "OTg", "NTg",
@@ -53,7 +53,7 @@ public class NamedSuffixFormatter implements NumberSuffixFormatter {
      * Array of abbreviated names of the long scale powers of 3 to be used as number suffixes.
      */
     public static final String[] LONG = new String[] {
-            "", "K", "M", "Md", "B", "Bd", "T", "Td", "Qa", "Qad",
+            "", "k", "M", "Md", "B", "Bd", "T", "Td", "Qa", "Qad",
             "Qi", "Qid", "Sx", "Sxd", "Sp", "Spd", "Oc", "Od", "No", "Nd",
             "Dc", "Dd", "UDc", "UDd", "DDc", "DDd", "TDc", "TDd", "QaDc", "QaDd",
             "QiDc", "QiDd", "SxDc", "SxDd", "SpDc", "SpDd", "ODc", "ODd", "NDc", "NDd",
@@ -107,12 +107,11 @@ public class NamedSuffixFormatter implements NumberSuffixFormatter {
             return factory.getDefaultNumberSuffixFormatter().format(number, factory, configuration);
         }
         int shift = Math.floorMod(exponent, interval);
-        exponent = index * interval;
         BigDecimal mantissa = BigDecimalMath.mantissa(number);
         if(shift != 0) {
             mantissa = mantissa.movePointRight(shift);
         }
-        return new Output(mantissa, suffixes[index], exponent);
+        return new Output(mantissa, suffixes[index]);
     }
 
     /**

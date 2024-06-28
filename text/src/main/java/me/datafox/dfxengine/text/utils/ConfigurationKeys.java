@@ -41,11 +41,15 @@ public class ConfigurationKeys {
      * {@link Handle} of the {@link NumberSuffixFormatter} used by all {@link NumberFormatter NumberFormatters}. The
      * default value is {@link TextHandles#getExponentSuffixFormatter()}.
      */
-    public static final ConfigurationKey<Handle> NUMBER_SUFFIX_FACTORY = ConfigurationKey.of();
+    public static final ConfigurationKey<Handle> NUMBER_SUFFIX_FORMATTER = ConfigurationKey.of();
 
     @Inject
     public ConfigurationKeys(TextHandles handles) {
-        NUMBER_FORMATTER.setDefaultValue(handles.getSimpleNumberFormatter());
-        NUMBER_SUFFIX_FACTORY.setDefaultValue(handles.getExponentSuffixFormatter());
+        if(NUMBER_FORMATTER.getDefaultValue() == null) {
+            NUMBER_FORMATTER.setDefaultValue(handles.getSimpleNumberFormatter());
+        }
+        if(NUMBER_SUFFIX_FORMATTER.getDefaultValue() == null) {
+            NUMBER_SUFFIX_FORMATTER.setDefaultValue(handles.getExponentSuffixFormatter());
+        }
     }
 }

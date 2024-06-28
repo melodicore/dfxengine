@@ -161,7 +161,7 @@ public class SplittingNumberFormatter implements NumberFormatter {
     }
 
     private void validateConfiguration(NumberFormatter delegate, Split[] splits) {
-        if(getHandle().equals(delegate.getHandle()) || delegate instanceof SplittingNumberFormatter) {
+        if(delegate != null && (getHandle().equals(delegate.getHandle()) || delegate instanceof SplittingNumberFormatter)) {
             throw LogUtils.logExceptionAndGet(logger,
                     "delegate formatter cannot be a SplittingNumberFormatter",
                     TextConfigurationException::new);

@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.text.formatter;
 
+import ch.obermuhlner.math.big.BigDecimalMath;
 import lombok.Getter;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.injector.api.annotation.Component;
@@ -77,7 +78,7 @@ public class SimpleNumberFormatter implements NumberFormatter {
         }
         NumberSuffixFormatter.Output output = suffixFactory.format(number, factory, configuration);
         String suffix = "";
-        if(Math.abs(output.getExponent()) >= minExponent) {
+        if(Math.abs(BigDecimalMath.exponent(number)) >= minExponent) {
             number = output.getScaled();
             suffix = output.getSuffix();
         }

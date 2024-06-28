@@ -75,6 +75,11 @@ public class TextFactoryImpl implements TextFactory {
         numberSuffixFormatters.forEach(this::addNumberSuffixFormatter);
     }
 
+    @Override
+    public String build(Text text) {
+        return text.get(this, configuration.copy());
+    }
+
     /**
      * @param texts {@inheritDoc}
      * @return {@inheritDoc}
@@ -195,7 +200,7 @@ public class TextFactoryImpl implements TextFactory {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> NameConverter<? super T> getNameConverter(Class<T> type) {
+    public <T> NameConverter<T> getNameConverter(Class<T> type) {
         if(nameConverters.containsKey(type)) {
             return (NameConverter<T>) nameConverters.get(type);
         }
@@ -207,10 +212,7 @@ public class TextFactoryImpl implements TextFactory {
                 .filter(nameConverters::containsKey)
                 .findFirst()
                 .map(nameConverters::get);
-        if(converter.isPresent()) {
-            return (NameConverter<? super T>) converter.get();
-        }
-        return getNameConverter(type.getSuperclass());
+        return (NameConverter<T>) converter.orElseGet(() -> getNameConverter(type.getSuperclass()));
     }
 
     /**
@@ -276,7 +278,7 @@ public class TextFactoryImpl implements TextFactory {
     @Override
     public NumberSuffixFormatter getNumberSuffixFormatter(TextConfiguration configuration) {
         return numberSuffixFormatters.getOrDefault(
-                configuration.get(NUMBER_SUFFIX_FACTORY),
+                configuration.get(NUMBER_SUFFIX_FORMATTER),
                 getDefaultNumberSuffixFormatter());
     }
 
