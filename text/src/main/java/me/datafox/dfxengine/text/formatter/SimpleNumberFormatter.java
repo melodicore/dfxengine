@@ -11,8 +11,13 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 
 /**
+ * A {@link NumberFormatter} that formats a number in a natural form. The precision of the number can be configured with
+ * {@link #PRECISION}, and the minimum absolute exponent when a {@link NumberSuffixFormatter} will be used can be
+ * configured with {@link #MIN_EXPONENT}. The minimum exponent must be smaller than or equal to the precision.
+ *
  * @author datafox
  */
+@Getter
 @Component
 public class SimpleNumberFormatter implements NumberFormatter {
     /**
@@ -26,23 +31,31 @@ public class SimpleNumberFormatter implements NumberFormatter {
      */
     public static final ConfigurationKey<Integer> MIN_EXPONENT = ConfigurationKey.of(3);
 
-    @Getter
     private final Handle handle;
 
+    /**
+     * @param handles {@link TextHandles} to be used for this formatter's {@link Handle}
+     */
     @Inject
     public SimpleNumberFormatter(TextHandles handles) {
         handle = handles.getSimpleNumberFormatter();
     }
 
+    /**
+     * @param number {@inheritDoc}
+     * @param factory {@inheritDoc}
+     * @param configuration {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
     public String format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
         int precision = configuration.get(PRECISION);
         int minExponent = configuration.get(MIN_EXPONENT);
-        NumberSuffixFactory suffixFactory = factory.getNumberSuffixFactory(configuration);
+        NumberSuffixFormatter suffixFactory = factory.getNumberSuffixFormatter(configuration);
         if(suffixFactory == null) {
-            suffixFactory = factory.getDefaultNumberSuffixFactory();
+            suffixFactory = factory.getDefaultNumberSuffixFormatter();
         }
-        NumberSuffixFactory.Output output = suffixFactory.format(number, factory, configuration);
+        NumberSuffixFormatter.Output output = suffixFactory.format(number, factory, configuration);
         String suffix = "";
         if(Math.abs(output.getExponent()) >= minExponent) {
             number = output.getScaled();

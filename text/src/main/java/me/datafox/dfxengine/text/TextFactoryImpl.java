@@ -1,13 +1,17 @@
 package me.datafox.dfxengine.text;
 
 import lombok.Getter;
+import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleManager;
+import me.datafox.dfxengine.handles.api.HandleMap;
+import me.datafox.dfxengine.injector.api.Injector;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.*;
 import me.datafox.dfxengine.text.utils.TextConfigurationImpl;
+import me.datafox.dfxengine.text.utils.TextHandles;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -16,6 +20,12 @@ import java.util.stream.Collectors;
 import static me.datafox.dfxengine.text.utils.ConfigurationKeys.*;
 
 /**
+ * Implementation of {@link TextFactory}, a singleton class that generates {@link String Strings} from {@link Text}
+ * objects. It manages {@link Name Names}, {@link NameConverter NameConverters},
+ * {@link NumberFormatter NumberFormatters}, {@link NumberSuffixFormatter NumberSuffixFacctories},
+ * {@link TextConfiguration} and the {@link PluralConverter}. This class is designed to be used with the
+ * {@link Injector}.
+ *
  * @author datafox
  */
 @Component
@@ -24,36 +34,51 @@ public class TextFactoryImpl implements TextFactory {
     @Getter
     private final HandleManager handleManager;
     private final Map<Object, Name<?>> names;
-    private final Map<Class<?>,NameConverter<?>> converters;
-    private final Map<Handle,NumberFormatter> formatters;
-    private final Map<Handle,NumberSuffixFactory> factories;
+    private final Map<Class<?>,NameConverter<?>> nameConverters;
+    private final HandleMap<NumberFormatter> numberFormatters;
+    private final HandleMap<NumberSuffixFormatter> numberSuffixFormatters;
     private final TextConfiguration configuration;
-    private NumberSuffixFactory defaultFactory;
+    private NumberSuffixFormatter defaultFactory;
     private PluralConverter pluralConverter;
 
+    /**
+     * @param logger {@link Logger} for this factory
+     * @param handleManager {@link HandleManager} for this factory
+     * @param handles {@link TextHandles} for this factory
+     * @param names {@link Name Names} for this factory
+     * @param nameConverters {@link NameConverter NameConverters} for this factory
+     * @param numberFormatters {@link NumberFormatter NumberFormatters} for this factory
+     * @param numberSuffixFormatters {@link NumberSuffixFormatter NumberSuffixFormatters} for this factory
+     * @param pluralConverter {@link PluralConverter} for this factory
+     */
     @Inject
     public TextFactoryImpl(Logger logger,
                            HandleManager handleManager,
+                           TextHandles handles,
                            List<Name<?>> names,
-                           List<NameConverter<?>> converters,
-                           List<NumberFormatter> formatters,
-                           List<NumberSuffixFactory> factories,
+                           List<NameConverter<?>> nameConverters,
+                           List<NumberFormatter> numberFormatters,
+                           List<NumberSuffixFormatter> numberSuffixFormatters,
                            PluralConverter pluralConverter) {
         this.logger = logger;
         this.handleManager = handleManager;
         this.names = new HashMap<>();
-        this.converters = new HashMap<>();
-        this.formatters = new HashMap<>();
-        this.factories = new HashMap<>();
+        this.nameConverters = new HashMap<>();
+        this.numberFormatters = new HashHandleMap<>(handles.getNumberFormatters());
+        this.numberSuffixFormatters = new HashHandleMap<>(handles.getNumberSuffixFormatters());
         this.configuration = new TextConfigurationImpl(this);
         this.pluralConverter = pluralConverter;
 
         names.forEach(this::addName);
-        converters.forEach(this::addNameConverter);
-        formatters.forEach(this::addNumberFormatter);
-        factories.forEach(this::addNumberSuffixFactory);
+        nameConverters.forEach(this::addNameConverter);
+        numberFormatters.forEach(this::addNumberFormatter);
+        numberSuffixFormatters.forEach(this::addNumberSuffixFormatter);
     }
 
+    /**
+     * @param texts {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
     public String build(List<Text> texts) {
         TextConfiguration effective = configuration.copy();
@@ -64,11 +89,26 @@ public class TextFactoryImpl implements TextFactory {
                 .collect(Collectors.joining(delimiter));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param object {@inheritDoc}
+     * @param name {@inheritDoc}
+     * @return {@inheritDoc}
+     * @param <T> {@inheritDoc}
+     */
     @Override
     public <T> Name<T> createName(T object, String name) {
         return createName(object, name, pluralConverter.convert(name));
     }
 
+    /**
+     * @param object {@inheritDoc}
+     * @param singular {@inheritDoc}
+     * @param plural {@inheritDoc}
+     * @return {@inheritDoc}
+     * @param <T> {@inheritDoc}
+     */
     @Override
     public <T> Name<T> createName(T object, String singular, String plural) {
         Name<T> name = Name
@@ -81,17 +121,30 @@ public class TextFactoryImpl implements TextFactory {
         return name;
     }
 
+    /**
+     * @param name {@inheritDoc}
+     * @return {@inheritDoc}
+     * @param <T> {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> Name<T> addName(Name<T> name) {
         return (Name<T>) names.put(name.getOwner(), name);
     }
 
+    /**
+     * @param object {@inheritDoc}
+     * @return {@inheritDoc}
+     * @param <T> {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> Name<T> getName(T object) {
         if(names.containsKey(object)) {
             return (Name<T>) names.get(object);
+        }
+        if(object instanceof Named) {
+            return ((Named<T>) object).getName();
         }
         String singular;
         String plural = null;
@@ -110,114 +163,175 @@ public class TextFactoryImpl implements TextFactory {
         return createName(object, singular, plural);
     }
 
+    /**
+     * @param object {@inheritDoc}
+     * @param plural {@inheritDoc}
+     * @return {@inheritDoc}
+     * @param <T> {@inheritDoc}
+     */
     @Override
     public <T> String getName(T object, boolean plural) {
         Name<T> name = getName(object);
         return plural ? name.getPlural() : name.getSingular();
     }
 
+    /**
+     * @param converter {@inheritDoc}
+     * @param <T> {@inheritDoc}
+     */
     @Override
     public <T> void addNameConverter(NameConverter<T> converter) {
-        if(converters.containsKey(converter.getType())) {
+        if(nameConverters.containsKey(converter.getType())) {
             logger.warn(String.format("Converter for class %s is already present, %s will be ignored", converter.getType(), converter));
             return;
         }
-        converters.put(converter.getType(), converter);
+        nameConverters.put(converter.getType(), converter);
     }
 
+    /**
+     * @param type {@inheritDoc}
+     * @return {@inheritDoc}
+     * @param <T> {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> NameConverter<? super T> getNameConverter(Class<T> type) {
-        if(converters.containsKey(type)) {
-            return (NameConverter<T>) converters.get(type);
+        if(nameConverters.containsKey(type)) {
+            return (NameConverter<T>) nameConverters.get(type);
         }
         if(Object.class.equals(type)) {
             return null;
         }
         Optional<NameConverter<?>> converter = Arrays
                 .stream(type.getInterfaces())
-                .filter(converters::containsKey)
+                .filter(nameConverters::containsKey)
                 .findFirst()
-                .map(converters::get);
+                .map(nameConverters::get);
         if(converter.isPresent()) {
             return (NameConverter<? super T>) converter.get();
         }
         return getNameConverter(type.getSuperclass());
     }
 
+    /**
+     * @param formatter {@inheritDoc}
+     */
     @Override
     public void addNumberFormatter(NumberFormatter formatter) {
-        if(formatters.containsKey(formatter)) {
+        if(numberFormatters.containsKey(formatter.getHandle())) {
             logger.warn(String.format("Formatter with handle %s is already present, %s will be ignored", formatter.getHandle(), formatter));
             return;
         }
-        formatters.put(formatter.getHandle(), formatter);
+        numberFormatters.put(formatter.getHandle(), formatter);
     }
 
+    /**
+     * @param handle {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
     public NumberFormatter getNumberFormatter(Handle handle) {
-        return formatters.get(handle);
+        return numberFormatters.get(handle);
     }
 
+    /**
+     * @param configuration {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
     public NumberFormatter getNumberFormatter(TextConfiguration configuration) {
-        return formatters.get(configuration.get(NUMBER_FORMATTER));
+        return numberFormatters.get(configuration.get(NUMBER_FORMATTER));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param formatter {@inheritDoc}
+     */
     @Override
-    public void addNumberSuffixFactory(NumberSuffixFactory factory) {
-        if(factories.containsKey(factory)) {
-            logger.warn(String.format("Factory with handle %s is already present, %s will be ignored", factory.getHandle(), factory));
+    public void addNumberSuffixFormatter(NumberSuffixFormatter formatter) {
+        if(numberSuffixFormatters.containsKey(formatter.getHandle())) {
+            logger.warn(String.format("Formatter with handle %s is already present, %s will be ignored", formatter.getHandle(), formatter));
             return;
         }
-        if(factory.isInfinite() && defaultFactory == null) {
-            defaultFactory = factory;
+        if(formatter.isInfinite() && defaultFactory == null) {
+            defaultFactory = formatter;
         }
-        factories.put(factory.getHandle(), factory);
+        numberSuffixFormatters.put(formatter.getHandle(), formatter);
     }
 
+    /**
+     * @param handle {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
-    public NumberSuffixFactory getNumberSuffixFactory(Handle handle) {
-        return factories.get(handle);
+    public NumberSuffixFormatter getNumberSuffixFormatter(Handle handle) {
+        return numberSuffixFormatters.get(handle);
     }
 
+    /**
+     * @param configuration {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
-    public NumberSuffixFactory getNumberSuffixFactory(TextConfiguration configuration) {
-        return factories.getOrDefault(
+    public NumberSuffixFormatter getNumberSuffixFormatter(TextConfiguration configuration) {
+        return numberSuffixFormatters.getOrDefault(
                 configuration.get(NUMBER_SUFFIX_FACTORY),
-                getDefaultNumberSuffixFactory());
+                getDefaultNumberSuffixFormatter());
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param formatter {@inheritDoc}
+     */
     @Override
-    public void setDefaultNumberSuffixFactory(NumberSuffixFactory factory) {
-        if(!factory.isInfinite()) {
-            logger.warn(String.format("Factory %s is not infinite and cannot be used as a default", factory));
+    public void setDefaultNumberSuffixFormatter(NumberSuffixFormatter formatter) {
+        if(!formatter.isInfinite()) {
+            logger.warn(String.format("Factory %s is not infinite and cannot be used as a default", formatter));
             return;
         }
-        defaultFactory = factory;
+        defaultFactory = formatter;
     }
 
+    /**
+     * @return {@inheritDoc}
+     */
     @Override
-    public NumberSuffixFactory getDefaultNumberSuffixFactory() {
+    public NumberSuffixFormatter getDefaultNumberSuffixFormatter() {
         return defaultFactory;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param configuration {@inheritDoc}
+     */
     @Override
     public void setConfiguration(TextConfiguration configuration) {
         this.configuration.clear();
         this.configuration.set(configuration);
     }
 
+    /**
+     * @return {@inheritDoc}
+     */
     @Override
     public TextConfiguration getConfiguration() {
         return configuration;
     }
 
+    /**
+     * @param converter {@inheritDoc}
+     */
     @Override
     public void setPluralConverter(PluralConverter converter) {
         pluralConverter = converter;
     }
 
+    /**
+     * @return {@inheritDoc}
+     */
     @Override
     public PluralConverter getPluralConverter() {
         return pluralConverter;

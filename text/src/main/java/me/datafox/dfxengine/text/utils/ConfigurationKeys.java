@@ -1,13 +1,16 @@
 package me.datafox.dfxengine.text.utils;
 
 import me.datafox.dfxengine.handles.api.Handle;
+import me.datafox.dfxengine.injector.api.Injector;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.ConfigurationKey;
 import me.datafox.dfxengine.text.api.NumberFormatter;
-import me.datafox.dfxengine.text.api.NumberSuffixFactory;
+import me.datafox.dfxengine.text.api.NumberSuffixFormatter;
 
 /**
+ * Global configuration keys used by this module. This class is designed to be used with the {@link Injector}.
+ *
  * @author datafox
  */
 @Component
@@ -35,14 +38,14 @@ public class ConfigurationKeys {
     public static final ConfigurationKey<Handle> NUMBER_FORMATTER = ConfigurationKey.of();
 
     /**
-     * {@link Handle} of the {@link NumberSuffixFactory} used by all {@link NumberFormatter NumberFormatters}. The
-     * default value is {@link TextHandles#getExponentSuffixFactory()}.
+     * {@link Handle} of the {@link NumberSuffixFormatter} used by all {@link NumberFormatter NumberFormatters}. The
+     * default value is {@link TextHandles#getExponentSuffixFormatter()}.
      */
     public static final ConfigurationKey<Handle> NUMBER_SUFFIX_FACTORY = ConfigurationKey.of();
 
     @Inject
-    private ConfigurationKeys(TextHandles handles) {
+    public ConfigurationKeys(TextHandles handles) {
         NUMBER_FORMATTER.setDefaultValue(handles.getSimpleNumberFormatter());
-        NUMBER_SUFFIX_FACTORY.setDefaultValue(handles.getExponentSuffixFactory());
+        NUMBER_SUFFIX_FACTORY.setDefaultValue(handles.getExponentSuffixFormatter());
     }
 }

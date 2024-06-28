@@ -19,10 +19,29 @@ import java.util.List;
 import static me.datafox.dfxengine.text.utils.ConfigurationKeys.*;
 
 /**
+ * <p>
+ * A {@link NumberFormatter} that splits a number into multiple parts in order of magnitude and outputs them in a list.
+ * The most common use case is formatting a period of time. A {@link Split} consists of a {@link BigDecimal} multiplier
+ * and a singular and plural forms of a suffix. Splits are stored in an array and configured with {@link #SPLITS}. The
+ * array must have the splits in ascending order based on the multiplier, and the first split is recommended (but not
+ * required) to be {@link BigDecimal#ONE}.
+ * </p>
+ * <p>
+ * Each part of the output will be formatted by a different {@link NumberFormatter} which can be configured with
+ * {@link #FORMATTER}. The least significant part of the output can be in decimal form or rounded down, configured with
+ * {@link #ROUND_SMALLEST}. When formatting the parts either {@link ConfigurationKeys#DELIMITER}, or
+ * {@link ConfigurationKeys#LIST_DELIMITER} and {@link ConfigurationKeys#LIST_LAST_DELIMITER} can be used, configured
+ * with {@link #USE_LIST_DELIMITER}.
+ * </p>
+ *
  * @author datafox
  */
 @Component
 public class SplittingNumberFormatter implements NumberFormatter {
+    /**
+     * Array of {@link Split Splits} for formatting time with abbreviations of different units of time, from seconds to
+     * years. A month is assumed to be 30 days and a year is assumed to be 365 days.
+     */
     public static final Split[] TIME_SHORT = new Split[] {
             Split.of(BigDecimal.ONE, "s"),
             Split.of(new BigDecimal("60"), "m"),
@@ -32,6 +51,10 @@ public class SplittingNumberFormatter implements NumberFormatter {
             Split.of(new BigDecimal("2592000"), "mo"),
             Split.of(new BigDecimal("31536000"), "y")};
 
+    /**
+     * Array of {@link Split Splits} for formatting time with singular and plural names of different units of time,
+     * from seconds to years. A month is assumed to be 30 days and a year is assumed to be 365 days.
+     */
     public static final Split[] TIME_LONG = new Split[] {
             Split.of(BigDecimal.ONE, " second", " seconds"),
             Split.of(new BigDecimal("60"), " minute", " minutes"),
@@ -68,6 +91,10 @@ public class SplittingNumberFormatter implements NumberFormatter {
     @Getter
     private final Handle handle;
 
+    /**
+     * @param logger {@link Logger} for this formatter
+     * @param handles {@link TextHandles} to be used for this formatter's {@link Handle}
+     */
     @Inject
     public SplittingNumberFormatter(Logger logger, TextHandles handles) {
         this.logger = logger;
@@ -77,6 +104,12 @@ public class SplittingNumberFormatter implements NumberFormatter {
         }
     }
 
+    /**
+     * @param number {@inheritDoc}
+     * @param factory {@inheritDoc}
+     * @param configuration {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
     public String format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
         Split[] splits = configuration.get(SPLITS);
@@ -100,7 +133,7 @@ public class SplittingNumberFormatter implements NumberFormatter {
                     divided = divided.setScale(0, RoundingMode.DOWN);
                 }
                 String formatted = delegate.format(divided, factory, configuration);
-                if(TextUtils.isZero(formatted)) {
+                if(i != 0 && TextUtils.isZero(formatted)) {
                     continue;
                 }
                 number = number.remainder(split.getMultiplier());
@@ -119,16 +152,44 @@ public class SplittingNumberFormatter implements NumberFormatter {
         }
     }
 
+    /**
+     * Defines a single part to be used with {@link SplittingNumberFormatter}. Contains a {@link BigDecimal} multiplier
+     * and singular and plural forms of a suffix.
+     */
     @Data
     public static class Split {
+        /**
+         * Multiplier for this split.
+         */
         private final BigDecimal multiplier;
+
+        /**
+         * Suffix for this split in singular form.
+         */
         private final String singular;
+
+        /**
+         * Suffix for this split in plural form.
+         */
         private final String plural;
 
+        /**
+         * This method uses the name as both singular and plural form. It does <b>not</b> use a {@link PluralConverter}.
+         *
+         * @param multiplier {@link BigDecimal} multiplier for the split
+         * @param name name of the split
+         * @return new split with the specified parameters
+         */
         public static Split of(BigDecimal multiplier, String name) {
             return new Split(multiplier, name, name);
         }
 
+        /**
+         * @param multiplier {@link BigDecimal} multiplier for the split
+         * @param singular name of the split in singular form
+         * @param plural name of the split in plural form
+         * @return new split with the specified parameters
+         */
         public static Split of(BigDecimal multiplier, String singular, String plural) {
             return new Split(multiplier, singular, plural);
         }

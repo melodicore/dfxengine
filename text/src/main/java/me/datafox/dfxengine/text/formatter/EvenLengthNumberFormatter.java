@@ -13,6 +13,13 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 
 /**
+ * A {@link NumberFormatter} that formats a number in a natural form and ensures that every output is no longer than an
+ * arbitrary number of characters, configured with {@link #LENGTH}, and the minimum absolute exponent when a
+ * {@link NumberSuffixFormatter} will be used can be configured with {@link #MIN_EXPONENT}. The minimum exponent must be
+ * smaller than or equal to the length. The output can be configured to be padded with zeros to keep all outputs at the
+ * same length with {@link #PAD_ZEROS}. If an output of the desired length cannot be produced, the output will be longer
+ * and a warning will be logged.
+ *
  * @author datafox
  */
 @Component
@@ -39,17 +46,27 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
     @Getter
     private final Handle handle;
 
+    /**
+     * @param logger {@link Logger} for this formatter
+     * @param handles {@link TextHandles} to be used for this formatter's {@link Handle}
+     */
     @Inject
     public EvenLengthNumberFormatter(Logger logger, TextHandles handles) {
         this.logger = logger;
         handle = handles.getEvenLengthNumberFormatter();
     }
 
+    /**
+     * @param number {@inheritDoc}
+     * @param factory {@inheritDoc}
+     * @param configuration {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
     public String format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
         int length = configuration.get(LENGTH);
         int minExp = configuration.get(MIN_EXPONENT);
-        NumberSuffixFactory suffixFactory = factory.getNumberSuffixFactory(configuration);
+        NumberSuffixFormatter suffixFactory = factory.getNumberSuffixFormatter(configuration);
         int exponent = BigDecimalMath.exponent(number);
         int absExponent = Math.abs(exponent);
         String out;
@@ -60,7 +77,7 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
         if(exponent == length - 1 && length == minExp) {
             out = getNumberString(number, length);
         } else if(absExponent >= minExp || (exponent < 0 && absExponent >= minExp - 1)) {
-            NumberSuffixFactory.Output output = suffixFactory.format(number, factory, configuration);
+            NumberSuffixFormatter.Output output = suffixFactory.format(number, factory, configuration);
             suffix = output.getSuffix();
             int exp = Math.abs(BigDecimalMath.exponent(output.getScaled()));
             if(exp == length - suffix.length() - 1) {
