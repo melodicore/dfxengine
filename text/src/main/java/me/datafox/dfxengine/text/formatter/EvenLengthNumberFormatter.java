@@ -84,7 +84,7 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
         }
         if(exponent == length - 1 && length == minExponent) {
             out = getNumberString(number, length);
-        } else if(absExponent >= minExponent || (exponent < 0 && absExponent >= minExponent - 1)) {
+        } else if(absExponent >= minExponent) {
             NumberSuffixFormatter.Output output = suffixFactory.format(number, factory, configuration);
             suffix = output.getSuffix();
             int exp = Math.abs(BigDecimalMath.exponent(output.getScaled()));
@@ -136,7 +136,7 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
             logger.warn(String.format("%s takes up more character than the desired length", original));
             precision = 1;
         }
-        return number.round(new MathContext(precision)).toPlainString();
+        return number.stripTrailingZeros().round(new MathContext(precision)).toPlainString();
     }
 
     private String getNumberString(BigDecimal number, int precision) {
