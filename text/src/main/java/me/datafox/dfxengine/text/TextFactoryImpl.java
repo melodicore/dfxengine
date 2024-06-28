@@ -338,7 +338,7 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     @Initialize
-    private void initialize(TextConfiguration configuration) {
-        setConfiguration(configuration);
+    private void initialize(List<TextConfiguration> configurations) {
+        configurations.forEach(this::setConfiguration);
     }
 }
