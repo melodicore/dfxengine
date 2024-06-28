@@ -15,7 +15,7 @@ public class TextUtils {
      * @return {@code true} if the number is zero
      */
     public static boolean isZero(String number) {
-        return number.matches("^0$|^0\\.0*$");
+        return number.matches("0|0\\.0*");
     }
 
     /**
@@ -25,7 +25,7 @@ public class TextUtils {
      * @return {@code true} if the number is one
      */
     public static boolean isOne(String number) {
-        return number.matches("^1$|^1\\.0*$");
+        return number.matches("1|1\\.0*");
     }
 
     /**

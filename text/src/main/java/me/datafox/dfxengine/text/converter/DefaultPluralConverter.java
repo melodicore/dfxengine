@@ -19,10 +19,10 @@ public class DefaultPluralConverter implements PluralConverter {
      */
     @Override
     public String convert(String singular) {
-        if(singular.matches(".*([sx]|ch)$")) {
+        if(singular.matches(".*([sx]|ch)")) {
             return singular + "es";
         }
-        if(singular.matches(".*[^aeiouy]y$")) {
+        if(singular.matches(".*[^aeiouy]y")) {
             return singular.substring(0, singular.length() - 1) + "ies";
         }
         return singular + "s";
