@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  *
  * @author datafox
  */
+@SuppressWarnings("MissingJavadoc")
 public class InjectorStrings {
     public static final String NOT_CLOSING_SCAN = "Option set to not close ClassGraph scan. " +
             "This is not recommended, and only exists for testing purposes where multiple " +
@@ -71,45 +72,42 @@ public class InjectorStrings {
     private static final String ARRAY_FIELD_DEPENDENCY =
             "Class %s has field %s annotated with @Inject, array components are not permitted";
     private static final String CYCLIC_DEPENDENCY_DETECTED = "Detected a cyclic dependency: %s";
-    private static final String TYPE_PARAMETER_MISMATCH_SS = "Class %s has %s type parameter but %s was provided";
-    private static final String TYPE_PARAMETER_MISMATCH_SP = "Class %s has %s type parameter but %s were provided";
-    private static final String TYPE_PARAMETER_MISMATCH_PS = "Class %s has %s type parameters but %s was provided";
-    private static final String TYPE_PARAMETER_MISMATCH_PP = "Class %s has %s type parameters but %s were provided";
 
     public static String packageWhitelistPresent(int rules) {
-        return forTwoStringsAndInt(rules == 1 ?
+        return String.format(rules == 1 ?
                 WHITELIST_OR_BLACKLIST_PRESENT_SINGULAR :
                 WHITELIST_OR_BLACKLIST_PRESENT_PLURAL,
                 "Package", "white", rules);
     }
 
     public static String packageBlacklistPresent(int rules) {
-        return forTwoStringsAndInt(rules == 1 ?
+        return String.format(rules == 1 ?
                         WHITELIST_OR_BLACKLIST_PRESENT_SINGULAR :
                         WHITELIST_OR_BLACKLIST_PRESENT_PLURAL,
                 "Package", "black", rules);
     }
 
     public static String classWhitelistPresent(int rules) {
-        return forTwoStringsAndInt(rules == 1 ?
+        return String.format(rules == 1 ?
                         WHITELIST_OR_BLACKLIST_PRESENT_SINGULAR :
                         WHITELIST_OR_BLACKLIST_PRESENT_PLURAL,
                 "Class", "white", rules);
     }
 
     public static String classBlacklistPresent(int rules) {
-        return forTwoStringsAndInt(rules == 1 ?
+        return String.format(rules == 1 ?
                         WHITELIST_OR_BLACKLIST_PRESENT_SINGULAR :
                         WHITELIST_OR_BLACKLIST_PRESENT_PLURAL,
                 "Class", "black", rules);
     }
 
     public static String whitelistOrBlacklistRules(Collection<String> rules) {
-        return forStringCollection(WHITELIST_OR_BLACKLIST_RULES, rules);
+        return String.format(WHITELIST_OR_BLACKLIST_RULES,
+                "\"" + StringUtils.joining(rules, "\", \"", "\" and \"") + "\"");
     }
 
     public static String componentClassesFound(int classes) {
-        return forInt(classes == 1 ?
+        return String.format(classes == 1 ?
                 COMPONENT_CLASSES_FOUND_SINGULAR :
                 COMPONENT_CLASSES_FOUND_PLURAL,
                 classes);
@@ -120,7 +118,7 @@ public class InjectorStrings {
     }
 
     public static String componentMethodClassesFound(int classes) {
-        return forInt(classes == 1 ?
+        return String.format(classes == 1 ?
                         COMPONENT_METHOD_CLASSES_FOUND_SINGULAR :
                         COMPONENT_METHOD_CLASSES_FOUND_PLURAL,
                 classes);
@@ -131,7 +129,7 @@ public class InjectorStrings {
     }
 
     public static String instantiatedClassesFound(int classes) {
-        return forInt(classes == 1 ?
+        return String.format(classes == 1 ?
                         INSTANTIATED_CLASSES_FOUND_SINGULAR :
                         INSTANTIATED_CLASSES_FOUND_PLURAL,
                 classes);
@@ -142,7 +140,7 @@ public class InjectorStrings {
     }
 
     public static String invokedConstructorsFound(int constructors) {
-        return forInt(constructors == 1 ?
+        return String.format(constructors == 1 ?
                         INVOKED_CONSTRUCTORS_FOUND_SINGULAR :
                         INVOKED_CONSTRUCTORS_FOUND_PLURAL,
                 constructors);
@@ -153,7 +151,7 @@ public class InjectorStrings {
     }
 
     public static String invokedMethodsFound(int methods) {
-        return forInt(methods == 1 ?
+        return String.format(methods == 1 ?
                         INVOKED_METHODS_FOUND_SINGULAR :
                         INVOKED_METHODS_FOUND_PLURAL,
                 methods);
@@ -164,73 +162,81 @@ public class InjectorStrings {
     }
 
     public static String componentsFound(int components) {
-        return forInt(components == 1 ?
+        return String.format(components == 1 ?
                         COMPONENTS_FOUND_SINGULAR :
                         COMPONENTS_FOUND_PLURAL,
                 components);
     }
 
     public static String components(List<ComponentData<?>> components) {
-        return forComponentDataList(COMPONENTS, components);
+        return String.format(COMPONENTS, StringUtils.joining(components
+                        .stream()
+                        .map(InjectorStrings::getComponentString)
+                        .collect(Collectors.toList()),
+                ", ", " and "));
     }
 
     public static String nonComponentClassWithInjectConstructor(MethodInfo constructor) {
-        return forClassAndMethodInfo(NON_COMPONENT_CLASS_WITH_INJECT_CONSTRUCTOR,
-                constructor.getClassInfo(), constructor);
+        return String.format(NON_COMPONENT_CLASS_WITH_INJECT_CONSTRUCTOR,
+                constructor.getClassInfo().getName(), getMethodParameterString(constructor));
     }
 
     public static String nonComponentClassWithInjectField(FieldInfo field) {
-        return forClassAndFieldInfo(NON_COMPONENT_CLASS_WITH_INJECT_FIELD,
-                field.getClassInfo(), field);
+        return String.format(NON_COMPONENT_CLASS_WITH_INJECT_FIELD,
+                field.getClassInfo().getName(), getFieldParameterString(field));
     }
 
     public static String nonComponentClassWithInitializeMethod(MethodInfo method) {
-        return forClassAndMethodInfo(NON_COMPONENT_CLASS_WITH_INITIALIZE_METHOD,
-                method.getClassInfo(), method);
+        return String.format(NON_COMPONENT_CLASS_WITH_INITIALIZE_METHOD,
+                method.getClassInfo().getName(), getMethodParameterString(method));
     }
 
     public static String multipleConstructors(ClassInfo info, MethodInfoList constructors) {
-        return forClassInfoAndMethodInfoList(MULTIPLE_CONSTRUCTORS, info, constructors);
+        return String.format(MULTIPLE_CONSTRUCTORS, info.getName(),
+                StringUtils.joining(constructors
+                        .stream()
+                        .map(InjectorStrings::getMethodParameterString)
+                        .collect(Collectors.toList()), ", ", " and "));
     }
 
     public static String noConstructor(ClassInfo info) {
-        return forClassInfo(NO_CONSTRUCTOR, info);
+        return String.format(NO_CONSTRUCTOR, info.getName());
     }
 
     public static String buildingComponentClassData(String classString, MethodInfo constructor) {
-        return forStringAndMethodInfo(BUILDING_COMPONENT_CLASS_DATA, classString, constructor);
+        return String.format(BUILDING_COMPONENT_CLASS_DATA, classString, getMethodParameterString(constructor));
     }
 
     public static String buildingComponentMethodData(String classString, MethodInfo method) {
-        return forStringAndMethodInfo(BUILDING_COMPONENT_METHOD_DATA, classString, method);
+        return String.format(BUILDING_COMPONENT_METHOD_DATA, classString, getMethodParameterString(method));
     }
 
     public static String noDependenciesRuntime(ClassReference<?> reference) {
-        return forReference(NO_DEPENDENCIES, reference);
+        return String.format(NO_DEPENDENCIES, reference.getSignature());
     }
 
     public static String multipleDependenciesRuntime(ClassReference<?> reference) {
-        return forReference(MULTIPLE_DEPENDENCIES, reference);
+        return String.format(MULTIPLE_DEPENDENCIES, reference.getSignature());
     }
 
     public static String arrayComponent(MethodInfo method, ClassInfo info) {
-        return forMethodAndClassInfo(ARRAY_COMPONENT, method, info);
+        return String.format(ARRAY_COMPONENT, getMethodParameterString(method), info.getName());
     }
 
     public static String arrayDependency(MethodParameterInfo info) {
-        return forMethodInfo(ARRAY_DEPENDENCY, info.getMethodInfo());
+        return String.format(ARRAY_DEPENDENCY, getMethodParameterString(info.getMethodInfo()));
     }
 
     public static String arrayFieldDependency(FieldInfo info) {
-        return forClassAndFieldInfo(ARRAY_FIELD_DEPENDENCY, info.getClassInfo(), info);
+        return String.format(ARRAY_FIELD_DEPENDENCY, info.getClassInfo().getName(), getFieldParameterString(info));
     }
 
     public static String finalFieldDependency(FieldInfo field) {
-        return forFieldAndClassInfo(FINAL_FIELD_DEPENDENCY, field, field.getClassInfo());
+        return String.format(FINAL_FIELD_DEPENDENCY, getFieldParameterString(field), field.getClassInfo().getName());
     }
 
     public static String unresolvedTypeParameter(MethodInfo info, String parameter) {
-        return forMethodComponentAndString(UNRESOLVED_TYPE_PARAMETER, info, parameter);
+        return String.format(UNRESOLVED_TYPE_PARAMETER, getMethodComponentString(info), parameter);
     }
 
     public static String cyclicDependencyDetected(ComponentData<?> current, Deque<ComponentData<?>> visited) {
@@ -248,27 +254,6 @@ public class InjectorStrings {
                 .collect(Collectors.joining(" -> ")));
     }
 
-    public static String parameterCountMismatch(Class<?> type, int expected, int actual) {
-        String str = TYPE_PARAMETER_MISMATCH_PP;
-        if(expected == 1 && actual == 1) {
-            str = TYPE_PARAMETER_MISMATCH_SS;
-        } else if(expected == 1) {
-            str = TYPE_PARAMETER_MISMATCH_SP;
-        } else if(actual == 1) {
-            str = TYPE_PARAMETER_MISMATCH_PS;
-        }
-        return forClassAndTwoInts(str, type, expected, actual);
-    }
-
-    private static String forTwoStringsAndInt(String str, String string1, String string2, int integer) {
-        return String.format(str, string1, string2, integer);
-    }
-
-    private static String forStringCollection(String str, Collection<String> strings) {
-        return String.format(str,
-                "\"" + StringUtils.joining(strings, "\", \"", "\" and \"") + "\"");
-    }
-
     private static String forClassInfoList(String str, ClassInfoList classes) {
         return String.format(str, StringUtils.joining(classes
                         .stream()
@@ -283,66 +268,6 @@ public class InjectorStrings {
                         .map(InjectorStrings::getMethodParameterString)
                         .collect(Collectors.toList()),
                 ", ", " and "));
-    }
-
-    private static String forComponentDataList(String str, List<ComponentData<?>> components) {
-        return String.format(str, StringUtils.joining(components
-                        .stream()
-                        .map(InjectorStrings::getComponentString)
-                        .collect(Collectors.toList()),
-                ", ", " and "));
-    }
-
-    private static String forInt(String str, int integer) {
-        return String.format(str, integer);
-    }
-
-    private static String forClassInfo(String str, ClassInfo info) {
-        return String.format(str, info.getName());
-    }
-
-    private static String forMethodInfo(String str, MethodInfo info) {
-        return String.format(str, getMethodParameterString(info));
-    }
-
-    private static String forClassAndMethodInfo(String str, ClassInfo info, MethodInfo method) {
-        return String.format(str, info.getName(), getMethodParameterString(method));
-    }
-
-    private static String forStringAndMethodInfo(String str, String string, MethodInfo method) {
-        return String.format(str, string, getMethodParameterString(method));
-    }
-
-    private static String forClassInfoAndMethodInfoList(String str, ClassInfo info, MethodInfoList methods) {
-        return String.format(str, info.getName(),
-                StringUtils.joining(methods
-                        .stream()
-                        .map(InjectorStrings::getMethodParameterString)
-                        .collect(Collectors.toList()), ", ", " and "));
-    }
-
-    private static String forMethodAndClassInfo(String str, MethodInfo method, ClassInfo info) {
-        return String.format(str, getMethodParameterString(method), info.getName());
-    }
-
-    private static String forClassAndFieldInfo(String str, ClassInfo info, FieldInfo field) {
-        return String.format(str, info.getName(), getFieldParameterString(field));
-    }
-
-    private static String forFieldAndClassInfo(String str, FieldInfo field, ClassInfo info) {
-        return String.format(str, getFieldParameterString(field), info.getName());
-    }
-
-    private static String forMethodComponentAndString(String str, MethodInfo info, String string) {
-        return String.format(str, getMethodComponentString(info), string);
-    }
-
-    private static String forReference(String str, ClassReference<?> reference) {
-        return String.format(str, reference.getSignature());
-    }
-
-    private static String forClassAndTwoInts(String str, Class<?> type, int int1, int int2) {
-        return String.format(str, type.getName(), int1, int2);
     }
 
     private static String getMethodParameterString(MethodInfo method) {

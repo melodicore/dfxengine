@@ -5,9 +5,11 @@ import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.values.api.Value;
 
 /**
+ * Contains all string literals used for logging in this module.
+ *
  * @author datafox
  */
-@SuppressWarnings("SameParameterValue")
+@SuppressWarnings("MissingJavadoc")
 public class ValuesStrings {
     public static final String IMMUTABLE = "Immutable Values cannot be changed";
     public static final String OVERFLOW = "Numeral overflow or underflow";
@@ -24,36 +26,20 @@ public class ValuesStrings {
     private static final String INVALID_PARAMETER_COUNT = "Expected %s parameters but %s were present instead";
 
     public static String immutableValueMismatch(boolean immutable) {
-        return forTwoStrings(IMMUTABLE_VALUE_MISMATCH,
+        return String.format(IMMUTABLE_VALUE_MISMATCH,
                 immutable ? "a mutable" : "an immutable",
                 immutable ? "immutable" : "mutable");
     }
 
     public static String handleIgnored(Handle handle, Value value) {
-        return forHandleAndValue(HANDLE_IGNORED, handle, value);
+        return String.format(HANDLE_IGNORED, handle, value);
     }
 
     public static String spaceIgnored(Space space) {
-        return forSpace(SPACE_IGNORED, space);
+        return String.format(SPACE_IGNORED, space);
     }
 
     public static String invalidParameterCount(int expected, int actual) {
-        return forTwoInts(INVALID_PARAMETER_COUNT, expected, actual);
-    }
-
-    private static String forHandleAndValue(String str, Handle handle, Value value) {
-        return String.format(str, handle, value);
-    }
-
-    private static String forSpace(String str, Space space) {
-        return String.format(str, space);
-    }
-
-    private static String forTwoStrings(String str, String string1, String string2) {
-        return String.format(str, string1, string2);
-    }
-
-    private static String forTwoInts(String str, int int1, int int2) {
-        return String.format(str, int1, int2);
+        return String.format(INVALID_PARAMETER_COUNT, expected, actual);
     }
 }

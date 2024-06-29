@@ -8,6 +8,7 @@ import me.datafox.dfxengine.dependencies.Dependent;
  *
  * @author datafox
  */
+@SuppressWarnings("MissingJavadoc")
 public class DependencyStrings {
     private static final String CYCLIC_DETECTED =
             "Dependency %s cannot be added to Dependent %s, cyclic dependency chain detected";

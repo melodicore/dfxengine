@@ -8,7 +8,7 @@ import me.datafox.dfxengine.handles.api.Space;
  *
  * @author datafox
  */
-@SuppressWarnings({"MissingJavadoc", "SameParameterValue"})
+@SuppressWarnings("MissingJavadoc")
 public class HandleStrings {
     public static final String HANDLE = "Handle";
     public static final String SUBHANDLE = "Subhandle";
