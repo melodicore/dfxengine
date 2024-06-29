@@ -12,6 +12,7 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.*;
 import me.datafox.dfxengine.text.utils.TextConfigurationImpl;
 import me.datafox.dfxengine.text.utils.TextHandles;
+import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -187,7 +188,7 @@ public class TextFactoryImpl implements TextFactory {
     @Override
     public <T> void addNameConverter(NameConverter<T> converter) {
         if(nameConverters.containsKey(converter.getType())) {
-            logger.warn(String.format("Converter for class %s is already present, %s will be ignored", converter.getType(), converter));
+            logger.warn(TextStrings.converterPresent(converter));
             return;
         }
         nameConverters.put(converter.getType(), converter);
@@ -221,7 +222,7 @@ public class TextFactoryImpl implements TextFactory {
     @Override
     public void addNumberFormatter(NumberFormatter formatter) {
         if(numberFormatters.containsKey(formatter.getHandle())) {
-            logger.warn(String.format("Formatter with handle %s is already present, %s will be ignored", formatter.getHandle(), formatter));
+            logger.warn(TextStrings.formatterPresent(formatter));
             return;
         }
         numberFormatters.put(formatter.getHandle(), formatter);
@@ -253,7 +254,7 @@ public class TextFactoryImpl implements TextFactory {
     @Override
     public void addNumberSuffixFormatter(NumberSuffixFormatter formatter) {
         if(numberSuffixFormatters.containsKey(formatter.getHandle())) {
-            logger.warn(String.format("Formatter with handle %s is already present, %s will be ignored", formatter.getHandle(), formatter));
+            logger.warn(TextStrings.suffixFormatterPresent(formatter));
             return;
         }
         if(formatter.isInfinite() && defaultFactory == null) {
@@ -290,7 +291,7 @@ public class TextFactoryImpl implements TextFactory {
     @Override
     public void setDefaultNumberSuffixFormatter(NumberSuffixFormatter formatter) {
         if(!formatter.isInfinite()) {
-            logger.warn(String.format("Factory %s is not infinite and cannot be used as a default", formatter));
+            logger.warn(TextStrings.notInfinite(formatter));
             return;
         }
         defaultFactory = formatter;

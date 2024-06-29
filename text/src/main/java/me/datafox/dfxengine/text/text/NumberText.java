@@ -5,6 +5,7 @@ import me.datafox.dfxengine.text.api.Text;
 import me.datafox.dfxengine.text.api.TextConfiguration;
 import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
+import me.datafox.dfxengine.text.utils.internal.TextStrings;
 
 import java.math.BigDecimal;
 import java.util.function.Supplier;
@@ -39,7 +40,7 @@ public class NumberText extends AbstractText {
         NumberFormatter formatter = factory.getNumberFormatter(configuration);
         Number supplied = supplier.get();
         if(formatter == null) {
-            logger.warn("Invalid number formatter configuration, using Number.toString()");
+            logger.warn(TextStrings.INVALID_NUMBER_FORMATTER);
             return supplied.toString();
         }
         BigDecimal number;

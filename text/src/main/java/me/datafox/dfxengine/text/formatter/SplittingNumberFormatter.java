@@ -10,6 +10,7 @@ import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
 import me.datafox.dfxengine.text.utils.TextHandles;
 import me.datafox.dfxengine.text.utils.TextUtils;
+import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 
@@ -123,11 +124,11 @@ public class SplittingNumberFormatter implements NumberFormatter {
         Split[] splits = configuration.get(SPLITS);
         validateConfiguration(delegate, splits);
         if(delegate == null) {
-            logger.warn("Invalid number formatter configuration, using BigDecimal.toString()");
+            logger.warn(TextStrings.INVALID_NUMBER_FORMATTER);
             delegate = DEFAULT_DELEGATE;
         }
         if(number.compareTo(BigDecimal.ZERO) < 0) {
-            logger.warn(String.format("%s is negative, using delegate number formatter as is", number));
+            logger.warn(TextStrings.spnfNegativeNumber(number));
             return delegate.format(number, factory, configuration);
         }
         List<String> out = new ArrayList<>(splits.length);
@@ -163,7 +164,7 @@ public class SplittingNumberFormatter implements NumberFormatter {
     private void validateConfiguration(NumberFormatter delegate, Split[] splits) {
         if(delegate != null && (getHandle().equals(delegate.getHandle()) || delegate instanceof SplittingNumberFormatter)) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "delegate formatter cannot be a SplittingNumberFormatter",
+                    TextStrings.SPNF_DELEGATE_IS_SPLITTING,
                     TextConfigurationException::new);
         }
         BigDecimal last = null;
@@ -171,7 +172,7 @@ public class SplittingNumberFormatter implements NumberFormatter {
             if(last != null) {
                 if(last.compareTo(split.getMultiplier()) >= 0) {
                     throw LogUtils.logExceptionAndGet(logger,
-                            "split multipliers are not in ascending order",
+                            TextStrings.SPNF_SPLITS_NOT_IN_ORDER,
                             TextConfigurationException::new);
                 }
             }

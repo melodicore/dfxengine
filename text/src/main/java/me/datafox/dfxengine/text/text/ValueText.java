@@ -3,6 +3,7 @@ package me.datafox.dfxengine.text.text;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.text.api.*;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
+import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import me.datafox.dfxengine.values.api.Value;
 
 import java.util.function.Supplier;
@@ -44,7 +45,7 @@ public class ValueText extends AbstractText {
         Numeral numeral = configuration.get(USE_MODIFIED) ? supplier.get().getValue() : supplier.get().getBase();
         NumberFormatter formatter = factory.getNumberFormatter(configuration);
         if(formatter == null) {
-            logger.warn("Invalid number formatter configuration, using Number.toString()");
+            logger.warn(TextStrings.INVALID_NUMBER_FORMATTER);
             return numeral.getNumber().toString();
         }
         return formatter.format(numeral.bigDecValue(), factory, configuration);

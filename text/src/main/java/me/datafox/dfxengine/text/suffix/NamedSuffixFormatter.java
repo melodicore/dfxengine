@@ -12,6 +12,7 @@ import me.datafox.dfxengine.text.api.TextConfiguration;
 import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.TextHandles;
+import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 
@@ -127,7 +128,7 @@ public class NamedSuffixFormatter implements NumberSuffixFormatter {
     private void validateConfiguration(int interval) {
         if(interval <= 0) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "interval must be positive and non-zero",
+                    TextStrings.nsfInvalidInterval(interval),
                     TextConfigurationException::new);
         }
     }

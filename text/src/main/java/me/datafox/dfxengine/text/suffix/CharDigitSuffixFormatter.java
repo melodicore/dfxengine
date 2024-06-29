@@ -11,6 +11,7 @@ import me.datafox.dfxengine.text.api.TextConfiguration;
 import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.TextHandles;
+import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 
@@ -88,7 +89,6 @@ public class CharDigitSuffixFormatter implements NumberSuffixFormatter {
         if(interval != 1) {
             shift = Math.floorMod(exponent, interval);
             index = Math.floorDiv(exponent, interval);
-            exponent = index * interval;
         }
         index = Math.abs(index);
         BigDecimal mantissa = BigDecimalMath.mantissa(number);
@@ -125,18 +125,18 @@ public class CharDigitSuffixFormatter implements NumberSuffixFormatter {
     private void validateConfiguration(int interval, char[] characters) {
         if(interval <= 0) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "interval must be positive and non-zero",
+                    TextStrings.cdsfInvalidInterval(interval),
                     TextConfigurationException::new);
         }
         if(characters.length == 0) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "character array must not be empty",
+                    TextStrings.CDSF_EMPTY_CHAR_ARRAY,
                     TextConfigurationException::new);
         }
         Set<Character> visited = new HashSet<>();
         for(char c : characters) {
             if(!visited.add(c)) {
-                logger.warn("character array has the same element multiple times");
+                logger.warn(TextStrings.CDSF_NOT_DISTINCT_CHAR_ARRAY);
                 break;
             }
         }

@@ -6,6 +6,7 @@ import me.datafox.dfxengine.text.api.Text;
 import me.datafox.dfxengine.text.api.TextConfiguration;
 import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
+import me.datafox.dfxengine.text.utils.internal.TextStrings;
 
 import java.util.function.Supplier;
 
@@ -38,7 +39,7 @@ public class NumeralText extends AbstractText {
     protected String generate(TextFactory factory, TextConfiguration configuration) {
         NumberFormatter formatter = factory.getNumberFormatter(configuration);
         if(formatter == null) {
-            logger.warn("Invalid number formatter configuration, using Numeral.toString()");
+            logger.warn(TextStrings.INVALID_NUMBER_FORMATTER);
             return supplier.get().toString();
         }
         return formatter.format(supplier.get().bigDecValue(), factory, configuration);

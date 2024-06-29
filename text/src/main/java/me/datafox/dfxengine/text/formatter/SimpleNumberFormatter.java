@@ -8,6 +8,7 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.*;
 import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.TextHandles;
+import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 
@@ -91,17 +92,17 @@ public class SimpleNumberFormatter implements NumberFormatter {
     private void validateConfiguration(int precision, int minExponent) {
         if(precision < 1) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "precision must be positive and non-zero",
+                    TextStrings.snfInvalidPrecision(precision),
                     TextConfigurationException::new);
         }
         if(minExponent < 0) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "minimum exponent must be positive",
+                    TextStrings.snfInvalidMinExponent(precision),
                     TextConfigurationException::new);
         }
         if(precision < minExponent) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "minimum exponent must be smaller than or equal to the precision",
+                    TextStrings.snfPrecisionMinExponentMismatch(precision, minExponent),
                     TextConfigurationException::new);
         }
     }

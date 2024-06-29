@@ -143,6 +143,9 @@ public class NumberSuffixFormatterTest extends AbstractFormatterTest {
         assertEquals("2.52689k", format("2.52689e1"));
         assertEquals("2.52689M", format("2.52689e2"));
 
+        configuration.set(NamedSuffixFormatter.SUFFIXES, new String[0]);
+        assertEquals("2.52689e9", format("2.52689e9"));
+
         configuration.set(NamedSuffixFormatter.INTERVAL, 0);
         assertThrows(TextConfigurationException.class, () -> format("0"));
     }

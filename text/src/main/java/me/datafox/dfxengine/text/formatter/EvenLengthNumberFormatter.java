@@ -8,6 +8,7 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.*;
 import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.TextHandles;
+import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 
@@ -71,7 +72,8 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
         if(number == null) {
             number = BigDecimal.ZERO;
         }
-        int length = configuration.get(LENGTH);
+        int actualLength = configuration.get(LENGTH);
+        int length = actualLength;
         int minExponent = configuration.get(MIN_EXPONENT);
         validateConfiguration(length, minExponent);
         NumberSuffixFormatter suffixFactory = factory.getNumberSuffixFormatter(configuration);
@@ -83,30 +85,27 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
             length--;
         }
         if(exponent == length - 1 && length == minExponent) {
-            out = getNumberString(number, length);
+            out = getNumberString(number, length, actualLength);
         } else if(absExponent >= minExponent) {
             NumberSuffixFormatter.Output output = suffixFactory.format(number, factory, configuration);
             suffix = output.getSuffix();
             int exp = Math.abs(BigDecimalMath.exponent(output.getScaled()));
             if(exp == length - suffix.length() - 1) {
-                out = getNumberString(output.getScaled(), number, length - suffix.length());
+                out = getNumberString(output.getScaled(), number, length - suffix.length(), actualLength);
             } else {
-                out = getNumberString(output.getScaled(), number, length - suffix.length() - 1);
+                out = getNumberString(output.getScaled(), number, length - suffix.length() - 1, actualLength);
             }
         } else if(exponent < 0) {
-            out = getNumberString(number, length - 1 + exponent);
+            out = getNumberString(number, length - 1 + exponent, actualLength);
         } else {
-            out = getNumberString(number, length - 1);
+            out = getNumberString(number, length - 1, actualLength);
         }
         if(configuration.get(PAD_ZEROS)) {
-            if(number.signum() == -1) {
-                length++;
-            }
-            if(out.length() + suffix.length() < length) {
+            if(out.length() + suffix.length() < actualLength) {
                 if(out.contains(".")) {
-                    out += "0".repeat(length - (out.length() + suffix.length()));
+                    out += "0".repeat(actualLength - (out.length() + suffix.length()));
                 } else {
-                    out += "." + "0".repeat(length - (out.length() + suffix.length()) - 1);
+                    out += "." + "0".repeat(actualLength - (out.length() + suffix.length()) - 1);
                 }
             }
         }
@@ -116,30 +115,30 @@ public class EvenLengthNumberFormatter implements NumberFormatter {
     private void validateConfiguration(int length, int minExponent) {
         if(length < 1) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "length must be positive and non-zero",
+                    TextStrings.elnfInvalidLength(length),
                     TextConfigurationException::new);
         }
         if(minExponent < 0) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "minimum exponent must be positive",
+                    TextStrings.elnfInvalidMinExponent(minExponent),
                     TextConfigurationException::new);
         }
         if(length < minExponent) {
             throw LogUtils.logExceptionAndGet(logger,
-                    "minimum exponent must be smaller than or equal to the length",
+                    TextStrings.elnfLengthMinExponentMismatch(length, minExponent),
                     TextConfigurationException::new);
         }
     }
 
-    private String getNumberString(BigDecimal number, BigDecimal original, int precision) {
+    private String getNumberString(BigDecimal number, BigDecimal original, int precision, int length) {
         if(precision < 1) {
-            logger.warn(String.format("%s takes up more character than the desired length", original));
+            logger.warn(TextStrings.elnfTooLongNumber(original, length));
             precision = 1;
         }
         return number.stripTrailingZeros().round(new MathContext(precision)).toPlainString();
     }
 
-    private String getNumberString(BigDecimal number, int precision) {
-        return getNumberString(number, number, precision);
+    private String getNumberString(BigDecimal number, int precision, int length) {
+        return getNumberString(number, number, precision, length);
     }
 }
