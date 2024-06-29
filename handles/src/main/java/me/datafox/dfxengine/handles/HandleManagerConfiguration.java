@@ -22,7 +22,7 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
  *     <li>{@link #orderedSubHandles} reflects {@link HandleImpl#getSubHandles()} and is {@code true} by default</li>
  *     <li>{@link #orderedTags} reflects {@link HandleImpl#getTags()} and is {@code false} by default</li>
  * </ul>
- * </p>
+ *
  * @author datafox
  */
 @Data

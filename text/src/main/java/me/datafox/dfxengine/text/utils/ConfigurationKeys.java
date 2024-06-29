@@ -7,6 +7,8 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.ConfigurationKey;
 import me.datafox.dfxengine.text.api.NumberFormatter;
 import me.datafox.dfxengine.text.api.NumberSuffixFormatter;
+import me.datafox.dfxengine.text.formatter.SimpleNumberFormatter;
+import me.datafox.dfxengine.text.suffix.ExponentSuffixFormatter;
 
 /**
  * Global configuration keys used by this module. This class is designed to be used with the {@link Injector}.
@@ -33,13 +35,13 @@ public class ConfigurationKeys {
 
     /**
      * {@link Handle} of the {@link NumberFormatter} to be used. The default value is
-     * {@link TextHandles#getSimpleNumberFormatter()}.
+     * {@link SimpleNumberFormatter#getHandle()}.
      */
     public static final ConfigurationKey<Handle> NUMBER_FORMATTER = ConfigurationKey.of();
 
     /**
      * {@link Handle} of the {@link NumberSuffixFormatter} used by all {@link NumberFormatter NumberFormatters}. The
-     * default value is {@link TextHandles#getExponentSuffixFormatter()}.
+     * default value is {@link ExponentSuffixFormatter#getHandle()}.
      */
     public static final ConfigurationKey<Handle> NUMBER_SUFFIX_FORMATTER = ConfigurationKey.of();
 

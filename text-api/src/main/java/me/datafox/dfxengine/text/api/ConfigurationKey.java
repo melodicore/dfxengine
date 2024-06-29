@@ -46,7 +46,7 @@ public final class ConfigurationKey<T> {
     }
 
     /**
-     * Any class calling this method must also call {@link #setDefaultValue(T)} on the returned configuration key.
+     * Any class calling this method must also call {@link #setDefaultValue(Object)} on the returned configuration key.
      *
      * @return new {@link ConfigurationKey} with the specified default value
      * @param <T> type of the value of this configuration key

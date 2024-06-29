@@ -33,7 +33,7 @@ import static me.datafox.dfxengine.injector.utils.InjectorStrings.noDependencies
  * <p>
  * A dependency injector. For general information, see
  * <a href="https://github.com/melodicore/dfxengine/blob/master/injector/README.md">README.md</a> on GitHub. Use
- * {@link #builder()} to build.
+ * {@link InjectorBuilder} to build.
  * </p>
  * <p>
  * {@link #getComponent(Class)}, {@link #getComponent(TypeRef)}, {@link #getComponent(Class, Class)},

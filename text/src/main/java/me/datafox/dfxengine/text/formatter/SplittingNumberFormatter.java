@@ -68,14 +68,14 @@ public class SplittingNumberFormatter implements NumberFormatter {
             Split.of(new BigDecimal("31536000"), " year", " years")};
 
     /**
-     * {@link Split Splits} to be used. The elements must be in ascending order by {@link Split#getMultiplier()}, and
-     * the first element is recommended to be {@link BigDecimal#ONE}. The default value is {@link #TIME_LONG}.
+     * {@link Split Splits} to be used. The elements must be in ascending order by the multiplier, and the first element
+     * is recommended to be {@link BigDecimal#ONE}. The default value is {@link #TIME_LONG}.
      */
     public static final ConfigurationKey<Split[]> SPLITS = ConfigurationKey.of(TIME_LONG);
 
     /**
      * {@link Handle} of the {@link NumberFormatter} to be used for the splits. The default value is
-     * {@link TextHandles#getSimpleNumberFormatter()}.
+     * {@link SimpleNumberFormatter#getHandle()}.
      */
     public static final ConfigurationKey<Handle> FORMATTER = ConfigurationKey.of();
 

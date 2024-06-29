@@ -144,7 +144,7 @@ public class InjectorBuilder {
     }
 
     /**
-     * If {@code close} is set to {@link false}, {@link ScanResult#close()} will never be called on the static
+     * If {@code close} is set to {@code false}, {@link ScanResult#close()} will never be called on the static
      * {@link ScanResult} instance. This is not recommended, and the only purpose for this option is to allow multiple
      * {@link InjectorImpl} instances to be built within the same process during testing.
      *

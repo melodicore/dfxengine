@@ -33,8 +33,8 @@ public interface Injector {
     /**
      * Returns a single {@link Component} of the specified type. If the Component has
      * {@link InstantiationPolicy#PER_INSTANCE} and depends on {@link InstantiationDetails}, the {@code requesting}
-     * parameter will be used for {@link InstantiationDetails#getRequesting()}. If the {@link Class} has type
-     * parameters, use {@link #getComponent(TypeRef)} instead.
+     * parameter will be used for {@link InstantiationDetails}. If the {@link Class} has type parameters, use
+     * {@link #getComponent(TypeRef)} instead.
      *
      * @param type type of the {@link Component} to be requested
      * @param requesting type of the object requesting the {@link Component}
@@ -49,7 +49,7 @@ public interface Injector {
     /**
      * Returns a single {@link Component} of the specified type. If the Component has
      * {@link InstantiationPolicy#PER_INSTANCE} and depends on {@link InstantiationDetails}, the {@code requesting}
-     * parameter will be used for {@link InstantiationDetails#getRequesting()}. Otherwise, an exception is thrown.
+     * parameter will be used for {@link InstantiationDetails}.
      *
      * @param type type of the {@link Component} to be requested
      * @param requesting type of the object requesting the {@link Component}
@@ -83,8 +83,8 @@ public interface Injector {
     /**
      * Returns {@link Component Components} of the specified type. If any of the Components have
      * {@link InstantiationPolicy#PER_INSTANCE} and depend on {@link InstantiationDetails}, the {@code requesting}
-     * parameter will be used for {@link InstantiationDetails#getRequesting()}. If the {@link Class} has type
-     * parameters, use {@link #getComponent(TypeRef)} instead. Otherwise, an exception is thrown.
+     * parameter will be used for {@link InstantiationDetails}. If the {@link Class} has type parameters, use
+     * {@link #getComponent(TypeRef)} instead. Otherwise, an exception is thrown.
      *
      * @param type type of the {@link Component Components} to be requested
      * @param requesting type of the object requesting the {@link Component Components}
@@ -99,7 +99,7 @@ public interface Injector {
     /**
      * Returns {@link Component Components} of the specified type. If any of the Components hav
      * {@link InstantiationPolicy#PER_INSTANCE} and depend on {@link InstantiationDetails}, the {@code requesting}
-     * parameter will be used for {@link InstantiationDetails#getRequesting()}.
+     * parameter will be used for {@link InstantiationDetails}.
      *
      * @param type type of the {@link Component Components} to be requested
      * @param requesting type of the object requesting the {@link Component Components}

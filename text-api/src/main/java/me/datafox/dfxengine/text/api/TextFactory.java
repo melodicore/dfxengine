@@ -51,8 +51,7 @@ public interface TextFactory {
 
     /**
      * @param name {@link Name} object
-     * @return previous {@link Name} associated with {@link Name#getOwner()} or {@code null} if no previous mapping is
-     * present
+     * @return previous {@link Name} associated with the owner, or {@code null} if no previous mapping is present
      * @param <T> type of the object to be named
      */
     <T> Name<T> addName(Name<T> name);

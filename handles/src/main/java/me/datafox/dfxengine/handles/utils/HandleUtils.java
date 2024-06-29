@@ -10,6 +10,7 @@ import static me.datafox.dfxengine.handles.utils.HandleStrings.*;
 /**
  * @author datafox
  */
+@SuppressWarnings("MissingJavadoc")
 public class HandleUtils {
     public static void checkId(String name, String id, Logger logger) {
         if(id == null) {

@@ -37,7 +37,7 @@ public interface TextConfiguration {
 
     /**
      * @param key {@link ConfigurationKey} to be used
-     * @return object associated with the key, or {@link ConfigurationKey#getDefaultValue()} if none is present
+     * @return object associated with the key, or the default value if none is present
      * @param <T> type of the object
      */
     <T> T get(ConfigurationKey<T> key);

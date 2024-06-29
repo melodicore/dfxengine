@@ -22,8 +22,10 @@ import java.util.Map;
  * @author datafox
  */
 public interface ValueMap extends HandleMap<Value> {
-
-    boolean hasImmutable();
+    /**
+     * @return {@code true} if this map is for immutable {@link Value Values}
+     */
+    boolean isImmutable();
 
     /**
      * @param type {@link NumeralType} for the {@link Value Values} to be converted to

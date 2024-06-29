@@ -42,6 +42,8 @@ public class DelegatedValueMap implements ValueMap {
 
     /**
      * @param map {@link HandleMap} to back this map with
+     * @param immutable {@code true} if this map should contain immutable {@link Value Values}
+     * @param logger {@link Logger} for this map
      */
     public DelegatedValueMap(HandleMap<Value> map, boolean immutable, Logger logger) {
         this.logger = logger;
@@ -62,8 +64,11 @@ public class DelegatedValueMap implements ValueMap {
         }
     }
 
+    /**
+     * @return {@code true} if this map is for immutable {@link Value Values}
+     */
     @Override
-    public boolean hasImmutable() {
+    public boolean isImmutable() {
         return immutable;
     }
 
@@ -580,7 +585,7 @@ public class DelegatedValueMap implements ValueMap {
      * @return the previously associated {@link Value} in this map, or {@code null} if there was no previous association
      *
      * @throws IllegalArgumentException if the {@link Value} is static, if {@link Value#isImmutable()} is not the same
-     * as {@link #hasImmutable()} or if the associated {@link Handle} is not contained in the {@link Space} associated
+     * as {@link #isImmutable()} or if the associated {@link Handle} is not contained in the {@link Space} associated
      * with this map
      */
     @Override
@@ -694,7 +699,7 @@ public class DelegatedValueMap implements ValueMap {
      * @return previously associated {@link Value} in this map, or {@code null} if there was no previous association
      *
      * @throws IllegalArgumentException if the {@link Value} is static, if {@link Value#isImmutable()} is not the same
-     * as {@link #hasImmutable()} or if the associated {@link Handle} is not contained in the {@link Space} associated
+     * as {@link #isImmutable()} or if the associated {@link Handle} is not contained in the {@link Space} associated
      * with this map
      */
     @Override
