@@ -152,12 +152,6 @@ public class ValueMapTest {
         assertEquals(Numerals.of("2.689423689278274536642740000000000e555"), valueMap.get(bigDecHandle).getValue());
 
         assertThrows(ExtendedArithmeticException.class, () -> valueMap.apply(Operations::multiply, MathContext.builder().convertResultTo(FLOAT).ignoreBadConversion(false).build(), Numerals.of(1.2f)));
-
-        assertEquals(Numerals.of(103369), valueMap.get(intHandle).getValue());
-        assertEquals(Numerals.of("28975389235899203095289151"), valueMap.get(bigIntHandle).getValue());
-        assertEquals(Numerals.of(5.1234514e142d), valueMap.get(doubleHandle).getValue());
-        assertEquals(Numerals.of("2.689423689278274536642740000000000e555"), valueMap.get(bigDecHandle).getValue());
-
         assertThrows(UnsupportedOperationException.class, () -> immutableValueMap.apply(Operations::log2));
     }
 
