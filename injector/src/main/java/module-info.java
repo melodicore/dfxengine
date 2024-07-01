@@ -12,5 +12,5 @@ module dfxengine.injector {
     requires dfxengine.injector.api;
 
     exports me.datafox.dfxengine.injector;
-    exports me.datafox.dfxengine.injector.internal;
+    exports me.datafox.dfxengine.injector.exception;
 }

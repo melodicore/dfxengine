@@ -1,0 +1,5 @@
+--add-modules
+  dfxengine.injector,dfxengine.values,dfxengine.math
+
+--add-reads
+  dfxengine.text=dfxengine.injector,dfxengine.values,dfxengine.math

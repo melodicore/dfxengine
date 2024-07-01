@@ -1,9 +1,14 @@
+plugins {
+    id 'org.javamodularity.moduleplugin' version '1.8.15' apply false
+}
+
 group = "$dfxengineGroup"
 
 subprojects {
     apply plugin: "java-library"
     apply plugin: "maven-publish"
     apply plugin: "signing"
+    apply plugin: "org.javamodularity.moduleplugin"
 
     group = "$dfxengineGroup"
 
@@ -12,6 +17,12 @@ subprojects {
         targetCompatibility = JavaVersion.VERSION_11
         withJavadocJar()
         withSourcesJar()
+    }
+
+    compileTestJava {
+        moduleOptions {
+            compileOnClasspath = true
+        }
     }
 
     repositories {
