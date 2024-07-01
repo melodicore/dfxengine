@@ -9,7 +9,6 @@ version = "$injectorVersion"
 dependencies {
     api project(":injector-api")
     implementation project(":utils")
-    implementation project(":collections")
     implementation "io.github.classgraph:classgraph:$classgraphVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 

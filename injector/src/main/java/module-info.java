@@ -9,7 +9,6 @@ module dfxengine.injector {
     requires org.slf4j;
 
     requires dfxengine.utils;
-    requires dfxengine.collections;
     requires dfxengine.injector.api;
 
     exports me.datafox.dfxengine.injector;
