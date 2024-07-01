@@ -24,7 +24,9 @@ public interface Engine {
 
     void registerPack(DataPack pack);
 
-    void loadPacks();
+    void deregisterPack(DataPack pack, boolean removeDependents, boolean keepState);
+
+    void loadPacks(boolean keepState);
 
     void setState(EngineState state);
 

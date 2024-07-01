@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author datafox
@@ -72,7 +73,37 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public void loadPacks() {
+    public void deregisterPack(DataPack pack, boolean removeDependents, boolean keepState) {
+        if(!dataPacks.containsKey(pack.getId())) {
+            logger.warn("pack not found");
+            return;
+        }
+        Set<String> removed = new HashSet<>();
+        removed.add(pack.getId());
+        if(dataPacks.values()
+                .stream()
+                .map(DataPack::getDependencies)
+                .anyMatch(s -> s.contains(pack.getId()))) {
+            if(removeDependents) {
+                removed.addAll(getDependents(pack.getId()).collect(Collectors.toSet()));
+            } else {
+                logger.warn("dependents found but removeDependents is false");
+                return;
+            }
+        }
+        removed.forEach(dataPacks::remove);
+        loadPacks(keepState);
+    }
+
+    @Override
+    public void loadPacks(boolean keepState) {
+        EngineState state = null;
+        if(keepState) {
+            state = getState();
+        }
+        entities.clear();
+        links.clear();
+        systems.clear();
         dataPacks.values()
                 .stream()
                 .map(DataPack::getSpaces)
@@ -99,6 +130,9 @@ public class EngineImpl implements Engine {
                 .flatMap(List::stream)
                 .map(s -> s.build(this))
                 .collect(Collectors.toList()));
+        if(state != null) {
+            setState(state);
+        }
     }
 
     @Override
@@ -121,6 +155,16 @@ public class EngineImpl implements Engine {
     @Override
     public void update(float delta) {
         systems.forEach(s -> s.update(this, delta));
+    }
+
+    private Stream<String> getDependents(String id) {
+        return dataPacks.values()
+                .stream()
+                .filter(d -> d.getDependencies().contains(id))
+                .flatMap(d -> Stream.concat(
+                        Stream.of(d.getId()),
+                        getDependents(d.getId())))
+                .distinct();
     }
 
     private Entity buildEntity(EntityDefinition definition) {
