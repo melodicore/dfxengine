@@ -1,0 +1,42 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+    id "signing"
+}
+
+version = "$entitiesVersion"
+
+dependencies {
+    api project(":entities-api")
+    implementation project(":handles")
+    implementation project(":math")
+    implementation project(":utils")
+    implementation project(":injector-api")
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            pom {
+                name = "DFXEngine Handles"
+                description = "Dynamic enum-like values to use for identification, such as map keys, and tools to manipulate them"
+            }
+        }
+    }
+}
