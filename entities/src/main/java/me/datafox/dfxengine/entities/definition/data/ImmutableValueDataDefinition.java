@@ -21,9 +21,13 @@ import me.datafox.dfxengine.values.ValueImpl;
 @NoArgsConstructor
 public class ImmutableValueDataDefinition implements DataDefinition {
     private String handle;
-    private final String typeHandle = EntityHandles.getValueType().getId();
     private String valueType;
     private String value;
+
+    @Override
+    public String getTypeHandle() {
+        return EntityHandles.getValueType().getId();
+    }
 
     @Override
     public ImmutableValueData build(Engine engine) {

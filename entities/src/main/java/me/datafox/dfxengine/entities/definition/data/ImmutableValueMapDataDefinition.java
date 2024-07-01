@@ -30,9 +30,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ImmutableValueMapDataDefinition implements DataDefinition {
     private String handle;
-    private final String typeHandle = EntityHandles.getValueType().getId();
     private String space;
     private List<ValueDto> values;
+
+    @Override
+    public String getTypeHandle() {
+        return EntityHandles.getValueMapType().getId();
+    }
 
     @Override
     public ImmutableValueMapData build(Engine engine) {
