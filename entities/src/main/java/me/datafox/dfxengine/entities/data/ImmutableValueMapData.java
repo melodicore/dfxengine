@@ -9,7 +9,7 @@ import me.datafox.dfxengine.values.api.ValueMap;
  */
 public class ImmutableValueMapData extends AbstractData<ValueMap> {
     public ImmutableValueMapData(Handle handle, ValueMap data) {
-        super(handle, EntityHandles.getValueType(), data);
+        super(handle, EntityHandles.getImmutableValueMapType(), data);
         if(!data.isImmutable()) {
             throw new IllegalArgumentException("ImmutableValueMapData must have an immutable ValueMap");
         }

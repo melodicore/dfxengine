@@ -12,6 +12,9 @@ import me.datafox.dfxengine.values.api.Value;
 public class ValueData extends AbstractStatefulData<Value> {
     public ValueData(Value data) {
         super(data.getHandle(), EntityHandles.getValueType(), data);
+        if(data.isImmutable()) {
+            throw new IllegalArgumentException("ValueData must not have an immutable Value");
+        }
     }
 
     @Override

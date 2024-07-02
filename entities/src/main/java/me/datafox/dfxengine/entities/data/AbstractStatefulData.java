@@ -12,7 +12,7 @@ public abstract class AbstractStatefulData<T> extends AbstractData<T> implements
         super(handle, typeHandle, data);
     }
 
-    protected static <D extends DataState> D castState(DataState state, Class<D> type) {
+    protected static <T extends DataState> T castState(DataState state, Class<T> type) {
         if(!type.isInstance(state)) {
             throw new IllegalArgumentException("invalid state");
         }

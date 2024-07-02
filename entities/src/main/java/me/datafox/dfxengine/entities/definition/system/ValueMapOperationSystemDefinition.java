@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Engine;
+import me.datafox.dfxengine.entities.api.definition.MathContextDefinition;
 import me.datafox.dfxengine.entities.api.definition.SingleParameterOperationDefinition;
 import me.datafox.dfxengine.entities.api.definition.SystemDefinition;
 import me.datafox.dfxengine.entities.api.reference.DataReference;
@@ -25,12 +26,13 @@ public class ValueMapOperationSystemDefinition implements SystemDefinition {
     private DataReference<ValueMap> inputs;
     private DataReference<ValueMap> outputs;
     private SingleParameterOperationDefinition operation;
+    private MathContextDefinition definition;
 
     @Override
     public ValueMapOperationSystem build(Engine engine) {
         return new ValueMapOperationSystem(priority,
                 inputs.get(engine).collect(Collectors.toList()),
                 outputs.get(engine).collect(Collectors.toList()),
-                operation.build(engine));
+                operation.build(engine), definition.build(engine));
     }
 }

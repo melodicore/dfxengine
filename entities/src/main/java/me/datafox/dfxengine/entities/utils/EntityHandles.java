@@ -29,7 +29,11 @@ public class EntityHandles {
     @Getter
     private static Handle valueType;
     @Getter
+    private static Handle immutableValueType;
+    @Getter
     private static Handle valueMapType;
+    @Getter
+    private static Handle immutableValueMapType;
 
     @Inject
     public EntityHandles(HandleManager handleManager) {
@@ -41,6 +45,8 @@ public class EntityHandles {
         actions = handleManager.getOrCreateSpace("actions");
 
         valueType = types.getOrCreateHandle("value");
+        immutableValueType = types.getOrCreateHandle("immutableValue");
         valueMapType = types.getOrCreateHandle("valueMap");
+        immutableValueMapType = types.getOrCreateHandle("immutableValueMap");
     }
 }

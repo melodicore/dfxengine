@@ -17,7 +17,7 @@ public class ValueMapData extends AbstractStatefulData<ValueMap> {
     public ValueMapData(Handle handle, ValueMap data) {
         super(handle, EntityHandles.getValueType(), data);
         if(data.isImmutable()) {
-            throw new IllegalArgumentException("ValueMapEntityData must not have an immutable ValueMap");
+            throw new IllegalArgumentException("ValueMapData must not have an immutable ValueMap");
         }
     }
 
@@ -47,5 +47,4 @@ public class ValueMapData extends AbstractStatefulData<ValueMap> {
                         .collect(Collectors.toList()))
                 .build();
     }
-
 }

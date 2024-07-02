@@ -8,6 +8,9 @@ import me.datafox.dfxengine.values.api.Value;
  */
 public class ImmutableValueData extends AbstractData<Value> {
     public ImmutableValueData(Value data) {
-        super(data.getHandle(), EntityHandles.getValueType(), data);
+        super(data.getHandle(), EntityHandles.getImmutableValueType(), data);
+        if(!data.isImmutable()) {
+            throw new IllegalArgumentException("ImmutableValueData must have an immutable Value");
+        }
     }
 }
