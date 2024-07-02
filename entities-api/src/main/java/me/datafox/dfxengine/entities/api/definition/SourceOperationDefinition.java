@@ -9,4 +9,9 @@ import me.datafox.dfxengine.values.api.operation.SourceOperation;
 public interface SourceOperationDefinition extends OperationDefinition {
     @Override
     SourceOperation build(Engine engine);
+
+    @Override
+    default int getParameterCount() {
+        return 0;
+    }
 }

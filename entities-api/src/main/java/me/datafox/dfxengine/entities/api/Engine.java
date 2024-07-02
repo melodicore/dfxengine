@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.entities.api;
 
+import me.datafox.dfxengine.entities.api.link.EntityLink;
 import me.datafox.dfxengine.entities.api.state.EngineState;
 import me.datafox.dfxengine.handles.api.HandleMap;
 import me.datafox.dfxengine.injector.api.Injector;
@@ -24,13 +25,15 @@ public interface Engine {
 
     void registerPack(DataPack pack);
 
-    void deregisterPack(DataPack pack, boolean removeDependents, boolean keepState);
+    void deregisterPack(DataPack pack, boolean removeDependents);
 
     void loadPacks(boolean keepState);
 
     void setState(EngineState state);
 
     EngineState getState();
+
+    void scheduleAction(EntityAction action);
 
     void update(float delta);
 }

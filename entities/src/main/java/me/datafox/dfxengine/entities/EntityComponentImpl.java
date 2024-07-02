@@ -3,6 +3,7 @@ package me.datafox.dfxengine.entities;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
+import me.datafox.dfxengine.entities.api.EntityAction;
 import me.datafox.dfxengine.entities.api.EntityComponent;
 import me.datafox.dfxengine.entities.api.EntityData;
 import me.datafox.dfxengine.entities.api.StatefulEntityData;
@@ -28,18 +29,26 @@ public class EntityComponentImpl implements EntityComponent {
     @Getter
     private final Handle handle;
     private final HandleMap<HandleMap<EntityData<?>>> data;
+    private final HandleMap<EntityAction> actions;
 
     @Builder
-    public EntityComponentImpl(Logger logger, Handle handle, @Singular List<EntityData<?>> data) {
+    public EntityComponentImpl(Logger logger, Handle handle, @Singular("data") List<EntityData<?>> data, @Singular List<EntityAction> actions) {
         this.logger = logger;
         this.handle = handle;
         this.data = new TreeHandleMap<>(EntityHandles.getTypes());
+        this.actions = new HashHandleMap<>(EntityHandles.getActions());
         data.forEach(this::putData);
+        actions.forEach(this.actions::putHandled);
     }
 
     @Override
     public HandleMap<HandleMap<EntityData<?>>> getData() {
         return data.unmodifiable();
+    }
+
+    @Override
+    public HandleMap<EntityAction> getActions() {
+        return actions.unmodifiable();
     }
 
     @Override

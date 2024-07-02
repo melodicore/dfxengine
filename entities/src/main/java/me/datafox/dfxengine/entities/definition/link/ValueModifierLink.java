@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Engine;
-import me.datafox.dfxengine.entities.api.EntityLink;
+import me.datafox.dfxengine.entities.api.link.EntityLink;
 import me.datafox.dfxengine.entities.api.definition.LinkDefinition;
 import me.datafox.dfxengine.entities.api.definition.ModifierDefinition;
 import me.datafox.dfxengine.entities.api.reference.DataReference;
@@ -27,11 +27,6 @@ public class ValueModifierLink implements LinkDefinition {
     public EntityLink build(Engine engine) {
         Modifier modifier = definition.build(engine);
         output.get(engine).forEach(v -> v.addModifier(modifier));
-        return new Link(modifier);
-    }
-
-    @Data
-    public static class Link implements EntityLink {
-        private final Modifier modifier;
+        return new me.datafox.dfxengine.entities.link.ValueModifierLink(modifier);
     }
 }

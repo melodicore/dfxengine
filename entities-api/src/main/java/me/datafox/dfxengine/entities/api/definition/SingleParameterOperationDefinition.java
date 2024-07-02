@@ -9,4 +9,9 @@ import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
 public interface SingleParameterOperationDefinition extends OperationDefinition {
     @Override
     SingleParameterOperation build(Engine engine);
+
+    @Override
+    default int getParameterCount() {
+        return 1;
+    }
 }

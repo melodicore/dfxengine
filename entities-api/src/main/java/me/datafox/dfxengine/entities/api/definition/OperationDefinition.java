@@ -7,5 +7,7 @@ import me.datafox.dfxengine.values.api.operation.Operation;
  * @author datafox
  */
 public interface OperationDefinition {
+    int getParameterCount();
+
     Operation build(Engine engine);
 }

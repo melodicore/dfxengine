@@ -1,6 +1,5 @@
 package me.datafox.dfxengine.entities.api;
 
-import me.datafox.dfxengine.entities.api.state.DataState;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Handled;
 

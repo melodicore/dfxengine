@@ -4,6 +4,7 @@ import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.EntityComponent;
 import me.datafox.dfxengine.entities.api.EntityData;
 import me.datafox.dfxengine.entities.api.reference.ComponentReference;
+import me.datafox.dfxengine.entities.api.reference.DataReference;
 import me.datafox.dfxengine.entities.data.ValueDto;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleMap;
@@ -14,6 +15,7 @@ import me.datafox.dfxengine.math.utils.Numerals;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -59,5 +61,16 @@ public class EntityUtils {
                 .map(map -> map.get(type))
                 .filter(Objects::nonNull)
                 .flatMap(mapper);
+    }
+
+    public static <T> Stream<T> assertSingleAndStream(Engine engine, List<DataReference<T>> references) {
+        if(!references.stream().allMatch(DataReference::isSingle)) {
+            throw new IllegalArgumentException("DataReferences must be single");
+        }
+        return references
+                .stream()
+                .map(d -> d.get(engine))
+                .map(Stream::findFirst)
+                .map(o -> o.orElseThrow(() -> new IllegalArgumentException("Data not found")));
     }
 }

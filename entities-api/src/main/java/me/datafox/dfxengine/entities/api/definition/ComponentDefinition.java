@@ -9,4 +9,6 @@ public interface ComponentDefinition {
     String getHandle();
 
     List<DataDefinition> getData();
+
+    List<ActionDefinition> getActions();
 }

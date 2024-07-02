@@ -9,4 +9,9 @@ import me.datafox.dfxengine.values.api.operation.DualParameterOperation;
 public interface DualParameterOperationDefinition extends OperationDefinition {
     @Override
     DualParameterOperation build(Engine engine);
+
+    @Override
+    default int getParameterCount() {
+        return 2;
+    }
 }

@@ -6,6 +6,7 @@ import me.datafox.dfxengine.entities.api.definition.ComponentDefinition;
 import me.datafox.dfxengine.entities.api.definition.EntityDefinition;
 import me.datafox.dfxengine.entities.api.definition.HandleDefinition;
 import me.datafox.dfxengine.entities.api.definition.SpaceDefinition;
+import me.datafox.dfxengine.entities.api.link.EntityLink;
 import me.datafox.dfxengine.entities.api.state.EngineState;
 import me.datafox.dfxengine.entities.api.state.EntityState;
 import me.datafox.dfxengine.entities.state.EngineStateImpl;
@@ -38,6 +39,7 @@ public class EngineImpl implements Engine {
     private final List<EntityLink> links;
     private final Map<String,DataPack> dataPacks;
     private final SortedSet<EntitySystem> systems;
+    private final Queue<EntityAction> actions;
 
     @Inject
     public EngineImpl(Logger logger, Injector injector, HandleManager handleManager, EntityHandles ignoredHandles, List<EntitySystem> systems) {
@@ -48,6 +50,7 @@ public class EngineImpl implements Engine {
         links = new ArrayList<>();
         dataPacks = new HashMap<>();
         this.systems = new TreeSet<>(systems);
+        actions = new ArrayDeque<>();
     }
 
     @Override
@@ -66,6 +69,9 @@ public class EngineImpl implements Engine {
 
     @Override
     public void registerPack(DataPack pack) {
+        if(dataPacks.containsKey(pack.getId())) {
+            throw new IllegalArgumentException("pack with this id is already present");
+        }
         if(!pack.getDependencies().stream().allMatch(dataPacks::containsKey)) {
             throw new IllegalArgumentException("unresolved pack dependency");
         }
@@ -73,7 +79,7 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public void deregisterPack(DataPack pack, boolean removeDependents, boolean keepState) {
+    public void deregisterPack(DataPack pack, boolean removeDependents) {
         if(!dataPacks.containsKey(pack.getId())) {
             logger.warn("pack not found");
             return;
@@ -92,7 +98,6 @@ public class EngineImpl implements Engine {
             }
         }
         removed.forEach(dataPacks::remove);
-        loadPacks(keepState);
     }
 
     @Override
@@ -153,7 +158,13 @@ public class EngineImpl implements Engine {
     }
 
     @Override
+    public void scheduleAction(EntityAction action) {
+        actions.offer(action);
+    }
+
+    @Override
     public void update(float delta) {
+        runActions();
         systems.forEach(s -> s.update(this, delta));
     }
 
@@ -194,6 +205,11 @@ public class EngineImpl implements Engine {
                         .stream()
                         .map(d -> d.build(this))
                         .collect(Collectors.toList()))
+                .actions(definition
+                        .getActions()
+                        .stream()
+                        .map(a -> a.build(this))
+                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -219,5 +235,13 @@ public class EngineImpl implements Engine {
             return;
         }
         entities.get(state.getHandle()).setState(state);
+    }
+
+    private void runActions() {
+        EntityAction action = actions.poll();
+        while(action != null) {
+            action.run(this);
+            action = actions.poll();
+        }
     }
 }

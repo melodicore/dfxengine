@@ -21,6 +21,11 @@ public class OperationChainDefinition implements OperationDefinition {
     private List<OperationDefinition> operations;
 
     @Override
+    public int getParameterCount() {
+        return operations.stream().mapToInt(OperationDefinition::getParameterCount).sum();
+    }
+
+    @Override
     public Operation build(Engine engine) {
         return new OperationChain(operations
                 .stream()

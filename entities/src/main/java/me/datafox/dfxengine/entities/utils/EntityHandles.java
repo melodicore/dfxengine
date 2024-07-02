@@ -23,13 +23,13 @@ public class EntityHandles {
     private static Space types;
     @Getter
     private static Space data;
+    @Getter
+    private static Space actions;
 
     @Getter
     private static Handle valueType;
     @Getter
     private static Handle valueMapType;
-    @Getter
-    private static Handle modifierType;
 
     @Inject
     public EntityHandles(HandleManager handleManager) {
@@ -38,6 +38,7 @@ public class EntityHandles {
         components = handleManager.getOrCreateSpace("components");
         types = handleManager.getOrCreateSpace("types");
         data = handleManager.getOrCreateSpace("data");
+        actions = handleManager.getOrCreateSpace("actions");
 
         valueType = types.getOrCreateHandle("value");
         valueMapType = types.getOrCreateHandle("valueMap");

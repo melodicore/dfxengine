@@ -10,6 +10,7 @@ dependencies {
     api project(":entities-api")
     implementation project(":handles")
     implementation project(":math")
+    implementation project(":values")
     implementation project(":utils")
     implementation project(":injector-api")
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
