@@ -7,6 +7,8 @@ import java.util.Map;
  * An extension of {@link Map} that may only contain {@link Handle} keys from a specified {@link Space}. Also has
  * extra functionality to query entries based on their {@link String} id.
  *
+ * @param <T> the type of mapped values
+ *
  * @author datafox
  */
 public interface HandleMap<T> extends Map<Handle, T> {

@@ -19,6 +19,8 @@ import static me.datafox.dfxengine.handles.utils.HandleStrings.UNMODIFIABLE_MAP;
  * Unmodifiable {@link HandleMap} that mirrors another handle map. Used internally by implementations of
  * {@link HandleMap#unmodifiable()}.
  *
+ * @param <T> the type of mapped values
+ *
  * @author datafox
  */
 public class UnmodifiableHandleMap<T> implements HandleMap<T> {

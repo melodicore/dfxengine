@@ -21,6 +21,8 @@ import static me.datafox.dfxengine.handles.utils.HandleUtils.checkTag;
 /**
  * An ordered implementation of {@link HandleMap} backed with a {@link TreeMap}.
  *
+ * @param <T> the type of mapped values
+ *
  * @author datafox
  */
 public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> {

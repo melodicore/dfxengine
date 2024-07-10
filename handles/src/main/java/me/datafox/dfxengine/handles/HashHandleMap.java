@@ -24,6 +24,8 @@ import static me.datafox.dfxengine.handles.utils.HandleUtils.checkTag;
 /**
  * An unordered implementation of {@link HandleMap} backed with a {@link HashMap}.
  *
+ * @param <T> the type of mapped values
+ *
  * @author datafox
  */
 public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> {

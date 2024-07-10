@@ -17,7 +17,8 @@ public interface Group extends Handled {
     Space getSpace();
 
     /**
-     * The returned {@link HandleSet} is modifiable and tags may be added to or removed from it at will.
+     * The returned {@link HandleSet} is modifiable and {@link Handle Handles} may be added to or removed from it at
+     * will.
      *
      * @return {@link HandleSet} containing the {@link Handle Handles} of this group
      */
