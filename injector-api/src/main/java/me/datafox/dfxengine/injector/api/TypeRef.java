@@ -10,6 +10,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Represents a type with parameters. This class is used when requesting {@link Component Components} from the
@@ -56,6 +57,21 @@ public final class TypeRef<T> {
         }
         this.type = type;
         this.parameters = parameters;
+    }
+
+    /**
+     * The purpose of this method is to be able to cast a type reference to a parameterised type with multiple type
+     * layers without the compiler complaining about illegal casting. For example, calling {@code TypeRef.of(Map.class,
+     * String.class, Integer.class)} will return an object with type {@code TypeRef<Map>} without the parameters for
+     * {@code Map}, and casting that directly to {@code TypeRef<Map<String,Integer>>} is not allowed. But casting from
+     * {@code TypeRef<?>} is allowed, so calling {@code (TypeRef<Map<String,Integer>>) TypeRef.of(Map.class,
+     * String.class, Integer.class).uncast()} will work. This is mainly useful for getting the component with the right
+     * runtime type with {@link Injector#getComponent(TypeRef)} and related methods.
+     *
+     * @return this type reference as {@code TypeRef<?>}
+     */
+    public TypeRef<?> uncast() {
+        return this;
     }
 
     /**
@@ -146,5 +162,23 @@ public final class TypeRef<T> {
      */
     public static <T> TypeRef<T> of(Class<T> type, TypeRef<?> ... parameters) {
         return of(type, Arrays.asList(parameters));
+    }
+
+    /**
+     * @param type type for the type reference
+     * @param firstParameter first parameter for the type reference
+     * @param parameters other parameters for the type reference
+     * @return type reference for the specified parameters
+     * @param <T> type for the type reference
+     */
+    public static <T> TypeRef<T> of(Class<T> type, Class<?> firstParameter, Class<?> ... parameters) {
+        if(parameters.length == 0) {
+            return of(type, TypeRef.of(firstParameter));
+        }
+        return of(type, Stream.concat(
+                        Stream.of(firstParameter),
+                        Arrays.stream(parameters))
+                .map(TypeRef::of)
+                .collect(Collectors.toList()));
     }
 }
