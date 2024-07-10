@@ -1,13 +1,11 @@
 package me.datafox.dfxengine.entities.state;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.datafox.dfxengine.entities.api.state.EngineState;
 import me.datafox.dfxengine.entities.api.state.EntityState;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author datafox
@@ -17,5 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EngineStateImpl implements EngineState {
-    private List<EntityState> entities;
+    @Singular
+    private List<EntityState> singleEntities;
+    @Singular
+    private Map<String,List<EntityState>> multiEntities;
 }

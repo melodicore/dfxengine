@@ -1,7 +1,6 @@
 package me.datafox.dfxengine.entities.api;
 
 import me.datafox.dfxengine.entities.api.definition.EntityDefinition;
-import me.datafox.dfxengine.entities.api.definition.LinkDefinition;
 import me.datafox.dfxengine.entities.api.definition.SpaceDefinition;
 import me.datafox.dfxengine.entities.api.definition.SystemDefinition;
 
@@ -21,8 +20,6 @@ public interface DataPack {
     List<SpaceDefinition> getSpaces();
 
     List<EntityDefinition> getEntities();
-
-    List<LinkDefinition> getLinks();
 
     List<SystemDefinition> getSystems();
 }

@@ -1,11 +1,12 @@
 package me.datafox.dfxengine.entities.api;
 
-import me.datafox.dfxengine.entities.api.link.EntityLink;
 import me.datafox.dfxengine.entities.api.state.EngineState;
+import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleMap;
 import me.datafox.dfxengine.injector.api.Injector;
 import org.slf4j.Logger;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -17,17 +18,27 @@ public interface Engine {
 
     Injector getInjector();
 
-    HandleMap<Entity> getEntities();
+    HandleMap<List<Entity>> getEntities();
 
-    List<EntityLink> getLinks();
+    Entity createMultiEntity(Handle handle);
+
+    List<Entity> createMultiEntities(List<Handle> handles);
+
+    void removeMultiEntity(Entity entity);
+
+    void removeMultiEntities(Collection<Entity> entities);
 
     Map<String,DataPack> getDataPacks();
 
-    void registerPack(DataPack pack);
+    void addPack(DataPack pack);
 
-    void deregisterPack(DataPack pack, boolean removeDependents);
+    void removePack(String id, boolean removeDependents);
 
     void loadPacks(boolean keepState);
+
+    Entity getCurrentEntity();
+
+    EntityComponent getCurrentComponent();
 
     void setState(EngineState state);
 

@@ -10,12 +10,9 @@ import me.datafox.dfxengine.entities.api.definition.ActionDefinition;
 import me.datafox.dfxengine.entities.api.definition.MathContextDefinition;
 import me.datafox.dfxengine.entities.api.definition.OperationDefinition;
 import me.datafox.dfxengine.entities.api.reference.DataReference;
-import me.datafox.dfxengine.entities.utils.EntityHandles;
-import me.datafox.dfxengine.entities.utils.internal.EntityUtils;
 import me.datafox.dfxengine.values.api.Value;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author datafox
@@ -29,13 +26,10 @@ public class ValueOperationActionDefinition implements ActionDefinition {
     private OperationDefinition operation;
     private List<DataReference<Value>> inputs;
     private DataReference<Value> outputs;
-    private MathContextDefinition definition;
+    private MathContextDefinition context;
 
     @Override
     public ValueOperationAction build(Engine engine) {
-        return new ValueOperationAction(EntityHandles.getActions().getOrCreateHandle(handle),
-                operation.build(engine),
-                EntityUtils.assertSingleAndStream(engine, inputs).collect(Collectors.toList()),
-                outputs.get(engine).collect(Collectors.toList()), definition.build(engine));
+        return new ValueOperationAction(this, engine);
     }
 }

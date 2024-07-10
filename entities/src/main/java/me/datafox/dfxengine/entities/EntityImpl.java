@@ -2,41 +2,48 @@ package me.datafox.dfxengine.entities;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Singular;
-import me.datafox.dfxengine.entities.api.Entity;
-import me.datafox.dfxengine.entities.api.EntityComponent;
+import me.datafox.dfxengine.entities.api.*;
 import me.datafox.dfxengine.entities.api.state.ComponentState;
 import me.datafox.dfxengine.entities.api.state.EntityState;
+import me.datafox.dfxengine.entities.definition.EntityDefinitionImpl;
 import me.datafox.dfxengine.entities.state.EntityStateImpl;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
 import me.datafox.dfxengine.handles.TreeHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleMap;
-import org.slf4j.Logger;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * @author datafox
  */
 public class EntityImpl implements Entity {
-    private final Logger logger;
     @Getter
     private final Handle handle;
+    private final EntityDefinitionImpl definition;
+    private final Engine engine;
     private final HandleMap<EntityComponent> components;
 
     @Builder
-    public EntityImpl(Logger logger, Handle handle, @Singular List<EntityComponent> components) {
-        this.logger = logger;
-        this.handle = handle;
-        this.components = new TreeHandleMap<>(EntityHandles.getComponents());
-        components.forEach(this.components::putHandled);
+    public EntityImpl(EntityDefinitionImpl definition, Engine engine) {
+        handle = EntityHandles.getEntities().getOrCreateHandle(definition.getHandle());
+        if(definition.isSingleton()) {
+            handle.getTags().add(EntityHandles.getSingleTag());
+        }
+        this.definition = definition;
+        this.engine = engine;
+        components = new TreeHandleMap<>(EntityHandles.getComponents());
+        definition.getComponents().stream().map(c -> c.build(engine)).forEach(this.components::putHandled);
     }
 
     @Override
     public HandleMap<EntityComponent> getComponents() {
         return components.unmodifiable();
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return definition.isSingleton();
     }
 
     @Override
@@ -59,7 +66,7 @@ public class EntityImpl implements Entity {
 
     private void setComponentState(ComponentState state) {
         if(!components.containsKey(state.getHandle())) {
-            logger.warn(String.format("State contains unknown component %s", state.getHandle()));
+            engine.getLogger().warn(String.format("State contains unknown component %s", state.getHandle()));
             return;
         }
         components.get(state.getHandle()).setState(state);

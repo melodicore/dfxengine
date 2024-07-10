@@ -2,43 +2,43 @@ package me.datafox.dfxengine.entities;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Singular;
-import me.datafox.dfxengine.entities.api.EntityAction;
-import me.datafox.dfxengine.entities.api.EntityComponent;
-import me.datafox.dfxengine.entities.api.EntityData;
-import me.datafox.dfxengine.entities.api.StatefulEntityData;
+import me.datafox.dfxengine.entities.api.*;
 import me.datafox.dfxengine.entities.api.state.ComponentState;
 import me.datafox.dfxengine.entities.api.state.DataState;
+import me.datafox.dfxengine.entities.definition.ComponentDefinitionImpl;
 import me.datafox.dfxengine.entities.state.ComponentStateImpl;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
 import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.TreeHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleMap;
-import org.slf4j.Logger;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * @author datafox
  */
 public class EntityComponentImpl implements EntityComponent {
-    private final Logger logger;
     @Getter
     private final Handle handle;
+    private final ComponentDefinitionImpl definition;
+    private final Engine engine;
     private final HandleMap<HandleMap<EntityData<?>>> data;
+    private final HandleMap<EntityLink> links;
     private final HandleMap<EntityAction> actions;
 
     @Builder
-    public EntityComponentImpl(Logger logger, Handle handle, @Singular("data") List<EntityData<?>> data, @Singular List<EntityAction> actions) {
-        this.logger = logger;
-        this.handle = handle;
-        this.data = new TreeHandleMap<>(EntityHandles.getTypes());
-        this.actions = new HashHandleMap<>(EntityHandles.getActions());
-        data.forEach(this::putData);
-        actions.forEach(this.actions::putHandled);
+    public EntityComponentImpl(ComponentDefinitionImpl definition, Engine engine) {
+        handle = EntityHandles.getComponents().getOrCreateHandle(definition.getHandle());
+        this.definition = definition;
+        this.engine = engine;
+        data = new TreeHandleMap<>(EntityHandles.getTypes());
+        links = new HashHandleMap<>(EntityHandles.getLinks());
+        actions = new HashHandleMap<>(EntityHandles.getActions());
+        definition.getData().stream().map(d -> d.build(engine)).forEach(this::putData);
+        definition.getLinks().stream().map(l -> l.build(engine)).forEach(links::putHandled);
+        definition.getActions().stream().map(a -> a.build(engine)).forEach(actions::putHandled);
     }
 
     @Override
@@ -47,8 +47,25 @@ public class EntityComponentImpl implements EntityComponent {
     }
 
     @Override
+    public HandleMap<EntityLink> getLinks() {
+        return links.unmodifiable();
+    }
+
+    @Override
     public HandleMap<EntityAction> getActions() {
         return actions.unmodifiable();
+    }
+
+    @Override
+    public void link() {
+        links.values().forEach(EntityLink::link);
+        actions.values().forEach(EntityAction::link);
+    }
+
+    @Override
+    public void clear() {
+        links.values().forEach(EntityLink::clear);
+        actions.values().forEach(EntityAction::clear);
     }
 
     @Override
@@ -82,17 +99,17 @@ public class EntityComponentImpl implements EntityComponent {
 
     private void setDataState(DataState state) {
         if(!data.containsKey(state.getTypeHandle())) {
-            logger.warn(String.format("State contains unknown data type %s", state.getHandle()));
+            engine.getLogger().warn(String.format("State contains unknown data type %s", state.getHandle()));
             return;
         }
         HandleMap<EntityData<?>> map = data.get(state.getTypeHandle());
         if(!map.containsKey(state.getHandle())) {
-            logger.warn(String.format("State contains unknown data value %s", state.getHandle()));
+            engine.getLogger().warn(String.format("State contains unknown data value %s", state.getHandle()));
             return;
         }
         EntityData<?> d = map.get(state.getHandle());
         if(!(d instanceof StatefulEntityData)) {
-            logger.warn(String.format("State contains non-stateful data value %s", state.getHandle()));
+            engine.getLogger().warn(String.format("State contains non-stateful data value %s", state.getHandle()));
             return;
         }
         ((StatefulEntityData<?>) d).setState(state);

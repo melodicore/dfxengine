@@ -21,7 +21,7 @@ public class TagSelector implements Selector {
     private String tag;
 
     @Override
-    public boolean isSingle() {
+    public boolean isSingle(boolean isEntity) {
         return false;
     }
 

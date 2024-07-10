@@ -8,9 +8,6 @@ import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.definition.DataDefinition;
 import me.datafox.dfxengine.entities.data.ImmutableValueData;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
-import me.datafox.dfxengine.entities.utils.internal.EntityUtils;
-import me.datafox.dfxengine.handles.api.Handle;
-import me.datafox.dfxengine.values.ValueImpl;
 
 /**
  * @author datafox
@@ -31,8 +28,6 @@ public class ImmutableValueDataDefinition implements DataDefinition {
 
     @Override
     public ImmutableValueData build(Engine engine) {
-        Handle h = EntityHandles.getData().getOrCreateHandle(handle);
-        return new ImmutableValueData(new ValueImpl(
-                h, EntityUtils.getNumeral(valueType, value), true));
+        return new ImmutableValueData(this);
     }
 }

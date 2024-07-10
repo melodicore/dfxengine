@@ -6,7 +6,11 @@ package me.datafox.dfxengine.entities.api;
 public interface EntitySystem extends Comparable<EntitySystem> {
     int getPriority();
 
-    void update(Engine engine, float delta);
+    void update(float delta);
+
+    void link();
+
+    void clear();
 
     @Override
     default int compareTo(EntitySystem o) {

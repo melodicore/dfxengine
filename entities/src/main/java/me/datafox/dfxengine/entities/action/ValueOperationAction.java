@@ -1,44 +1,60 @@
 package me.datafox.dfxengine.entities.action;
 
 import me.datafox.dfxengine.entities.api.Engine;
-import me.datafox.dfxengine.handles.api.Handle;
+import me.datafox.dfxengine.entities.definition.action.ValueOperationActionDefinition;
+import me.datafox.dfxengine.entities.utils.internal.EntityUtils;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.api.operation.MathContext;
 import me.datafox.dfxengine.values.api.operation.Operation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author datafox
  */
 public class ValueOperationAction extends AbstractAction {
+    private final ValueOperationActionDefinition definition;
     private final Operation operation;
     private final List<Value> inputs;
     private final List<Value> outputs;
     private final MathContext context;
 
-    public ValueOperationAction(Handle handle, Operation operation, List<Value> inputs, List<Value> outputs, MathContext context) {
-        super(handle);
-        this.operation = operation;
-        this.inputs = inputs;
-        this.outputs = outputs;
-        if(context != null) {
-            this.context = context;
-        } else {
-            this.context = MathContext.defaults();
-        }
-        if(inputs.size() != operation.getParameterCount()) {
+    public ValueOperationAction(ValueOperationActionDefinition definition, Engine engine) {
+        super(definition.getHandle(), engine);
+        this.definition = definition;
+        operation = definition.getOperation().build(engine);
+        if(definition.getInputs().size() != operation.getParameterCount()) {
             throw new IllegalArgumentException("input count does not match operation's parameter count");
+        }
+        inputs = new ArrayList<>();
+        outputs = new ArrayList<>();
+        if(definition.getContext() != null) {
+            context = definition.getContext().build(engine);
+        } else {
+            context = MathContext.defaults();
         }
     }
 
     @Override
-    public void run(Engine engine) {
+    public void run() {
         outputs.forEach(v -> v
                 .apply(operation, context, inputs
                         .stream()
                         .map(Value::getValue)
                         .toArray(Numeral[]::new)));
+    }
+
+    @Override
+    public void link() {
+        EntityUtils.assertSingleAndStream(getEngine(), definition.getInputs()).forEach(inputs::add);
+        definition.getOutputs().get(getEngine()).forEach(outputs::add);
+    }
+
+    @Override
+    public void clear() {
+        inputs.clear();
+        outputs.clear();
     }
 }

@@ -5,11 +5,7 @@ import me.datafox.dfxengine.handles.api.Handled;
 /**
  * @author datafox
  */
-public interface EntityAction extends Handled {
-    void schedule();
-
-    void run();
-
+public interface EntityLink extends Handled {
     void link();
 
     void clear();

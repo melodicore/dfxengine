@@ -23,7 +23,7 @@ public class SelectorValueMapValueDataReference implements DataReference<Value> 
 
     @Override
     public boolean isSingle() {
-        return map.isSingle() && selector.isSingle();
+        return map.isSingle() && selector.isSingle(false);
     }
 
     @Override

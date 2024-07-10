@@ -20,7 +20,7 @@ public class OrSelector implements Selector {
     private List<Selector> selectors;
 
     @Override
-    public boolean isSingle() {
+    public boolean isSingle(boolean isEntity) {
         return false;
     }
 

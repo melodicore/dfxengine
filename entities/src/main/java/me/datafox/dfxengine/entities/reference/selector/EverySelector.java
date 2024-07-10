@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  */
 public class EverySelector implements Selector {
     @Override
-    public boolean isSingle() {
+    public boolean isSingle(boolean isEntity) {
         return false;
     }
 

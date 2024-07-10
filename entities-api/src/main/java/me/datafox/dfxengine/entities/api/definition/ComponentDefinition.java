@@ -1,5 +1,8 @@
 package me.datafox.dfxengine.entities.api.definition;
 
+import me.datafox.dfxengine.entities.api.Engine;
+import me.datafox.dfxengine.entities.api.EntityComponent;
+
 import java.util.List;
 
 /**
@@ -10,5 +13,9 @@ public interface ComponentDefinition {
 
     List<DataDefinition> getData();
 
+    List<LinkDefinition> getLinks();
+
     List<ActionDefinition> getActions();
+
+    EntityComponent build(Engine engine);
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.reference.Selector;
+import me.datafox.dfxengine.entities.utils.EntityHandles;
 import me.datafox.dfxengine.handles.api.HandleMap;
 
 import java.util.stream.Stream;
@@ -21,8 +22,11 @@ public class HandleSelector implements Selector {
     private String handle;
 
     @Override
-    public boolean isSingle() {
-        return true;
+    public boolean isSingle(boolean isEntity) {
+        if(!isEntity) {
+            return true;
+        }
+        return EntityHandles.getEntities().getOrCreateHandle(handle).getTags().contains(EntityHandles.getSingleTag());
     }
 
     @Override

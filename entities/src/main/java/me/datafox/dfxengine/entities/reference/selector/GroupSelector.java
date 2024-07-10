@@ -22,7 +22,7 @@ public class GroupSelector implements Selector {
     private String group;
 
     @Override
-    public boolean isSingle() {
+    public boolean isSingle(boolean isEntity) {
         return false;
     }
 

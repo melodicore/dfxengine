@@ -23,7 +23,7 @@ public class MultiHandleSelector implements Selector {
     private List<String> handles;
 
     @Override
-    public boolean isSingle() {
+    public boolean isSingle(boolean isEntity) {
         return false;
     }
 

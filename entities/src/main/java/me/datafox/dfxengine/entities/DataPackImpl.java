@@ -3,7 +3,6 @@ package me.datafox.dfxengine.entities;
 import lombok.*;
 import me.datafox.dfxengine.entities.api.DataPack;
 import me.datafox.dfxengine.entities.api.definition.EntityDefinition;
-import me.datafox.dfxengine.entities.api.definition.LinkDefinition;
 import me.datafox.dfxengine.entities.api.definition.SpaceDefinition;
 import me.datafox.dfxengine.entities.api.definition.SystemDefinition;
 
@@ -26,8 +25,6 @@ public class DataPackImpl implements DataPack {
     private List<SpaceDefinition> spaces;
     @Singular
     private List<EntityDefinition> entities;
-    @Singular
-    private List<LinkDefinition> links;
     @Singular
     private List<SystemDefinition> systems;
 }

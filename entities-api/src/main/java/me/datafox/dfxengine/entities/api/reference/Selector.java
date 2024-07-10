@@ -9,7 +9,7 @@ import java.util.stream.Stream;
  * @author datafox
  */
 public interface Selector {
-    boolean isSingle();
+    boolean isSingle(boolean isEntity);
 
     <T> Stream<T> select(HandleMap<T> map, Engine engine);
 }

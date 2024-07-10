@@ -8,9 +8,6 @@ import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.definition.DataDefinition;
 import me.datafox.dfxengine.entities.data.ValueData;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
-import me.datafox.dfxengine.entities.utils.internal.EntityUtils;
-import me.datafox.dfxengine.handles.api.Handle;
-import me.datafox.dfxengine.values.ValueImpl;
 
 /**
  * @author datafox
@@ -31,8 +28,6 @@ public class ValueDataDefinition implements DataDefinition {
 
     @Override
     public ValueData build(Engine engine) {
-        Handle h = EntityHandles.getData().getOrCreateHandle(handle);
-        return new ValueData(new ValueImpl(
-                h, EntityUtils.getNumeral(valueType, value), false));
+        return new ValueData(this);
     }
 }

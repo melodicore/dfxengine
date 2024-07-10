@@ -22,7 +22,7 @@ public class MultiTagSelector implements Selector {
     private List<String> tags;
 
     @Override
-    public boolean isSingle() {
+    public boolean isSingle(boolean isEntity) {
         return false;
     }
 

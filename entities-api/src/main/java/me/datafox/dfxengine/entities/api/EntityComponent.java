@@ -10,7 +10,13 @@ import me.datafox.dfxengine.handles.api.Handled;
 public interface EntityComponent extends Handled {
     HandleMap<HandleMap<EntityData<?>>> getData();
 
+    HandleMap<EntityLink> getLinks();
+
     HandleMap<EntityAction> getActions();
+
+    void link();
+
+    void clear();
 
     void setState(ComponentState state);
 

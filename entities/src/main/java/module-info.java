@@ -17,5 +17,20 @@ module dfxengine.entities {
     requires dfxengine.values;
 
     exports me.datafox.dfxengine.entities;
+    exports me.datafox.dfxengine.entities.action;
+    exports me.datafox.dfxengine.entities.data;
+    exports me.datafox.dfxengine.entities.definition;
+    exports me.datafox.dfxengine.entities.definition.action;
+    exports me.datafox.dfxengine.entities.definition.data;
+    exports me.datafox.dfxengine.entities.definition.link;
+    exports me.datafox.dfxengine.entities.definition.modifier;
+    exports me.datafox.dfxengine.entities.definition.operation;
+    exports me.datafox.dfxengine.entities.definition.system;
+    exports me.datafox.dfxengine.entities.link;
+    exports me.datafox.dfxengine.entities.reference;
+    exports me.datafox.dfxengine.entities.reference.data;
+    exports me.datafox.dfxengine.entities.reference.selector;
+    exports me.datafox.dfxengine.entities.state;
+    exports me.datafox.dfxengine.entities.system;
     exports me.datafox.dfxengine.entities.utils;
 }

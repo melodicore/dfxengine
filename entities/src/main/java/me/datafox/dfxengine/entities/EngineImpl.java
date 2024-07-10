@@ -2,26 +2,21 @@ package me.datafox.dfxengine.entities;
 
 import lombok.Getter;
 import me.datafox.dfxengine.entities.api.*;
-import me.datafox.dfxengine.entities.api.definition.ComponentDefinition;
-import me.datafox.dfxengine.entities.api.definition.EntityDefinition;
-import me.datafox.dfxengine.entities.api.definition.HandleDefinition;
-import me.datafox.dfxengine.entities.api.definition.SpaceDefinition;
-import me.datafox.dfxengine.entities.api.link.EntityLink;
+import me.datafox.dfxengine.entities.api.definition.*;
 import me.datafox.dfxengine.entities.api.state.EngineState;
 import me.datafox.dfxengine.entities.api.state.EntityState;
 import me.datafox.dfxengine.entities.state.EngineStateImpl;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
-import me.datafox.dfxengine.handles.TreeHandleMap;
+import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
-import me.datafox.dfxengine.handles.api.HandleManager;
 import me.datafox.dfxengine.handles.api.HandleMap;
-import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.injector.api.Injector;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import org.slf4j.Logger;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,70 +29,121 @@ public class EngineImpl implements Engine {
     private final Logger logger;
     @Getter
     private final Injector injector;
-    private final HandleManager handleManager;
-    private final HandleMap<Entity> entities;
-    private final List<EntityLink> links;
+    private final HandleMap<List<Entity>> entities;
+    private final HandleMap<EntityDefinition> multiDefinitions;
     private final Map<String,DataPack> dataPacks;
     private final SortedSet<EntitySystem> systems;
     private final Queue<EntityAction> actions;
+    @Getter
+    private Entity currentEntity;
+    @Getter
+    private EntityComponent currentComponent;
+    boolean linked;
 
     @Inject
-    public EngineImpl(Logger logger, Injector injector, HandleManager handleManager, EntityHandles ignoredHandles, List<EntitySystem> systems) {
+    public EngineImpl(Logger logger, Injector injector, EntityHandles ignored) {
         this.logger = logger;
         this.injector = injector;
-        this.handleManager = handleManager;
-        entities = new TreeHandleMap<>(EntityHandles.getEntities(), logger);
-        links = new ArrayList<>();
+        entities = new HashHandleMap<>(EntityHandles.getEntities());
+        multiDefinitions = new HashHandleMap<>(EntityHandles.getEntities());
         dataPacks = new HashMap<>();
-        this.systems = new TreeSet<>(systems);
+        systems = new TreeSet<>();
         actions = new ArrayDeque<>();
+        currentEntity = null;
+        currentComponent = null;
+        linked = false;
     }
 
     @Override
-    public HandleMap<Entity> getEntities() {
+    public HandleMap<List<Entity>> getEntities() {
         return entities.unmodifiable();
     }
 
     @Override
-    public List<EntityLink> getLinks() {
-        return Collections.unmodifiableList(links);
+    public Entity createMultiEntity(Handle handle) {
+        if(!multiDefinitions.containsKey(handle)) {
+            throw new IllegalArgumentException("not a multi entity");
+        }
+        clear();
+        Entity entity = createMultiEntityInternal(handle);
+        link();
+        return entity;
     }
 
+    @Override
+    public List<Entity> createMultiEntities(List<Handle> handles) {
+        if(!multiDefinitions.containsKeys(handles)) {
+            throw new IllegalArgumentException("not a multi entity");
+        }
+        clear();
+        handles.forEach(this::createMultiEntityInternal);
+        link();
+        return List.of();
+    }
+
+    @Override
+    public void removeMultiEntity(Entity entity) {
+        if(entity.isSingleton()) {
+            throw new IllegalArgumentException("not a multi entity");
+        }
+        if(!entities.containsKey(entity.getHandle())) {
+            logger.warn("entity not found");
+            return;
+        }
+        clear();
+        removeMultiEntityInternal(entity);
+        link();
+    }
+
+    @Override
+    public void removeMultiEntities(Collection<Entity> entities) {
+        if(entities.stream().anyMatch(Entity::isSingleton)) {
+            throw new IllegalArgumentException("not a multi entity");
+        }
+        if(!this.entities.containsKeys(entities.stream().map(Entity::getHandle).collect(Collectors.toSet()))) {
+            logger.warn("at least one entity not found");
+        }
+        clear();
+        entities.forEach(this::removeMultiEntityInternal);
+        link();
+    }
+
+    @Override
     public Map<String,DataPack> getDataPacks() {
         return Collections.unmodifiableMap(dataPacks);
     }
 
     @Override
-    public void registerPack(DataPack pack) {
+    public void addPack(DataPack pack) {
         if(dataPacks.containsKey(pack.getId())) {
-            throw new IllegalArgumentException("pack with this id is already present");
+            throw new IllegalArgumentException("pack with id already exists");
         }
         if(!pack.getDependencies().stream().allMatch(dataPacks::containsKey)) {
-            throw new IllegalArgumentException("unresolved pack dependency");
+            throw new IllegalArgumentException("unsatisfied dependencies");
         }
         dataPacks.put(pack.getId(), pack);
     }
 
     @Override
-    public void deregisterPack(DataPack pack, boolean removeDependents) {
-        if(!dataPacks.containsKey(pack.getId())) {
-            logger.warn("pack not found");
+    public void removePack(String id, boolean removeDependents) {
+        if(!dataPacks.containsKey(id)) {
+            throw new IllegalArgumentException("pack with id does not exist");
+        }
+        removePackInternal(id, removeDependents);
+    }
+
+    private void removePackInternal(String id, boolean removeDependents) {
+        Set<String> dependents = dataPacks.values().stream().filter(d -> d.getDependencies().contains(id)).map(DataPack::getId).collect(Collectors.toSet());
+        if(dependents.isEmpty()) {
+            dataPacks.remove(id);
             return;
         }
-        Set<String> removed = new HashSet<>();
-        removed.add(pack.getId());
-        if(dataPacks.values()
-                .stream()
-                .map(DataPack::getDependencies)
-                .anyMatch(s -> s.contains(pack.getId()))) {
-            if(removeDependents) {
-                removed.addAll(getDependents(pack.getId()).collect(Collectors.toSet()));
-            } else {
-                logger.warn("dependents found but removeDependents is false");
-                return;
-            }
+        if(removeDependents) {
+            dataPacks.remove(id);
+            dependents.forEach(d -> removePackInternal(d, true));
+            return;
         }
-        removed.forEach(dataPacks::remove);
+        throw new IllegalArgumentException("dependents found but removeDependents is false");
     }
 
     @Override
@@ -106,55 +152,50 @@ public class EngineImpl implements Engine {
         if(keepState) {
             state = getState();
         }
+        clear();
+        EntityHandles.clear();
         entities.clear();
-        links.clear();
+        multiDefinitions.clear();
         systems.clear();
         dataPacks.values()
                 .stream()
                 .map(DataPack::getSpaces)
                 .flatMap(List::stream)
-                .forEach(this::registerSpace);
+                .forEach(EntityHandles::setSpace);
         dataPacks.values()
                 .stream()
                 .map(DataPack::getEntities)
                 .flatMap(List::stream)
-                .map(this::buildEntity)
-                .forEach(entities::putHandled);
-        links.addAll(dataPacks
-                .values()
-                .stream()
-                .map(DataPack::getLinks)
-                .flatMap(List::stream)
-                .map(l -> l.build(this))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList()));
-        systems.addAll(dataPacks
-                .values()
+                .forEach(this::createEntityInternal);
+        dataPacks.values()
                 .stream()
                 .map(DataPack::getSystems)
                 .flatMap(List::stream)
                 .map(s -> s.build(this))
-                .collect(Collectors.toList()));
-        if(state != null) {
+                .forEach(systems::add);
+        if(keepState && state != null) {
             setState(state);
         }
+        link();
     }
 
     @Override
     public void setState(EngineState state) {
-        state.getEntities().forEach(this::setEntityState);
+        state.getSingleEntities().forEach(this::loadSingleEntityState);
+        if(state.getMultiEntities().isEmpty()) {
+            return;
+        }
+        clear();
+        clearMultiEntities();
+        state.getMultiEntities().forEach(this::loadMultiEntityState);
+        link();
     }
 
     @Override
     public EngineState getState() {
-        return EngineStateImpl
-                .builder()
-                .entities(entities
-                        .values()
-                        .stream()
-                        .map(Entity::getState)
-                        .collect(Collectors.toList()))
-                .build();
+        EngineStateImpl.EngineStateImplBuilder builder = EngineStateImpl.builder();
+        entities.forEach((h, l) -> getEntityState(l, builder));
+        return builder.build();
     }
 
     @Override
@@ -164,84 +205,122 @@ public class EngineImpl implements Engine {
 
     @Override
     public void update(float delta) {
-        runActions();
-        systems.forEach(s -> s.update(this, delta));
-    }
-
-    private Stream<String> getDependents(String id) {
-        return dataPacks.values()
-                .stream()
-                .filter(d -> d.getDependencies().contains(id))
-                .flatMap(d -> Stream.concat(
-                        Stream.of(d.getId()),
-                        getDependents(d.getId())))
-                .distinct();
-    }
-
-    private Entity buildEntity(EntityDefinition definition) {
-        return EntityImpl
-                .builder()
-                .logger(logger)
-                .handle(EntityHandles
-                        .getEntities()
-                        .getOrCreateHandle(definition.getHandle()))
-                .components(definition
-                        .getComponents()
-                        .stream()
-                        .map(this::buildComponent)
-                        .collect(Collectors.toList()))
-                .build();
-    }
-
-    private EntityComponent buildComponent(ComponentDefinition definition) {
-        return EntityComponentImpl
-                .builder()
-                .logger(logger)
-                .handle(EntityHandles
-                        .getComponents()
-                        .getOrCreateHandle(definition.getHandle()))
-                .data(definition
-                        .getData()
-                        .stream()
-                        .map(d -> d.build(this))
-                        .collect(Collectors.toList()))
-                .actions(definition
-                        .getActions()
-                        .stream()
-                        .map(a -> a.build(this))
-                        .collect(Collectors.toList()))
-                .build();
-    }
-
-    private void registerSpace(SpaceDefinition definition) {
-        Space space = handleManager.getOrCreateSpace(definition.getId());
-        definition.getGroups().forEach(space::getOrCreateGroup);
-        definition.getHandles().forEach(h -> registerHandle(space, h));
-    }
-
-    private void registerHandle(Space space, HandleDefinition definition) {
-        Handle handle = space.getOrCreateHandle(definition.getId());
-        definition.getGroups()
-                .stream()
-                .map(space::getOrCreateGroup)
-                .forEach(g -> g.getHandles().add(handle));
-        definition.getTags().forEach(handle.getTags()::add);
-
-    }
-
-    private void setEntityState(EntityState state) {
-        if(!entities.containsKey(state.getHandle())) {
-            logger.warn(String.format("State contains unknown entity %s", state.getHandle()));
-            return;
-        }
-        entities.get(state.getHandle()).setState(state);
-    }
-
-    private void runActions() {
         EntityAction action = actions.poll();
         while(action != null) {
-            action.run(this);
+            action.run();
             action = actions.poll();
         }
+        systems.forEach(s -> s.update(delta));
+    }
+
+    private void link() {
+        if(linked) {
+            return;
+        }
+        entities.values()
+                .stream()
+                .flatMap(List::stream)
+                .forEach(this::linkEntity);
+        systems.forEach(EntitySystem::link);
+        linked = true;
+    }
+
+    private void clear() {
+        if(!linked) {
+            return;
+        }
+        entities.values()
+                .stream()
+                .flatMap(List::stream)
+                .map(Entity::getComponents)
+                .map(HandleMap::values)
+                .flatMap(Collection::stream)
+                .forEach(EntityComponent::clear);
+        systems.forEach(EntitySystem::clear);
+        linked = false;
+    }
+
+    private void clearMultiEntities() {
+        multiDefinitions.keySet().forEach(entities::remove);
+    }
+
+    private Entity createMultiEntityInternal(Handle handle) {
+        Entity entity = multiDefinitions.get(handle).build(this);
+        if(entities.containsKey(handle)) {
+            entities.put(handle, Stream.concat(entities.get(handle).stream(),
+                    Stream.of(entity)).collect(Collectors.toList()));
+        } else {
+            entities.put(handle, List.of(entity));
+        }
+        return entity;
+    }
+
+    private void removeMultiEntityInternal(Entity entity) {
+        entities.put(entity.getHandle(), entities
+                .get(entity.getHandle())
+                .stream()
+                .filter(Predicate.not(Predicate.isEqual(entity)))
+                .collect(Collectors.toList()));
+    }
+
+    private void createEntityInternal(EntityDefinition definition) {
+        if(!definition.isSingleton()) {
+            multiDefinitions.put(EntityHandles.getEntities().getOrCreateHandle(definition.getHandle()), definition);
+            return;
+        }
+        if(entities.containsKey(definition.getHandle())) {
+            throw new IllegalArgumentException("entity with handle already exists");
+        }
+        Entity entity = definition.build(this);
+        entities.put(entity.getHandle(), List.of(entity));
+    }
+
+    private void loadSingleEntityState(EntityState state) {
+        List<Entity> list = entities.get(state.getHandle());
+        if(list == null || list.isEmpty()) {
+            logger.warn("entity not found");
+            return;
+        }
+        Entity entity = list.get(0);
+        if(list.size() != 1 || !entity.isSingleton()) {
+            throw new IllegalArgumentException("trying to load singleton entity data to multi entity");
+        }
+        entity.setState(state);
+    }
+
+    private void loadMultiEntityState(String id, List<EntityState> states) {
+        Handle handle = EntityHandles.getEntities().getOrCreateHandle(id);
+        if(handle.getTags().contains(EntityHandles.getSingleTag())) {
+            throw new IllegalArgumentException("trying to load multi entity data to singleton entity");
+        }
+        states.forEach(s -> createMultiEntityInternal(handle).setState(s));
+    }
+
+    private void getEntityState(List<Entity> entities, EngineStateImpl.EngineStateImplBuilder builder) {
+        if(entities.isEmpty()) {
+            return;
+        }
+        Entity entity = entities.get(0);
+        if(entity.isSingleton()) {
+            builder.singleEntity(entity.getState());
+        } else {
+            builder.multiEntity(entity.getHandle().getId(),
+                    entities
+                            .stream()
+                            .map(Entity::getState)
+                            .collect(Collectors.toList()));
+        }
+    }
+
+    private void linkEntity(Entity entity) {
+        currentEntity = entity;
+        entity.getComponents().values().forEach(this::linkComponent);
+        currentEntity = null;
+    }
+
+    private void linkComponent(EntityComponent component) {
+        currentComponent = component;
+        component.link();
+        currentComponent = null;
     }
 }

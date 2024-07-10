@@ -23,8 +23,8 @@ public class AndSelector implements Selector {
     private List<Selector> selectors;
 
     @Override
-    public boolean isSingle() {
-        return selectors.stream().allMatch(Selector::isSingle);
+    public boolean isSingle(boolean isEntity) {
+        return selectors.stream().allMatch(s -> s.isSingle(isEntity));
     }
 
     @Override

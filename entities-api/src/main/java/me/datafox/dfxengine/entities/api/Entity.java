@@ -10,6 +10,8 @@ import me.datafox.dfxengine.handles.api.Handled;
 public interface Entity extends Handled {
     HandleMap<EntityComponent> getComponents();
 
+    boolean isSingleton();
+
     void setState(EntityState state);
 
     EntityState getState();

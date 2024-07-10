@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.Entity;
 import me.datafox.dfxengine.entities.api.reference.EntityReference;
-import me.datafox.dfxengine.entities.api.reference.Selector;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -19,16 +17,14 @@ import java.util.stream.Stream;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SelectorEntityReference implements EntityReference {
-    private Selector selector;
-
+public class SelfEntityReference implements EntityReference {
     @Override
     public boolean isSingle() {
-        return selector.isSingle(true);
+        return true;
     }
 
     @Override
     public Stream<Entity> get(Engine engine) {
-        return selector.select(engine.getEntities(), engine).flatMap(List::stream);
+        return Stream.ofNullable(engine.getCurrentEntity());
     }
 }

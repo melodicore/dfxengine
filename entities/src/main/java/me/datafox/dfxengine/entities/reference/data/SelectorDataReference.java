@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 public abstract class SelectorDataReference<T> implements DataReference<T> {
     @Override
     public boolean isSingle() {
-        return getComponent().isSingle() && getSelector().isSingle();
+        return getComponent().isSingle() && getSelector().isSingle(false);
     }
 
     @SuppressWarnings("unchecked")

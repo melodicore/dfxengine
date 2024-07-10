@@ -1,20 +1,21 @@
 package me.datafox.dfxengine.entities.data;
 
 import me.datafox.dfxengine.entities.api.state.DataState;
+import me.datafox.dfxengine.entities.definition.data.ValueDataDefinition;
 import me.datafox.dfxengine.entities.state.ValueState;
-import me.datafox.dfxengine.entities.utils.EntityHandles;
 import me.datafox.dfxengine.entities.utils.internal.EntityUtils;
+import me.datafox.dfxengine.values.ValueImpl;
 import me.datafox.dfxengine.values.api.Value;
 
 /**
  * @author datafox
  */
 public class ValueData extends AbstractStatefulData<Value> {
-    public ValueData(Value data) {
-        super(data.getHandle(), EntityHandles.getValueType(), data);
-        if(data.isImmutable()) {
-            throw new IllegalArgumentException("ValueData must not have an immutable Value");
-        }
+    public ValueData(ValueDataDefinition definition) {
+        super(definition.getHandle(), definition.getTypeHandle());
+        setData(new ValueImpl(getHandle(),
+                EntityUtils.getNumeral(definition.getValueType(), definition.getValue()),
+                false));
     }
 
     @Override

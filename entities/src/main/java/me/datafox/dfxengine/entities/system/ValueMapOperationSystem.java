@@ -1,6 +1,7 @@
 package me.datafox.dfxengine.entities.system;
 
 import me.datafox.dfxengine.entities.api.Engine;
+import me.datafox.dfxengine.entities.definition.system.ValueMapOperationSystemDefinition;
 import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.math.utils.Numerals;
@@ -10,30 +11,50 @@ import me.datafox.dfxengine.values.api.ValueMap;
 import me.datafox.dfxengine.values.api.operation.MapMathContext;
 import me.datafox.dfxengine.values.api.operation.SingleParameterOperation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * @author datafox
  */
 public class ValueMapOperationSystem extends AbstractEntitySystem {
-    private final Space space;
+    private final ValueMapOperationSystemDefinition definition;
+    private final SingleParameterOperation operation;
     private final List<ValueMap> inputs;
     private final List<ValueMap> outputs;
-    private final SingleParameterOperation operation;
     private final MapMathContext context;
+    private Space space;
 
-    public ValueMapOperationSystem(int priority, List<ValueMap> inputs, List<ValueMap> outputs, SingleParameterOperation operation, MapMathContext context) {
-        super(priority);
-        this.inputs = inputs;
-        this.outputs = outputs;
-        this.operation = operation;
-        if(context != null) {
-            this.context = context;
+    public ValueMapOperationSystem(ValueMapOperationSystemDefinition definition, Engine engine) {
+        super(definition.getPriority(), engine);
+        this.definition = definition;
+        inputs = new ArrayList<>();
+        outputs = new ArrayList<>();
+        operation = definition.getOperation().build(engine);
+        if(definition.getContext() != null) {
+            context = definition.getContext().build(engine);
         } else {
-            this.context = MapMathContext.defaults();
+            context = MapMathContext.defaults();
         }
+    }
+
+    @Override
+    public void update(float delta) {
+        ValueMap combined = new DelegatedValueMap(new HashHandleMap<>(space), false, getEngine().getLogger());
+        inputs.forEach(i -> combined.apply(Operations::add, MapMathContext.builder().createNonExistingAs(Numerals.of(0)).build(), i.getValueNumeralMap()));
+        if(delta != 1) {
+            combined.apply(Operations::multiply, Numerals.of(delta));
+        }
+        outputs.forEach(o -> o.apply(operation, context, combined.getValueNumeralMap()));
+    }
+
+    @Override
+    public void link() {
+        inputs.addAll(definition.getInputs().get(getEngine()).collect(Collectors.toList()));
+        outputs.addAll(definition.getOutputs().get(getEngine()).collect(Collectors.toList()));
         if(inputs.isEmpty()) {
             throw new IllegalArgumentException("empty inputs");
         }
@@ -47,12 +68,9 @@ public class ValueMapOperationSystem extends AbstractEntitySystem {
     }
 
     @Override
-    public void update(Engine engine, float delta) {
-        ValueMap combined = new DelegatedValueMap(new HashHandleMap<>(space), false, engine.getLogger());
-        inputs.forEach(i -> combined.apply(Operations::add, MapMathContext.builder().createNonExistingAs(Numerals.of(0)).build(), i.getValueNumeralMap()));
-        if(delta != 1) {
-            combined.apply(Operations::multiply, Numerals.of(delta));
-        }
-        outputs.forEach(o -> o.apply(operation, context, combined.getValueNumeralMap()));
+    public void clear() {
+        inputs.clear();
+        outputs.clear();
+        space = null;
     }
 }

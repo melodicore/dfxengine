@@ -12,8 +12,6 @@ import me.datafox.dfxengine.entities.api.reference.DataReference;
 import me.datafox.dfxengine.entities.system.ValueMapOperationSystem;
 import me.datafox.dfxengine.values.api.ValueMap;
 
-import java.util.stream.Collectors;
-
 /**
  * @author datafox
  */
@@ -22,17 +20,15 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ValueMapOperationSystemDefinition implements SystemDefinition {
+    private String handle;
     private int priority;
     private DataReference<ValueMap> inputs;
     private DataReference<ValueMap> outputs;
     private SingleParameterOperationDefinition operation;
-    private MathContextDefinition definition;
+    private MathContextDefinition context;
 
     @Override
     public ValueMapOperationSystem build(Engine engine) {
-        return new ValueMapOperationSystem(priority,
-                inputs.get(engine).collect(Collectors.toList()),
-                outputs.get(engine).collect(Collectors.toList()),
-                operation.build(engine), definition.build(engine));
+        return new ValueMapOperationSystem(this, engine);
     }
 }
