@@ -809,12 +809,18 @@ public class DelegatedValueMap implements ValueMap {
         return map.entrySet();
     }
 
+
+    @Override
+    public String toString() {
+        return map.toString();
+    }
+
     private Stream<Value> getExisting(Collection<? extends Handle> handles) {
         return handles.stream().filter(this::containsKey).map(this::get);
     }
 
     private Stream<? extends Handle> getNonExisting(Collection<? extends Handle> handles) {
-        if(handles.stream().noneMatch(Predicate.not(handle -> getSpace().equals(handle.getSpace())))) {
+        if(handles.stream().anyMatch(Predicate.not(handle -> getSpace().equals(handle.getSpace())))) {
             logger.warn(spaceIgnored(getSpace()));
         }
         return handles.stream()
@@ -853,14 +859,11 @@ public class DelegatedValueMap implements ValueMap {
         if(context.convertResultTo() != null && !context.ignoreBadConversion()) {
             logger.warn(MIDWAY_EXCEPTION);
         }
-
         if(context.createNonExistingAs() != null) {
             createNonExisting(values.keySet(), context.createNonExistingAs());
-            values().forEach(val -> operation.accept(values.get(val.getHandle()), val));
-        } else {
-            getExisting(values.keySet())
-                    .forEach(val -> operation.accept(values.get(val.getHandle()), val));
         }
+        getExisting(values.keySet())
+                .forEach(val -> operation.accept(values.get(val.getHandle()), val));
     }
 
     private void checkImmutable() {
@@ -1018,6 +1021,11 @@ public class DelegatedValueMap implements ValueMap {
         @Override
         public Set<Entry<Handle,Numeral>> entrySet() {
             return DelegatedValueMap.this.entrySet().stream().map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(), getInternal(entry.getValue()))).collect(Collectors.toSet());
+        }
+
+        @Override
+        public String toString() {
+            return map.toString();
         }
 
         private Numeral getInternal(Value value) {
