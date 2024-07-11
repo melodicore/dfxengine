@@ -47,6 +47,11 @@ public class EntityImpl implements Entity {
     }
 
     @Override
+    public int getIndex() {
+        return isSingleton() ? 0 : engine.getEntities().get(handle).indexOf(this);
+    }
+
+    @Override
     public void setState(EntityState state) {
         state.getComponents().forEach(this::setComponentState);
     }

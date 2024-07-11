@@ -1,6 +1,7 @@
 package me.datafox.dfxengine.entities.action;
 
 import lombok.Getter;
+import me.datafox.dfxengine.entities.api.ActionParameters;
 import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.EntityAction;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
@@ -20,7 +21,7 @@ public abstract class AbstractAction implements EntityAction {
     }
 
     @Override
-    public void schedule() {
-        engine.scheduleAction(this);
+    public void schedule(ActionParameters parameters) {
+        engine.scheduleAction(this, parameters);
     }
 }

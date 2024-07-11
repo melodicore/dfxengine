@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.EntityComponent;
-import me.datafox.dfxengine.entities.api.reference.ComponentReference;
+import me.datafox.dfxengine.entities.api.Reference;
 
 import java.util.stream.Stream;
 
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SelfComponentReference implements ComponentReference {
+public class SelfComponentReference implements Reference<EntityComponent> {
     @Override
     public boolean isSingle() {
         return true;

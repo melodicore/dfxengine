@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.Entity;
-import me.datafox.dfxengine.entities.api.reference.EntityReference;
-import me.datafox.dfxengine.entities.api.reference.Selector;
+import me.datafox.dfxengine.entities.api.Reference;
+import me.datafox.dfxengine.entities.api.Selector;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SelectorEntityReference implements EntityReference {
+public class SelectorEntityReference implements Reference<Entity> {
     private Selector selector;
 
     @Override

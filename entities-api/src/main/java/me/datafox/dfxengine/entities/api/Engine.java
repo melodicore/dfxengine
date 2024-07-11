@@ -20,6 +20,10 @@ public interface Engine {
 
     HandleMap<List<Entity>> getEntities();
 
+    void addEntityListener(EntityListener listener);
+
+    void removeEntityListener(EntityListener listener);
+
     Entity createMultiEntity(Handle handle);
 
     List<Entity> createMultiEntities(List<Handle> handles);
@@ -44,7 +48,7 @@ public interface Engine {
 
     EngineState getState();
 
-    void scheduleAction(EntityAction action);
+    void scheduleAction(EntityAction action, ActionParameters parameters);
 
     void update(float delta);
 }

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Engine;
-import me.datafox.dfxengine.entities.api.reference.Selector;
+import me.datafox.dfxengine.entities.api.Selector;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
 import me.datafox.dfxengine.handles.api.HandleMap;
 

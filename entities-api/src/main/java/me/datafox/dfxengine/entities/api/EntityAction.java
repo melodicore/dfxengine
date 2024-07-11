@@ -6,9 +6,9 @@ import me.datafox.dfxengine.handles.api.Handled;
  * @author datafox
  */
 public interface EntityAction extends Handled {
-    void schedule();
+    void schedule(ActionParameters parameters);
 
-    void run();
+    void run(ActionParameters parameters);
 
     void link();
 

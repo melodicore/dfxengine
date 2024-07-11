@@ -1,6 +1,5 @@
-package me.datafox.dfxengine.entities.api.reference;
+package me.datafox.dfxengine.entities.api;
 
-import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.handles.api.HandleMap;
 
 import java.util.stream.Stream;

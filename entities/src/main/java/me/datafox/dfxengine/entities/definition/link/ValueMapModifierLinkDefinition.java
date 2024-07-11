@@ -5,10 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Engine;
+import me.datafox.dfxengine.entities.api.EntityLink;
+import me.datafox.dfxengine.entities.api.Reference;
 import me.datafox.dfxengine.entities.api.definition.LinkDefinition;
 import me.datafox.dfxengine.entities.api.definition.ModifierDefinition;
-import me.datafox.dfxengine.entities.api.EntityLink;
-import me.datafox.dfxengine.entities.api.reference.DataReference;
 import me.datafox.dfxengine.entities.link.ValueMapModifierLink;
 import me.datafox.dfxengine.values.api.ValueMap;
 
@@ -21,7 +21,7 @@ import me.datafox.dfxengine.values.api.ValueMap;
 @NoArgsConstructor
 public class ValueMapModifierLinkDefinition implements LinkDefinition {
     private String handle;
-    private DataReference<ValueMap> output;
+    private Reference<ValueMap> output;
     private ModifierDefinition modifier;
 
     @Override

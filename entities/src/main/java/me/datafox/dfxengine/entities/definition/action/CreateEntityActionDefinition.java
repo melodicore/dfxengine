@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.datafox.dfxengine.entities.action.ValueMapOperationAction;
+import me.datafox.dfxengine.entities.action.CreateEntityAction;
 import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.definition.ActionDefinition;
 
@@ -15,11 +15,11 @@ import me.datafox.dfxengine.entities.api.definition.ActionDefinition;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ValueMapOperationActionDefinition implements ActionDefinition {
+public class CreateEntityActionDefinition implements ActionDefinition {
     private String handle;
 
     @Override
-    public ValueMapOperationAction build(Engine engine) {
-        return new ValueMapOperationAction(this, engine);
+    public CreateEntityAction build(Engine engine) {
+        return new CreateEntityAction(this, engine);
     }
 }

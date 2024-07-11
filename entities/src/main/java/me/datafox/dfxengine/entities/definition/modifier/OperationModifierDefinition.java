@@ -4,9 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 import me.datafox.dfxengine.entities.api.Engine;
+import me.datafox.dfxengine.entities.api.Reference;
 import me.datafox.dfxengine.entities.api.definition.ModifierDefinition;
 import me.datafox.dfxengine.entities.api.definition.OperationDefinition;
-import me.datafox.dfxengine.entities.api.reference.DataReference;
 import me.datafox.dfxengine.entities.utils.internal.EntityUtils;
 import me.datafox.dfxengine.values.api.Modifier;
 import me.datafox.dfxengine.values.api.Value;
@@ -22,10 +22,10 @@ public class OperationModifierDefinition implements ModifierDefinition {
     private int priority;
     private OperationDefinition operation;
     @Singular
-    private List<DataReference<Value>> inputs;
+    private List<Reference<Value>> inputs;
 
     @Builder
-    public OperationModifierDefinition(int priority, OperationDefinition operation, @Singular List<DataReference<Value>> inputs) {
+    public OperationModifierDefinition(int priority, OperationDefinition operation, @Singular List<Reference<Value>> inputs) {
         this.priority = priority;
         this.inputs = inputs;
         this.operation = operation;

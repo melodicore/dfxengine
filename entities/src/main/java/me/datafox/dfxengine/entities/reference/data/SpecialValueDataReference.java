@@ -2,7 +2,7 @@ package me.datafox.dfxengine.entities.reference.data;
 
 import lombok.*;
 import me.datafox.dfxengine.entities.api.Engine;
-import me.datafox.dfxengine.entities.api.reference.DataReference;
+import me.datafox.dfxengine.entities.api.Reference;
 import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.modifier.MappingOperationModifier;
 
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SpecialValueDataReference implements DataReference<Value> {
+public class SpecialValueDataReference implements Reference<Value> {
     private int index;
 
     @Override

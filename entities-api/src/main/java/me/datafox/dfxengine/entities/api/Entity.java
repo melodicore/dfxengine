@@ -12,6 +12,8 @@ public interface Entity extends Handled {
 
     boolean isSingleton();
 
+    int getIndex();
+
     void setState(EntityState state);
 
     EntityState getState();

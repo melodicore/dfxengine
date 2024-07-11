@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.entities;
 
+import lombok.Data;
 import lombok.Getter;
 import me.datafox.dfxengine.entities.api.*;
 import me.datafox.dfxengine.entities.api.definition.*;
@@ -31,9 +32,10 @@ public class EngineImpl implements Engine {
     private final Injector injector;
     private final HandleMap<List<Entity>> entities;
     private final HandleMap<EntityDefinition> multiDefinitions;
+    private final Set<EntityListener> listeners;
     private final Map<String,DataPack> dataPacks;
     private final SortedSet<EntitySystem> systems;
-    private final Queue<EntityAction> actions;
+    private final Queue<ActionInstance> actions;
     @Getter
     private Entity currentEntity;
     @Getter
@@ -46,6 +48,7 @@ public class EngineImpl implements Engine {
         this.injector = injector;
         entities = new HashHandleMap<>(EntityHandles.getEntities());
         multiDefinitions = new HashHandleMap<>(EntityHandles.getEntities());
+        listeners = new LinkedHashSet<>();
         dataPacks = new HashMap<>();
         systems = new TreeSet<>();
         actions = new ArrayDeque<>();
@@ -60,6 +63,16 @@ public class EngineImpl implements Engine {
     }
 
     @Override
+    public void addEntityListener(EntityListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeEntityListener(EntityListener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
     public Entity createMultiEntity(Handle handle) {
         if(!multiDefinitions.containsKey(handle)) {
             throw new IllegalArgumentException("not a multi entity");
@@ -67,6 +80,7 @@ public class EngineImpl implements Engine {
         clear();
         Entity entity = createMultiEntityInternal(handle);
         link();
+        listeners.forEach(l -> l.added(entity));
         return entity;
     }
 
@@ -76,9 +90,10 @@ public class EngineImpl implements Engine {
             throw new IllegalArgumentException("not a multi entity");
         }
         clear();
-        handles.forEach(this::createMultiEntityInternal);
+        List<Entity> added = handles.stream().map(this::createMultiEntityInternal).collect(Collectors.toList());
         link();
-        return List.of();
+        listeners.forEach(l -> added.forEach(l::added));
+        return added;
     }
 
     @Override
@@ -91,8 +106,9 @@ public class EngineImpl implements Engine {
             return;
         }
         clear();
-        removeMultiEntityInternal(entity);
+        Entity removed = removeMultiEntityInternal(entity);
         link();
+        listeners.forEach(l -> l.removed(removed));
     }
 
     @Override
@@ -104,8 +120,9 @@ public class EngineImpl implements Engine {
             logger.warn("at least one entity not found");
         }
         clear();
-        entities.forEach(this::removeMultiEntityInternal);
+        List<Entity> removed = entities.stream().map(this::removeMultiEntityInternal).collect(Collectors.toList());
         link();
+        listeners.forEach(l -> removed.forEach(l::removed));
     }
 
     @Override
@@ -199,15 +216,15 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public void scheduleAction(EntityAction action) {
-        actions.offer(action);
+    public void scheduleAction(EntityAction action, ActionParameters parameters) {
+        actions.offer(new ActionInstance(action, parameters));
     }
 
     @Override
     public void update(float delta) {
-        EntityAction action = actions.poll();
+        ActionInstance action = actions.poll();
         while(action != null) {
-            action.run();
+            action.getAction().run(action.getParameters());
             action = actions.poll();
         }
         systems.forEach(s -> s.update(delta));
@@ -255,12 +272,13 @@ public class EngineImpl implements Engine {
         return entity;
     }
 
-    private void removeMultiEntityInternal(Entity entity) {
+    private Entity removeMultiEntityInternal(Entity entity) {
         entities.put(entity.getHandle(), entities
                 .get(entity.getHandle())
                 .stream()
                 .filter(Predicate.not(Predicate.isEqual(entity)))
                 .collect(Collectors.toList()));
+        return entity;
     }
 
     private void createEntityInternal(EntityDefinition definition) {
@@ -322,5 +340,11 @@ public class EngineImpl implements Engine {
         currentComponent = component;
         component.link();
         currentComponent = null;
+    }
+
+    @Data
+    private static class ActionInstance {
+        private final EntityAction action;
+        private final ActionParameters parameters;
     }
 }

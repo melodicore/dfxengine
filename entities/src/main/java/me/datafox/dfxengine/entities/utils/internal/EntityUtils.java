@@ -3,8 +3,7 @@ package me.datafox.dfxengine.entities.utils.internal;
 import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.EntityComponent;
 import me.datafox.dfxengine.entities.api.EntityData;
-import me.datafox.dfxengine.entities.api.reference.ComponentReference;
-import me.datafox.dfxengine.entities.api.reference.DataReference;
+import me.datafox.dfxengine.entities.api.Reference;
 import me.datafox.dfxengine.entities.data.ValueDto;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleMap;
@@ -52,7 +51,7 @@ public class EntityUtils {
     }
 
     public static Stream<EntityData<?>> flatMapEntityData(Engine engine,
-                                                      ComponentReference component,
+                                                      Reference<EntityComponent> component,
                                                       String type,
                                                       Function<HandleMap<EntityData<?>>,Stream<EntityData<?>>> mapper) {
         return component
@@ -63,8 +62,8 @@ public class EntityUtils {
                 .flatMap(mapper);
     }
 
-    public static <T> Stream<T> assertSingleAndStream(Engine engine, List<DataReference<T>> references) {
-        if(!references.stream().allMatch(DataReference::isSingle)) {
+    public static <T> Stream<T> assertSingleAndStream(Engine engine, List<Reference<T>> references) {
+        if(!references.stream().allMatch(Reference::isSingle)) {
             throw new IllegalArgumentException("DataReferences must be single");
         }
         return references
