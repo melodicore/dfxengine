@@ -194,7 +194,9 @@ public class ComponentDataFactory {
     }
 
     private String parseSuperclass(String str) {
-        str = str.split(" extends ", 2)[1];
+        System.out.println("AAA: " + str);
+        str = InjectorUtils.splitWithoutTypes(str, " extends ", 2)[1];
+        System.out.println("AAA: " + str);
         return toFullSignature(str);
     }
 

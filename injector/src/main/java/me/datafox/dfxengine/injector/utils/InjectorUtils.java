@@ -84,7 +84,7 @@ public class InjectorUtils {
             } else if(str.startsWith(split, i) && counter == 0) {
                 splits.add(str.substring(start, i));
                 i += split.length();
-                start = i + 1;
+                start = i;
                 if(splits.size() == max - 1) {
                     break;
                 }
