@@ -167,13 +167,20 @@ public class ComponentDataFactory {
             originals.put(original, ref);
             return ref;
         }
-        if(str.contains(" implements ")) {
-            builder.interfaces(parseInterfaces(str).stream().map(this::buildClassReference).collect(Collectors.toList()));
-            str = str.split(" implements ", 2)[0];
-        }
-        if(InjectorUtils.removeTypes(str).contains(" extends ")) {
-            builder.superclass(buildClassReference(parseSuperclass(str)));
-            str = InjectorUtils.splitWithoutTypes(str, " extends ", 2)[0];
+        if(classInfoMap.get(str.split("[< ]", 2)[0]).isInterface()) {
+            if(InjectorUtils.removeTypes(str).contains(" extends ")) {
+                builder.interfaces(parseExtendsInterfaces(str).stream().map(this::buildClassReference).collect(Collectors.toList()));
+                str = InjectorUtils.splitWithoutTypes(str, " extends ", 2)[0];
+            }
+        } else {
+            if(str.contains(" implements ")) {
+                builder.interfaces(parseInterfaces(str).stream().map(this::buildClassReference).collect(Collectors.toList()));
+                str = str.split(" implements ", 2)[0];
+            }
+            if(InjectorUtils.removeTypes(str).contains(" extends ")) {
+                builder.superclass(buildClassReference(parseSuperclass(str)));
+                str = InjectorUtils.splitWithoutTypes(str, " extends ", 2)[0];
+            }
         }
         if(str.contains("<")) {
             builder.parameters(parseParameters(str).stream().map(this::buildClassReference).collect(Collectors.toList()));
@@ -190,7 +197,15 @@ public class ComponentDataFactory {
     private List<String> parseInterfaces(String str) {
         str = str.split(" implements ", 2)[1];
         List<String> list = InjectorUtils.splitParameters(str);
-        return list.stream().map(this::toFullSignature).collect(Collectors.toList());
+        return list.stream().filter(this::filterUnknownInterfaceParameters)
+                .map(this::toFullSignature).collect(Collectors.toList());
+    }
+
+    private List<String> parseExtendsInterfaces(String str) {
+        str = InjectorUtils.splitWithoutTypes(str, " extends ", 2)[1];
+        List<String> list = InjectorUtils.splitParameters(str);
+        return list.stream().filter(this::filterUnknownInterfaceParameters)
+                .map(this::toFullSignature).collect(Collectors.toList());
     }
 
     private String parseSuperclass(String str) {
@@ -325,5 +340,9 @@ public class ComponentDataFactory {
             data.setList(true);
             data.setListReference(data.getParameters().get(0));
         }
+    }
+
+    private boolean filterUnknownInterfaceParameters(String s) {
+        return !classInfoMap.containsKey(s) || classInfoMap.get(s).getTypeSignatureOrTypeDescriptor().getTypeParameters().isEmpty();
     }
 }
