@@ -61,16 +61,11 @@ public class InjectorStrings {
     private static final String FINAL_FIELD_DEPENDENCY =
             "Field %s in class %s is annotated with @Inject but is final, only non-final fields can be injected";
     private static final String UNRESOLVED_TYPE_PARAMETER =
-            "Component %s has unresolved type parameter %s, unresolved type parameters cannot be injected";
+            "Component %s has unresolved type parameter, unresolved type parameters cannot be injected";
+    private static final String INVALID_ARRAY = "Array %s cannot be resolved to a type";
     private static final String NO_DEPENDENCIES = "A single Component %s was requested but none are present";
     private static final String MULTIPLE_DEPENDENCIES =
             "A single Component %s was requested but multiple are present";
-    private static final String ARRAY_COMPONENT =
-            "Component method %s in class %s returns an array, array components are not permitted";
-    private static final String ARRAY_DEPENDENCY =
-            "Component %s depends on an array, array components are not permitted";
-    private static final String ARRAY_FIELD_DEPENDENCY =
-            "Class %s has field %s annotated with @Inject, array components are not permitted";
     private static final String CYCLIC_DEPENDENCY_DETECTED = "Detected a cyclic dependency: %s";
 
     public static String packageWhitelistPresent(int rules) {
@@ -219,24 +214,16 @@ public class InjectorStrings {
         return String.format(MULTIPLE_DEPENDENCIES, reference.getSignature());
     }
 
-    public static String arrayComponent(MethodInfo method, ClassInfo info) {
-        return String.format(ARRAY_COMPONENT, getMethodParameterString(method), info.getName());
-    }
-
-    public static String arrayDependency(MethodParameterInfo info) {
-        return String.format(ARRAY_DEPENDENCY, getMethodParameterString(info.getMethodInfo()));
-    }
-
-    public static String arrayFieldDependency(FieldInfo info) {
-        return String.format(ARRAY_FIELD_DEPENDENCY, info.getClassInfo().getName(), getFieldParameterString(info));
-    }
-
     public static String finalFieldDependency(FieldInfo field) {
         return String.format(FINAL_FIELD_DEPENDENCY, getFieldParameterString(field), field.getClassInfo().getName());
     }
 
-    public static String unresolvedTypeParameter(MethodInfo info, String parameter) {
-        return String.format(UNRESOLVED_TYPE_PARAMETER, getMethodComponentString(info), parameter);
+    public static String unresolvedTypeParameter(String classString) {
+        return String.format(UNRESOLVED_TYPE_PARAMETER, classString);
+    }
+
+    public static String invalidArray(String array) {
+        return String.format(INVALID_ARRAY, array);
     }
 
     public static String cyclicDependencyDetected(ComponentData<?> current, Deque<ComponentData<?>> visited) {
@@ -274,22 +261,6 @@ public class InjectorStrings {
         String prefix = method.getClassName();
         if(!method.isConstructor()) {
             prefix += "." + method.getName();
-        }
-        return prefix +
-                "(" +
-                Arrays.stream(method.getParameterInfo())
-                        .map(MethodParameterInfo::getTypeSignatureOrTypeDescriptor)
-                        .map(TypeSignature::toString)
-                        .collect(Collectors.joining(", ")) +
-                ")";
-    }
-
-    private static String getMethodComponentString(MethodInfo method) {
-        String prefix;
-        if(method.isConstructor()) {
-            prefix = method.getClassInfo().getTypeSignatureOrTypeDescriptor().toString().split(" class | interface ",2)[1];
-        } else {
-            prefix = method.getTypeSignatureOrTypeDescriptor().getResultType().toString() + " " + method.getClassName() + "." + method.getName();
         }
         return prefix +
                 "(" +

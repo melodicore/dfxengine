@@ -75,27 +75,6 @@ public final class TypeRef<T> {
     }
 
     /**
-     * This method is equivalent to {@link Class#isAssignableFrom(Class)} but takes type parameters into account. Only
-     * if this type reference and all parameters recursively have an equal amount of parameters and the type and all
-     * parameter types return {@code true} for {@link Class#isAssignableFrom(Class)} will this method return
-     * {@code true}.
-     *
-     * @param other type reference to compare to
-     * @return {@code true} if this type reference is assignable from the other type reference
-     */
-    public boolean isAssignableFrom(TypeRef<?> other) {
-        if(parameters.size() != other.parameters.size() || !type.isAssignableFrom(other.type)) {
-            return false;
-        }
-        for(int i = 0; i < parameters.size(); i++) {
-            if(!parameters.get(i).isAssignableFrom(other.parameters.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * @return String representation of this type reference in the format "{@code Type<Parameter,Other<Child>>}"
      * without packages
      */

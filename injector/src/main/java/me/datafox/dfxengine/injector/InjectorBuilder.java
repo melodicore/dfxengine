@@ -1,7 +1,6 @@
 package me.datafox.dfxengine.injector;
 
 import io.github.classgraph.*;
-import me.datafox.dfxengine.injector.api.InstantiationDetails;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
@@ -407,7 +406,6 @@ public class InjectorBuilder {
                     .map(ClassReference::getActualReference)
                     .map(data -> parseDependency(data, components))
                     .collect(Collectors.toList()));
-            checkDependencies(component);
         }
     }
 
@@ -416,27 +414,6 @@ public class InjectorBuilder {
                 .stream()
                 .filter(data -> classReference.isAssignableFrom(data.getReference().getActualReference()))
                 .collect(Collectors.toList());
-    }
-
-    private void checkDependencies(ComponentData<?> data) {
-        for(int i = 0; i < data.getDependencies().size(); i++) {
-            ClassReference<?> reference;
-            if(i < data.getParameters().size()) {
-                reference = data.getParameters().get(i);
-            } else if(i == data.getParameters().size() && data.getOwner() != null) {
-                reference = data.getOwner();
-            } else {
-                int index = i - data.getParameters().size();
-                if(data.getOwner() != null) {
-                    index--;
-                }
-                reference = data.getFields().get(index).getReference();
-            }
-            if(InstantiationDetails.class.equals(reference.getActualReference().getTypeRef().getType())) {
-                continue;
-            }
-            List<ComponentData<?>> dependency = data.getDependencies().get(i);
-        }
     }
 
     private void checkCyclicDependencies(List<ComponentData<?>> components) {

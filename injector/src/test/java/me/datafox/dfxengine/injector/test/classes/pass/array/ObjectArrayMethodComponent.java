@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.injector.test.classes.fail.array.object;
+package me.datafox.dfxengine.injector.test.classes.pass.array;
 
 import me.datafox.dfxengine.injector.api.annotation.Component;
 

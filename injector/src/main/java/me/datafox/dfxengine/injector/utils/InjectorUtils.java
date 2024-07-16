@@ -1,9 +1,7 @@
 package me.datafox.dfxengine.injector.utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Contains various utilities used internally by this module.
@@ -46,58 +44,53 @@ public class InjectorUtils {
     }
 
     /**
-     * @param string class signature to resolve
-     * @return resolved superclasses and interfaces from the class signature
+     * @param str string to be processed
+     * @return specified string with everything between {@code <} and {@code >} removed
      */
-    public static Stream<String> getSuperclasses(String string) {
-        if(!string.contains("<")) {
-            return Arrays.stream(string.split(" extends | implements ", 2)[1].split(" extends | implements ")).map(InjectorUtils::splitParameters).flatMap(List::stream);
+    public static String removeTypes(String str) {
+        if(!str.contains("<")) {
+            return str;
         }
-        List<String> superclasses = new ArrayList<>();
-        int withinParams = 0;
-        int start = 0;
-        for(int i = 0; i < string.length(); i++) {
-            if(string.charAt(i) == '<') {
-                withinParams++;
-                continue;
-            }
-            if(string.charAt(i) == '>') {
-                withinParams--;
-                continue;
-            }
-            if(withinParams == 0) {
-                if(string.startsWith(", ", i) || string.startsWith(" extends ", i) || string.startsWith( " implements ", i)) {
-                    superclasses.add(string.substring(start, i));
-                    if(string.startsWith(", ", i)) {
-                        i++;
-                    } else if(string.startsWith(" extends ", i)) {
-                        i += 8;
-                    } else {
-                        i += 11;
-                    }
-                    start = i + 1;
-                }
+        int counter = 0;
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < str.length(); i++) {
+            if(str.charAt(i) == '<') {
+                counter++;
+            } else if(str.charAt(i) == '>') {
+                counter--;
+            } else if(counter == 0) {
+                sb.append(str.charAt(i));
             }
         }
-        superclasses.add(string.substring(start));
-        if(superclasses.size() == 1) {
-            return Stream.empty();
-        } else {
-            return superclasses.subList(1, superclasses.size()).stream();
-        }
+        return sb.toString();
     }
 
     /**
-     *
-     * @param string signature from which keywords should be stripped
-     * @return specified signature with keywords stripped
+     * @param str string to be split
+     * @param split split delimiter
+     * @param max maximum amount of elements
+     * @return specified string split by the specified delimiter, ignoring delimiters that appear between {@code <} and
+     * {@code >}
      */
-    public static String stripKeywords(String string) {
-        for(String str : new String[] {" public ", " abstract ", " interface "}) {
-            while(string.contains(str)) {
-                string = string.substring(0, string.indexOf(str)) + string.substring(string.indexOf(str) + str.length() - 1);
+    public static String[] splitWithoutTypes(String str, String split, int max) {
+        List<String> splits = new ArrayList<>(max);
+        int counter = 0;
+        int start = 0;
+        for(int i = 0; i < str.length(); i++) {
+            if(str.charAt(i) == '<') {
+                counter++;
+            } else if(str.charAt(i) == '>') {
+                counter--;
+            } else if(str.startsWith(split, i) && counter == 0) {
+                splits.add(str.substring(start, i));
+                i += split.length();
+                start = i + 1;
+                if(splits.size() == max - 1) {
+                    break;
+                }
             }
         }
-        return string;
+        splits.add(str.substring(start));
+        return splits.toArray(String[]::new);
     }
 }

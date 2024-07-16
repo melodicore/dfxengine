@@ -5,11 +5,6 @@ import me.datafox.dfxengine.injector.InjectorImpl;
 import me.datafox.dfxengine.injector.api.TypeRef;
 import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
 import me.datafox.dfxengine.injector.exception.*;
-import me.datafox.dfxengine.injector.test.classes.fail.array.constructor.ConstructorArrayComponent;
-import me.datafox.dfxengine.injector.test.classes.fail.array.field.FieldArrayComponent;
-import me.datafox.dfxengine.injector.test.classes.fail.array.initialize.InitializeArrayComponent;
-import me.datafox.dfxengine.injector.test.classes.fail.array.object.ObjectArrayMethodComponent;
-import me.datafox.dfxengine.injector.test.classes.fail.array.primitive.PrimitiveArrayMethodComponent;
 import me.datafox.dfxengine.injector.test.classes.fail.constructor.multiple.ComponentWithMultipleConstructors;
 import me.datafox.dfxengine.injector.test.classes.fail.constructor.none.ComponentWithNoConstructor;
 import me.datafox.dfxengine.injector.test.classes.fail.dependency.cyclic.CyclicComponent1;
@@ -19,8 +14,12 @@ import me.datafox.dfxengine.injector.test.classes.fail.final_field.ComponentWith
 import me.datafox.dfxengine.injector.test.classes.fail.parametric.unresolved_class.UnresolvedParameterComponent;
 import me.datafox.dfxengine.injector.test.classes.fail.parametric.unresolved_method.UnresolvedParameterComponentMethod;
 import me.datafox.dfxengine.injector.test.classes.fail.parametric.unresolved_method_class.unresolved_method.UnresolvedParameterComponentMethodClass;
-import me.datafox.dfxengine.injector.test.classes.pass.array.NonComponent3;
-import me.datafox.dfxengine.injector.test.classes.pass.array.Parametric2;
+import me.datafox.dfxengine.injector.test.classes.pass.array.ConstructorArrayComponent;
+import me.datafox.dfxengine.injector.test.classes.pass.array.FieldArrayComponent;
+import me.datafox.dfxengine.injector.test.classes.pass.array.InitializeArrayComponent;
+import me.datafox.dfxengine.injector.test.classes.pass.array.PrimitiveArrayMethodComponent;
+import me.datafox.dfxengine.injector.test.classes.pass.array_parameter.NonComponent3;
+import me.datafox.dfxengine.injector.test.classes.pass.array_parameter.Parametric2;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.Component;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.ComponentMethod;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.NonComponent;
@@ -102,15 +101,15 @@ public class InjectorTest {
     public void parametricTest() {
         var injector = assertDoesNotThrow(() -> injector(Parametric.class));
 
-        var c1 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric.class,
-                TypeRef.of(Number.class), TypeRef.of(String.class))));
-        var c2 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric.class,
-                TypeRef.of(Number.class), TypeRef.of(StringBuilder.class))));
+        var c1 = assertDoesNotThrow(() -> injector.getComponent(
+                TypeRef.of(Parametric.class, Number.class, String.class)));
+        var c2 = assertDoesNotThrow(() -> injector.getComponent(
+                TypeRef.of(Parametric.class, Number.class, StringBuilder.class)));
         var c3 = assertDoesNotThrow(() -> injector.getComponent(ExtendingParametricComponent.class));
-        var l1 = assertDoesNotThrow(() -> injector.getComponents(TypeRef.of(Parametric.class,
-                TypeRef.of(Number.class), TypeRef.of(CharSequence.class))));
-        var l2 = assertDoesNotThrow(() -> injector.getComponents(TypeRef.of(Parametric.class,
-                TypeRef.of(Object.class), TypeRef.of(Object.class))));
+        var l1 = assertDoesNotThrow(() -> injector.getComponents(
+                TypeRef.of(Parametric.class, Number.class, CharSequence.class)));
+        var l2 = assertDoesNotThrow(() -> injector.getComponents(
+                TypeRef.of(Parametric.class, Object.class, Object.class)));
 
         assertEquals(c1, c3);
         assertEquals(2, l1.size());
@@ -170,8 +169,8 @@ public class InjectorTest {
     public void arrayParameterTest() {
         var injector = assertDoesNotThrow(() -> injector(Parametric2.class));
 
-        var c1 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric2.class, TypeRef.of(int[].class))));
-        var c2 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric2.class, TypeRef.of(Array.class, TypeRef.of(NonComponent3.class)))));
+        var c1 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric2.class, int[].class)));
+        var c2 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric2.class, TypeRef.of(Array.class, NonComponent3.class))));
 
         assertNotNull(c1);
         assertNotNull(c2);
@@ -209,11 +208,16 @@ public class InjectorTest {
 
     @Test
     public void arrayTest() {
-        assertThrows(ArrayComponentException.class, () -> injector(PrimitiveArrayMethodComponent.class));
-        assertThrows(ArrayComponentException.class, () -> injector(ObjectArrayMethodComponent.class));
-        assertThrows(ArrayComponentException.class, () -> injector(ConstructorArrayComponent.class));
-        assertThrows(ArrayComponentException.class, () -> injector(FieldArrayComponent.class));
-        assertThrows(ArrayComponentException.class, () -> injector(InitializeArrayComponent.class));
+        var injector = injector(PrimitiveArrayMethodComponent.class);
+
+        String[] sarray = (String[]) injector.getComponent(TypeRef.of(Array.class, String.class).uncast());
+        int[] iarray = injector.getComponent(TypeRef.of(int[].class));
+        assertSame(sarray, injector.getComponent(ConstructorArrayComponent.class).getSarray());
+        assertSame(iarray, injector.getComponent(ConstructorArrayComponent.class).getIarray());
+        assertSame(sarray, injector.getComponent(FieldArrayComponent.class).getSarray());
+        assertSame(iarray, injector.getComponent(FieldArrayComponent.class).getIarray());
+        assertSame(sarray, injector.getComponent(InitializeArrayComponent.class).getSarray());
+        assertSame(iarray, injector.getComponent(InitializeArrayComponent.class).getIarray());
     }
 
     @Test
@@ -241,8 +245,8 @@ public class InjectorTest {
     public void getComponentParameterTest() {
         var injector = emptyInjector();
 
-        assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(TypeRef.of(Function.class, TypeRef.of(String.class))));
-        assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(TypeRef.of(Supplier.class, TypeRef.of(Consumer.class))));
+        assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(TypeRef.of(Function.class, String.class)));
+        assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(TypeRef.of(Supplier.class, Consumer.class)));
         assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(Supplier.class));
     }
 }

@@ -25,31 +25,31 @@ resolve to `Object`, and <code>?&nbsp;extends&nbsp;Type</code> resolves to `Type
 * `List` (`java.util.List`) determines that multiple components of the same type are requested. The actual type of 
 component requested will be the type parameter of the list. The dependency must declare List specifically, any extending 
 interfaces or implementing classes will be treated as regular dependencies.
-* [`InstantiationDetails`](src/main/java/me/datafox/dfxengine/injector/InstantiationDetails.java) is automatically 
-instantiated for every component that depends on it, and contains a reference to the class of the component and its type
-parameters. For method components, the class and type parameters are the method's declared type, not the type of the
-object actually returned by the method. If the component's instantiation policy is `PER_INSTANCE`, details will also
-contain a reference to the class and type parameters of the component that has the first component as a dependency.
+* [`InstantiationDetails`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/InstantiationDetails.java) is 
+automatically instantiated for every component that depends on it, and contains a reference to the class of the 
+component and its type parameters. For method components, the class and type parameters are the method's declared type, 
+not the type of the object actually returned by the method. If the component's instantiation policy is `PER_INSTANCE`, 
+details will also contain a reference to the class and type parameters of the component that has the first component as 
+a dependency.
 
 ### Preset dependencies
 
 The injector module currently declares two preset components to be used as dependencies.
 
-* [`Injector`](src/main/java/me/datafox/dfxengine/injector/Injector.java) can be used to request any arbitrary component
-or components during runtime by using the `getComponent(...)` and `getComponents(...)` methods.
+* [`Injector`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/Injector.java) can be used to request any 
+arbitrary component or components during runtime by using the `getComponent(...)` and `getComponents(...)` methods.
 * `Logger` (`org.slf4j.Logger`) can be used to request a slf4j logger. It has the `PER_INSTANCE` instantiation policy 
 and uses the requesting class parameter of `InstantiationDetails` as a parameter to `LoggerFactory.getLogger()` 
 internally to get the appropriate logger.
 
 ### Arrays
 
-Arrays are not allowed as components, and trying to create one with component methods will throw an error, but they are
-allowed as parametric types. Internally, references to primitive arrays are stored as is, but references to object 
+Arrays are allowed as components. Internally, references to primitive arrays are stored as is, but references to object 
 arrays are not stored as `Object[].class` or equivalent, but instead as `java.lang.reflect.Array.class` with the 
 object's class as a parameter. So if you are requesting components manually:
 
-* Do: `Injector.getComponent(Component.class, Parameter.listOf(Array.class, Parameter.of(String.class)))`
-* Do not: `Injector.getComponent(Component.class, Parameter.listOf(String[].class))`
+* Do: `Injector.getComponent(Array.class, String.class)`
+* Do not: `Injector.getComponent(String[].class)`
 
 ## Annotations
 

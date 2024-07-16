@@ -247,21 +247,22 @@ public class InjectorImpl implements Injector {
         return getComponent(TypeRef.of(List.class, type), requesting);
     }
 
-    @SuppressWarnings("unchecked")
     private <T> ClassReference<T> getReference(TypeRef<T> type) {
         if(type == null) {
             return null;
         }
         ClassReference<T> reference = ClassReference
                 .<T>builder()
-                .typeRef(type)
+                .type(type.getType())
+                .parameters(type
+                        .getParameters()
+                        .stream()
+                        .map(this::getReference)
+                        .collect(Collectors.toList()))
                 .build();
         if(List.class.equals(type.getType())) {
             reference.setList(true);
-            reference.setListReference(ClassReference
-                    .builder()
-                    .typeRef((TypeRef<Object>) type.getParameters().get(0))
-                    .build());
+            reference.setListReference(reference.getParameters().get(0));
         }
         return reference;
     }
@@ -357,11 +358,11 @@ public class InjectorImpl implements Injector {
 
     @SuppressWarnings("unchecked")
     private <T,I> T getParameter(ClassReference<T> reference, ClassReference<I> instantiating, List<ClassReference<?>> requesting, List<List<ComponentData<?>>> components) {
-        if(InstantiationDetails.class.equals(reference.getActualReference().getTypeRef().getType())) {
+        if(InstantiationDetails.class.equals(reference.getActualReference().getType())) {
             InstantiationDetails details = InstantiationDetails
                     .builder()
-                    .type(instantiating.getTypeRef())
-                    .requesting(requesting.size() < 2 ? null : requesting.get(requesting.size() - 2).getTypeRef())
+                    .type(instantiating.toTypeRef())
+                    .requesting(requesting.size() < 2 ? null : requesting.get(requesting.size() - 2).toTypeRef())
                     .build();
             if(reference.isList()) {
                 return (T) List.of(details);
