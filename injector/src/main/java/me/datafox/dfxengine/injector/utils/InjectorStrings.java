@@ -60,6 +60,8 @@ public class InjectorStrings {
     private static final String BUILDING_COMPONENT_METHOD_DATA = "Building component data for class %s using method %s";
     private static final String FINAL_FIELD_DEPENDENCY =
             "Field %s in class %s is annotated with @Inject but is final, only non-final fields can be injected";
+    private static final String UNKNOWN_TYPE =
+            "Class %s cannot be found";
     private static final String UNRESOLVED_TYPE_PARAMETER =
             "Component %s has unresolved type parameter, unresolved type parameters cannot be injected";
     private static final String INVALID_ARRAY = "Array %s cannot be resolved to a type";
@@ -216,6 +218,10 @@ public class InjectorStrings {
 
     public static String finalFieldDependency(FieldInfo field) {
         return String.format(FINAL_FIELD_DEPENDENCY, getFieldParameterString(field), field.getClassInfo().getName());
+    }
+
+    public static String unknownType(String classString) {
+        return String.format(UNKNOWN_TYPE, classString);
     }
 
     public static String unresolvedTypeParameter(String classString) {

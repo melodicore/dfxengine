@@ -1,11 +1,7 @@
 package me.datafox.dfxengine.injector.internal;
 
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.FieldInfo;
-import io.github.classgraph.MethodInfo;
-import io.github.classgraph.MethodParameterInfo;
+import io.github.classgraph.*;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
-import me.datafox.dfxengine.injector.api.TypeRef;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
@@ -24,8 +20,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * Factory that builds {@link ComponentData} instances and by extension {@link ClassReference} and {@link TypeRef}
- * instances.
+ * Factory that builds {@link ComponentData} instances and by extension {@link ClassReference}, {@link FieldReference},
+ * {@link InitializeReference} and {@link SelfReference} instances.
  *
  * @author datafox
  */
@@ -57,13 +53,15 @@ public class ComponentDataFactory {
         Component annotation = null;
         ComponentData.ComponentDataBuilder<T> builder = ComponentData.builder();
         if(info.isConstructor()) {
-            String classString = info.getClassInfo().getName();
+            //Create class component
+            String classString = parseClass(info.getClassInfo());
             logger.debug(InjectorStrings.buildingComponentClassData(classString, info));
-            ClassReference<T> reference = buildClassReferenceEntry(parseClass(info.getClassInfo()));
+            ClassReference<T> reference = buildClassReferenceEntry(classString);
             builder.reference(reference).executable(info.loadClassAndGetConstructor());
             if(info.getClassInfo().hasAnnotation(Component.class)) {
                 annotation = (Component) info.getClassInfo().getAnnotationInfo(Component.class).loadClassAndInstantiate();
             }
+            //Register fields with @Inject annotation
             for(FieldInfo field : info.getClassInfo().getDeclaredFieldInfo().filter(f -> f.hasAnnotation(Inject.class))) {
                 if(field.isFinal()) {
                     throw LogUtils.logExceptionAndGet(logger,
@@ -79,6 +77,7 @@ public class ComponentDataFactory {
                         .reference(buildClassReferenceEntry(field.getTypeSignatureOrTypeDescriptor().toString()))
                         .build());
             }
+            //Register methods with @Initialize annotation
             for(MethodInfo method : info.getClassInfo().getDeclaredMethodInfo().filter(m -> m.hasAnnotation(Initialize.class))) {
                 Initialize initialize = (Initialize) method.getAnnotationInfo(Initialize.class).loadClassAndInstantiate();
                 InitializeReference.InitializeReferenceBuilder<T> initBuilder = InitializeReference
@@ -95,9 +94,10 @@ public class ComponentDataFactory {
                 builder.initializer(initBuilder.build());
             }
         } else {
-            String classString = info.getClassName();
+            //Create method component
+            String classString = parseMethod(info);
             logger.debug(InjectorStrings.buildingComponentMethodData(classString, info));
-            builder.reference(buildClassReferenceEntry(parseMethod(info)))
+            builder.reference(buildClassReferenceEntry(classString))
                     .executable(info.loadClassAndGetMethod());
             if(!info.isStatic()) {
                 builder.owner(buildClassReferenceEntry(parseClass(info.getClassInfo())));
@@ -111,6 +111,7 @@ public class ComponentDataFactory {
         } else {
             builder.policy(InstantiationPolicy.ONCE).order(0);
         }
+        //Register dependencies (constructor/method parameters)
         for(MethodParameterInfo param : info.getParameterInfo()) {
             if(InstantiationPolicy.class.getName().equals(param.getTypeDescriptor().toString())) {
                 continue;
@@ -135,11 +136,22 @@ public class ComponentDataFactory {
         reference.setReference((ClassReference<T>) originals.get(key));
     }
 
+    /**
+     * @param str class string in the format {@code com.package.Class<com.package.Parameter, com.package.OtherParameter>
+     * extends com.package.Superclass implements com.package.Interface, com.package.OtherInterface}
+     * @return {@link ClassReference} for specified class string
+     * @param <T> type of the class
+     */
     @SuppressWarnings("unchecked")
     private <T> ClassReference<T> buildClassReference(String str) {
+        //ClassGraph does not create ClassInfo for Object.class
         if(Object.class.getName().equals(str)) {
             return (ClassReference<T>) ClassReference.object();
         }
+        /*
+        If this class reference has already been created, return a SelfReference instead. This is to prevent cyclic
+        ClassReference graphs with classes where the type parameter of a superclass/interface is the class itself.
+        */
         if(visited.contains(str)) {
             if(references.containsKey(str)) {
                 return (SelfReference<T>) references.get(str);
@@ -150,44 +162,54 @@ public class ComponentDataFactory {
         }
         visited.add(str);
         String original = str;
+        //If the class is a primitive, create a reference to the boxed version
         String className = getBoxedPrimitiveName(str);
         if(className != null) {
             ClassReference<T> ref = buildClassReference(parseClass(classInfoMap.get(className)));
             originals.put(original, ref);
             return ref;
         }
+        //If the class is an array, create a reference to it
         if(str.endsWith("[]")) {
             ClassReference<T> ref = buildArrayClassReference(str);
             originals.put(original, ref);
             return ref;
         }
         ClassReference.ClassReferenceBuilder<T> builder = ClassReference.builder();
+        //If the class does not have type parameters, superclasses or interfaces, create a reference to it.
         if(classInfoMap.containsKey(str)) {
             ClassReference<T> ref = builder.type((Class<T>) classInfoMap.get(str).loadClass()).build();
             originals.put(original, ref);
             return ref;
         }
+        //If the class is an interface and extends other interfaces, parse them
         if(classInfoMap.get(str.split("[< ]", 2)[0]).isInterface()) {
             if(InjectorUtils.removeTypes(str).contains(" extends ")) {
                 builder.interfaces(parseExtendsInterfaces(str).stream().map(this::buildClassReference).collect(Collectors.toList()));
                 str = InjectorUtils.splitWithoutTypes(str, " extends ", 2)[0];
             }
         } else {
+            //If the class is not an interface but implements interfaces, parse them
             if(str.contains(" implements ")) {
                 builder.interfaces(parseInterfaces(str).stream().map(this::buildClassReference).collect(Collectors.toList()));
                 str = str.split(" implements ", 2)[0];
             }
+            //If the class has a superclass, parse it
             if(InjectorUtils.removeTypes(str).contains(" extends ")) {
                 builder.superclass(buildClassReference(parseSuperclass(str)));
                 str = InjectorUtils.splitWithoutTypes(str, " extends ", 2)[0];
             }
         }
+        //If the class has type parameters, parse them
         if(str.contains("<")) {
             builder.parameters(parseParameters(str).stream().map(this::buildClassReference).collect(Collectors.toList()));
             str = str.split("<", 2)[0];
         }
+        //If the class does not exist, throw an exception
         if(!classInfoMap.containsKey(str)) {
-            throw new UnresolvedOrUnknownTypeException(str);
+            throw LogUtils.logExceptionAndGet(logger,
+                    InjectorStrings.unknownType(str),
+                    UnresolvedOrUnknownTypeException::new);
         }
         ClassReference<T> ref = builder.type((Class<T>) classInfoMap.get(str).loadClass()).build();
         originals.put(original, ref);
@@ -197,15 +219,19 @@ public class ComponentDataFactory {
     private List<String> parseInterfaces(String str) {
         str = str.split(" implements ", 2)[1];
         List<String> list = InjectorUtils.splitParameters(str);
-        return list.stream().filter(this::filterUnknownInterfaceParameters)
-                .map(this::toFullSignature).collect(Collectors.toList());
+        return list.stream()
+                .filter(this::filterUnknownInterfaceParameters)
+                .map(this::toFullSignature)
+                .collect(Collectors.toList());
     }
 
     private List<String> parseExtendsInterfaces(String str) {
         str = InjectorUtils.splitWithoutTypes(str, " extends ", 2)[1];
         List<String> list = InjectorUtils.splitParameters(str);
-        return list.stream().filter(this::filterUnknownInterfaceParameters)
-                .map(this::toFullSignature).collect(Collectors.toList());
+        return list.stream()
+                .filter(this::filterUnknownInterfaceParameters)
+                .map(this::toFullSignature)
+                .collect(Collectors.toList());
     }
 
     private String parseSuperclass(String str) {
@@ -217,29 +243,43 @@ public class ComponentDataFactory {
         str = str.split("<", 2)[1];
         str = str.substring(0, str.length() - 1);
         List<String> list = InjectorUtils.splitParameters(str);
-        return list.stream().map(this::toFullSignature).collect(Collectors.toList());
+        return list.stream()
+                .map(this::toFullSignature)
+                .collect(Collectors.toList());
     }
 
-    private String toFullSignature(String data) {
-        if(data.endsWith("[]")) {
-            return data;
+    /**
+     * @param str class string with type parameters but without superclasses/interfaces
+     * @return class string in the format specified by {@link #buildClassReference(String)}
+     */
+    private String toFullSignature(String str) {
+        //If the class is an array, do nothing
+        if(str.endsWith("[]")) {
+            return str;
         }
-        if(data.startsWith("?")) {
-            if(data.startsWith("? extends ")) {
-                data = data.substring(10);
+        //Resolve vague type parameters ("?" and "? super T" become java.lang.Object, "? extends T" becomes "T")
+        if(str.startsWith("?")) {
+            if(str.startsWith("? extends ")) {
+                str = str.substring(10);
             } else {
                 return Object.class.getName();
             }
         }
-        if(classInfoMap.containsKey(data)) {
-            return parseClass(classInfoMap.get(data));
+        //If type parameters are not present, use parseClass(String)
+        if(classInfoMap.containsKey(str)) {
+            return parseClass(classInfoMap.get(str));
         }
-        String[] split = data.split("<", 2);
+        String[] split = str.split("<", 2);
+        /*
+        If the split only has one element, the class does not have parameters but did not get recognised in the previous
+        step, it could not be found
+         */
         if(split.length != 2) {
             throw LogUtils.logExceptionAndGet(logger,
-                    InjectorStrings.unresolvedTypeParameter(data),
+                    InjectorStrings.unresolvedTypeParameter(str),
                     UnresolvedOrUnknownTypeException::new);
         }
+        //Replace generic type parameters in superclasses and interfaces with the child class's resolved parameters
         List<String> parameters = InjectorUtils.splitParameters(split[1]);
         String classString = parseClass(classInfoMap.get(split[0]));
         List<String> genericParameters = InjectorUtils.splitParameters(classString.split("<", 2)[1]);
@@ -342,7 +382,13 @@ public class ComponentDataFactory {
         }
     }
 
-    private boolean filterUnknownInterfaceParameters(String s) {
-        return !classInfoMap.containsKey(s) || classInfoMap.get(s).getTypeSignatureOrTypeDescriptor().getTypeParameters().isEmpty();
+    /**
+     * @param str class string for an interface
+     * @return {@code true} if the interface has type parameters present in the string or does not have type parameters
+     * at all, or {@code false} if it has type parameters that are not present in the string
+     */
+    private boolean filterUnknownInterfaceParameters(String str) {
+        return !classInfoMap.containsKey(str) ||
+                classInfoMap.get(str).getTypeSignatureOrTypeDescriptor().getTypeParameters().isEmpty();
     }
 }
