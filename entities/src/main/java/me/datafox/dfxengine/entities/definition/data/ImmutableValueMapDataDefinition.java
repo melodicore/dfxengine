@@ -8,7 +8,6 @@ import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.definition.DataDefinition;
 import me.datafox.dfxengine.entities.data.ImmutableValueMapData;
 import me.datafox.dfxengine.entities.data.ValueDto;
-import me.datafox.dfxengine.entities.utils.EntityHandles;
 
 import java.util.List;
 
@@ -23,11 +22,6 @@ public class ImmutableValueMapDataDefinition implements DataDefinition {
     private String handle;
     private String space;
     private List<ValueDto> values;
-
-    @Override
-    public String getTypeHandle() {
-        return EntityHandles.getValueMapType().getId();
-    }
 
     @Override
     public ImmutableValueMapData build(Engine engine) {

@@ -5,7 +5,6 @@ import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.definition.DataDefinition;
 import me.datafox.dfxengine.entities.data.ValueDto;
 import me.datafox.dfxengine.entities.data.ValueMapData;
-import me.datafox.dfxengine.entities.utils.EntityHandles;
 
 import java.util.List;
 
@@ -21,11 +20,6 @@ public class ValueMapDataDefinition implements DataDefinition {
     private String space;
     @Singular
     private List<ValueDto> values;
-
-    @Override
-    public String getTypeHandle() {
-        return EntityHandles.getValueMapType().getId();
-    }
 
     @Override
     public ValueMapData build(Engine engine) {

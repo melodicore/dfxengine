@@ -12,7 +12,7 @@ import me.datafox.dfxengine.values.api.Value;
  */
 public class ValueData extends AbstractStatefulData<Value> {
     public ValueData(ValueDataDefinition definition) {
-        super(definition.getHandle(), definition.getTypeHandle());
+        super(Value.class, definition.getHandle());
         setData(new ValueImpl(getHandle(),
                 EntityUtils.getNumeral(definition.getValueType(), definition.getValue()),
                 false));
@@ -29,7 +29,7 @@ public class ValueData extends AbstractStatefulData<Value> {
         return ValueState
                 .builder()
                 .handle(getHandle().getId())
-                .typeHandle(getTypeHandle().getId())
+                .typeId(getType().getName())
                 .valueType(getData().getBase().getType().name())
                 .value(getData().getBase().getNumber().toString())
                 .build();

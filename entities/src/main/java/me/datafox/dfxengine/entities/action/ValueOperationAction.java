@@ -32,7 +32,10 @@ public class ValueOperationAction extends AbstractAction {
 
     @Override
     public void run(ActionParameters parameters) {
-        parameters.get(OUTPUTS).forEach(m -> m
+        parameters.get(OUTPUTS)
+                .stream()
+                .filter(this::checkImmutable)
+                .forEach(m -> m
                 .apply(parameters.get(OPERATION),
                         parameters.get(CONTEXT),
                         parameters.get(INPUTS)
@@ -47,5 +50,14 @@ public class ValueOperationAction extends AbstractAction {
 
     @Override
     public void clear() {
+    }
+
+    private boolean checkImmutable(Value value) {
+        if(value.isImmutable()) {
+            getEngine().getLogger()
+                    .warn(String.format("%s is immutable and cannot be modified by ValueOperationAction", value));
+            return false;
+        }
+        return true;
     }
 }

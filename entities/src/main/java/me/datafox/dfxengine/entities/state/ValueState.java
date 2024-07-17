@@ -15,7 +15,7 @@ import me.datafox.dfxengine.entities.api.state.DataState;
 @NoArgsConstructor
 public class ValueState implements DataState {
     private String handle;
-    private String typeHandle;
+    private String typeId;
     private String valueType;
     private String value;
 }

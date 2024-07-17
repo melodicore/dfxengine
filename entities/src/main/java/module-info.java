@@ -15,6 +15,7 @@ module dfxengine.entities {
     requires dfxengine.math.api;
     requires dfxengine.math;
     requires dfxengine.values;
+    requires dfxengine.text.api;
 
     exports me.datafox.dfxengine.entities;
     exports me.datafox.dfxengine.entities.action;

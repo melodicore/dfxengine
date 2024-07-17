@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
  */
 public class ImmutableValueMapData extends AbstractData<ValueMap> {
     public ImmutableValueMapData(ImmutableValueMapDataDefinition definition) {
-        super(definition.getHandle(), definition.getTypeHandle());
+        super(ValueMap.class, definition.getHandle());
+        getHandle().getTags().add(EntityHandles.getImmutableTag());
         setData(build(definition));
     }
 

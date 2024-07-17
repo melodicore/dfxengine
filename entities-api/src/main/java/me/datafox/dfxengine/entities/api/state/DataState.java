@@ -6,5 +6,5 @@ package me.datafox.dfxengine.entities.api.state;
 public interface DataState {
     String getHandle();
 
-    String getTypeHandle();
+    String getTypeId();
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ValueMapState implements DataState {
     private String handle;
-    private String typeHandle;
+    private String typeId;
     @Singular
     private List<ValueDto> values;
 }

@@ -13,8 +13,6 @@ open module dfxengine.entities.api {
     requires dfxengine.dependencies;
 
     exports me.datafox.dfxengine.entities.api;
-    exports me.datafox.dfxengine.entities.api.reference;
     exports me.datafox.dfxengine.entities.api.definition;
     exports me.datafox.dfxengine.entities.api.state;
-    exports me.datafox.dfxengine.entities.api.link;
 }

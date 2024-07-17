@@ -54,7 +54,7 @@ public class ValueMapOperationSystem extends AbstractEntitySystem {
     @Override
     public void link() {
         inputs.addAll(definition.getInputs().get(getEngine()).collect(Collectors.toList()));
-        outputs.addAll(definition.getOutputs().get(getEngine()).collect(Collectors.toList()));
+        outputs.addAll(definition.getOutputs().get(getEngine()).filter(this::checkImmutable).collect(Collectors.toList()));
         if(inputs.isEmpty()) {
             throw new IllegalArgumentException("empty inputs");
         }
@@ -72,5 +72,14 @@ public class ValueMapOperationSystem extends AbstractEntitySystem {
         inputs.clear();
         outputs.clear();
         space = null;
+    }
+
+    private boolean checkImmutable(ValueMap map) {
+        if(map.isImmutable()) {
+            getEngine().getLogger()
+                    .warn(String.format("%s is immutable and cannot be modified by ValueMapOperationSystem", map));
+            return false;
+        }
+        return true;
     }
 }

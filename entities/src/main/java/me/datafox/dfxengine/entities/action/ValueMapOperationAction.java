@@ -33,7 +33,10 @@ public class ValueMapOperationAction extends AbstractAction {
 
     @Override
     public void run(ActionParameters parameters) {
-        parameters.get(OUTPUTS).forEach(m -> m
+        parameters.get(OUTPUTS)
+                .stream()
+                .filter(this::checkImmutable)
+                .forEach(m -> m
                 .apply(parameters.get(OPERATION),
                         parameters.get(CONTEXT),
                         parameters.get(INPUTS)
@@ -48,5 +51,14 @@ public class ValueMapOperationAction extends AbstractAction {
 
     @Override
     public void clear() {
+    }
+
+    private boolean checkImmutable(ValueMap map) {
+        if(map.isImmutable()) {
+            getEngine().getLogger()
+                    .warn(String.format("%s is immutable and cannot be modified by ValueMapOperationAction", map));
+            return false;
+        }
+        return true;
     }
 }

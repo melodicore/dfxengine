@@ -8,7 +8,7 @@ import me.datafox.dfxengine.handles.api.Handled;
  * @author datafox
  */
 public interface EntityComponent extends Handled {
-    HandleMap<HandleMap<EntityData<?>>> getData();
+    <T> HandleMap<EntityData<T>> getData(Class<T> type);
 
     HandleMap<EntityLink> getLinks();
 

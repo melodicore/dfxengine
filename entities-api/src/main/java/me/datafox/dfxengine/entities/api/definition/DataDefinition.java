@@ -9,7 +9,5 @@ import me.datafox.dfxengine.entities.api.EntityData;
 public interface DataDefinition {
     String getHandle();
 
-    String getTypeHandle();
-
     EntityData<?> build(Engine engine);
 }

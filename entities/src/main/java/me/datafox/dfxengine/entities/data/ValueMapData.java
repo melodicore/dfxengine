@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public class ValueMapData extends AbstractStatefulData<ValueMap> {
     public ValueMapData(ValueMapDataDefinition definition) {
-        super(definition.getHandle(), definition.getTypeHandle());
+        super(ValueMap.class, definition.getHandle());
         setData(build(definition));
     }
 
@@ -56,7 +56,7 @@ public class ValueMapData extends AbstractStatefulData<ValueMap> {
         return ValueMapState
                 .builder()
                 .handle(getHandle().getId())
-                .typeHandle(getTypeHandle().getId())
+                .typeId(getType().getName())
                 .values(getData()
                         .values()
                         .stream()

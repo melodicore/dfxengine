@@ -7,6 +7,7 @@ import me.datafox.dfxengine.entities.api.definition.*;
 import me.datafox.dfxengine.entities.api.state.EngineState;
 import me.datafox.dfxengine.entities.api.state.EntityState;
 import me.datafox.dfxengine.entities.state.EngineStateImpl;
+import me.datafox.dfxengine.entities.utils.EntityDataTypes;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
 import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
@@ -43,7 +44,7 @@ public class EngineImpl implements Engine {
     boolean linked;
 
     @Inject
-    public EngineImpl(Logger logger, Injector injector, EntityHandles ignored) {
+    public EngineImpl(Logger logger, Injector injector, EntityHandles ignored, EntityDataTypes ignored1) {
         this.logger = logger;
         this.injector = injector;
         entities = new HashHandleMap<>(EntityHandles.getEntities());

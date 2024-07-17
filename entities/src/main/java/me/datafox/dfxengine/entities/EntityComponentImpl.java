@@ -7,13 +7,15 @@ import me.datafox.dfxengine.entities.api.state.ComponentState;
 import me.datafox.dfxengine.entities.api.state.DataState;
 import me.datafox.dfxengine.entities.definition.ComponentDefinitionImpl;
 import me.datafox.dfxengine.entities.state.ComponentStateImpl;
+import me.datafox.dfxengine.entities.utils.EntityDataTypes;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
 import me.datafox.dfxengine.handles.HashHandleMap;
-import me.datafox.dfxengine.handles.TreeHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleMap;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -24,7 +26,7 @@ public class EntityComponentImpl implements EntityComponent {
     private final Handle handle;
     private final ComponentDefinitionImpl definition;
     private final Engine engine;
-    private final HandleMap<HandleMap<EntityData<?>>> data;
+    private final Map<Class<?>, HandleMap<EntityData<?>>> data;
     private final HandleMap<EntityLink> links;
     private final HandleMap<EntityAction> actions;
 
@@ -33,7 +35,7 @@ public class EntityComponentImpl implements EntityComponent {
         handle = EntityHandles.getComponents().getOrCreateHandle(definition.getHandle());
         this.definition = definition;
         this.engine = engine;
-        data = new TreeHandleMap<>(EntityHandles.getTypes());
+        data = new HashMap<>();
         links = new HashHandleMap<>(EntityHandles.getLinks());
         actions = new HashHandleMap<>(EntityHandles.getActions());
         definition.getData().stream().map(d -> d.build(engine)).forEach(this::putData);
@@ -41,9 +43,10 @@ public class EntityComponentImpl implements EntityComponent {
         definition.getActions().stream().map(a -> a.build(engine)).forEach(actions::putHandled);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public HandleMap<HandleMap<EntityData<?>>> getData() {
-        return data.unmodifiable();
+    public <T> HandleMap<EntityData<T>> getData(Class<T> type) {
+        return ((HandleMap<EntityData<T>>) (HandleMap<?>) data.get(type)).unmodifiable();
     }
 
     @Override
@@ -91,18 +94,18 @@ public class EntityComponentImpl implements EntityComponent {
     }
 
     private void putData(EntityData<?> entityData) {
-        if(!data.containsValue(entityData.getTypeHandle())) {
-            data.put(entityData.getTypeHandle(), new HashHandleMap<>(EntityHandles.getData()));
+        if(!data.containsValue(entityData.getType())) {
+            data.put(entityData.getType(), new HashHandleMap<>(EntityHandles.getData()));
         }
-        data.get(entityData.getTypeHandle()).putHandled(entityData);
+        data.get(entityData.getType()).putHandled(entityData);
     }
 
     private void setDataState(DataState state) {
-        if(!data.containsKey(state.getTypeHandle())) {
+        if(!data.containsKey(EntityDataTypes.getType(state.getTypeId()))) {
             engine.getLogger().warn(String.format("State contains unknown data type %s", state.getHandle()));
             return;
         }
-        HandleMap<EntityData<?>> map = data.get(state.getTypeHandle());
+        HandleMap<EntityData<?>> map = data.get(EntityDataTypes.getType(state.getTypeId()));
         if(!map.containsKey(state.getHandle())) {
             engine.getLogger().warn(String.format("State contains unknown data value %s", state.getHandle()));
             return;

@@ -23,8 +23,6 @@ public class EntityHandles {
     @Getter
     private static Space components;
     @Getter
-    private static Space types;
-    @Getter
     private static Space data;
     @Getter
     private static Space links;
@@ -32,16 +30,9 @@ public class EntityHandles {
     private static Space actions;
 
     @Getter
-    private static Handle valueType;
-    @Getter
-    private static Handle immutableValueType;
-    @Getter
-    private static Handle valueMapType;
-    @Getter
-    private static Handle immutableValueMapType;
-
-    @Getter
     private static Handle singleTag;
+    @Getter
+    private static Handle immutableTag;
 
     @Inject
     public EntityHandles(HandleManager handleManager) {
@@ -49,17 +40,12 @@ public class EntityHandles {
 
         entities = handleManager.getOrCreateSpace("entities");
         components = handleManager.getOrCreateSpace("components");
-        types = handleManager.getOrCreateSpace("types");
         data = handleManager.getOrCreateSpace("data");
         links = handleManager.getOrCreateSpace("links");
         actions = handleManager.getOrCreateSpace("actions");
 
-        valueType = types.getOrCreateHandle("value");
-        immutableValueType = types.getOrCreateHandle("immutableValue");
-        valueMapType = types.getOrCreateHandle("valueMap");
-        immutableValueMapType = types.getOrCreateHandle("immutableValueMap");
-
         singleTag = handleManager.getTagSpace().getOrCreateHandle("singleEntity");
+        immutableTag = handleManager.getTagSpace().getOrCreateHandle("immutableData");
     }
 
     public static void setSpace(SpaceDefinition definition) {
@@ -68,14 +54,14 @@ public class EntityHandles {
         definition.getHandles().forEach(handle -> EntityHandles.setHandle(space, handle));
     }
 
+    public static void clear() {
+        handleManager.getSpaces().values().forEach(EntityHandles::clearSpace);
+    }
+
     private static void setHandle(Space space, HandleDefinition definition) {
         Handle handle = space.getOrCreateHandle(definition.getId());
         definition.getGroups().stream().map(space::getOrCreateGroup).forEach(group -> group.getHandles().add(handle));
         definition.getTags().forEach(handle.getTags()::add);
-    }
-
-    public static void clear() {
-        handleManager.getSpaces().values().forEach(EntityHandles::clearSpace);
     }
 
     private static void clearSpace(Space space) {

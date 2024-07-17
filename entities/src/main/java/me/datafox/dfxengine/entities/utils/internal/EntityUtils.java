@@ -5,6 +5,7 @@ import me.datafox.dfxengine.entities.api.EntityComponent;
 import me.datafox.dfxengine.entities.api.EntityData;
 import me.datafox.dfxengine.entities.api.Reference;
 import me.datafox.dfxengine.entities.data.ValueDto;
+import me.datafox.dfxengine.entities.utils.EntityDataTypes;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleMap;
 import me.datafox.dfxengine.handles.api.Space;
@@ -50,14 +51,14 @@ public class EntityUtils {
         return getNumeral(value.getValueType(), value.getValue());
     }
 
+    @SuppressWarnings("unchecked")
     public static Stream<EntityData<?>> flatMapEntityData(Engine engine,
-                                                      Reference<EntityComponent> component,
-                                                      String type,
-                                                      Function<HandleMap<EntityData<?>>,Stream<EntityData<?>>> mapper) {
+                                                          Reference<EntityComponent> component,
+                                                          String typeId,
+                                                          Function<HandleMap<EntityData<?>>,Stream<EntityData<?>>> mapper) {
         return component
                 .get(engine)
-                .map(EntityComponent::getData)
-                .map(map -> map.get(type))
+                .map(c -> (HandleMap<EntityData<?>>) (HandleMap<?>) c.getData(EntityDataTypes.getType(typeId)))
                 .filter(Objects::nonNull)
                 .flatMap(mapper);
     }

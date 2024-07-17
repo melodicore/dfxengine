@@ -1,6 +1,5 @@
 package me.datafox.dfxengine.entities.reference;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,6 @@ import java.util.stream.Stream;
  */
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class SelfComponentReference implements Reference<EntityComponent> {
     @Override

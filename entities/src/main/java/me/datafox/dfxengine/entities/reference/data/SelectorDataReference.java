@@ -22,14 +22,14 @@ public abstract class SelectorDataReference<T> implements Reference<T> {
     public Stream<T> get(Engine engine) {
         return EntityUtils.flatMapEntityData(engine,
                         getComponent(),
-                        getTypeHandle(),
+                        getTypeId(),
                         map -> getSelector().select(map, engine))
                 .map(d -> (T) d.getData());
     }
 
     protected abstract Reference<EntityComponent> getComponent();
 
-    protected abstract String getTypeHandle();
+    protected abstract String getTypeId();
 
     protected abstract Selector getSelector();
 }
