@@ -157,9 +157,12 @@ public class InjectorTest {
     public void initializeTest() {
         var injector = assertDoesNotThrow(() -> injector(ComponentWithInitialize.class));
 
-        var l = assertDoesNotThrow(() -> injector.getComponent(ComponentWithInitialize.class).getList());
+        var l = assertDoesNotThrow(() -> injector.getComponents(ComponentWithInitialize.class));
+        var l1 = l.get(0).getList();
+        var l2 = l.get(1).getList();
 
-        assertEquals(List.of("first", "second", "third"), l);
+        assertEquals(List.of("first", "second", "third"), l1);
+        assertEquals(List.of(), l2);
         assertEquals("success", ComponentWithStaticInitialize.getStr());
     }
 
