@@ -128,4 +128,14 @@ public class ClassReference<T> {
                 .type(Object.class)
                 .build();
     }
+
+    /**
+     * @return class reference for {@link Object}
+     */
+    public static ClassReference<Void> voidType() {
+        return ClassReference.<Void>builder()
+                .type(Void.class)
+                .superclass(object())
+                .build();
+    }
 }

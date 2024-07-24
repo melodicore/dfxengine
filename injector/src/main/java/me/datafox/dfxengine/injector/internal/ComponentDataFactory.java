@@ -51,6 +51,7 @@ public class ComponentDataFactory {
      */
     public <T> ComponentData<T> buildComponentData(MethodInfo info) {
         Component annotation = null;
+        boolean voidType = false;
         ComponentData.ComponentDataBuilder<T> builder = ComponentData.builder();
         if(info.isConstructor()) {
             //Create class component
@@ -96,9 +97,14 @@ public class ComponentDataFactory {
         } else {
             //Create method component
             String classString = parseMethod(info);
-            logger.debug(InjectorStrings.buildingComponentMethodData(classString, info));
-            builder.reference(buildClassReferenceEntry(classString))
-                    .executable(info.loadClassAndGetMethod());
+            if("void".equals(classString)) {
+                logger.debug(InjectorStrings.buildingVoidComponentData(info));
+                voidType = true;
+            } else {
+                logger.debug(InjectorStrings.buildingComponentMethodData(classString, info));
+                builder.reference(buildClassReferenceEntry(classString));
+            }
+            builder.executable(info.loadClassAndGetMethod());
             if(!info.isStatic()) {
                 builder.owner(buildClassReferenceEntry(parseClass(info.getClassInfo())));
             }
@@ -108,6 +114,9 @@ public class ComponentDataFactory {
         }
         if(annotation != null) {
             builder.policy(annotation.value()).order(annotation.order());
+            if(voidType && annotation.value().equals(InstantiationPolicy.PER_INSTANCE)) {
+                logger.warn(InjectorStrings.perInstanceVoidComponent(info));
+            }
         } else {
             builder.policy(InstantiationPolicy.ONCE).order(0);
         }

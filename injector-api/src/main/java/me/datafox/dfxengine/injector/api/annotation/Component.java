@@ -17,6 +17,11 @@ import java.util.List;
  * that are injected right after instantiation. Likewise, a component method may have other dependencies as parameters.
  * </p>
  * <p>
+ * If a method is annotated as a component but is {@code void}, the method will be invoked after all other invocations
+ * (including {@link Initialize} methods) and all of its parameters are treated as dependencies like normal. This is
+ * useful when you need to validate other components in ways that are not covered by the Injector itself.
+ * </p>
+ * <p>
  * {@link #value()} determines how the component is instantiated. {@link InstantiationPolicy#ONCE} creates a singleton
  * instance of the component class at build time, while {@link InstantiationPolicy#PER_INSTANCE} instantiates a new
  * instance of the component class for every component that depends on it.

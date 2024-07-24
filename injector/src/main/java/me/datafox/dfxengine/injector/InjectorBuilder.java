@@ -395,6 +395,7 @@ public class InjectorBuilder {
             if(component.getOwner() != null) {
                 List<ComponentData<?>> owners = components
                         .stream()
+                        .filter(data -> data.getReference() != null)
                         .filter(data -> component.getOwner().equals(data.getReference()))
                         .collect(Collectors.toList());
                 component.getDependencies().add(owners);
@@ -412,6 +413,7 @@ public class InjectorBuilder {
     private List<ComponentData<?>> parseDependency(ClassReference<?> classReference, List<ComponentData<?>> components) {
         return components
                 .stream()
+                .filter(data -> data.getReference() != null)
                 .filter(data -> classReference.isAssignableFrom(data.getReference().getActualReference()))
                 .collect(Collectors.toList());
     }

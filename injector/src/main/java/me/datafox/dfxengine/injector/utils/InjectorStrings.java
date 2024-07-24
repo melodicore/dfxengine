@@ -57,7 +57,10 @@ public class InjectorStrings {
             "Class %s has no default constructor or a constructor annotated with @Inject and cannot be instantiated";
     private static final String BUILDING_COMPONENT_CLASS_DATA =
             "Building component data for class %s using constructor %s";
+    private static final String BUILDING_VOID_COMPONENT_DATA = "Building void component data using method %s";
     private static final String BUILDING_COMPONENT_METHOD_DATA = "Building component data for class %s using method %s";
+    private static final String PER_INSTANCE_VOID_COMPONENT =
+            "Void component method %s has InstantiationPolicy.PER_INSTANCE, but void methods are only invoked once";
     private static final String FINAL_FIELD_DEPENDENCY =
             "Field %s in class %s is annotated with @Inject but is final, only non-final fields can be injected";
     private static final String UNKNOWN_TYPE =
@@ -204,8 +207,16 @@ public class InjectorStrings {
         return String.format(BUILDING_COMPONENT_CLASS_DATA, classString, getMethodParameterString(constructor));
     }
 
+    public static String buildingVoidComponentData(MethodInfo method) {
+        return String.format(BUILDING_VOID_COMPONENT_DATA, getMethodParameterString(method));
+    }
+
     public static String buildingComponentMethodData(String classString, MethodInfo method) {
         return String.format(BUILDING_COMPONENT_METHOD_DATA, classString, getMethodParameterString(method));
+    }
+
+    public static String perInstanceVoidComponent(MethodInfo method) {
+        return String.format(PER_INSTANCE_VOID_COMPONENT, getMethodParameterString(method));
     }
 
     public static String noDependenciesRuntime(ClassReference<?> reference) {
@@ -281,7 +292,13 @@ public class InjectorStrings {
         if(component.getExecutable() instanceof Constructor) {
             return component.getReference().getSignature();
         }
-        return component.getReference().getSignature() +
+        String signature;
+        if(component.getReference() == null) {
+            signature = "void";
+        } else {
+            signature = component.getReference().getSignature();
+        }
+        return signature +
                 " " + component.getExecutable().getDeclaringClass().getName() +
                 "." + component.getExecutable().getName() +
                 "(" + component

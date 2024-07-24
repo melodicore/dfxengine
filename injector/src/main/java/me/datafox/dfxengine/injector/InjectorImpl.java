@@ -80,20 +80,32 @@ public class InjectorImpl implements Injector {
 
     private final List<PrioritizedRunnable> initializerQueue;
 
+    private final List<ComponentData<?>> voidComponentQueue;
+
     InjectorImpl(Stream<ComponentData<?>> components) {
         instance = this;
         logger = LoggerFactory.getLogger(InjectorImpl.class);
         componentList = new ArrayList<>();
         initializerQueue = new ArrayList<>();
+        voidComponentQueue = new ArrayList<>();
         components.peek(this::instantiateOnce)
                 .sorted(Comparator.comparingInt(ComponentData::getOrder))
                 .forEach(componentList::add);
         runAndClearInitializers();
+        runAndClearVoidComponents();
     }
 
     private void runAndClearInitializers() {
         initializerQueue.stream().sorted().forEach(Runnable::run);
         initializerQueue.clear();
+    }
+
+    private void runAndClearVoidComponents() {
+        voidComponentQueue
+                .stream()
+                .sorted(Comparator.comparingInt(ComponentData::getOrder))
+                .forEach(this::invokeVoid);
+        voidComponentQueue.clear();
     }
 
     /**
@@ -271,6 +283,10 @@ public class InjectorImpl implements Injector {
         if(!data.getPolicy().equals(InstantiationPolicy.ONCE)) {
             return;
         }
+        if(data.getReference() == null) {
+            voidComponentQueue.add(data);
+            return;
+        }
         List<ClassReference<?>> referenceStack = new ArrayList<>();
         data.setObjects(instantiate(data, referenceStack));
     }
@@ -325,6 +341,37 @@ public class InjectorImpl implements Injector {
                                 .build())).collect(Collectors.toList()));
         requesting.remove(requesting.size() - 1);
         return list;
+    }
+
+    private void invokeVoid(ComponentData<?> data) {
+        Object[] parameters = new Object[0];
+        List<ClassReference<?>> requesting = new ArrayList<>();
+        ClassReference<Void> voidReference = ClassReference.voidType();
+        requesting.add(voidReference);
+        if(!data.getParameters().isEmpty()) {
+            parameters = data
+                    .getParameters()
+                    .stream()
+                    .map(reference -> getParameter(reference,
+                            voidReference,
+                            requesting,
+                            data.getDependencies()))
+                    .toArray(Object[]::new);
+        }
+        try {
+            data.getExecutable().setAccessible(true);
+            Method method = ((Method) data.getExecutable());
+            Object owner = null;
+            if(data.getOwner() != null) {
+                owner = getParameter(data.getOwner(),
+                        voidReference,
+                        requesting,
+                        data.getDependencies());
+            }
+            method.invoke(owner, parameters);
+        } catch(InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private <T> void initialize(InitializeReference<?> init, T object, List<ClassReference<?>> requesting) {

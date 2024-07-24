@@ -39,6 +39,7 @@ import me.datafox.dfxengine.injector.test.classes.pass.per_instance.PerInstanceC
 import me.datafox.dfxengine.injector.test.classes.pass.per_instance.RequestingComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.primitive.PrimitiveComponentMethod;
 import me.datafox.dfxengine.injector.test.classes.pass.primitive.PrimitiveDependencyComponent;
+import me.datafox.dfxengine.injector.test.classes.pass.void_component.VoidComponentMethod;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Array;
@@ -198,6 +199,11 @@ public class InjectorTest {
 
         assertNotNull(c1);
         assertEquals(c1, c2.getComponent());
+    }
+
+    @Test
+    public void voidComponentTest() {
+        var injector = assertDoesNotThrow(() -> injector(VoidComponentMethod.class));
     }
 
     @Test
