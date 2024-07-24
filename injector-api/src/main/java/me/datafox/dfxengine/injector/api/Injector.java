@@ -6,6 +6,9 @@ import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchExcepti
 import java.util.List;
 
 /**
+ * An interface for a dependency injector. For general information, see
+ * <a href="https://github.com/melodicore/dfxengine/blob/master/injector/README.md">README.md</a> on GitHub.
+ *
  * @author datafox
  */
 public interface Injector {
