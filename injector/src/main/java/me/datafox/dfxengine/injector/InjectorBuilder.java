@@ -29,18 +29,11 @@ import static me.datafox.dfxengine.injector.utils.InjectorStrings.*;
  * @author datafox
  */
 public class InjectorBuilder {
-    private static final ScanResult scan;
-
-    static {
-        scan = new ClassGraph().enableAllInfo().enableSystemJarsAndModules().scan();
-    }
-
     private final Logger logger;
     private final List<String> packageWhitelist;
     private final List<String> packageBlacklist;
     private final List<String> classWhitelist;
     private final List<String> classBlacklist;
-    private boolean closeScan;
 
     /**
      * Constructor for the builder
@@ -51,7 +44,6 @@ public class InjectorBuilder {
         packageBlacklist = new ArrayList<>();
         classWhitelist = new ArrayList<>();
         classBlacklist = new ArrayList<>();
-        closeScan = true;
     }
 
     /**
@@ -143,28 +135,14 @@ public class InjectorBuilder {
     }
 
     /**
-     * If {@code close} is set to {@code false}, {@link ScanResult#close()} will never be called on the static
-     * {@link ScanResult} instance. This is not recommended, and the only purpose for this option is to allow multiple
-     * {@link InjectorImpl} instances to be built within the same process during testing.
-     *
-     * @param close {@code false} if {@link ScanResult#close()} should not be called
-     * @return builder
-     */
-    public InjectorBuilder closeScan(boolean close) {
-        if(!close) {
-            logger.warn(NOT_CLOSING_SCAN);
-        }
-        closeScan = close;
-        return this;
-    }
-
-    /**
      * Builds the {@link InjectorImpl} according to the scan done at compile time.
      *
      * @return the {@link InjectorImpl}
      */
     public InjectorImpl build() {
         logger.info(SCANNING_CLASSPATH);
+        ScanResult scan = new ClassGraph().enableAllInfo().enableSystemJarsAndModules().scan();
+
         checkAndLogWhitelistAndBlacklist();
 
         ClassInfoList componentClasses = scan
@@ -234,11 +212,9 @@ public class InjectorBuilder {
                 .map(factory::buildComponentData)
                 .collect(Collectors.toList());
 
-        logComponents(components);
+        scan.close();
 
-        if(closeScan) {
-            scan.close();
-        }
+        logComponents(components);
 
         parseDependencies(components);
 

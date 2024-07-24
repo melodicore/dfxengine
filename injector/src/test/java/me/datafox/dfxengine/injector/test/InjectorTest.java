@@ -58,14 +58,12 @@ public class InjectorTest {
     private static InjectorImpl emptyInjector() {
         return new InjectorBuilder()
                 .whitelistPackage("me.datafox.dfxengine.injector.test.classes.empty")
-                .closeScan(false)
                 .build();
     }
 
     private static InjectorImpl injector(Class<?> classFromPackageToWhitelist) {
         return new InjectorBuilder()
                 .whitelistPackageRegex(Pattern.quote(classFromPackageToWhitelist.getPackageName()) + ".*")
-                .closeScan(false)
                 .build();
     }
 
