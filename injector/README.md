@@ -11,8 +11,8 @@ this would happen.
 2. If a class contains a non-static method annotated with `@Component`, it is a valid dependency.
 3. If a class is the declared return type of a method annotated with `@Component`, it is a valid dependency.
 
-`@Inject` annotations on constructors are recognised in cases 1 and 2, while `@Inject` annotations on fields and
-`@Initialize` annotations on methods are recognised in all three.
+`@Inject` annotations on constructors and fields, and `@Initialize` annotations on methods are recognised in cases 1 
+and 2.
 
 When resolving dependencies, any component that's type is assignable to the dependency's declared type is considered
 a valid dependency. This includes all type parameters. So for example, declaring a dependency as 
@@ -34,22 +34,20 @@ a dependency.
 
 ### Preset dependencies
 
-The injector module currently declares two preset components to be used as dependencies.
+The injector module currently declares three preset components to be used as dependencies.
 
 * [`Injector`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/Injector.java) can be used to request any 
 arbitrary component or components during runtime by using the `getComponent(...)` and `getComponents(...)` methods.
 * `Logger` (`org.slf4j.Logger`) can be used to request a slf4j logger. It has the `PER_INSTANCE` instantiation policy 
-and uses the requesting class parameter of `InstantiationDetails` as a parameter to `LoggerFactory.getLogger()` 
-internally to get the appropriate logger.
-
-### Arrays
-
-Arrays are allowed as components. Internally, references to primitive arrays are stored as is, but references to object 
-arrays are not stored as `Object[].class` or equivalent, but instead as `java.lang.reflect.Array.class` with the 
-object's class as a parameter. So if you are requesting components manually:
-
-* Do: `Injector.getComponent(Array.class, String.class)`
-* Do not: `Injector.getComponent(String[].class)`
+and uses the requesting component's signature from `InstantiationDetails` as a parameter to `LoggerFactory.getLogger()` 
+internally to get the appropriate logger, the method of which can be selected with `LoggerType`.
+* [`LoggerType`](src/main/java/me/datafox/dfxengine/injector/InjectorImpl.java) is an enum with three possible values 
+that determine how the `Logger` name is resolved.
+  * `CLASSIC` is the normal way of using the requesting component's `Class` as a parameter for
+  `LoggerFactory.getLogger()`.
+  * `PARAMETERS` includes type parameters in the logger name, but stripping their package prefixes for more concise 
+  output. This is the default option if no `LoggerType` component is declared by the user.
+  * `FULL_PARAMETERS` is the same as `PARAMETERS` but does not strip the package prefixes.
 
 ## Annotations
 
@@ -62,18 +60,26 @@ invoked. In both cases, all parameters of the constructor/method will be treated
 is not static, its declaring class will be treated as if it was also annotated as a component and will be subject to all
 the same rules.
 
+If a method annotated as component is `void`, the method will be treated as a special void component. Void components
+are invoked once after everything else is invoked, including methods annotated with `@Initialize`. This is useful when 
+you need to validate other components in ways that are not covered by the Injector itself.
+
 If a component method's declared return type is `List`, the list's type parameter will be used as the component's type 
 instead and the method will effectively return multiple components. The method must declare List specifically, any 
 extending interfaces or implementing classes will be treated as regular dependencies.
 
-The `@Component` annotation has two parameters. The value parameter determines the 
+The `@Component` annotation has two parameters. 
+* The value parameter determines the 
 [`InstantiationPolicy`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/InstantiationPolicy.java). The
 default value is `ONCE`, which means that the component will be instantiated at build time and the instance will be used
 for all components that depend on it. If the value is set to `PER_INSTANCE`, the component will instead be instantiated
-for every component that depends on it. The second parameter is `order`, an integer normally set to `0`. It determines 
-the order of components in a list when multiple components are requested. It also prioritises components when a single 
-component is requested and multiple components are present, where lower value means higher priority. An exception is 
-thrown when a single component is requested but multiple components have the same lowest value for `order`.
+for every component that depends on it. `PER_INSTANCE` has no effect on void components, and a warning will be logged if
+void components with `PER_INSTANCE` exist.
+* The second parameter is `order`, an integer normally set to `0`. It determines the order of components in a list when 
+multiple components are requested. It also prioritises components when a single component is requested and multiple 
+components are present, where lower value means higher priority. An exception is only thrown when a single component is 
+requested but multiple components have the same lowest value for `order`. On void components, `order` determines the
+invocation order.
 
 ### [`@Inject`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/annotation/Inject.java)
 
@@ -90,7 +96,7 @@ Any non-final field annotated with `@Inject` on a class annotated with, containi
 right after the component in question is instantiated. This includes the declaring classes of non-static component 
 methods. If an injectable field is present that is final, an exception is thrown.
 
-`@Inject` annotations on classes that are not components or otherwise instantiated by the Injector are ignored.
+`@Inject` annotations on classes that are not components or contain non-static component methods are ignored.
 
 ### [`@Initialize`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/annotation/Initialize.java)
 

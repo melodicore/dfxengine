@@ -178,21 +178,21 @@ public class InjectorStrings {
 
     public static String nonComponentClassWithInjectConstructor(MethodInfo constructor) {
         return String.format(NON_COMPONENT_CLASS_WITH_INJECT_CONSTRUCTOR,
-                constructor.getClassInfo().getName(), getMethodParameterString(constructor));
+                getName(constructor.getClassInfo()), getMethodParameterString(constructor));
     }
 
     public static String nonComponentClassWithInjectField(FieldInfo field) {
         return String.format(NON_COMPONENT_CLASS_WITH_INJECT_FIELD,
-                field.getClassInfo().getName(), getFieldParameterString(field));
+                getName(field.getClassInfo()), getFieldParameterString(field));
     }
 
     public static String nonComponentClassWithInitializeMethod(MethodInfo method) {
         return String.format(NON_COMPONENT_CLASS_WITH_INITIALIZE_METHOD,
-                method.getClassInfo().getName(), getMethodParameterString(method));
+                getName(method.getClassInfo()), getMethodParameterString(method));
     }
 
     public static String multipleConstructors(ClassInfo info, MethodInfoList constructors) {
-        return String.format(MULTIPLE_CONSTRUCTORS, info.getName(),
+        return String.format(MULTIPLE_CONSTRUCTORS, getName(info),
                 StringUtils.joining(constructors
                         .stream()
                         .map(InjectorStrings::getMethodParameterString)
@@ -200,7 +200,7 @@ public class InjectorStrings {
     }
 
     public static String noConstructor(ClassInfo info) {
-        return String.format(NO_CONSTRUCTOR, info.getName());
+        return String.format(NO_CONSTRUCTOR, getName(info));
     }
 
     public static String buildingComponentClassData(String classString, MethodInfo constructor) {
@@ -228,7 +228,7 @@ public class InjectorStrings {
     }
 
     public static String finalFieldDependency(FieldInfo field) {
-        return String.format(FINAL_FIELD_DEPENDENCY, getFieldParameterString(field), field.getClassInfo().getName());
+        return String.format(FINAL_FIELD_DEPENDENCY, getFieldParameterString(field), getName(field.getClassInfo()));
     }
 
     public static String unknownType(String classString) {
@@ -261,7 +261,7 @@ public class InjectorStrings {
     private static String forClassInfoList(String str, ClassInfoList classes) {
         return String.format(str, StringUtils.joining(classes
                         .stream()
-                        .map(ClassInfo::getName)
+                        .map(InjectorStrings::getName)
                         .collect(Collectors.toList()),
                 ", ", " and "));
     }
@@ -299,7 +299,7 @@ public class InjectorStrings {
             signature = component.getReference().getSignature();
         }
         return signature +
-                " " + component.getExecutable().getDeclaringClass().getName() +
+                " " + getName(component.getExecutable().getDeclaringClass()) +
                 "." + component.getExecutable().getName() +
                 "(" + component
                         .getParameters()
@@ -313,5 +313,19 @@ public class InjectorStrings {
         return field.getTypeSignatureOrTypeDescriptor() +
                 " " +
                 field.getName();
+    }
+
+    private static String getName(ClassInfo info) {
+        if(info.isArrayClass()) {
+            return getName(info.loadClass());
+        }
+        return info.getName();
+    }
+
+    private static String getName(Class<?> type) {
+        if(type.isArray()) {
+            return type.arrayType().getName() + "[]";
+        }
+         return type.getName();
     }
 }

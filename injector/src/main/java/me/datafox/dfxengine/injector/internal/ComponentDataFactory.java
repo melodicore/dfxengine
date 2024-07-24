@@ -315,10 +315,13 @@ public class ComponentDataFactory {
                     .build();
         }
         if(classInfoMap.containsKey(str)) {
+            ClassReference<?> ref = buildClassReference(parseClass(classInfoMap.get(str)));
             return ClassReference
                     .<T>builder()
-                    .type((Class<T>) Array.class)
-                    .parameter(buildClassReference(parseClass(classInfoMap.get(str))))
+                    .type((Class<T>) Array.newInstance(ref.getType(), 0).getClass())
+                    .parameters(ref.getParameters())
+                    .superclass((ClassReference<? super T>) ref.getSuperclass())
+                    .interfaces((Collection<? extends ClassReference<? super T>>) (Collection<?>) ref.getInterfaces())
                     .build();
         }
         throw LogUtils.logExceptionAndGet(logger,

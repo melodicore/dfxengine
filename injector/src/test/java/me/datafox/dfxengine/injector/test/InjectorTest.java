@@ -42,7 +42,6 @@ import me.datafox.dfxengine.injector.test.classes.pass.primitive.PrimitiveDepend
 import me.datafox.dfxengine.injector.test.classes.pass.void_component.VoidComponentMethod;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -169,7 +168,7 @@ public class InjectorTest {
         var injector = assertDoesNotThrow(() -> injector(Parametric2.class));
 
         var c1 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric2.class, int[].class)));
-        var c2 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric2.class, TypeRef.of(Array.class, NonComponent3.class))));
+        var c2 = assertDoesNotThrow(() -> injector.getComponent(TypeRef.of(Parametric2.class, NonComponent3[].class)));
 
         assertNotNull(c1);
         assertNotNull(c2);
@@ -214,7 +213,7 @@ public class InjectorTest {
     public void arrayTest() {
         var injector = injector(PrimitiveArrayMethodComponent.class);
 
-        String[] sarray = (String[]) injector.getComponent(TypeRef.of(Array.class, String.class).uncast());
+        String[] sarray = injector.getComponent(String[].class);
         int[] iarray = injector.getComponent(TypeRef.of(int[].class));
         assertSame(sarray, injector.getComponent(ConstructorArrayComponent.class).getSarray());
         assertSame(iarray, injector.getComponent(ConstructorArrayComponent.class).getIarray());
