@@ -1,8 +1,8 @@
 package me.datafox.dfxengine.values.api;
 
-import me.datafox.dfxengine.dependencies.Dependency;
-import me.datafox.dfxengine.dependencies.DependencyDependent;
 import me.datafox.dfxengine.dependencies.Dependent;
+import me.datafox.dfxengine.dependencies.DependencyDependent;
+import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.math.api.Numeral;
@@ -40,7 +40,7 @@ import java.util.Collection;
  *
  * @author datafox
  */
-public interface Value extends Dependency, Dependent, Handled {
+public interface Value extends Dependent, Dependency, Handled {
     /**
      * @return {@link Handle} associated with this value, or {@code null} if this value is static
      */

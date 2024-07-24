@@ -20,7 +20,7 @@ version in square brackets is the current version in the repository.
 
 | Module                       | Status                | Description                                         |
 |------------------------------|-----------------------|-----------------------------------------------------|
-| [Dependencies](dependencies) | Done (1.0.4)          | Data structure dependencies and invalidation        |
+| [Dependencies](dependencies) | Done (1.0.4) \[1.0.5] | Data structure dependencies and invalidation        |
 | [Handles API](handles-api)   | Done (2.0.1) \[2.0.2] | Interfaces for the Handles module                   |
 | [Handles](handles)           | Done (2.0.1) \[2.0.2] | Dynamic enum-like structures for map keys           |
 | [Injector API](injector-api) | Done (2.0.1) \[2.1.0] | Annotations for the Injector module                 |
@@ -30,8 +30,8 @@ version in square brackets is the current version in the repository.
 | [Text API](text-api)         | Done (1.0.1)          | Interfaces for the Text module                      |
 | [Text](text)                 | Done (1.0.1)          | Text handling and representation                    |
 | [Utils](utils)<sup>1</sup>   | Done (1.0.2)          | Utilities used by other modules                     |
-| [Values API](values-api)     | Done (1.1.1)          | Interfaces for the Values module                    |
-| [Values](values)             | Done (1.1.1)          | Mutable number values and a dynamic modifier system |
+| [Values API](values-api)     | Done (1.1.1) \[1.1.2] | Interfaces for the Values module                    |
+| [Values](values)             | Done (1.1.1) \[1.1.2] | Mutable number values and a dynamic modifier system |
 | [Entities API](entities-api) | Under construction    | Interfaces for the Entities module                  |
 | [Entities](entities)         | Under construction    | Data-oriented entity system                         |
 | [Collections](collections)   | Deprecated (1.0.2)    | Collections for other modules and general usage     |

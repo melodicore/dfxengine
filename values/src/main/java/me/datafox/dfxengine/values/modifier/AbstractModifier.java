@@ -1,7 +1,7 @@
 package me.datafox.dfxengine.values.modifier;
 
 import lombok.Getter;
-import me.datafox.dfxengine.dependencies.Dependency;
+import me.datafox.dfxengine.dependencies.Dependent;
 import me.datafox.dfxengine.dependencies.DependencyDependent;
 import me.datafox.dfxengine.values.api.Modifier;
 import me.datafox.dfxengine.values.api.Value;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 /**
- * An abstract implementation of {@link Modifier}. Adds itself as a {@link Dependency} to parameter {@link Value Values}
+ * An abstract implementation of {@link Modifier}. Adds itself as a {@link Dependent} to parameter {@link Value Values}
  * on instantiation.
  *
  * @author datafox
@@ -36,13 +36,13 @@ public abstract class AbstractModifier extends DependencyDependent implements Mo
 
         Arrays.stream(parameters)
                 .filter(Predicate.not(Value::isStatic))
-                .forEach(val -> val.addDependency(this));
+                .forEach(val -> val.addDependent(this));
     }
 
     /**
-     * This method should be treated as the equivalent of {@link Dependency#invalidate()} for classes extending
+     * This method should be treated as the equivalent of {@link Dependent#invalidate()} for classes extending
      * DependencyDependent. This exists to avoid the need for calling {@code super.invalidate()} or
-     * {@link #invalidateDependencies()} which may cause hidden or hard to find bugs when forgotten.
+     * {@link #invalidateDependents()} which may cause hidden or hard to find bugs when forgotten.
      */
     @Override
     protected void onInvalidate() {}

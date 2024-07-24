@@ -175,6 +175,7 @@ public class ValueTest {
         assertFalse(immutableFloatValue.convertIfAllowed(BIG_DEC));
     }
 
+    @Test
     public void toIntegerTest() {
         assertFalse(intValue.toInteger());
         assertEquals(intNumeral, intValue.getBase());
@@ -197,6 +198,7 @@ public class ValueTest {
         assertThrows(UnsupportedOperationException.class, immutableBigDecValue::toInteger);
     }
 
+    @Test
     public void toDecimalTest() {
         assertTrue(intValue.toDecimal());
         assertEquals(Numerals.of(99456.0f), intValue.getBase());
@@ -353,14 +355,14 @@ public class ValueTest {
         assertFalse(staticValue.removeModifiers(Set.of(sqrt, exp)));
         assertFalse(staticValue.containsModifier(sqrt));
         assertFalse(staticValue.containsModifiers(Set.of(sqrt, exp)));
-        assertFalse(staticValue.addDependency(sqrt));
-        assertFalse(staticValue.addDependencies(Set.of(sqrt, exp)));
-        assertFalse(staticValue.removeDependency(sqrt));
-        assertFalse(staticValue.removeDependencies(Set.of(sqrt, exp)));
-        assertFalse(staticValue.containsDependency(sqrt));
-        assertFalse(staticValue.containsDependencies(Set.of(sqrt, exp)));
-        assertFalse(staticValue.containsDependencyRecursive(sqrt));
-        assertFalse(staticValue.containsDependenciesRecursive(Set.of(sqrt, exp)));
+        assertFalse(staticValue.addDependent(sqrt));
+        assertFalse(staticValue.addDependents(Set.of(sqrt, exp)));
+        assertFalse(staticValue.removeDependent(sqrt));
+        assertFalse(staticValue.removeDependents(Set.of(sqrt, exp)));
+        assertFalse(staticValue.containsDependent(sqrt));
+        assertFalse(staticValue.containsDependents(Set.of(sqrt, exp)));
+        assertFalse(staticValue.containsDependentRecursive(sqrt));
+        assertFalse(staticValue.containsDependentsRecursive(Set.of(sqrt, exp)));
     }
 
     private static final class ToDoubleTestOperation implements Operation {

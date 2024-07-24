@@ -33,7 +33,7 @@ public class ModifierTest {
         OperationModifier lerp = new OperationModifier(2, Operations::lerp, Values.of(2), Values.of(-1));
         OperationModifier divide = new OperationModifier(3, new DivideTestOperation(), Values.of("7.5"));
         assertEquals(0, log2.getPriority());
-        assertEquals(0, log2.getDependencies().size());
+        assertEquals(0, log2.getDependents().size());
         assertEquals(Numerals.of(5.1234514e142d), doubleValue.getValue());
         assertTrue(doubleValue.addModifier(lerp));
         assertEquals(Numerals.of(-1.5370354199999998e143d), doubleValue.getValue());

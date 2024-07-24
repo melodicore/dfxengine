@@ -1,9 +1,9 @@
 package me.datafox.dfxengine.values;
 
 import lombok.EqualsAndHashCode;
-import me.datafox.dfxengine.dependencies.Dependency;
-import me.datafox.dfxengine.dependencies.DependencyDependent;
 import me.datafox.dfxengine.dependencies.Dependent;
+import me.datafox.dfxengine.dependencies.DependencyDependent;
+import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
@@ -28,7 +28,7 @@ import static me.datafox.dfxengine.values.utils.internal.ValuesStrings.IMMUTABLE
  * {@link #apply(Operation, MathContext, Numeral...)} and other {@code apply(...)} methods. Each value also contains a
  * value Numeral, which represents the base Numeral with all the Modifiers applied to it. This value is lazily
  * calculated when {@link #getValue()} is called, but only when the base Numeral or any of the Modifiers have changed.
- * These changes are tracked with {@link Dependency Dependencies} and {@link Dependent Dependents}.
+ * These changes are tracked with {@link Dependent Dependencies} and {@link Dependency Dependents}.
  *
  * @author datafox
  */
@@ -341,7 +341,7 @@ public class ValueImpl extends DependencyDependent implements Value {
     public boolean addModifier(Modifier modifier) {
         boolean changed = modifiers.add(modifier);
         if(changed) {
-            modifier.addDependency(this);
+            modifier.addDependent(this);
             invalidate();
         }
         return changed;
@@ -355,7 +355,7 @@ public class ValueImpl extends DependencyDependent implements Value {
     public boolean addModifiers(Collection<? extends Modifier> modifiers) {
         boolean changed = this.modifiers.addAll(modifiers);
         if(changed) {
-            modifiers.forEach(modifier -> modifier.addDependency(this));
+            modifiers.forEach(modifier -> modifier.addDependent(this));
             invalidate();
         }
         return changed;
@@ -369,7 +369,7 @@ public class ValueImpl extends DependencyDependent implements Value {
     public boolean removeModifier(Modifier modifier) {
         boolean changed = modifiers.remove(modifier);
         if(changed) {
-            modifier.removeDependency(this);
+            modifier.removeDependent(this);
             invalidate();
         }
         return changed;
@@ -383,7 +383,7 @@ public class ValueImpl extends DependencyDependent implements Value {
     public boolean removeModifiers(Collection<? extends Modifier> modifiers) {
         boolean changed = this.modifiers.removeAll(modifiers);
         if(changed) {
-            modifiers.forEach(modifier -> modifier.removeDependency(this));
+            modifiers.forEach(modifier -> modifier.removeDependent(this));
             invalidate();
         }
         return changed;

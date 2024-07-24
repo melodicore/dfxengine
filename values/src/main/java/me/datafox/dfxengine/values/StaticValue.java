@@ -1,7 +1,7 @@
 package me.datafox.dfxengine.values;
 
 import lombok.EqualsAndHashCode;
-import me.datafox.dfxengine.dependencies.Dependency;
+import me.datafox.dfxengine.dependencies.Dependent;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
@@ -323,7 +323,7 @@ public class StaticValue implements Value {
      * @return {@link Set#of()}
      */
     @Override
-    public Collection<Dependency> getDependencies() {
+    public Collection<Dependent> getDependents() {
         return Set.of();
     }
 
@@ -331,18 +331,18 @@ public class StaticValue implements Value {
      * Static values do not need to be invalidated.
      */
     @Override
-    public void invalidateDependencies() {
+    public void invalidateDependents() {
 
     }
 
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependency ignored parameter
+     * @param dependent ignored parameter
      * @return {@code false}
      */
     @Override
-    public boolean addDependency(Dependency dependency) {
+    public boolean addDependent(Dependent dependent) {
         return false;
     }
 
@@ -353,73 +353,73 @@ public class StaticValue implements Value {
      * @return {@code false}
      */
     @Override
-    public boolean addDependencies(Collection<? extends Dependency> dependencies) {
+    public boolean addDependents(Collection<? extends Dependent> dependencies) {
         return false;
     }
 
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependency ignored parameter
+     * @param dependent ignored parameter
      * @return {@code false}
      */
     @Override
-    public boolean removeDependency(Dependency dependency) {
+    public boolean removeDependent(Dependent dependent) {
         return false;
     }
 
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependencies ignored parameter
+     * @param dependents ignored parameter
      * @return {@code false}
      */
     @Override
-    public boolean removeDependencies(Collection<? extends Dependency> dependencies) {
+    public boolean removeDependents(Collection<? extends Dependent> dependents) {
         return false;
     }
 
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependency ignored parameter
+     * @param dependent ignored parameter
      * @return {@code false}
      */
     @Override
-    public boolean containsDependency(Dependency dependency) {
+    public boolean containsDependent(Dependent dependent) {
         return false;
     }
 
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependencies ignored parameter
+     * @param dependents ignored parameter
      * @return {@code false}
      */
     @Override
-    public boolean containsDependencies(Collection<? extends Dependency> dependencies) {
+    public boolean containsDependents(Collection<? extends Dependent> dependents) {
         return false;
     }
 
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependency ignored parameter
+     * @param dependent ignored parameter
      * @return {@code false}
      */
     @Override
-    public boolean containsDependencyRecursive(Dependency dependency) {
+    public boolean containsDependentRecursive(Dependent dependent) {
         return false;
     }
 
     /**
      * This implementation will always return {@code false}.
      *
-     * @param dependencies ignored parameter
+     * @param dependents ignored parameter
      * @return {@code false}
      */
     @Override
-    public boolean containsDependenciesRecursive(Collection<? extends Dependency> dependencies) {
+    public boolean containsDependentsRecursive(Collection<? extends Dependent> dependents) {
         return false;
     }
 
@@ -429,7 +429,7 @@ public class StaticValue implements Value {
      * @return {@link Stream#empty()}
      */
     @Override
-    public Stream<Dependency> dependencyStream() {
+    public Stream<Dependent> dependentStream() {
         return Stream.empty();
     }
 
@@ -439,7 +439,7 @@ public class StaticValue implements Value {
      * @return {@link Stream#empty()}
      */
     @Override
-    public Stream<Dependency> recursiveDependencyStream() {
+    public Stream<Dependent> recursiveDependentStream() {
         return Stream.empty();
     }
 

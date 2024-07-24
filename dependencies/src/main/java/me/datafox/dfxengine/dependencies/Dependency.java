@@ -1,26 +1,104 @@
 package me.datafox.dfxengine.dependencies;
 
+import java.util.Collection;
+import java.util.stream.Stream;
+
 /**
- * <p>
- * A simple dependency that can be invalidated. Invalidation should generally be only called by
- * {@link Dependent#invalidateDependencies()}. If a class that implements this interface also implements
- * {@link Dependent}, {@link #invalidate()} must call {@link Dependent#invalidateDependencies()} on itself.
- * </p>
- * <p>
- * In general a Dependency is implemented on any class that has a return value which is dependent on values of other
- * classes. These other classes should implement {@link Dependent}, and the dependency should be added to them with
- * {@link Dependent#addDependency(Dependency)}. The dependency can then cache the return value, and invalidate that
- * cache whenever {@link #invalidate()} is called, and the {@link Dependent Dependents} should call it whenever
- * something in them changes, usually by calling {@link Dependent#invalidateDependencies()}.
- * </p>
+ * A class with values that values of other classes depend on. A class with values depending on the implementing class
+ * should implement {@link Dependent}, and all dependents should be added to the class implementing this interface
+ * with {@link #addDependent(Dependent)} or {@link #addDependents(Collection)}. The implementation of these methods
+ * must check for cyclic dependencies and throw {@link IllegalArgumentException} if one would be caused by the
+ * operation.
+ *
  * @author datafox
  */
 public interface Dependency {
     /**
-     * Invalidates the class implementing this interface. In practice, this should invalidate the caches of any values
-     * that are dependent on values of other classes. Because this method may be called multiple times, it is not
-     * recommended to recalculate the cached value in this method, and instead create an invalidated flag that is set
-     * in this method, and recalculate the value in its getter method if the flag is set.
+     * @return all {@link Dependent Dependents} that depend on this class
      */
-    void invalidate();
+    Collection<Dependent> getDependents();
+
+    /**
+     * Calls {@link Dependent#invalidate()} on all {@link Dependent Dependents} of this class.
+     */
+    void invalidateDependents();
+
+    /**
+     * Register a {@link Dependent} that depends on this class. The method must check for cyclic dependencies and throw
+     * {@link IllegalArgumentException} if one is detected.
+     *
+     * @param dependent {@link Dependent} that depends on this class
+     * @return {@code true} if the registered {@link Dependent Dependents} changed as a result of this operation
+     *
+     * @throws IllegalArgumentException if this operation would cause a cyclic dependency
+     */
+    boolean addDependent(Dependent dependent);
+
+    /**
+     * Register {@link Dependent Dependents} that depends on this class. The method must check for cyclic dependencies
+     * and throw {@link IllegalArgumentException} if one is detected.
+     *
+     * @param dependencies {@link Dependent Dependencies} that depend on this class
+     * @return {@code true} if the registered {@link Dependent Dependents} changed as a result of this operation
+     *
+     * @throws IllegalArgumentException if this operation would cause a cyclic dependency
+     */
+    boolean addDependents(Collection<? extends Dependent> dependencies);
+
+    /**
+     * @param dependent {@link Dependent} to be removed
+     * @return {@code true} if the registered {@link Dependent Dependents} changed as a result of this operation
+     */
+    boolean removeDependent(Dependent dependent);
+
+    /**
+     * @param dependents {@link Dependent Dependents} to be removed
+     * @return {@code true} if the registered {@link Dependent Dependents} changed as a result of this operation
+     */
+    boolean removeDependents(Collection<? extends Dependent> dependents);
+
+    /**
+     * @param dependent {@link Dependent} to be checked for
+     * @return {@code true} if the specified {@link Dependent} is registered to this class
+     */
+    boolean containsDependent(Dependent dependent);
+
+    /**
+     * @param dependents {@link Dependent Dependents} to be checked for
+     * @return {@code true} if all the specified {@link Dependent Dependents} are registered to this class
+     */
+    boolean containsDependents(Collection<? extends Dependent> dependents);
+
+    /**
+     * Checks if the specified {@link Dependent} is registered to this class or any of its dependents that also
+     * implement dependent, recursively. In practice any dependent that depends on this class, directly or indirectly,
+     * would cause this method to return {@code true}.
+     *
+     * @param dependent {@link Dependent} to be checked for
+     * @return {@code true} if the specified {@link Dependent} is registered to this class or any of its dependents that
+     * also implement dependent, recursively
+     */
+    boolean containsDependentRecursive(Dependent dependent);
+
+    /**
+     * Checks if all the specified {@link Dependent Dependents} are registered to this class or any of its dependencies
+     * that also implement dependent, recursively. In practice any collection of dependencies that depend on this class,
+     * directly or indirectly, would cause this method to return {@code true}.
+     *
+     * @param dependents {@link Dependent Dependencies} to be checked for
+     * @return {@code true} if the specified {@link Dependent Dependencies} are registered to this class or any of its
+     * dependencies that also implement dependent, recursively
+     */
+    boolean containsDependentsRecursive(Collection<? extends Dependent> dependents);
+
+    /**
+     * @return {@link Stream} of all {@link Dependent Dependents} that are registered to this class
+     */
+    Stream<Dependent> dependentStream();
+
+    /**
+     * @return {@link Stream} of all {@link Dependent Dependents} that are registered to this class or any of its
+     * dependents that also implement dependency, recursively
+     */
+    Stream<Dependent> recursiveDependentStream();
 }

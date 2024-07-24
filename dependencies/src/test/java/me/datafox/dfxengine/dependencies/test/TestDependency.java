@@ -1,11 +1,11 @@
 package me.datafox.dfxengine.dependencies.test;
 
-import me.datafox.dfxengine.dependencies.Dependency;
+import me.datafox.dfxengine.dependencies.Dependent;
 
 /**
  * @author datafox
  */
-public class TestDependency implements Dependency {
+public class TestDependency implements Dependent {
     private int i = 0;
 
     @Override

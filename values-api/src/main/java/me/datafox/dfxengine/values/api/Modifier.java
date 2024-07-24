@@ -1,7 +1,7 @@
 package me.datafox.dfxengine.values.api;
 
-import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.dependencies.Dependent;
+import me.datafox.dfxengine.dependencies.Dependency;
 import me.datafox.dfxengine.math.api.Numeral;
 
 import java.util.function.Function;
@@ -14,7 +14,7 @@ import java.util.function.Function;
  *
  * @author datafox
  */
-public interface Modifier extends Dependency, Dependent, Function<Numeral, Numeral>, Comparable<Modifier> {
+public interface Modifier extends Dependent, Dependency, Function<Numeral, Numeral>, Comparable<Modifier> {
     /**
      * @return priority of this modifier
      */
