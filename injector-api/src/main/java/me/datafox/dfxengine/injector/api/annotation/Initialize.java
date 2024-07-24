@@ -7,10 +7,10 @@ import java.lang.annotation.Target;
 
 /**
  * An initialization method is a method that is invoked after all {@link Component Components} are instantiated. It is
- * only recognised if its declaring class is a component or otherwise instantiated by the Injector. This is especially
- * useful when you must have cyclic dependencies. The initialization method may have parameters which are treated as
- * dependencies. A class may have multiple initialization methods, and the order of all initialization methods can be
- * determined by setting {@link #value()}, where lower values mean earlier invocation.
+ * only recognised if its declaring class is a component. This is especially useful when you must have cyclic
+ * dependencies. The initialization method may have parameters which are treated as dependencies. A class may have
+ * multiple initialization methods, and the order of all initialization methods can be determined by setting
+ * {@link #value()}, where lower values mean earlier invocation.
  *
  * @author datafox
  */
