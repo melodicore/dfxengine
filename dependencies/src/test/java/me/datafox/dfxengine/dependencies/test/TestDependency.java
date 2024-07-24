@@ -1,19 +1,13 @@
 package me.datafox.dfxengine.dependencies.test;
 
-import me.datafox.dfxengine.dependencies.Dependent;
+import me.datafox.dfxengine.dependencies.AbstractDependency;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author datafox
  */
-public class TestDependency implements Dependent {
-    private int i = 0;
-
-    @Override
-    public void invalidate() {
-        i++;
-    }
-
-    public int i() {
-        return i;
+public class TestDependency extends AbstractDependency {
+    public TestDependency() {
+        super(LoggerFactory.getLogger(TestDependency.class));
     }
 }
