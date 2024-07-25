@@ -66,12 +66,12 @@ a `TreeMap` respectively.
 `HandleManagerConfiguration` is used to configure the `HandleManager` and by extension all other classes in the module.
 Specifically, it determines whether sorted or unsorted collections should be used in various places of the module. The
 options are:
-* `orderedSpaces` determines if `Spaces` within the handle manager should be ordered. Default is `true`.
-* `orderedHandlesInSpaces` determines if `Handles` within spaces should be ordered. Default is `true`.
-* `orderedHandlesInGroups` determines if handles within `Groups` should be ordered. Default is `false`.
-* `orderedGroups` determines if groups within spaces should be ordered. Default is `true`.
-* `orderedSubHandles` determines if subhandles within handles should be ordered. Default is `true`.
-* `orderedTags` determines if tag handles within handles should be ordered. Default is `false`.
+* `orderedSpaces` determines if `Spaces` within the handle manager should be ordered. Default is `true`
+* `orderedHandlesInSpaces` determines if `Handles` within spaces should be ordered. Default is `true`
+* `orderedHandlesInGroups` determines if handles within `Groups` should be ordered. Default is `false`
+* `orderedGroups` determines if groups within spaces should be ordered. Default is `true`
+* `orderedSubHandles` determines if subhandles within handles should be ordered. Default is `true`
+* `orderedTags` determines if tag handles within handles should be ordered. Default is `false`
 
 ## [`Handled`](../handles-api/src/main/java/me/datafox/dfxengine/handles/api/Handled.java)
 

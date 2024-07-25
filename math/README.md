@@ -24,7 +24,7 @@ overflow or an infinite floating point value, but do allow conversions from non-
 types
 
 Along these methods, the numeral also has methods for converting them to native Java number types. These methods throw
-ExtendedArithmeticException if the numeral's value is out of bounds.
+`ExtendedArithmeticException` if the numeral's value is out of bounds.
 
 Numerals can be created with their constructors, but the `Numerals` utility contains various methods for creating 
 numerals. Details of utility classes are explained below.
