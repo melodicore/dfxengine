@@ -90,11 +90,13 @@ public class Numerals {
     }
 
     /**
+     * If the {@link Number} is not an instance of {@link Integer}, {@link Long}, {@link BigInteger}, {@link Float},
+     * {@link Double} or {@link BigDecimal}, this method attempts to parse the number using {@link Number#toString()}.
+     *
      * @param number {@link Number} value
      * @return {@link Numeral} representing the specified value
      *
-     * @throws IllegalArgumentException if the {@link Number} is not any of the following classes: {@link Integer},
-     * {@link Long}, {@link BigInteger}, {@link Float}, {@link Double} or {@link BigDecimal}
+     * @throws NumberFormatException If the {@link Number} is not recognised and parsing its string representation fails
      */
     public static Numeral of(Number number) {
         if(number instanceof Integer) {
@@ -115,9 +117,7 @@ public class Numerals {
         if(number instanceof BigDecimal) {
             return of((BigDecimal) number);
         }
-        throw LogUtils.logExceptionAndGet(logger,
-                MathStrings.unknownNumberType(number),
-                IllegalArgumentException::new);
+        return of(number.toString());
     }
 
     /**

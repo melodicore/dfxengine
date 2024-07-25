@@ -33,7 +33,8 @@ public class NumeralsTest {
         assertThrows(NumberFormatException.class, () -> Numerals.of("941a76"));
 
         assertInstanceOf(LongNumeral.class, of(Long.valueOf(1337L)));
-        assertThrows(IllegalArgumentException.class, () -> of(Short.valueOf("37")));
+        assertInstanceOf(BigIntNumeral.class, of(Short.valueOf("37")));
+        assertThrows(NumberFormatException.class, () -> of(new FunkyNumber()));
     }
 
     @Test
@@ -128,5 +129,32 @@ public class NumeralsTest {
         assertEquals(BIG_DEC, getSignificantType(FLOAT, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
         assertEquals(BIG_DEC, getSignificantType(DOUBLE, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
         assertEquals(BIG_DEC, getSignificantType(BIG_DEC, BIG_DEC, INT, BIG_INT, FLOAT, DOUBLE));
+    }
+
+    private static class FunkyNumber extends Number {
+        @Override
+        public int intValue() {
+            return 0;
+        }
+
+        @Override
+        public long longValue() {
+            return 0;
+        }
+
+        @Override
+        public float floatValue() {
+            return 0;
+        }
+
+        @Override
+        public double doubleValue() {
+            return 0;
+        }
+
+        @Override
+        public String toString() {
+            return "420x69";
+        }
     }
 }

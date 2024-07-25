@@ -26,7 +26,7 @@ version in square brackets is the current version in the repository.
 | [Injector API](injector-api) | Done (2.0.1) \[2.1.0] | Annotations for the Injector module                 |
 | [Injector](injector)         | Done (2.0.1) \[2.1.0] | A dependency injector                               |
 | [Math API](math-api)         | Done (1.0.4)          | Interfaces for the Math module                      |
-| [Math](math)                 | Done (1.0.6)          | Seamless wrapping and manipulation of number types  |
+| [Math](math)                 | Done (1.0.6) \[1.0.7] | Seamless wrapping and manipulation of number types  |
 | [Text API](text-api)         | Done (1.0.1)          | Interfaces for the Text module                      |
 | [Text](text)                 | Done (1.0.1)          | Text handling and representation                    |
 | [Utils](utils)<sup>1</sup>   | Done (1.0.2)          | Utilities used by other modules                     |
