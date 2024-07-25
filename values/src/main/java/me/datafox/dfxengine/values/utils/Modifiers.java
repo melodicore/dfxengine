@@ -317,8 +317,7 @@ public class Modifiers {
     }
 
     /**
-     * The formula for the {@link MappingOperationModifier} is
-     * {@code [source] * ([percentage]}<sup>[multiplier]</sup>{@code )}.
+     * The formula for the {@link MappingOperationModifier} is <code>[source] * ([base]<sup>[exponent]</sup>)</code>.
      *
      * @param priority priority for the {@link MappingOperationModifier}
      * @param base base {@link Value} for the {@link MappingOperationModifier}
