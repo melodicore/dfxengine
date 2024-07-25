@@ -38,8 +38,7 @@ public class SimpleNumberFormatter implements NumberFormatter {
 
     /**
      * If {@code true}, the number will be stripped of any trailing zeros in the decimal part of the number before
-     * formatting. The default value is
-     * {@code true}.
+     * formatting. The default value is {@code true}.
      */
     public static final ConfigurationKey<Boolean> STRIP_ZEROS = ConfigurationKey.of(true);
 

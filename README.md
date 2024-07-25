@@ -28,7 +28,7 @@ version in square brackets is the current version in the repository.
 | [Math API](math-api)         | Done (1.0.4)          | Interfaces for the Math module                      |
 | [Math](math)                 | Done (1.0.6) \[1.0.7] | Seamless wrapping and manipulation of number types  |
 | [Text API](text-api)         | Done (1.0.1)          | Interfaces for the Text module                      |
-| [Text](text)                 | Done (1.0.1)          | Text handling and representation                    |
+| [Text](text)                 | Done (1.0.1) \[1.0.2] | Text handling and representation                    |
 | [Utils](utils)<sup>1</sup>   | Done (1.0.2)          | Utilities used by other modules                     |
 | [Values API](values-api)     | Done (1.1.1) \[1.1.2] | Interfaces for the Values module                    |
 | [Values](values)             | Done (1.1.1) \[1.1.2] | Mutable number values and a dynamic modifier system |

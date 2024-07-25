@@ -76,6 +76,10 @@ public class TextFactoryImpl implements TextFactory {
         numberSuffixFormatters.forEach(this::addNumberSuffixFormatter);
     }
 
+    /**
+     * @param text {@inheritDoc}
+     * @return {@inheritDoc}
+     */
     @Override
     public String build(Text text) {
         return text.get(this, configuration.copy());
