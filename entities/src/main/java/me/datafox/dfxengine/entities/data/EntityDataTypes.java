@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.entities.configuration;
+package me.datafox.dfxengine.entities.data;
 
 import me.datafox.dfxengine.entities.api.DataType;
 import me.datafox.dfxengine.injector.api.annotation.Component;
@@ -14,15 +14,15 @@ import java.util.Map;
  * @author datafox
  */
 @Component
-public class DataTypeConfiguration {
+public class EntityDataTypes {
     private static Map<String,Class<?>> types;
 
     @Inject
-    public DataTypeConfiguration(List<DataType<?>> dataTypes) {
+    public EntityDataTypes(List<DataType<?>> dataTypes) {
         types = new HashMap<>();
         dataTypes.stream()
                 .map(DataType::getType)
-                .forEach(DataTypeConfiguration::registerDataType);
+                .forEach(EntityDataTypes::registerDataType);
     }
 
     public static void registerDataType(Class<?> type) {

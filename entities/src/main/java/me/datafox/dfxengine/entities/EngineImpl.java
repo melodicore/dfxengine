@@ -7,7 +7,7 @@ import me.datafox.dfxengine.entities.api.definition.*;
 import me.datafox.dfxengine.entities.api.state.EngineState;
 import me.datafox.dfxengine.entities.api.state.EntityState;
 import me.datafox.dfxengine.entities.state.EngineStateImpl;
-import me.datafox.dfxengine.entities.configuration.DataTypeConfiguration;
+import me.datafox.dfxengine.entities.data.EntityDataTypes;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
 import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
@@ -50,7 +50,7 @@ public class EngineImpl implements Engine {
                       Injector injector,
                       SerializationHandler serializationHandler,
                       EntityHandles ignored,
-                      DataTypeConfiguration ignored1) {
+                      EntityDataTypes ignored1) {
         this.logger = logger;
         this.injector = injector;
         this.serializationHandler = serializationHandler;

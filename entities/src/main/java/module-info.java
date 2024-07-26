@@ -32,8 +32,8 @@ module dfxengine.entities {
     exports me.datafox.dfxengine.entities.reference;
     exports me.datafox.dfxengine.entities.reference.data;
     exports me.datafox.dfxengine.entities.reference.selector;
+    exports me.datafox.dfxengine.entities.serialization;
     exports me.datafox.dfxengine.entities.state;
     exports me.datafox.dfxengine.entities.system;
     exports me.datafox.dfxengine.entities.utils;
-    exports me.datafox.dfxengine.entities.configuration;
 }
