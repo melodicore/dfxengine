@@ -6,6 +6,7 @@ import me.datafox.dfxengine.entities.api.definition.OperationDefinition;
 import me.datafox.dfxengine.values.api.operation.Operation;
 import me.datafox.dfxengine.values.operation.MappingOperationChain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,12 +14,14 @@ import java.util.stream.Collectors;
  * @author datafox
  */
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class MappingOperationChainDefinition implements OperationDefinition {
-    @Singular
     private List<OperationDefinition> operations;
+
+    @Builder
+    public MappingOperationChainDefinition(@Singular List<OperationDefinition> operations) {
+        this.operations = new ArrayList<>(operations);
+    }
 
     @Override
     public int getParameterCount() {

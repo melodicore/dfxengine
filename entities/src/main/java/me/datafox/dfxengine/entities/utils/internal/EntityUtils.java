@@ -5,7 +5,7 @@ import me.datafox.dfxengine.entities.api.EntityComponent;
 import me.datafox.dfxengine.entities.api.EntityData;
 import me.datafox.dfxengine.entities.api.Reference;
 import me.datafox.dfxengine.entities.data.ValueDto;
-import me.datafox.dfxengine.entities.utils.EntityDataTypes;
+import me.datafox.dfxengine.entities.configuration.DataTypeConfiguration;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleMap;
 import me.datafox.dfxengine.handles.api.Space;
@@ -25,7 +25,11 @@ import java.util.stream.Stream;
  */
 public class EntityUtils {
     public static Numeral getNumeral(String type, String value) {
-        switch(NumeralType.valueOf(type)) {
+        return getNumeral(NumeralType.valueOf(type), value);
+    }
+
+    public static Numeral getNumeral(NumeralType type, String value) {
+        switch(type) {
             case INT:
                 return Numerals.of(Integer.valueOf(value));
             case LONG:
@@ -48,7 +52,7 @@ public class EntityUtils {
     }
 
     public static Numeral getValueNumeral(ValueDto value) {
-        return getNumeral(value.getValueType(), value.getValue());
+        return getNumeral(value.getType(), value.getValue());
     }
 
     @SuppressWarnings("unchecked")
@@ -58,7 +62,7 @@ public class EntityUtils {
                                                           Function<HandleMap<EntityData<?>>,Stream<EntityData<?>>> mapper) {
         return component
                 .get(engine)
-                .map(c -> (HandleMap<EntityData<?>>) (HandleMap<?>) c.getData(EntityDataTypes.getType(typeId)))
+                .map(c -> (HandleMap<EntityData<?>>) (HandleMap<?>) c.getData(DataTypeConfiguration.getType(typeId)))
                 .filter(Objects::nonNull)
                 .flatMap(mapper);
     }

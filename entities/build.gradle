@@ -14,12 +14,14 @@ dependencies {
     implementation project(":utils")
     implementation project(":injector-api")
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation "io.vacco.jsonbeans:jsonbeans:$jsonBeansVersion"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
+    testImplementation project(":injector")
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 

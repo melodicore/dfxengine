@@ -5,7 +5,6 @@ import me.datafox.dfxengine.entities.api.definition.SpaceDefinition;
 import me.datafox.dfxengine.entities.api.definition.SystemDefinition;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author datafox
@@ -13,7 +12,7 @@ import java.util.Set;
 public interface DataPack {
     String getId();
 
-    Set<String> getDependencies();
+    List<String> getDependencies();
 
     String getDeveloper();
 

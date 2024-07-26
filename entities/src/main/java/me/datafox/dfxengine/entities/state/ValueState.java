@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.state.DataState;
+import me.datafox.dfxengine.entities.data.ValueDto;
 
 /**
  * @author datafox
@@ -14,8 +15,11 @@ import me.datafox.dfxengine.entities.api.state.DataState;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ValueState implements DataState {
-    private String handle;
     private String typeId;
-    private String valueType;
-    private String value;
+    private ValueDto value;
+
+    @Override
+    public String getHandle() {
+        return value.getHandle();
+    }
 }

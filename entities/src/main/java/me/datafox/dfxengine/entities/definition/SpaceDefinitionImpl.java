@@ -4,19 +4,23 @@ import lombok.*;
 import me.datafox.dfxengine.entities.api.definition.HandleDefinition;
 import me.datafox.dfxengine.entities.api.definition.SpaceDefinition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author datafox
  */
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class SpaceDefinitionImpl implements SpaceDefinition {
     private String id;
-    @Singular
     private List<String> groups;
-    @Singular
     private List<HandleDefinition> handles;
+
+    @Builder
+    public SpaceDefinitionImpl(String id, @Singular List<String> groups, @Singular List<HandleDefinition> handles) {
+        this.id = id;
+        this.groups = new ArrayList<>(groups);
+        this.handles = new ArrayList<>(handles);
+    }
 }

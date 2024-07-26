@@ -7,7 +7,7 @@ import me.datafox.dfxengine.entities.api.state.ComponentState;
 import me.datafox.dfxengine.entities.api.state.DataState;
 import me.datafox.dfxengine.entities.definition.ComponentDefinitionImpl;
 import me.datafox.dfxengine.entities.state.ComponentStateImpl;
-import me.datafox.dfxengine.entities.utils.EntityDataTypes;
+import me.datafox.dfxengine.entities.configuration.DataTypeConfiguration;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
 import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
@@ -101,11 +101,11 @@ public class EntityComponentImpl implements EntityComponent {
     }
 
     private void setDataState(DataState state) {
-        if(!data.containsKey(EntityDataTypes.getType(state.getTypeId()))) {
+        if(!data.containsKey(DataTypeConfiguration.getType(state.getTypeId()))) {
             engine.getLogger().warn(String.format("State contains unknown data type %s", state.getHandle()));
             return;
         }
-        HandleMap<EntityData<?>> map = data.get(EntityDataTypes.getType(state.getTypeId()));
+        HandleMap<EntityData<?>> map = data.get(DataTypeConfiguration.getType(state.getTypeId()));
         if(!map.containsKey(state.getHandle())) {
             engine.getLogger().warn(String.format("State contains unknown data value %s", state.getHandle()));
             return;

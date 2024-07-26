@@ -5,6 +5,7 @@ import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.Selector;
 import me.datafox.dfxengine.handles.api.HandleMap;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -12,12 +13,14 @@ import java.util.stream.Stream;
  * @author datafox
  */
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class OrSelector implements Selector {
-    @Singular
     private List<Selector> selectors;
+
+    @Builder
+    public OrSelector(@Singular List<Selector> selectors) {
+        this.selectors = new ArrayList<>(selectors);
+    }
 
     @Override
     public boolean isSingle(boolean isEntity) {

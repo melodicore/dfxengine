@@ -9,23 +9,30 @@ import me.datafox.dfxengine.entities.api.definition.ComponentDefinition;
 import me.datafox.dfxengine.entities.api.definition.DataDefinition;
 import me.datafox.dfxengine.entities.api.definition.LinkDefinition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author datafox
  */
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class ComponentDefinitionImpl implements ComponentDefinition {
     private String handle;
-    @Singular("data")
     private List<DataDefinition> data;
-    @Singular
     private List<LinkDefinition> links;
-    @Singular
     private List<ActionDefinition> actions;
+
+    @Builder
+    public ComponentDefinitionImpl(String handle,
+                                   @Singular("data") List<DataDefinition> data,
+                                   @Singular List<LinkDefinition> links,
+                                   @Singular List<ActionDefinition> actions) {
+        this.handle = handle;
+        this.data = new ArrayList<>(data);
+        this.links = new ArrayList<>(links);
+        this.actions = new ArrayList<>(actions);
+    }
 
     @Override
     public EntityComponent build(Engine engine) {

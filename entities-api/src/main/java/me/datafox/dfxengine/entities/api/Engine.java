@@ -18,6 +18,8 @@ public interface Engine {
 
     Injector getInjector();
 
+    SerializationHandler getSerializationHandler();
+
     HandleMap<List<Entity>> getEntities();
 
     void addEntityListener(EntityListener listener);
@@ -36,6 +38,8 @@ public interface Engine {
 
     void addPack(DataPack pack);
 
+    void addSerializedPack(String pack);
+
     void removePack(String id, boolean removeDependents);
 
     void loadPacks(boolean keepState);
@@ -46,7 +50,11 @@ public interface Engine {
 
     void setState(EngineState state);
 
+    void setSerializedState(String state);
+
     EngineState getState();
+
+    String getSerializedState();
 
     void scheduleAction(EntityAction action, ActionParameters parameters);
 

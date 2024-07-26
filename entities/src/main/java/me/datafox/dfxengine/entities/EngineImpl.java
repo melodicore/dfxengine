@@ -7,7 +7,7 @@ import me.datafox.dfxengine.entities.api.definition.*;
 import me.datafox.dfxengine.entities.api.state.EngineState;
 import me.datafox.dfxengine.entities.api.state.EntityState;
 import me.datafox.dfxengine.entities.state.EngineStateImpl;
-import me.datafox.dfxengine.entities.utils.EntityDataTypes;
+import me.datafox.dfxengine.entities.configuration.DataTypeConfiguration;
 import me.datafox.dfxengine.entities.utils.EntityHandles;
 import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
@@ -31,6 +31,8 @@ public class EngineImpl implements Engine {
     private final Logger logger;
     @Getter
     private final Injector injector;
+    @Getter
+    private final SerializationHandler serializationHandler;
     private final HandleMap<List<Entity>> entities;
     private final HandleMap<EntityDefinition> multiDefinitions;
     private final Set<EntityListener> listeners;
@@ -44,9 +46,14 @@ public class EngineImpl implements Engine {
     boolean linked;
 
     @Inject
-    public EngineImpl(Logger logger, Injector injector, EntityHandles ignored, EntityDataTypes ignored1) {
+    public EngineImpl(Logger logger,
+                      Injector injector,
+                      SerializationHandler serializationHandler,
+                      EntityHandles ignored,
+                      DataTypeConfiguration ignored1) {
         this.logger = logger;
         this.injector = injector;
+        this.serializationHandler = serializationHandler;
         entities = new HashHandleMap<>(EntityHandles.getEntities());
         multiDefinitions = new HashHandleMap<>(EntityHandles.getEntities());
         listeners = new LinkedHashSet<>();
@@ -143,6 +150,11 @@ public class EngineImpl implements Engine {
     }
 
     @Override
+    public void addSerializedPack(String pack) {
+        addPack(serializationHandler.deserialize(DataPackImpl.class, pack));
+    }
+
+    @Override
     public void removePack(String id, boolean removeDependents) {
         if(!dataPacks.containsKey(id)) {
             throw new IllegalArgumentException("pack with id does not exist");
@@ -210,10 +222,20 @@ public class EngineImpl implements Engine {
     }
 
     @Override
+    public void setSerializedState(String state) {
+        setState(serializationHandler.deserialize(EngineStateImpl.class, state));
+    }
+
+    @Override
     public EngineState getState() {
         EngineStateImpl.EngineStateImplBuilder builder = EngineStateImpl.builder();
         entities.forEach((h, l) -> getEntityState(l, builder));
         return builder.build();
+    }
+
+    @Override
+    public String getSerializedState() {
+        return serializationHandler.serialize(getState());
     }
 
     @Override

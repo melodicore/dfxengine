@@ -14,24 +14,22 @@ public class ValueData extends AbstractStatefulData<Value> {
     public ValueData(ValueDataDefinition definition) {
         super(Value.class, definition.getHandle());
         setData(new ValueImpl(getHandle(),
-                EntityUtils.getNumeral(definition.getValueType(), definition.getValue()),
+                EntityUtils.getNumeral(definition.getValue().getType(), definition.getValue().getValue()),
                 false));
     }
 
     @Override
     public void setState(DataState state) {
         ValueState cast = castState(state, ValueState.class);
-        getData().set(EntityUtils.getNumeral(cast.getValueType(), cast.getValue()));
+        getData().set(EntityUtils.getNumeral(cast.getValue().getType(), cast.getValue().getValue()));
     }
 
     @Override
     public DataState getState() {
         return ValueState
                 .builder()
-                .handle(getHandle().getId())
                 .typeId(getType().getName())
-                .valueType(getData().getBase().getType().name())
-                .value(getData().getBase().getNumber().toString())
+                .value(ValueDto.of(getData()))
                 .build();
     }
 

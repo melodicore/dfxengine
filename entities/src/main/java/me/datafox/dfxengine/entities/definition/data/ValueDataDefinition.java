@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.definition.DataDefinition;
 import me.datafox.dfxengine.entities.data.ValueData;
+import me.datafox.dfxengine.entities.data.ValueDto;
 
 /**
  * @author datafox
@@ -16,9 +17,12 @@ import me.datafox.dfxengine.entities.data.ValueData;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ValueDataDefinition implements DataDefinition {
-    private String handle;
-    private String valueType;
-    private String value;
+    private ValueDto value;
+
+    @Override
+    public String getHandle() {
+        return value.getHandle();
+    }
 
     @Override
     public ValueData build(Engine engine) {

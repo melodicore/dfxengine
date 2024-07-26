@@ -14,7 +14,7 @@ public class ImmutableValueData extends AbstractData<Value> {
         super(Value.class, definition.getHandle());
         getHandle().getTags().add(EntityHandles.getImmutableTag());
         setData(new ValueImpl(getHandle(),
-                EntityUtils.getNumeral(definition.getValueType(), definition.getValue()),
+                EntityUtils.getNumeral(definition.getValue().getType(), definition.getValue().getValue()),
                 true));
     }
 }

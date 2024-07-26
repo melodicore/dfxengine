@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.definition.DataDefinition;
 import me.datafox.dfxengine.entities.data.ImmutableValueData;
+import me.datafox.dfxengine.entities.data.ValueDto;
 
 /**
  * @author datafox
@@ -16,9 +17,12 @@ import me.datafox.dfxengine.entities.data.ImmutableValueData;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ImmutableValueDataDefinition implements DataDefinition {
-    private String handle;
-    private String valueType;
-    private String value;
+    private ValueDto value;
+
+    @Override
+    public String getHandle() {
+        return value.getHandle();
+    }
 
     @Override
     public ImmutableValueData build(Engine engine) {
