@@ -15,8 +15,8 @@ import me.datafox.dfxengine.values.api.ValueMap;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SelectorValueMapDataReference extends SelectorDataReference<ValueMap> {
-    private Reference<EntityComponent> component;
-    private Selector selector;
+    public Reference<EntityComponent> component;
+    public Selector selector;
 
     @Override
     protected String getTypeId() {

@@ -18,11 +18,11 @@ import me.datafox.dfxengine.values.api.operation.MapMathContext;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MathContextDefinitionImpl implements MathContextDefinition {
-    private String convertResultTo;
-    private String ignoreBadConversion;
-    private String convertToDecimal;
-    private String createNonExistingAsType;
-    private String createNonExistingAsValue;
+    public String convertResultTo;
+    public String ignoreBadConversion;
+    public String convertToDecimal;
+    public String createNonExistingAsType;
+    public String createNonExistingAsValue;
 
     @Override
     public MapMathContext build(Engine engine) {

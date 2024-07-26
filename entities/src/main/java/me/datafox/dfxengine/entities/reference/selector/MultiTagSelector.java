@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MultiTagSelector implements Selector {
-    private List<String> tags;
+    public List<String> tags;
 
     @Override
     public boolean isSingle(boolean isEntity) {

@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MultiHandleSelector implements Selector {
-    private List<String> handles;
+    public List<String> handles;
 
     @Override
     public boolean isSingle(boolean isEntity) {

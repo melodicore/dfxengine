@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 @Data
 @NoArgsConstructor
 public class AndSelector implements Selector {
-    private List<Selector> selectors;
+    public List<Selector> selectors;
 
     @Builder
     public AndSelector(@Singular List<Selector> selectors) {

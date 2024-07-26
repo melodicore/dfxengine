@@ -20,8 +20,8 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SelectorComponentReference implements Reference<EntityComponent> {
-    private Reference<Entity> entity;
-    private Selector selector;
+    public Reference<Entity> entity;
+    public Selector selector;
 
     @Override
     public boolean isSingle() {

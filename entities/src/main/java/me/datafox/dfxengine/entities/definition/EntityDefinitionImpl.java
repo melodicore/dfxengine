@@ -16,9 +16,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class EntityDefinitionImpl implements EntityDefinition {
-    private String handle;
-    private List<ComponentDefinition> components;
-    private boolean singleton;
+    public String handle;
+    public List<ComponentDefinition> components;
+    public boolean singleton;
 
     @Builder
     public EntityDefinitionImpl(String handle, @Singular List<ComponentDefinition> components, boolean singleton) {

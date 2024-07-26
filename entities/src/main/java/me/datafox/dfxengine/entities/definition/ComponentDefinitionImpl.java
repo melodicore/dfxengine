@@ -18,10 +18,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ComponentDefinitionImpl implements ComponentDefinition {
-    private String handle;
-    private List<DataDefinition> data;
-    private List<LinkDefinition> links;
-    private List<ActionDefinition> actions;
+    public String handle;
+    public List<DataDefinition> data;
+    public List<LinkDefinition> links;
+    public List<ActionDefinition> actions;
 
     @Builder
     public ComponentDefinitionImpl(String handle,

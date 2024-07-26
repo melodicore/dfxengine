@@ -20,12 +20,12 @@ import me.datafox.dfxengine.values.api.ValueMap;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ValueMapOperationSystemDefinition implements SystemDefinition {
-    private String handle;
-    private int priority;
-    private Reference<ValueMap> inputs;
-    private Reference<ValueMap> outputs;
-    private SingleParameterOperationDefinition operation;
-    private MathContextDefinition context;
+    public String handle;
+    public int priority;
+    public Reference<ValueMap> inputs;
+    public Reference<ValueMap> outputs;
+    public SingleParameterOperationDefinition operation;
+    public MathContextDefinition context;
 
     @Override
     public ValueMapOperationSystem build(Engine engine) {

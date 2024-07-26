@@ -20,8 +20,8 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StaticValueDataReference implements Reference<Value> {
-    private String valueType;
-    private String value;
+    public String valueType;
+    public String value;
 
     @Override
     public boolean isSingle() {

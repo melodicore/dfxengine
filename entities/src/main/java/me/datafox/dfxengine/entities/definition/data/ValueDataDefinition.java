@@ -17,7 +17,7 @@ import me.datafox.dfxengine.entities.data.ValueDto;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ValueDataDefinition implements DataDefinition {
-    private ValueDto value;
+    public ValueDto value;
 
     @Override
     public String getHandle() {

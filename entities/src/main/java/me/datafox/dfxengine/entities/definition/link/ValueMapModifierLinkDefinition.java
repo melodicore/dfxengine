@@ -20,9 +20,9 @@ import me.datafox.dfxengine.values.api.ValueMap;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ValueMapModifierLinkDefinition implements LinkDefinition {
-    private String handle;
-    private Reference<ValueMap> output;
-    private ModifierDefinition modifier;
+    public String handle;
+    public Reference<ValueMap> output;
+    public ModifierDefinition modifier;
 
     @Override
     public EntityLink build(Engine engine) {

@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TagSelector implements Selector {
-    private String tag;
+    public String tag;
 
     @Override
     public boolean isSingle(boolean isEntity) {

@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HandleSelector implements Selector {
-    private String handle;
+    public String handle;
 
     @Override
     public boolean isSingle(boolean isEntity) {

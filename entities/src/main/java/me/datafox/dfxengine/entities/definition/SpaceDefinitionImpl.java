@@ -13,9 +13,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class SpaceDefinitionImpl implements SpaceDefinition {
-    private String id;
-    private List<String> groups;
-    private List<HandleDefinition> handles;
+    public String id;
+    public List<String> groups;
+    public List<HandleDefinition> handles;
 
     @Builder
     public SpaceDefinitionImpl(String id, @Singular List<String> groups, @Singular List<HandleDefinition> handles) {

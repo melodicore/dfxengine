@@ -15,8 +15,8 @@ import me.datafox.dfxengine.entities.data.ValueDto;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ValueState implements DataState {
-    private String typeId;
-    private ValueDto value;
+    public String typeId;
+    public ValueDto value;
 
     @Override
     public String getHandle() {

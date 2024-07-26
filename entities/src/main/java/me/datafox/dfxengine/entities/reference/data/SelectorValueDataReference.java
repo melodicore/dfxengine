@@ -15,8 +15,8 @@ import me.datafox.dfxengine.values.api.Value;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SelectorValueDataReference extends SelectorDataReference<Value> {
-    private Reference<EntityComponent> component;
-    private Selector selector;
+    public Reference<EntityComponent> component;
+    public Selector selector;
 
     @Override
     protected String getTypeId() {

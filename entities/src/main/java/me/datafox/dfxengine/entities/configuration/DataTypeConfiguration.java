@@ -35,12 +35,12 @@ public class DataTypeConfiguration {
     }
 
     @Component
-    private static DataType<Value> valueType() {
+    public static DataType<Value> valueType() {
         return DataType.of(Value.class);
     }
 
     @Component
-    private static DataType<ValueMap> valueMapType() {
+    public static DataType<ValueMap> valueMapType() {
         return DataType.of(ValueMap.class);
     }
 }

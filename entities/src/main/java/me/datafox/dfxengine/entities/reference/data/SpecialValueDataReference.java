@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SpecialValueDataReference implements Reference<Value> {
-    private int index;
+    public int index;
 
     @Override
     public boolean isSingle() {

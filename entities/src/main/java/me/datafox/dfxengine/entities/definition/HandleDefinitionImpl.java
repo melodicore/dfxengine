@@ -12,9 +12,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class HandleDefinitionImpl implements HandleDefinition {
-    private String id;
-    private List<String> groups;
-    private List<String> tags;
+    public String id;
+    public List<String> groups;
+    public List<String> tags;
 
     @Builder
     public HandleDefinitionImpl(String id, @Singular List<String> groups, @Singular List<String> tags) {

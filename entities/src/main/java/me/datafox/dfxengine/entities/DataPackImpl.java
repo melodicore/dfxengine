@@ -18,12 +18,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class DataPackImpl implements DataPack {
-    private String id;
-    private List<String> dependencies;
-    private String developer;
-    private List<SpaceDefinition> spaces;
-    private List<EntityDefinition> entities;
-    private List<SystemDefinition> systems;
+    public String id;
+    public List<String> dependencies;
+    public String developer;
+    public List<SpaceDefinition> spaces;
+    public List<EntityDefinition> entities;
+    public List<SystemDefinition> systems;
 
     @Builder
     public DataPackImpl(String id,

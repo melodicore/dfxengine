@@ -18,8 +18,8 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SelectorValueMapValueDataReference implements Reference<Value> {
-    private Reference<ValueMap> map;
-    private Selector selector;
+    public Reference<ValueMap> map;
+    public Selector selector;
 
     @Override
     public boolean isSingle() {

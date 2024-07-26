@@ -15,9 +15,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ImmutableValueMapDataDefinition implements DataDefinition {
-    private String handle;
-    private String space;
-    private List<ValueDto> values;
+    public String handle;
+    public String space;
+    public List<ValueDto> values;
 
     @Builder
     public ImmutableValueMapDataDefinition(String handle, String space, @Singular List<ValueDto> values) {

@@ -16,7 +16,7 @@ import me.datafox.dfxengine.entities.api.definition.ActionDefinition;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RemoveEntityActionDefinition implements ActionDefinition {
-    private String handle;
+    public String handle;
 
     @Override
     public RemoveEntityAction build(Engine engine) {

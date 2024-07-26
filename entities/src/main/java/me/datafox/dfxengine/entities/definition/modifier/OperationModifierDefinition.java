@@ -22,9 +22,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class OperationModifierDefinition implements ModifierDefinition {
-    private int priority;
-    private OperationDefinition operation;
-    private List<Reference<Value>> inputs;
+    public int priority;
+    public OperationDefinition operation;
+    public List<Reference<Value>> inputs;
 
     @Builder
     public OperationModifierDefinition(int priority, OperationDefinition operation, @Singular List<Reference<Value>> inputs) {

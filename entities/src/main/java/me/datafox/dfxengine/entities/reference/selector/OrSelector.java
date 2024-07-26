@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 @Data
 @NoArgsConstructor
 public class OrSelector implements Selector {
-    private List<Selector> selectors;
+    public List<Selector> selectors;
 
     @Builder
     public OrSelector(@Singular List<Selector> selectors) {

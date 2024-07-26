@@ -19,9 +19,9 @@ import me.datafox.dfxengine.values.api.Value;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ValueDto {
-    private String handle;
-    private NumeralType type;
-    private String value;
+    public String handle;
+    public NumeralType type;
+    public String value;
 
     public static ValueDto of(Value value) {
         return of(value.getHandle().getId(), value.getBase());

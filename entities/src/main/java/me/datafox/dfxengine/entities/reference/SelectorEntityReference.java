@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SelectorEntityReference implements Reference<Entity> {
-    private Selector selector;
+    public Selector selector;
 
     @Override
     public boolean isSingle() {

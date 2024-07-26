@@ -16,7 +16,7 @@ import me.datafox.dfxengine.entities.api.definition.ActionDefinition;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateEntityActionDefinition implements ActionDefinition {
-    private String handle;
+    public String handle;
 
     @Override
     public CreateEntityAction build(Engine engine) {

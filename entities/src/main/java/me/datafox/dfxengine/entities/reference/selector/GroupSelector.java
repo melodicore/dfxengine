@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GroupSelector implements Selector {
-    private String group;
+    public String group;
 
     @Override
     public boolean isSingle(boolean isEntity) {

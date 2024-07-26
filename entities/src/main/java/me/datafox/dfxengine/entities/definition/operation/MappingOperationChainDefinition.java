@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 public class MappingOperationChainDefinition implements OperationDefinition {
-    private List<OperationDefinition> operations;
+    public List<OperationDefinition> operations;
 
     @Builder
     public MappingOperationChainDefinition(@Singular List<OperationDefinition> operations) {
