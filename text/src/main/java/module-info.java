@@ -21,6 +21,4 @@ module dfxengine.text {
     exports me.datafox.dfxengine.text.suffix;
     exports me.datafox.dfxengine.text.text;
     exports me.datafox.dfxengine.text.utils;
-
-    opens me.datafox.dfxengine.text;
 }

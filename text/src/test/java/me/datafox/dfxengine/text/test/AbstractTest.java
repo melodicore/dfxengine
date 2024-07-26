@@ -22,7 +22,7 @@ public class AbstractTest {
 
     @BeforeEach
     public void beforeEach() {
-        injector = new InjectorBuilder().closeScan(false).build();
+        injector = new InjectorBuilder().build();
         factory = injector.getComponent(TextFactory.class);
         handles = injector.getComponent(TextHandles.class);
     }
