@@ -73,15 +73,18 @@ public class EngineImpl implements Engine {
     @Override
     public void addEntityListener(EntityListener listener) {
         listeners.add(listener);
+        logger.info(String.format("Added entity listener %s", listener));
     }
 
     @Override
     public void removeEntityListener(EntityListener listener) {
         listeners.remove(listener);
+        logger.info(String.format("Removed entity listener %s", listener));
     }
 
     @Override
     public Entity createMultiEntity(Handle handle) {
+        logger.info(String.format("Creating multi entity instance with handle %s", handle));
         if(!multiDefinitions.containsKey(handle)) {
             throw new IllegalArgumentException("not a multi entity");
         }
@@ -94,6 +97,7 @@ public class EngineImpl implements Engine {
 
     @Override
     public List<Entity> createMultiEntities(List<Handle> handles) {
+        logger.info(String.format("Creating multi entity instances with handles %s", handles));
         if(!multiDefinitions.containsKeys(handles)) {
             throw new IllegalArgumentException("not a multi entity");
         }
@@ -106,6 +110,7 @@ public class EngineImpl implements Engine {
 
     @Override
     public void removeMultiEntity(Entity entity) {
+        logger.info(String.format("Removing multi entity instance %s", entity));
         if(entity.isSingleton()) {
             throw new IllegalArgumentException("not a multi entity");
         }
@@ -121,6 +126,7 @@ public class EngineImpl implements Engine {
 
     @Override
     public void removeMultiEntities(Collection<Entity> entities) {
+        logger.info(String.format("Removing multi entity instances %s", entities));
         if(entities.stream().anyMatch(Entity::isSingleton)) {
             throw new IllegalArgumentException("not a multi entity");
         }
@@ -140,6 +146,7 @@ public class EngineImpl implements Engine {
 
     @Override
     public void addPack(DataPack pack) {
+        logger.info(String.format("Registering data pack %s", pack.getId()));
         if(dataPacks.containsKey(pack.getId())) {
             throw new IllegalArgumentException("pack with id already exists");
         }
@@ -156,6 +163,7 @@ public class EngineImpl implements Engine {
 
     @Override
     public void removePack(String id, boolean removeDependents) {
+        logger.info(String.format("Unregistering data pack %s", id));
         if(!dataPacks.containsKey(id)) {
             throw new IllegalArgumentException("pack with id does not exist");
         }
@@ -241,12 +249,14 @@ public class EngineImpl implements Engine {
     @Override
     public void scheduleAction(EntityAction action, ActionParameters parameters) {
         actions.offer(new ActionInstance(action, parameters));
+        logger.info(String.format("Action %s scheduled with parameters %s", action, parameters));
     }
 
     @Override
     public void update(float delta) {
         ActionInstance action = actions.poll();
         while(action != null) {
+            logger.info(String.format("Running action %s with parameters %s", action.getAction(), action.getParameters()));
             action.getAction().run(action.getParameters());
             action = actions.poll();
         }
@@ -254,6 +264,7 @@ public class EngineImpl implements Engine {
     }
 
     private void link() {
+        logger.info("Linking entities and systems");
         if(linked) {
             return;
         }
@@ -266,6 +277,7 @@ public class EngineImpl implements Engine {
     }
 
     private void clear() {
+        logger.info("Clearing entity and system links");
         if(!linked) {
             return;
         }
