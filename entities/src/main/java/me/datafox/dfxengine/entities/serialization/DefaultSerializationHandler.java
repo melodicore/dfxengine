@@ -2,6 +2,9 @@ package me.datafox.dfxengine.entities.serialization;
 
 import com.esotericsoftware.jsonbeans.Json;
 import me.datafox.dfxengine.entities.api.SerializationHandler;
+import me.datafox.dfxengine.entities.serialization.DefaultSerializationHandlerConfiguration.ClassTag;
+import me.datafox.dfxengine.entities.serialization.DefaultSerializationHandlerConfiguration.ElementType;
+import me.datafox.dfxengine.entities.serialization.DefaultSerializationHandlerConfiguration.Serializer;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 
@@ -17,7 +20,9 @@ public class DefaultSerializationHandler implements SerializationHandler {
     public DefaultSerializationHandler(DefaultSerializationHandlerConfiguration configuration) {
         json = new Json(configuration.getOutputType());
         prettyPrint = configuration.isPrettyPrint();
-        configuration.getTypes().forEach(e -> json.setElementType(e.getType(), e.getFieldName(), e.getElementType()));
+        configuration.getTypes().forEach(this::setType);
+        configuration.getClassTags().forEach(this::addTag);
+        configuration.getSerializers().forEach(this::setSerializer);
     }
 
     @Override
@@ -28,5 +33,17 @@ public class DefaultSerializationHandler implements SerializationHandler {
     @Override
     public <T> T deserialize(Class<T> type, String data) {
         return json.fromJson(type, data);
+    }
+
+    private <T, E> void setType(ElementType<T, E> type) {
+        json.setElementType(type.getType(), type.getFieldName(), type.getElementType());
+    }
+
+    private <T> void addTag(ClassTag<T> tag) {
+        json.addClassTag(tag.getTag(), tag.getType());
+    }
+
+    private <T> void setSerializer(Serializer<T> serializer) {
+        json.setSerializer(serializer.getType(), serializer.getSerializer());
     }
 }
