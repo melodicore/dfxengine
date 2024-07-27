@@ -17,6 +17,7 @@ public class DefaultSerializationHandler implements SerializationHandler {
     public DefaultSerializationHandler(DefaultSerializationHandlerConfiguration configuration) {
         json = new Json(configuration.getOutputType());
         prettyPrint = configuration.isPrettyPrint();
+        configuration.getTypes().forEach(e -> json.setElementType(e.getType(), e.getFieldName(), e.getElementType()));
     }
 
     @Override
