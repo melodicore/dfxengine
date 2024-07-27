@@ -19,10 +19,10 @@ import java.util.List;
  * @author datafox
  */
 public class ValueMapOperationAction extends AbstractAction {
-    public static final ActionParameters.Key<Operation> OPERATION = ActionParameters.key((SingleParameterOperation) Operations::add);
-    public static final ActionParameters.Key<List<Value>> INPUTS = ActionParameters.key(List.of(new StaticValue(Numerals.of(1))));
-    public static final ActionParameters.Key<List<ValueMap>> OUTPUTS = ActionParameters.key(List.of());
-    public static final ActionParameters.Key<MathContext> CONTEXT = ActionParameters.key(MathContext.defaults());
+    public static final ActionParameters.Key<Operation> OPERATION = ActionParameters.key("operation", (SingleParameterOperation) Operations::add);
+    public static final ActionParameters.Key<List<Value>> INPUTS = ActionParameters.key("inputs", List.of(new StaticValue(Numerals.of(1))));
+    public static final ActionParameters.Key<List<ValueMap>> OUTPUTS = ActionParameters.key("outputs", List.of());
+    public static final ActionParameters.Key<MathContext> CONTEXT = ActionParameters.key("context", MathContext.defaults());
 
     private final ValueMapOperationActionDefinition definition;
 

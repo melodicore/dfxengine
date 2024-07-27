@@ -11,7 +11,7 @@ import java.util.List;
  * @author datafox
  */
 public class CreateEntityAction extends AbstractAction {
-    public static final ActionParameters.Key<List<Handle>> HANDLES = ActionParameters.key(List.of());
+    public static final ActionParameters.Key<List<Handle>> HANDLES = ActionParameters.key("handles", List.of());
 
     private final CreateEntityActionDefinition definition;
 

@@ -27,13 +27,24 @@ public final class ActionParameters {
         return (T) parameters.getOrDefault(key, key.getDefaultValue());
     }
 
+    @Override
+    public String toString() {
+        return parameters.toString();
+    }
+
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Key<T> {
+        private final String id;
         private final T defaultValue;
+
+        @Override
+        public String toString() {
+            return id;
+        }
     }
 
-    public static <T> Key<T> key(T defaultValue) {
-        return new Key<>(defaultValue);
+    public static <T> Key<T> key(String id, T defaultValue) {
+        return new Key<>(id, defaultValue);
     }
 }

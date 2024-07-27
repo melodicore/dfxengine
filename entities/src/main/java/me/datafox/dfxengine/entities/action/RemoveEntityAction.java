@@ -11,7 +11,7 @@ import java.util.List;
  * @author datafox
  */
 public class RemoveEntityAction extends AbstractAction {
-    public static final ActionParameters.Key<List<Entity>> ENTITIES = ActionParameters.key(List.of());
+    public static final ActionParameters.Key<List<Entity>> ENTITIES = ActionParameters.key("handles", List.of());
 
     private final RemoveEntityActionDefinition definition;
 
