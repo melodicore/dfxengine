@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 import me.datafox.dfxengine.entities.DataPackImpl;
-import me.datafox.dfxengine.entities.data.ImmutableValueMapData;
 import me.datafox.dfxengine.entities.definition.*;
 import me.datafox.dfxengine.entities.definition.action.CreateEntityActionDefinition;
 import me.datafox.dfxengine.entities.definition.action.RemoveEntityActionDefinition;
@@ -15,6 +14,7 @@ import me.datafox.dfxengine.entities.definition.action.ValueOperationActionDefin
 import me.datafox.dfxengine.entities.definition.data.ImmutableValueDataDefinition;
 import me.datafox.dfxengine.entities.definition.data.ImmutableValueMapDataDefinition;
 import me.datafox.dfxengine.entities.definition.data.ValueDataDefinition;
+import me.datafox.dfxengine.entities.definition.data.ValueMapDataDefinition;
 import me.datafox.dfxengine.entities.definition.link.ValueMapModifierLinkDefinition;
 import me.datafox.dfxengine.entities.definition.link.ValueModifierLinkDefinition;
 import me.datafox.dfxengine.entities.definition.modifier.OperationModifierDefinition;
@@ -70,7 +70,7 @@ public class DefaultSerializationHandlerConfiguration {
                 .classTag(new ClassTag<>("immutableValue", ImmutableValueDataDefinition.class))
                 .classTag(new ClassTag<>("immutableValueMap", ImmutableValueMapDataDefinition.class))
                 .classTag(new ClassTag<>("value", ValueDataDefinition.class))
-                .classTag(new ClassTag<>("valueMap", ImmutableValueMapData.class))
+                .classTag(new ClassTag<>("valueMap", ValueMapDataDefinition.class))
                 //Link
                 .classTag(new ClassTag<>("valueMapModifier", ValueMapModifierLinkDefinition.class))
                 .classTag(new ClassTag<>("valueModifier", ValueModifierLinkDefinition.class))
