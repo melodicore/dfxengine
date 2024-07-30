@@ -30,7 +30,7 @@ public class GroupSelector implements Selector {
     public <T> Stream<T> select(HandleMap<T> map, Engine engine) {
         return map.getSpace()
                 .getGroups()
-                .get(getGroup())
+                .get(map.getSpace().getHandle().getId() + ":" + getGroup())
                 .getHandles()
                 .stream()
                 .map(map::get)
