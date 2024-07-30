@@ -284,10 +284,7 @@ public class EngineImpl implements Engine {
         entities.values()
                 .stream()
                 .flatMap(List::stream)
-                .map(Entity::getComponents)
-                .map(HandleMap::values)
-                .flatMap(Collection::stream)
-                .forEach(EntityComponent::clear);
+                .forEach(this::clearEntity);
         systems.forEach(EntitySystem::clear);
         linked = false;
     }
@@ -374,6 +371,18 @@ public class EngineImpl implements Engine {
     private void linkComponent(EntityComponent component) {
         currentComponent = component;
         component.link();
+        currentComponent = null;
+    }
+
+    private void clearEntity(Entity entity) {
+        currentEntity = entity;
+        entity.getComponents().values().forEach(this::clearComponent);
+        currentEntity = null;
+    }
+
+    private void clearComponent(EntityComponent component) {
+        currentComponent = component;
+        component.clear();
         currentComponent = null;
     }
 
