@@ -213,19 +213,19 @@ public class EngineImpl implements Engine {
                 .forEach(systems::add);
         if(keepState && state != null) {
             setState(state);
+        } else {
+            link();
         }
-        link();
     }
 
     @Override
     public void setState(EngineState state) {
+        clear();
         state.getSingleEntities().forEach(this::loadSingleEntityState);
         if(state.getMultiEntities().isEmpty()) {
-            return;
+            clearMultiEntities();
+            state.getMultiEntities().forEach(this::loadMultiEntityState);
         }
-        clear();
-        clearMultiEntities();
-        state.getMultiEntities().forEach(this::loadMultiEntityState);
         link();
     }
 
