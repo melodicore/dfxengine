@@ -3,117 +3,117 @@
 "dependencies": [],
 "developer": "datafox",
 "spaces": [
-	{
-		"id": "values",
-		"groups": [],
-		"handles": [
-			{
-				"id": "value1",
-				"groups": [],
-				"tags": []
-			},
-			{
-				"id": "value2",
-				"groups": [],
-				"tags": []
-			}
-		]
-	}
+    {
+        "id": "values",
+        "groups": [],
+        "handles": [
+            {
+                "id": "value1",
+                "groups": [],
+                "tags": []
+            },
+            {
+                "id": "value2",
+                "groups": [],
+                "tags": []
+            }
+        ]
+    }
 ],
 "entities": [
-	{
-		"handle": "entity",
-		"components": [
-			{
-				"handle": "component",
-				"data": [
-					{
-						"class": "immutableValueMap",
-						"handle": "map",
-						"space": "values",
-						"values": [
-							{
-								"handle": "value1",
-								"type": "INT",
-								"value": "69"
-							},
-							{
-								"handle": "value2",
-								"type": "DOUBLE",
-								"value": "666.0"
-							}
-						]
-					},
-					{
-						"class": "immutableValue",
-						"value": {
-							"handle": "value",
-							"type": "FLOAT",
-							"value": "1337.0"
-						}
-					}
-				],
-				"links": [
-					{
-						"class": "valueMapModifier",
-						"handle": "mapModifier",
-						"output": {
-							"class": "selectorValueMap",
-							"component": {
-								"class": "selfComponent"
-							},
-							"selector": {
-								"class": "handle",
-								"handle": "map"
-							}
-						},
-						"modifier": {
-							"class": "operationModifier",
-							"operation": {
-								"class": "add"
-							},
-							"inputs": [
-								{
-									"class": "staticValue",
-									"type": "FLOAT",
-									"value": "7.34"
-								}
-							]
-						}
-					},
-					{
-						"class": "valueModifier",
-						"handle": "valueModifier",
-						"output": {
-							"class": "selectorValue",
-							"component": {
-								"class": "selfComponent"
-							},
-							"selector": {
-								"class": "handle",
-								"handle": "value"
-							}
-						},
-						"modifier": {
-							"class": "operationModifier",
-							"operation": {
-								"class": "add"
-							},
-							"inputs": [
-								{
-									"class": "staticValue",
-									"type": "BIG_DEC",
-									"value": "5.25"
-								}
-							]
-						}
-					}
-				],
-				"actions": []
-			}
-		],
-		"singleton": true
-	}
+    {
+        "handle": "entity",
+        "components": [
+            {
+                "handle": "component",
+                "data": [
+                    {
+                        "class": "immutableValueMap",
+                        "handle": "map",
+                        "space": "values",
+                        "values": [
+                            {
+                                "handle": "value1",
+                                "type": "INT",
+                                "value": "69"
+                            },
+                            {
+                                "handle": "value2",
+                                "type": "DOUBLE",
+                                "value": "666.0"
+                            }
+                        ]
+                    },
+                    {
+                        "class": "immutableValue",
+                        "value": {
+                            "handle": "value",
+                            "type": "FLOAT",
+                            "value": "1337.0"
+                        }
+                    }
+                ],
+                "links": [
+                    {
+                        "class": "valueMapModifier",
+                        "handle": "mapModifier",
+                        "output": {
+                            "class": "selectorValueMap",
+                            "component": {
+                                "class": "selfComponent"
+                            },
+                            "selector": {
+                                "class": "handle",
+                                "handle": "map"
+                            }
+                        },
+                        "modifier": {
+                            "class": "operationModifier",
+                            "operation": {
+                                "class": "add"
+                            },
+                            "inputs": [
+                                {
+                                    "class": "staticValue",
+                                    "type": "FLOAT",
+                                    "value": "7.34"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "class": "valueModifier",
+                        "handle": "valueModifier",
+                        "output": {
+                            "class": "selectorValue",
+                            "component": {
+                                "class": "selfComponent"
+                            },
+                            "selector": {
+                                "class": "handle",
+                                "handle": "value"
+                            }
+                        },
+                        "modifier": {
+                            "class": "operationModifier",
+                            "operation": {
+                                "class": "add"
+                            },
+                            "inputs": [
+                                {
+                                    "class": "staticValue",
+                                    "type": "BIG_DEC",
+                                    "value": "5.25"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "actions": []
+            }
+        ],
+        "singleton": true
+    }
 ],
 "systems": []
 }
