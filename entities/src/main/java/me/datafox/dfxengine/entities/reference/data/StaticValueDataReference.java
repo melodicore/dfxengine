@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Engine;
 import me.datafox.dfxengine.entities.api.Reference;
 import me.datafox.dfxengine.entities.utils.internal.EntityUtils;
+import me.datafox.dfxengine.math.api.NumeralType;
 import me.datafox.dfxengine.values.StaticValue;
 import me.datafox.dfxengine.values.api.Value;
 
@@ -20,7 +21,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StaticValueDataReference implements Reference<Value> {
-    public String valueType;
+    public NumeralType type;
     public String value;
 
     @Override
@@ -30,6 +31,6 @@ public class StaticValueDataReference implements Reference<Value> {
 
     @Override
     public Stream<Value> get(Engine engine) {
-        return Stream.of(new StaticValue(EntityUtils.getNumeral(valueType, value)));
+        return Stream.of(new StaticValue(EntityUtils.getNumeral(type, value)));
     }
 }
