@@ -1,0 +1,5 @@
+--add-modules
+  dfxengine.injector
+
+--add-reads
+  dfxengine.entities=dfxengine.injector
