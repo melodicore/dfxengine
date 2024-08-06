@@ -24,6 +24,9 @@ public class OrSelector implements Selector {
 
     @Override
     public boolean isSingle(boolean isEntity) {
+        if(selectors.size() == 1) {
+            return selectors.get(0).isSingle(isEntity);
+        }
         return false;
     }
 
