@@ -44,7 +44,13 @@ public class ValueMapOperationSystem extends AbstractEntitySystem {
     @Override
     public void update(float delta) {
         ValueMap combined = new DelegatedValueMap(new HashHandleMap<>(space), false, getEngine().getLogger());
-        inputs.forEach(i -> combined.apply(Operations::add, MapMathContext.builder().createNonExistingAs(Numerals.of(0)).build(), i.getValueNumeralMap()));
+        inputs.forEach(i -> combined.apply(
+                Operations::add,
+                MapMathContext
+                        .builder()
+                        .createNonExistingAs(Numerals.of(0))
+                        .build(),
+                i.getValueNumeralMap()));
         if(delta != 1) {
             combined.apply(Operations::multiply, Numerals.of(delta));
         }
