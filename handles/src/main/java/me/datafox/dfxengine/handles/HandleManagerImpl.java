@@ -41,7 +41,9 @@ public class HandleManagerImpl implements HandleManager {
         this.configuration = configuration;
         logConfiguration();
         spaceSpace = new SpaceSpace();
-        spaces = new HashHandleMap<>(spaceSpace, logger);
+        spaces = configuration.isOrderedSpaces() ?
+                new TreeHandleMap<>(spaceSpace, logger) :
+                new HashHandleMap<>(spaceSpace, logger);
         tagSpace = createSpace(TAG_SPACE_ID);
     }
 
