@@ -93,4 +93,11 @@ public class InjectorUtils {
         splits.add(str.substring(start));
         return splits.toArray(String[]::new);
     }
+
+    public static String escapeCapture(String str) {
+        if(!str.contains("$")) {
+            return str;
+        }
+        return String.join("\\$", str.split("\\$"));
+    }
 }

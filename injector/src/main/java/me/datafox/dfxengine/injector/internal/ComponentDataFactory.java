@@ -294,10 +294,10 @@ public class ComponentDataFactory {
         List<String> genericParameters = InjectorUtils.splitParameters(classString.split("<", 2)[1]);
         List<String> simpleGenericParameters = genericParameters.stream().map(s -> s.split(" ", 2)[0]).collect(Collectors.toList());
         for(int i = 0; i < parameters.size(); i++) {
-            classString = classString.replaceAll(Pattern.quote("<" + genericParameters.get(i)), "<" + parameters.get(i));
-            classString = classString.replaceAll(Pattern.quote(", " + genericParameters.get(i)), ", " + parameters.get(i));
-            classString = classString.replaceAll(Pattern.quote("<" + simpleGenericParameters.get(i)), "<" + parameters.get(i));
-            classString = classString.replaceAll(Pattern.quote(", " + simpleGenericParameters.get(i)), ", " + parameters.get(i));
+            classString = classString.replaceAll(Pattern.quote("<" + genericParameters.get(i)), "<" + InjectorUtils.escapeCapture(parameters.get(i)));
+            classString = classString.replaceAll(Pattern.quote(", " + genericParameters.get(i)), ", " + InjectorUtils.escapeCapture(parameters.get(i)));
+            classString = classString.replaceAll(Pattern.quote("<" + simpleGenericParameters.get(i)), "<" + InjectorUtils.escapeCapture(parameters.get(i)));
+            classString = classString.replaceAll(Pattern.quote(", " + simpleGenericParameters.get(i)), ", " + InjectorUtils.escapeCapture(parameters.get(i)));
         }
         return classString;
     }
