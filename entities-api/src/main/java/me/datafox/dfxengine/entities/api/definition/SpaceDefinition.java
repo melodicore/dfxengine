@@ -11,4 +11,6 @@ public interface SpaceDefinition {
     List<String> getGroups();
 
     List<HandleDefinition> getHandles();
+
+    void append(SpaceDefinition other);
 }

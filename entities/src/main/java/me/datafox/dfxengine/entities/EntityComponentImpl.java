@@ -94,7 +94,7 @@ public class EntityComponentImpl implements EntityComponent {
     }
 
     private void putData(EntityData<?> entityData) {
-        if(!data.containsValue(entityData.getType())) {
+        if(!data.containsKey(entityData.getType())) {
             data.put(entityData.getType(), new HashHandleMap<>(EntityHandles.getData()));
         }
         data.get(entityData.getType()).putHandled(entityData);

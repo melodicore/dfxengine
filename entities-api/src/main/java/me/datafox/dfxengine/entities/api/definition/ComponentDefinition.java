@@ -18,4 +18,6 @@ public interface ComponentDefinition {
     List<ActionDefinition> getActions();
 
     EntityComponent build(Engine engine);
+
+    void append(ComponentDefinition other);
 }

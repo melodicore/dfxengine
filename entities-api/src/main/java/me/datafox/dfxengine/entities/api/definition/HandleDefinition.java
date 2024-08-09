@@ -11,4 +11,6 @@ public interface HandleDefinition {
     List<String> getGroups();
 
     List<String> getTags();
+
+    void append(HandleDefinition other);
 }

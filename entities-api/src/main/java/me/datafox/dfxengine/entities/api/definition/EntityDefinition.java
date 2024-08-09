@@ -16,4 +16,6 @@ public interface EntityDefinition {
     boolean isSingleton();
 
     Entity build(Engine engine);
+
+    void append(EntityDefinition other);
 }

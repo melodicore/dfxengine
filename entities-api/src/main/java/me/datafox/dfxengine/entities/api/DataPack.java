@@ -21,4 +21,6 @@ public interface DataPack {
     List<EntityDefinition> getEntities();
 
     List<SystemDefinition> getSystems();
+
+    void append(DataPack other);
 }

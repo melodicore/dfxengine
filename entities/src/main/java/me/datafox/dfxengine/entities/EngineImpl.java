@@ -57,7 +57,7 @@ public class EngineImpl implements Engine {
         entities = new HashHandleMap<>(EntityHandles.getEntities());
         multiDefinitions = new HashHandleMap<>(EntityHandles.getEntities());
         listeners = new LinkedHashSet<>();
-        dataPacks = new HashMap<>();
+        dataPacks = new LinkedHashMap<>();
         systems = new TreeSet<>();
         actions = new ArrayDeque<>();
         currentEntity = null;
@@ -186,6 +186,9 @@ public class EngineImpl implements Engine {
 
     @Override
     public void loadPacks(boolean keepState) {
+        if(dataPacks.isEmpty()) {
+            throw new IllegalArgumentException("No data packs are registered");
+        }
         EngineState state = null;
         if(keepState) {
             state = getState();
@@ -195,20 +198,16 @@ public class EngineImpl implements Engine {
         entities.clear();
         multiDefinitions.clear();
         systems.clear();
-        dataPacks.values()
-                .stream()
-                .map(DataPack::getSpaces)
-                .flatMap(List::stream)
-                .forEach(EntityHandles::setSpace);
-        dataPacks.values()
-                .stream()
-                .map(DataPack::getEntities)
-                .flatMap(List::stream)
-                .forEach(this::createEntityInternal);
-        dataPacks.values()
-                .stream()
-                .map(DataPack::getSystems)
-                .flatMap(List::stream)
+        DataPack pack;
+        if(dataPacks.size() == 1) {
+            pack = dataPacks.values().iterator().next();
+        } else {
+            pack = new DataPackImpl();
+            dataPacks.values().forEach(pack::append);
+        }
+        pack.getSpaces().forEach(EntityHandles::setSpace);
+        pack.getEntities().forEach(this::createEntityInternal);
+        pack.getSystems().stream()
                 .map(s -> s.build(this))
                 .forEach(systems::add);
         if(keepState && state != null) {
