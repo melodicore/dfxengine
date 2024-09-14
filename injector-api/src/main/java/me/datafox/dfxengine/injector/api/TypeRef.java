@@ -6,7 +6,6 @@ import lombok.Singular;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,8 +15,7 @@ import java.util.stream.Stream;
  * Represents a type with parameters. This class is used when requesting {@link Component Components} from the
  * {@link Injector}. As an example, if you wanted to reference {@code Component<Type1,Type2<Type3>>}, you would call
  * {@code TypeRef.of(Component.class, TypeRef.of(Type1.class), TypeRef.of(Type2.class, TypeRef.of(Type3.class)));}. The
- * constructor checks for parameter count and throws an exception if an invalid amount of type parameters. The one
- * exception is {@link Array}, which is allowed to have one type parameter to represent a generic object array.
+ * constructor checks for parameter count and throws an exception if an invalid amount of type parameters.
  *
  * @author datafox
  */
@@ -35,12 +33,10 @@ public final class TypeRef<T> {
      * @param parameters type parameters to be represented
      *
      * @throws ParameterCountMismatchException if the amount of parameters for the specified type is different to the
-     * amount of provided parameters. If the type is {@link Array} and there is exactly one type parameter, this
-     * exception will not be thrown (see {@link TypeRef})
+     * amount of provided parameters
      */
     public TypeRef(Class<T> type, List<TypeRef<?>> parameters) {
-        if((!Array.class.equals(type) || parameters.size() != 1) &&
-                type.getTypeParameters().length != parameters.size()) {
+        if(type.getTypeParameters().length != parameters.size()) {
             StringBuilder sb = new StringBuilder();
             sb.append("Class ").append(type.getName()).append(" has ").append(type.getTypeParameters().length).append(" type parameter");
             if(type.getTypeParameters().length != 1) {
