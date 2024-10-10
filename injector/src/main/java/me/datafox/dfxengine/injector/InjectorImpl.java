@@ -271,9 +271,18 @@ public class InjectorImpl implements Injector {
      * @param event {@inheritDoc}
      * @param <T> {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     @Override
     public <T> void invokeEvent(T event) {
+        invokeEventInternal(event);
+        while(!eventQueue.isEmpty()) {
+            List<Object> copy = new ArrayList<>(eventQueue);
+            eventQueue.clear();
+            copy.forEach(this::invokeEventInternal);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> void invokeEventInternal(T event) {
         TypeRef<T> eventType;
 
         if(event instanceof ParametricEvent) {
@@ -301,7 +310,7 @@ public class InjectorImpl implements Injector {
 
     private <T> void invokeEvent(EventData<T> eventData, T event) {
         if(eventData.getOwner() != null) {
-            componentList.stream()
+            eventQueue.addAll(componentList.stream()
                     .filter(data -> eventData.getOwner()
                             .isAssignableFrom(data.getReference().getActualReference()))
                     .filter(data -> InstantiationPolicy.ONCE.equals(data.getPolicy()))
@@ -316,7 +325,7 @@ public class InjectorImpl implements Injector {
                         }
                     })
                     .flatMap(Stream::ofNullable)
-                    .forEach(this::invokeEvent);
+                    .collect(Collectors.toList()));
         } else {
             Object returned = null;
             try {
@@ -326,7 +335,7 @@ public class InjectorImpl implements Injector {
                 throw new RuntimeException(e);
             }
             if(returned != null) {
-                invokeEvent(returned);
+                eventQueue.add(returned);
             }
         }
     }
