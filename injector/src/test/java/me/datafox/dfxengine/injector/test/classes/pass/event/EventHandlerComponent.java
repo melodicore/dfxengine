@@ -9,8 +9,9 @@ import java.util.function.Predicate;
  * @author datafox
  */
 @Component
-public class EventHandlerComponent {
+public class EventHandlerComponent extends EventHandlerSuper implements EventInterface {
     public int events = 0;
+    public int interfaceEvents = 0;
 
     @EventHandler
     void event1(String str) {
@@ -26,5 +27,10 @@ public class EventHandlerComponent {
     String event3(Predicate<? super String> predicate) {
         events++;
         return "";
+    }
+
+    @Override
+    public void eventThing(Number number) {
+        interfaceEvents++;
     }
 }

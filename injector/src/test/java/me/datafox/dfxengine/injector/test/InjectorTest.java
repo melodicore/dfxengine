@@ -240,18 +240,28 @@ public class InjectorTest {
         var c = injector.getComponent(EventHandlerComponent.class);
 
         assertEquals(0, c.events);
+        assertEquals(0, c.superEvents);
+        assertEquals(0, c.interfaceEvents);
 
         injector.invokeEvent("yo");
-
         assertEquals(1, c.events);
+        assertEquals(0, c.superEvents);
+        assertEquals(0, c.interfaceEvents);
 
         injector.invokeEvent(52);
-
         assertEquals(2, c.events);
+        assertEquals(0, c.superEvents);
+        assertEquals(1, c.interfaceEvents);
 
         injector.invokeEvent(new ParametricPredicateEvent<>(CharSequence.class));
-
         assertEquals(4, c.events);
+        assertEquals(0, c.superEvents);
+        assertEquals(1, c.interfaceEvents);
+
+        injector.invokeEvent(59d);
+        assertEquals(4, c.events);
+        assertEquals(1, c.superEvents);
+        assertEquals(2, c.interfaceEvents);
     }
 
     @Test

@@ -276,8 +276,6 @@ public class InjectorImpl implements Injector {
     public <T> void invokeEvent(T event) {
         TypeRef<T> eventType;
 
-        System.out.println(event.getClass().isSynthetic());
-
         if(event instanceof ParametricEvent) {
             eventType = (TypeRef<T>) ((ParametricEvent) event).getType();
         } else {

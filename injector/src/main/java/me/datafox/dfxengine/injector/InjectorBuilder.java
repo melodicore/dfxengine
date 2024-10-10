@@ -169,16 +169,8 @@ public class InjectorBuilder {
                         .filter(method -> method.hasAnnotation(Component.class))
                         .anyMatch(Predicate.not(MethodInfo::isStatic)));
 
-        ClassInfoList instantiatedEventMethodClasses =
-                eventMethodClasses.filter(info -> info
-                        .getDeclaredMethodInfo()
-                        .stream()
-                        .filter(method -> method.hasAnnotation(EventHandler.class))
-                        .anyMatch(Predicate.not(MethodInfo::isStatic)));
-
         ClassInfoList instantiatedClasses = Stream.concat(componentClasses.stream(),
-                        Stream.concat(instantiatedComponentMethodClasses.stream(),
-                                instantiatedEventMethodClasses.stream()))
+                        instantiatedComponentMethodClasses.stream())
                 .distinct()
                 .collect(Collectors.toCollection(ClassInfoList::new));
 
