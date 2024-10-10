@@ -14,6 +14,7 @@ import me.datafox.dfxengine.injector.test.classes.fail.final_field.ComponentWith
 import me.datafox.dfxengine.injector.test.classes.fail.parametric.unresolved_class.UnresolvedParameterComponent;
 import me.datafox.dfxengine.injector.test.classes.fail.parametric.unresolved_method.UnresolvedParameterComponentMethod;
 import me.datafox.dfxengine.injector.test.classes.fail.parametric.unresolved_method_class.unresolved_method.UnresolvedParameterComponentMethodClass;
+import me.datafox.dfxengine.injector.test.classes.fail.parametric_event.ParametricEventComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.array.ConstructorArrayComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.array.FieldArrayComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.array.InitializeArrayComponent;
@@ -47,6 +48,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -280,5 +282,12 @@ public class InjectorTest {
         assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(TypeRef.of(Function.class, String.class)));
         assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(TypeRef.of(Supplier.class, Consumer.class)));
         assertThrows(ParameterCountMismatchException.class, () -> injector.getComponent(Supplier.class));
+    }
+
+    @Test
+    public void parametricEventTest() {
+        var injector = injector(ParametricEventComponent.class);
+
+        assertThrows(ParametricEventWithoutInterfaceException.class, () -> injector.invokeEvent((Predicate<String>) s -> false));
     }
 }

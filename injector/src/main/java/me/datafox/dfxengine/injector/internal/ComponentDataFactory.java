@@ -152,11 +152,6 @@ public class ComponentDataFactory {
                 .<T>builder()
                 .event(buildClassReferenceEntry(info.getParameterInfo()[0].getTypeSignatureOrTypeDescriptor().toString()));
 
-        String returnString = parseMethod(info);
-        if(!"void".equals(returnString)) {
-            builder.returnedEvent(buildClassReferenceEntry(returnString));
-        }
-
         if(!info.isStatic()) {
             builder.owner(buildClassReferenceEntry(parseClass(info.getClassInfo())));
         }

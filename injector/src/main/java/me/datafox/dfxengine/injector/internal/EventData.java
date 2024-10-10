@@ -16,8 +16,6 @@ import java.lang.reflect.Method;
 public class EventData<T> {
     private final ClassReference<T> event;
 
-    private final ClassReference<?> returnedEvent;
-
     private final ClassReference<?> owner;
 
     private final Method method;

@@ -6,6 +6,7 @@ import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchExcepti
 import me.datafox.dfxengine.injector.exception.MultipleDependenciesPresentException;
 import me.datafox.dfxengine.injector.exception.NoDependenciesPresentException;
 import me.datafox.dfxengine.injector.exception.ParametricEventWithoutInterfaceException;
+import me.datafox.dfxengine.injector.exception.UnresolvedOrUnknownTypeException;
 import me.datafox.dfxengine.injector.internal.*;
 import me.datafox.dfxengine.injector.utils.InjectorStrings;
 import me.datafox.dfxengine.utils.LogUtils;
@@ -275,19 +276,21 @@ public class InjectorImpl implements Injector {
     public <T> void invokeEvent(T event) {
         TypeRef<T> eventType;
 
-        if(event.getClass().getTypeParameters().length != 0) {
-            if(event instanceof ParametricEvent) {
-                eventType = (TypeRef<T>) ((ParametricEvent) event).getType();
-            } else {
-                throw LogUtils.logExceptionAndGet(logger,
-                        InjectorStrings.parametricEventWithoutInterface(event),
-                        ParametricEventWithoutInterfaceException::new);
-            }
+        System.out.println(event.getClass().isSynthetic());
+
+        if(event instanceof ParametricEvent) {
+            eventType = (TypeRef<T>) ((ParametricEvent) event).getType();
         } else {
             eventType = (TypeRef<T>) TypeRef.of(event.getClass());
         }
-
-        ClassReference<T> eventReference = factory.buildClasReferenceFromTypeRef(eventType);
+        ClassReference<T> eventReference;
+        try {
+            eventReference = factory.buildClasReferenceFromTypeRef(eventType);
+        } catch(UnresolvedOrUnknownTypeException e) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    InjectorStrings.parametricEventWithoutInterface(event),
+                    ParametricEventWithoutInterfaceException::new);
+        }
 
         List<EventData<T>> events = eventList
                 .stream()
