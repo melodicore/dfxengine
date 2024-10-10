@@ -281,15 +281,25 @@ public class InjectorImpl implements Injector {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param events {@inheritDoc}
+     */
+    @Override
+    public void invokeEvents(List<?> events) {
+        events.forEach(this::invokeEventInternal);
+    }
+
     @SuppressWarnings("unchecked")
     private <T> void invokeEventInternal(T event) {
         TypeRef<T> eventType;
-
         if(event instanceof ParametricEvent) {
             eventType = (TypeRef<T>) ((ParametricEvent) event).getType();
         } else {
             eventType = (TypeRef<T>) TypeRef.of(event.getClass());
         }
+
         ClassReference<T> eventReference;
         try {
             eventReference = factory.buildClasReferenceFromTypeRef(eventType);

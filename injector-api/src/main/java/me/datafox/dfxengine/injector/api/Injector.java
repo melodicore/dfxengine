@@ -121,4 +121,12 @@ public interface Injector {
      * @param <T> type of the event
      */
     <T> void invokeEvent(T event);
+
+    /**
+     * Calls all {@link EventHandler EventHandlers} with the specified events that can accept their types as parameters.
+     * If an event has type parameters, it must implement {@link ParametricEvent}.
+     *
+     * @param events events to be invoked
+     */
+    void invokeEvents(List<?> events);
 }
