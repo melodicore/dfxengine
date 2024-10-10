@@ -8,10 +8,7 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
 import me.datafox.dfxengine.injector.exception.MultipleDependenciesPresentException;
 import me.datafox.dfxengine.injector.exception.NoDependenciesPresentException;
-import me.datafox.dfxengine.injector.internal.ClassReference;
-import me.datafox.dfxengine.injector.internal.ComponentData;
-import me.datafox.dfxengine.injector.internal.InitializeReference;
-import me.datafox.dfxengine.injector.internal.PrioritizedRunnable;
+import me.datafox.dfxengine.injector.internal.*;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,15 +73,18 @@ public class InjectorImpl implements Injector {
 
     private final Logger logger;
 
+    private final ComponentDataFactory factory;
+
     private final List<ComponentData<?>> componentList;
 
     private final List<PrioritizedRunnable> initializerQueue;
 
     private final List<ComponentData<?>> voidComponentQueue;
 
-    InjectorImpl(Stream<ComponentData<?>> components) {
+    InjectorImpl(ComponentDataFactory factory, Stream<ComponentData<?>> components) {
         instance = this;
         logger = LoggerFactory.getLogger(InjectorImpl.class);
+        this.factory = factory;
         componentList = new ArrayList<>();
         initializerQueue = new ArrayList<>();
         voidComponentQueue = new ArrayList<>();
@@ -183,8 +183,8 @@ public class InjectorImpl implements Injector {
      */
     @Override
     public <T,R> T getComponent(TypeRef<T> type, TypeRef<R> requesting) {
-        ClassReference<T> reference = getReference(type);
-        ClassReference<R> requestingReference = getReference(requesting);
+        ClassReference<T> reference = factory.buildClasReferenceFromTypeRef(type);
+        ClassReference<R> requestingReference = factory.buildClasReferenceFromTypeRef(requesting);
         List<ClassReference<?>> referenceStack = new ArrayList<>();
         if(requestingReference != null) {
             referenceStack.add(requestingReference);
@@ -257,26 +257,6 @@ public class InjectorImpl implements Injector {
     @Override
     public <T,R> List<T> getComponents(TypeRef<T> type, TypeRef<R> requesting) {
         return getComponent(TypeRef.of(List.class, type), requesting);
-    }
-
-    private <T> ClassReference<T> getReference(TypeRef<T> type) {
-        if(type == null) {
-            return null;
-        }
-        ClassReference<T> reference = ClassReference
-                .<T>builder()
-                .type(type.getType())
-                .parameters(type
-                        .getParameters()
-                        .stream()
-                        .map(this::getReference)
-                        .collect(Collectors.toList()))
-                .build();
-        if(List.class.equals(type.getType())) {
-            reference.setList(true);
-            reference.setListReference(reference.getParameters().get(0));
-        }
-        return reference;
     }
 
     private <T> void instantiateOnce(ComponentData<T> data) {

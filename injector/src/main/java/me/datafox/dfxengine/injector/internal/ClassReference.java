@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 public class ClassReference<T> {
     private final Class<T> type;
 
+    private final boolean sup;
+
     @Singular
     private final List<ClassReference<?>> parameters;
 
@@ -54,8 +56,11 @@ public class ClassReference<T> {
         if(this.equals(other)) {
             return true;
         }
-        if(getParameters().isEmpty() && other.getParameters().isEmpty() && getType().isAssignableFrom(other.getType())) {
-            return true;
+        if(getParameters().isEmpty() && other.getParameters().isEmpty()) {
+            if(sup) {
+                return other.getType().isAssignableFrom(getType());
+            }
+            return getType().isAssignableFrom(other.getType());
         }
         if(getParameters().size() == other.getParameters().size() && getType().equals(other.getType())) {
             for(int i = 0; i < getParameters().size(); i++) {
@@ -66,13 +71,23 @@ public class ClassReference<T> {
             return true;
         }
         if(other.getSuperclass() == null) {
-            if(getType().isAssignableFrom(Object.class)) {
+            if(sup || getType().isAssignableFrom(Object.class)) {
                 return true;
             }
-        } else if(isAssignableFrom(other.getSuperclass())) {
-            return true;
+        } else if(sup) {
+            if(other.isAssignableFrom(getSuperclass())) {
+                return true;
+            }
+        } else {
+            if(isAssignableFrom(other.getSuperclass())) {
+                return true;
+            }
         }
-        return other.getInterfaces().stream().anyMatch(this::isAssignableFrom);
+        if(sup) {
+            return getInterfaces().stream().anyMatch(other::isAssignableFrom);
+        } else {
+            return other.getInterfaces().stream().anyMatch(this::isAssignableFrom);
+        }
     }
 
     /**
@@ -80,7 +95,7 @@ public class ClassReference<T> {
      * without packages
      */
     public String getSignatureWithoutPackage() {
-        return type.getSimpleName() + (parameters.isEmpty() ? "" :
+        return (sup ? "? super " : "") + type.getSimpleName() + (parameters.isEmpty() ? "" :
                 "<" + (parameters
                         .stream()
                         .map(ClassReference::getSignatureWithoutPackage)
@@ -92,7 +107,7 @@ public class ClassReference<T> {
      * with the parameters without packages
      */
     public String getSignatureParametersWithoutPackage() {
-        return type.getName() + (parameters.isEmpty() ? "" :
+        return (sup ? "? super " : "") + type.getName() + (parameters.isEmpty() ? "" :
                 "<" + (parameters
                         .stream()
                         .map(ClassReference::getSignatureWithoutPackage)
@@ -103,7 +118,7 @@ public class ClassReference<T> {
      * @return Signature of this type reference in the format "{@code Type<Parameter,Other<Child>>}"
      */
     public String getSignature() {
-        return type.getName() + (parameters.isEmpty() ? "" :
+        return (sup ? "? super " : "") + type.getName() + (parameters.isEmpty() ? "" :
                 "<" + (parameters
                         .stream()
                         .map(ClassReference::getSignature)
@@ -113,6 +128,7 @@ public class ClassReference<T> {
     public TypeRef<T> toTypeRef() {
         return TypeRef.<T>builder()
                 .type(type)
+                .sup(sup)
                 .parameters(parameters
                         .stream()
                         .map(ClassReference::toTypeRef)
@@ -126,6 +142,7 @@ public class ClassReference<T> {
     public static ClassReference<Object> object() {
         return builder()
                 .type(Object.class)
+                .sup(false)
                 .build();
     }
 
@@ -135,6 +152,7 @@ public class ClassReference<T> {
     public static ClassReference<Void> voidType() {
         return ClassReference.<Void>builder()
                 .type(Void.class)
+                .sup(false)
                 .superclass(object())
                 .build();
     }

@@ -108,10 +108,13 @@ public class InjectorTest {
                 TypeRef.of(Parametric.class, Number.class, CharSequence.class)));
         var l2 = assertDoesNotThrow(() -> injector.getComponents(
                 TypeRef.of(Parametric.class, Object.class, Object.class)));
+        var l3 = assertDoesNotThrow(() -> injector.getComponents(
+                TypeRef.of(Parametric.class, Number.class, Double.class)));
 
         assertEquals(c1, c3);
         assertEquals(2, l1.size());
         assertEquals(3, l2.size());
+        assertTrue(l3.isEmpty());
         assertTrue(l1.contains(c1));
         assertTrue(l1.contains(c2));
         assertNotEquals(l1.indexOf(c1), l1.indexOf(c2));

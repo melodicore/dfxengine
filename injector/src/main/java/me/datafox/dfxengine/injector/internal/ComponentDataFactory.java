@@ -2,6 +2,7 @@ package me.datafox.dfxengine.injector.internal;
 
 import io.github.classgraph.*;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
+import me.datafox.dfxengine.injector.api.TypeRef;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
@@ -130,6 +131,18 @@ public class ComponentDataFactory {
         return builder.build();
     }
 
+    public <T> ClassReference<T> buildClasReferenceFromTypeRef(TypeRef<T> typeRef) {
+        if(typeRef == null) {
+            return null;
+        }
+        System.out.println("AAAA " + typeRef);
+        String str = typeRef.toString();
+        if(str.startsWith("[")) {
+            str = getArrayFromInternal(str);
+        }
+        return buildClassReferenceEntry(toFullSignature(str));
+    }
+
     private <T> ClassReference<T> buildClassReferenceEntry(String str) {
         visited.clear();
         originals.clear();
@@ -153,23 +166,28 @@ public class ComponentDataFactory {
      */
     @SuppressWarnings("unchecked")
     private <T> ClassReference<T> buildClassReference(String str) {
+        boolean sup = str.startsWith("!");
+        String str1 = str;
+        if(sup) {
+            str = str.substring(1);
+        }
         //ClassGraph does not create ClassInfo for Object.class
-        if(Object.class.getName().equals(str)) {
+        if(Object.class.getName().equals(str1)) {
             return (ClassReference<T>) ClassReference.object();
         }
         /*
         If this class reference has already been created, return a SelfReference instead. This is to prevent cyclic
         ClassReference graphs with classes where the type parameter of a superclass/interface is the class itself.
         */
-        if(visited.contains(str)) {
-            if(references.containsKey(str)) {
-                return (SelfReference<T>) references.get(str);
+        if(visited.contains(str1)) {
+            if(references.containsKey(str1)) {
+                return (SelfReference<T>) references.get(str1);
             }
             SelfReference<T> ref = new SelfReference<>();
-            references.put(str, ref);
+            references.put(str1, ref);
             return ref;
         }
-        visited.add(str);
+        visited.add(str1);
         String original = str;
         //If the class is a primitive, create a reference to the boxed version
         String className = getBoxedPrimitiveName(str);
@@ -184,7 +202,7 @@ public class ComponentDataFactory {
             originals.put(original, ref);
             return ref;
         }
-        ClassReference.ClassReferenceBuilder<T> builder = ClassReference.builder();
+        ClassReference.ClassReferenceBuilder<T> builder = ClassReference.<T>builder().sup(sup);
         //If the class does not have type parameters, superclasses or interfaces, create a reference to it.
         if(classInfoMap.containsKey(str)) {
             ClassReference<T> ref = builder.type((Class<T>) classInfoMap.get(str).loadClass()).build();
@@ -262,21 +280,31 @@ public class ComponentDataFactory {
      * @return class string in the format specified by {@link #buildClassReference(String)}
      */
     private String toFullSignature(String str) {
+        if(str.startsWith("[")) {
+            str = getArrayFromInternal(str);
+        }
         //If the class is an array, do nothing
         if(str.endsWith("[]")) {
             return str;
         }
+        String sup = "";
         //Resolve vague type parameters ("?" and "? super T" become java.lang.Object, "? extends T" becomes "T")
         if(str.startsWith("?")) {
             if(str.startsWith("? extends ")) {
                 str = str.substring(10);
+            } else if(str.startsWith("? super ")) {
+                str = str.substring(8);
+                sup = "!";
             } else {
                 return Object.class.getName();
             }
         }
+        if(Object.class.getName().equals(str)) {
+            return str;
+        }
         //If type parameters are not present, use parseClass(String)
         if(classInfoMap.containsKey(str)) {
-            return parseClass(classInfoMap.get(str));
+            return sup + parseClass(classInfoMap.get(str));
         }
         String[] split = str.split("<", 2);
         /*
@@ -303,7 +331,7 @@ public class ComponentDataFactory {
             classString = classString.replaceAll(Pattern.quote(", " + simpleGenericParameters.get(i) + ", "), ", " + InjectorUtils.escapeCapture(parameters.get(i)) + ", ");
             classString = classString.replaceAll(Pattern.quote(", " + simpleGenericParameters.get(i) + ">"), ", " + InjectorUtils.escapeCapture(parameters.get(i)) + ">");
         }
-        return classString;
+        return sup + classString;
     }
 
     @SuppressWarnings("unchecked")
@@ -388,6 +416,32 @@ public class ComponentDataFactory {
                 return char[].class;
             default:
                 return null;
+        }
+    }
+
+    private static String getArrayFromInternal(String parameter) {
+        if(!parameter.startsWith("[")) {
+            return parameter;
+        }
+        switch(parameter) {
+            case "[Z":
+                return "boolean[]";
+            case "[B":
+                return "byte[]";
+            case "[S":
+                return "short[]";
+            case "[I":
+                return "int[]";
+            case "[J":
+                return "long[]";
+            case "[F":
+                return "float[]";
+            case "[D":
+                return "double[]";
+            case "[C":
+                return "char[]";
+            default:
+                return parameter.substring(2, parameter.length() - 1) + "[]";
         }
     }
 

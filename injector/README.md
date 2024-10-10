@@ -17,8 +17,9 @@ and 2.
 When resolving dependencies, any component that's type is assignable to the dependency's declared type is considered
 a valid dependency. This includes all type parameters. So for example, declaring a dependency as 
 `Supplier<CharSequence>` will return all components that implement Supplier, with any type parameter that implements
-`CharSequence`. Using wildcards is technically allowed, but internally `?` and <code>?&nbsp;super&nbsp;Type</code>
-resolve to `Object`, and <code>?&nbsp;extends&nbsp;Type</code> resolves to `Type`.
+`CharSequence`. Using wildcards is allowed, but internally `?` resolves to `Object`, and 
+<code>?&nbsp;extends&nbsp;Type</code> resolves to `Type`. <code>?&nbsp;super&nbsp;Type</code> works as intended since 
+version 2.1.0.
 
 ### Special dependencies
 

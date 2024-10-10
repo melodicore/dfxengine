@@ -15,7 +15,12 @@ public class SelfReference<T> extends ClassReference<T> {
     private ClassReference<T> reference;
 
     public SelfReference() {
-        super(null, null, null, null, false, null);
+        super(null, false, null, null, null, false, null);
+    }
+
+    @Override
+    public boolean isSup() {
+        return reference.isSup();
     }
 
     @Override

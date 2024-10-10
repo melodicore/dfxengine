@@ -212,8 +212,6 @@ public class InjectorBuilder {
                 .map(factory::buildComponentData)
                 .collect(Collectors.toList());
 
-        scan.close();
-
         logComponents(components);
 
         parseDependencies(components);
@@ -222,7 +220,7 @@ public class InjectorBuilder {
 
         Map<ComponentData<?>,Integer> orderMap = getOrder(components);
 
-        return new InjectorImpl(components.stream()
+        return new InjectorImpl(factory, components.stream()
                 .sorted(Comparator.comparing(orderMap::get)));
     }
 

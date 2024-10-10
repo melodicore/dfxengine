@@ -19,10 +19,11 @@ import java.util.stream.Stream;
  *
  * @author datafox
  */
-@Builder
 @Data
 public final class TypeRef<T> {
     private final Class<T> type;
+
+    private final boolean sup;
 
     @Singular
     private final List<TypeRef<?>> parameters;
@@ -35,7 +36,8 @@ public final class TypeRef<T> {
      * @throws ParameterCountMismatchException if the amount of parameters for the specified type is different to the
      * amount of provided parameters
      */
-    public TypeRef(Class<T> type, List<TypeRef<?>> parameters) {
+    @Builder
+    public TypeRef(Class<T> type, boolean sup, List<TypeRef<?>> parameters) {
         if(type.getTypeParameters().length != parameters.size()) {
             StringBuilder sb = new StringBuilder();
             sb.append("Class ").append(type.getName()).append(" has ").append(type.getTypeParameters().length).append(" type parameter");
@@ -52,6 +54,7 @@ public final class TypeRef<T> {
             throw new ParameterCountMismatchException(sb.toString());
         }
         this.type = type;
+        this.sup = sup;
         this.parameters = parameters;
     }
 
@@ -75,11 +78,11 @@ public final class TypeRef<T> {
      * without packages
      */
     public String toStringWithoutPackage() {
-        return type.getSimpleName() + (parameters.isEmpty() ? "" :
+        return (sup ? "? super " : "") + type.getSimpleName() + (parameters.isEmpty() ? "" :
                 "<" + (parameters
                         .stream()
                         .map(TypeRef::toStringWithoutPackage)
-                        .collect(Collectors.joining(",")) + ">"));
+                        .collect(Collectors.joining(", ")) + ">"));
     }
 
     /**
@@ -87,11 +90,11 @@ public final class TypeRef<T> {
      * with the parameters without packages
      */
     public String toStringParametersWithoutPackage() {
-        return type.getName() + (parameters.isEmpty() ? "" :
+        return (sup ? "? super " : "") + type.getName() + (parameters.isEmpty() ? "" :
                 "<" + (parameters
                         .stream()
                         .map(TypeRef::toStringWithoutPackage)
-                        .collect(Collectors.joining(",")) + ">"));
+                        .collect(Collectors.joining(", ")) + ">"));
     }
 
     /**
@@ -99,11 +102,11 @@ public final class TypeRef<T> {
      */
     @Override
     public String toString() {
-        return type.getName() + (parameters.isEmpty() ? "" :
+        return (sup ? "? super " : "") + type.getName() + (parameters.isEmpty() ? "" :
                 "<" + (parameters
                         .stream()
                         .map(TypeRef::toString)
-                        .collect(Collectors.joining(",")) + ">"));
+                        .collect(Collectors.joining(", ")) + ">"));
     }
 
     /**
@@ -125,6 +128,23 @@ public final class TypeRef<T> {
         return TypeRef
                 .<T>builder()
                 .type(type)
+                .sup(false)
+                .parameters(parameters)
+                .build();
+    }
+
+    /**
+     * @param type type for the type reference
+     * @param sup {@code true} if the type reference refers to {@code ? super T}
+     * @param parameters parameters for the type reference
+     * @return type reference for the specified parameters
+     * @param <T> type for the type reference
+     */
+    public static <T> TypeRef<T> of(Class<T> type, boolean sup, List<TypeRef<?>> parameters) {
+        return TypeRef
+                .<T>builder()
+                .type(type)
+                .sup(sup)
                 .parameters(parameters)
                 .build();
     }
@@ -141,6 +161,17 @@ public final class TypeRef<T> {
 
     /**
      * @param type type for the type reference
+     * @param sup {@code true} if the type reference refers to {@code ? super T}
+     * @param parameters parameters for the type reference
+     * @return type reference for the specified parameters
+     * @param <T> type for the type reference
+     */
+    public static <T> TypeRef<T> of(Class<T> type, boolean sup, TypeRef<?> ... parameters) {
+        return of(type, sup, Arrays.asList(parameters));
+    }
+
+    /**
+     * @param type type for the type reference
      * @param firstParameter first parameter for the type reference
      * @param parameters other parameters for the type reference
      * @return type reference for the specified parameters
@@ -151,6 +182,25 @@ public final class TypeRef<T> {
             return of(type, TypeRef.of(firstParameter));
         }
         return of(type, Stream.concat(
+                        Stream.of(firstParameter),
+                        Arrays.stream(parameters))
+                .map(TypeRef::of)
+                .collect(Collectors.toList()));
+    }
+
+    /**
+     * @param type type for the type reference
+     * @param sup {@code true} if the type reference refers to {@code ? super T}
+     * @param firstParameter first parameter for the type reference
+     * @param parameters other parameters for the type reference
+     * @return type reference for the specified parameters
+     * @param <T> type for the type reference
+     */
+    public static <T> TypeRef<T> of(Class<T> type, boolean sup, Class<?> firstParameter, Class<?> ... parameters) {
+        if(parameters.length == 0) {
+            return of(type, sup, TypeRef.of(firstParameter));
+        }
+        return of(type, sup, Stream.concat(
                         Stream.of(firstParameter),
                         Arrays.stream(parameters))
                 .map(TypeRef::of)
