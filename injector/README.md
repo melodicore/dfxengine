@@ -50,16 +50,26 @@ that determine how the `Logger` name is resolved.
   output. This is the default option if no `LoggerType` component is declared by the user.
   * `FULL_PARAMETERS` is the same as `PARAMETERS` but does not strip the package prefixes.
 
+## Events
+
+Events were added in 2.1.0 and allow runtime invocation of specific methods. Any methods annotated with `@EventHandler` 
+are registered as event methods. Event methods must have exactly one parameter. When calling 
+`Injector.invokeEvent(Object)`, all Components that have `InstantiationPolicy.ONCE` and contain event handler methods, 
+superclass and interface methods included, will have those methods invoked with the given object.
+
+If the event handler method returns an object, that object will be treated as an event as well. This allows for chaining
+events. If `null` is returned, no event is invoked. Events that are invoked this way are handled breadth first.
+
 ## Annotations
 
 ### [`@Component`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/annotation/Component.java)
 
 The `@Component` annotation can be used for both classes and methods. 
 
-A component class will be instantiated with a specific constructor (see `@Inject` below), and a component method will be
-invoked. In both cases, all parameters of the constructor/method will be treated as dependencies. If a component method
-is not static, its declaring class will be treated as if it was also annotated as a component and will be subject to all
-the same rules.
+A component class will be instantiated with a specific constructor (see [`@Inject`](#inject)), and a component method 
+will be invoked. In both cases, all parameters of the constructor/method will be treated as dependencies. If a component 
+method is not static, its declaring class will be treated as if it was also annotated as a component and will be subject 
+to all the same rules.
 
 If a method annotated as component is `void`, the method will be treated as a special void component. Void components
 are invoked once after everything else is invoked, including methods annotated with `@Initialize`. This is useful when 
@@ -113,6 +123,11 @@ methods. A lower value means the method is invoked sooner, and the default value
 Initializer methods on components with the `PER_INSTANCE` instantiation policy will be invoked for every request of that
 component, even if the methods are static. Initializer methods on classes that are not components or otherwise 
 instantiated by the Injector are ignored.
+
+### [`@EventHandler`](../injector-api/src/main/java/me/datafox/dfxengine/injector/api/annotation/EventHandler.java)
+
+The `@EventHandler` annotation can be used for methods. The behavior of event handler methods is described above in the
+[Events](#events) section.
 
 ## Third party libraries
 
