@@ -1,14 +1,13 @@
 package me.datafox.dfxengine.injector;
 
-import me.datafox.dfxengine.injector.api.Injector;
-import me.datafox.dfxengine.injector.api.InstantiationDetails;
-import me.datafox.dfxengine.injector.api.InstantiationPolicy;
-import me.datafox.dfxengine.injector.api.TypeRef;
+import me.datafox.dfxengine.injector.api.*;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
 import me.datafox.dfxengine.injector.exception.MultipleDependenciesPresentException;
 import me.datafox.dfxengine.injector.exception.NoDependenciesPresentException;
+import me.datafox.dfxengine.injector.exception.ParametricEventWithoutInterfaceException;
 import me.datafox.dfxengine.injector.internal.*;
+import me.datafox.dfxengine.injector.utils.InjectorStrings;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,17 +76,23 @@ public class InjectorImpl implements Injector {
 
     private final List<ComponentData<?>> componentList;
 
+    private final List<EventData<?>> eventList;
+
     private final List<PrioritizedRunnable> initializerQueue;
 
     private final List<ComponentData<?>> voidComponentQueue;
 
-    InjectorImpl(ComponentDataFactory factory, Stream<ComponentData<?>> components) {
+    private final List<Object> eventQueue;
+
+    InjectorImpl(ComponentDataFactory factory, Stream<ComponentData<?>> components, List<EventData<?>> eventData) {
         instance = this;
         logger = LoggerFactory.getLogger(InjectorImpl.class);
         this.factory = factory;
         componentList = new ArrayList<>();
+        eventList = eventData;
         initializerQueue = new ArrayList<>();
         voidComponentQueue = new ArrayList<>();
+        eventQueue = new ArrayList<>();
         components.peek(this::instantiateOnce)
                 .sorted(Comparator.comparingInt(ComponentData::getOrder))
                 .forEach(componentList::add);
@@ -257,6 +262,72 @@ public class InjectorImpl implements Injector {
     @Override
     public <T,R> List<T> getComponents(TypeRef<T> type, TypeRef<R> requesting) {
         return getComponent(TypeRef.of(List.class, type), requesting);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param event {@inheritDoc}
+     * @param <T> {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> void invokeEvent(T event) {
+        TypeRef<T> eventType;
+
+        if(event.getClass().getTypeParameters().length != 0) {
+            if(event instanceof ParametricEvent) {
+                eventType = (TypeRef<T>) ((ParametricEvent) event).getType();
+            } else {
+                throw LogUtils.logExceptionAndGet(logger,
+                        InjectorStrings.parametricEventWithoutInterface(event),
+                        ParametricEventWithoutInterfaceException::new);
+            }
+        } else {
+            eventType = (TypeRef<T>) TypeRef.of(event.getClass());
+        }
+
+        ClassReference<T> eventReference = factory.buildClasReferenceFromTypeRef(eventType);
+
+        List<EventData<T>> events = eventList
+                .stream()
+                .filter(e -> e.getEvent().isAssignableFrom(eventReference))
+                .map(e -> (EventData<T>) e)
+                .collect(Collectors.toList());
+
+        events.forEach(e -> invokeEvent(e, event));
+    }
+
+    private <T> void invokeEvent(EventData<T> eventData, T event) {
+        if(eventData.getOwner() != null) {
+            componentList.stream()
+                    .filter(data -> eventData.getOwner()
+                            .isAssignableFrom(data.getReference().getActualReference()))
+                    .filter(data -> InstantiationPolicy.ONCE.equals(data.getPolicy()))
+                    .map(ComponentData::getObjects)
+                    .flatMap(List::stream)
+                    .map(obj -> {
+                        try {
+                            eventData.getMethod().trySetAccessible();
+                            return eventData.getMethod().invoke(obj, event);
+                        } catch(IllegalAccessException | InvocationTargetException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .flatMap(Stream::ofNullable)
+                    .forEach(this::invokeEvent);
+        } else {
+            Object returned = null;
+            try {
+                eventData.getMethod().trySetAccessible();
+                returned = eventData.getMethod().invoke(null, event);
+            } catch(IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+            if(returned != null) {
+                invokeEvent(returned);
+            }
+        }
     }
 
     private <T> void instantiateOnce(ComponentData<T> data) {

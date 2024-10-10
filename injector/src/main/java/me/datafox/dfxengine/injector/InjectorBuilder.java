@@ -2,15 +2,13 @@ package me.datafox.dfxengine.injector;
 
 import io.github.classgraph.*;
 import me.datafox.dfxengine.injector.api.annotation.Component;
+import me.datafox.dfxengine.injector.api.annotation.EventHandler;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.injector.exception.ComponentClassWithMultipleValidConstructorsException;
 import me.datafox.dfxengine.injector.exception.ComponentClassWithNoValidConstructorsException;
 import me.datafox.dfxengine.injector.exception.CyclicDependencyException;
-import me.datafox.dfxengine.injector.internal.ClassReference;
-import me.datafox.dfxengine.injector.internal.ComponentData;
-import me.datafox.dfxengine.injector.internal.ComponentDataFactory;
-import me.datafox.dfxengine.injector.internal.FieldReference;
+import me.datafox.dfxengine.injector.internal.*;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +17,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static me.datafox.dfxengine.injector.utils.InjectorStrings.*;
 
@@ -157,16 +156,31 @@ public class InjectorBuilder {
 
         logComponentMethodClasses(componentMethodClasses);
 
+        ClassInfoList eventMethodClasses = scan
+                .getClassesWithMethodAnnotation(EventHandler.class)
+                .filter(this::whitelistBlacklistFilter);
+
+        logEventMethodClasses(eventMethodClasses);
+
         ClassInfoList instantiatedComponentMethodClasses =
                 componentMethodClasses.filter(info -> info
                         .getDeclaredMethodInfo()
                         .stream()
                         .filter(method -> method.hasAnnotation(Component.class))
                         .anyMatch(Predicate.not(MethodInfo::isStatic)));
-        instantiatedComponentMethodClasses.removeAll(componentClasses);
 
-        ClassInfoList instantiatedClasses = new ClassInfoList(componentClasses);
-        instantiatedClasses.addAll(instantiatedComponentMethodClasses);
+        ClassInfoList instantiatedEventMethodClasses =
+                eventMethodClasses.filter(info -> info
+                        .getDeclaredMethodInfo()
+                        .stream()
+                        .filter(method -> method.hasAnnotation(EventHandler.class))
+                        .anyMatch(Predicate.not(MethodInfo::isStatic)));
+
+        ClassInfoList instantiatedClasses = Stream.concat(componentClasses.stream(),
+                        Stream.concat(instantiatedComponentMethodClasses.stream(),
+                                instantiatedEventMethodClasses.stream()))
+                .distinct()
+                .collect(Collectors.toCollection(ClassInfoList::new));
 
         logInstantiatedClasses(instantiatedClasses);
 
@@ -202,6 +216,16 @@ public class InjectorBuilder {
 
         logInvokedMethods(methods);
 
+        MethodInfoList events = eventMethodClasses
+                .stream()
+                .flatMap(info -> info
+                        .getDeclaredMethodInfo()
+                        .stream()
+                        .filter(method -> method.hasAnnotation(EventHandler.class)))
+                .collect(Collectors.toCollection(MethodInfoList::new));
+
+        logEvents(events);
+
         MethodInfoList executables = new MethodInfoList(constructors);
         executables.addAll(methods);
 
@@ -214,6 +238,11 @@ public class InjectorBuilder {
 
         logComponents(components);
 
+        List<EventData<?>> eventData = events
+                .stream()
+                .map(factory::buildEventData)
+                .collect(Collectors.toList());
+
         parseDependencies(components);
 
         checkCyclicDependencies(components);
@@ -221,7 +250,7 @@ public class InjectorBuilder {
         Map<ComponentData<?>,Integer> orderMap = getOrder(components);
 
         return new InjectorImpl(factory, components.stream()
-                .sorted(Comparator.comparing(orderMap::get)));
+                .sorted(Comparator.comparing(orderMap::get)), eventData);
     }
 
     private void checkAndLogWhitelistAndBlacklist() {
@@ -269,6 +298,13 @@ public class InjectorBuilder {
         }
     }
 
+    private void logEventMethodClasses(ClassInfoList classes) {
+        logger.info(eventMethodClassesFound(classes.size()));
+        if(!classes.isEmpty()) {
+            logger.debug(eventMethodClasses(classes));
+        }
+    }
+
     private void logInstantiatedClasses(ClassInfoList classes) {
         logger.info(instantiatedClassesFound(classes.size()));
         if(!classes.isEmpty()) {
@@ -287,6 +323,13 @@ public class InjectorBuilder {
         logger.info(invokedMethodsFound(methods.size()));
         if(!methods.isEmpty()) {
             logger.debug(invokedMethods(methods));
+        }
+    }
+
+    private void logEvents(MethodInfoList events) {
+        logger.info(eventsFound(events.size()));
+        if(!events.isEmpty()) {
+            logger.debug(events(events));
         }
     }
 

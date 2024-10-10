@@ -24,6 +24,8 @@ import me.datafox.dfxengine.injector.test.classes.pass.basic.Component;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.ComponentMethod;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.NonComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.basic.StaticNonComponent;
+import me.datafox.dfxengine.injector.test.classes.pass.event.EventHandlerComponent;
+import me.datafox.dfxengine.injector.test.classes.pass.event.ParametricPredicateEvent;
 import me.datafox.dfxengine.injector.test.classes.pass.inheritance_order.ComponentInterface;
 import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithInitialize;
 import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithStaticInitialize;
@@ -227,6 +229,27 @@ public class InjectorTest {
         assertSame(iarray, injector.getComponent(FieldArrayComponent.class).getIarray());
         assertSame(sarray, injector.getComponent(InitializeArrayComponent.class).getSarray());
         assertSame(iarray, injector.getComponent(InitializeArrayComponent.class).getIarray());
+    }
+
+    @Test
+    public void eventTest() {
+        var injector = injector(EventHandlerComponent.class);
+
+        var c = injector.getComponent(EventHandlerComponent.class);
+
+        assertEquals(0, c.events);
+
+        injector.invokeEvent("yo");
+
+        assertEquals(1, c.events);
+
+        injector.invokeEvent(52);
+
+        assertEquals(2, c.events);
+
+        injector.invokeEvent(new ParametricPredicateEvent<>(CharSequence.class));
+
+        assertEquals(4, c.events);
     }
 
     @Test

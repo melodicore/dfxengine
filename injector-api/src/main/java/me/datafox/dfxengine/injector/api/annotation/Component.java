@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.injector.api.annotation;
 
+import me.datafox.dfxengine.injector.api.Injector;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 
 import java.lang.annotation.ElementType;
@@ -10,11 +11,12 @@ import java.util.List;
 
 /**
  * <p>
- * A component is a class that can be injected as a dependency. The Injector looks for all classes and methods annotated
- * as a component. A class will be registered as an injectable dependency, and a method's returned value will be used as
- * one. A class may have either a default constructor or a single constructor annotated with {@link Inject} with
- * dependencies as parameters. It may also have non-static and non-final dependency fields annotated with {@link Inject}
- * that are injected right after instantiation. Likewise, a component method may have other dependencies as parameters.
+ * A component is a class that can be injected as a dependency. The {@link Injector} looks for all classes and methods
+ * annotated as a component. A class will be registered as an injectable dependency, and a method's returned value will
+ * be used as one. A class may have either a default constructor or a single constructor annotated with {@link Inject}
+ * with dependencies as parameters. It may also have non-static and non-final dependency fields annotated with
+ * {@link Inject} that are injected right after instantiation. Likewise, a component method may have other dependencies
+ * as parameters.
  * </p>
  * <p>
  * If a method is annotated as a component but is {@code void}, the method will be invoked after all other invocations

@@ -1,11 +1,16 @@
 package me.datafox.dfxengine.injector.internal;
 
-import io.github.classgraph.*;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.FieldInfo;
+import io.github.classgraph.MethodInfo;
+import io.github.classgraph.MethodParameterInfo;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.TypeRef;
 import me.datafox.dfxengine.injector.api.annotation.Component;
+import me.datafox.dfxengine.injector.api.annotation.EventHandler;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
+import me.datafox.dfxengine.injector.exception.EventParameterCountException;
 import me.datafox.dfxengine.injector.exception.FinalFieldDependencyException;
 import me.datafox.dfxengine.injector.exception.InvalidArrayException;
 import me.datafox.dfxengine.injector.exception.UnresolvedOrUnknownTypeException;
@@ -115,8 +120,13 @@ public class ComponentDataFactory {
         }
         if(annotation != null) {
             builder.policy(annotation.value()).order(annotation.order());
-            if(voidType && annotation.value().equals(InstantiationPolicy.PER_INSTANCE)) {
-                logger.warn(InjectorStrings.perInstanceVoidComponent(info));
+            if(annotation.value().equals(InstantiationPolicy.PER_INSTANCE)) {
+                if(voidType) {
+                    logger.warn(InjectorStrings.perInstanceVoidComponent(info));
+                }
+                if(info.getClassInfo().hasDeclaredMethodAnnotation(EventHandler.class)) {
+                    logger.warn(InjectorStrings.perInstanceComponentEvent(info));
+                }
             }
         } else {
             builder.policy(InstantiationPolicy.ONCE).order(0);
@@ -131,11 +141,33 @@ public class ComponentDataFactory {
         return builder.build();
     }
 
+    public <T> EventData<T> buildEventData(MethodInfo info) {
+        if(info.getParameterInfo().length != 1) {
+            throw LogUtils.logExceptionAndGet(logger,
+                    InjectorStrings.eventParameterCount(info, info.getParameterInfo().length),
+                    EventParameterCountException::new);
+        }
+
+        EventData.EventDataBuilder<T> builder = EventData
+                .<T>builder()
+                .event(buildClassReferenceEntry(info.getParameterInfo()[0].getTypeSignatureOrTypeDescriptor().toString()));
+
+        String returnString = parseMethod(info);
+        if(!"void".equals(returnString)) {
+            builder.returnedEvent(buildClassReferenceEntry(returnString));
+        }
+
+        if(!info.isStatic()) {
+            builder.owner(buildClassReferenceEntry(parseClass(info.getClassInfo())));
+        }
+
+        return builder.method(info.loadClassAndGetMethod()).build();
+    }
+
     public <T> ClassReference<T> buildClasReferenceFromTypeRef(TypeRef<T> typeRef) {
         if(typeRef == null) {
             return null;
         }
-        System.out.println("AAAA " + typeRef);
         String str = typeRef.toString();
         if(str.startsWith("[")) {
             str = getArrayFromInternal(str);

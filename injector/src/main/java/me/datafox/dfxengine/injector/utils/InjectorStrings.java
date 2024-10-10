@@ -16,9 +16,6 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("MissingJavadoc")
 public class InjectorStrings {
-    public static final String NOT_CLOSING_SCAN = "Option set to not close ClassGraph scan. " +
-            "This is not recommended, and only exists for testing purposes where multiple " +
-            "Injector instances need to be created in the same process";
     public static final String SCANNING_CLASSPATH = "Scanning classpath";
     public static final String BUILDING_DEPENDENCY_GRAPH = "Building dependency graph";
     public static final String CHECKING_CYCLIC = "Checking for cyclic dependencies";
@@ -33,6 +30,9 @@ public class InjectorStrings {
     private static final String COMPONENT_METHOD_CLASSES_FOUND_SINGULAR = "Found %s class declaring component methods";
     private static final String COMPONENT_METHOD_CLASSES_FOUND_PLURAL = "Found %s classes declaring component methods";
     private static final String COMPONENT_METHOD_CLASSES = "Component method classes: %s";
+    private static final String EVENT_METHOD_CLASSES_FOUND_SINGULAR = "Found %s class declaring event methods";
+    private static final String EVENT_METHOD_CLASSES_FOUND_PLURAL = "Found %s classes declaring event methods";
+    private static final String EVENT_METHOD_CLASSES = "Event method classes: %s";
     private static final String INSTANTIATED_CLASSES_FOUND_SINGULAR = "Found %s class to instantiate";
     private static final String INSTANTIATED_CLASSES_FOUND_PLURAL = "Found %s classes to instantiate";
     private static final String INSTANTIATED_CLASSES = "Instantiated classes: %s";
@@ -42,6 +42,9 @@ public class InjectorStrings {
     private static final String INVOKED_METHODS_FOUND_SINGULAR = "Found %s method to invoke";
     private static final String INVOKED_METHODS_FOUND_PLURAL = "Found %s methods to invoke";
     private static final String INVOKED_METHODS = "Invoked methods: %s";
+    private static final String EVENTS_FOUND_SINGULAR = "Found %s event";
+    private static final String EVENTS_FOUND_PLURAL = "Found %s events";
+    private static final String EVENTS = "Events: %s";
     private static final String COMPONENTS_FOUND_SINGULAR = "Found %s declared component";
     private static final String COMPONENTS_FOUND_PLURAL = "Found %s declared components";
     private static final String COMPONENTS = "Declared components: %s";
@@ -61,6 +64,8 @@ public class InjectorStrings {
     private static final String BUILDING_COMPONENT_METHOD_DATA = "Building component data for class %s using method %s";
     private static final String PER_INSTANCE_VOID_COMPONENT =
             "Void component method %s has InstantiationPolicy.PER_INSTANCE, but void methods are only invoked once";
+    private static final String PER_INSTANCE_COMPONENT_EVENT = "Component %s has InstantiationPolicy.PER_INSTANCE " +
+            "but contains non-static event methods. Non-static event methods are not invoked in PER_INSTANCE components";
     private static final String FINAL_FIELD_DEPENDENCY =
             "Field %s in class %s is annotated with @Inject but is final, only non-final fields can be injected";
     private static final String UNKNOWN_TYPE =
@@ -68,6 +73,9 @@ public class InjectorStrings {
     private static final String UNRESOLVED_TYPE_PARAMETER =
             "Component %s has unresolved type parameter, unresolved type parameters cannot be injected";
     private static final String INVALID_ARRAY = "Array %s cannot be resolved to a type";
+    private static final String EVENT_PARAMETER_COUNT = "Event method %s has %s parameters but exactly one is required";
+    private static final String PARAMETRIC_EVENT_WITHOUT_INTERFACE =
+            "Event class %s has type parameters but does not implement ParametricEvent";
     private static final String NO_DEPENDENCIES = "A single Component %s was requested but none are present";
     private static final String MULTIPLE_DEPENDENCIES =
             "A single Component %s was requested but multiple are present";
@@ -128,6 +136,17 @@ public class InjectorStrings {
         return forClassInfoList(COMPONENT_METHOD_CLASSES, infos);
     }
 
+    public static String eventMethodClassesFound(int classes) {
+        return String.format(classes == 1 ?
+                        EVENT_METHOD_CLASSES_FOUND_SINGULAR :
+                        EVENT_METHOD_CLASSES_FOUND_PLURAL,
+                classes);
+    }
+
+    public static String eventMethodClasses(ClassInfoList infos) {
+        return forClassInfoList(EVENT_METHOD_CLASSES, infos);
+    }
+
     public static String instantiatedClassesFound(int classes) {
         return String.format(classes == 1 ?
                         INSTANTIATED_CLASSES_FOUND_SINGULAR :
@@ -159,6 +178,17 @@ public class InjectorStrings {
 
     public static String invokedMethods(MethodInfoList methods) {
         return forMethodInfoList(INVOKED_METHODS, methods);
+    }
+
+    public static String eventsFound(int events) {
+        return String.format(events == 1 ?
+                        EVENTS_FOUND_SINGULAR :
+                        EVENTS_FOUND_PLURAL,
+                events);
+    }
+
+    public static String events(MethodInfoList events) {
+        return forMethodInfoList(EVENTS, events);
     }
 
     public static String componentsFound(int components) {
@@ -219,6 +249,10 @@ public class InjectorStrings {
         return String.format(PER_INSTANCE_VOID_COMPONENT, getMethodParameterString(method));
     }
 
+    public static String perInstanceComponentEvent(MethodInfo method) {
+        return String.format(PER_INSTANCE_COMPONENT_EVENT, getMethodParameterString(method));
+    }
+
     public static String noDependenciesRuntime(ClassReference<?> reference) {
         return String.format(NO_DEPENDENCIES, reference.getSignature());
     }
@@ -241,6 +275,14 @@ public class InjectorStrings {
 
     public static String invalidArray(String array) {
         return String.format(INVALID_ARRAY, array);
+    }
+
+    public static String eventParameterCount(MethodInfo event, int parameters) {
+        return String.format(EVENT_PARAMETER_COUNT, event.getName(), parameters);
+    }
+
+    public static String parametricEventWithoutInterface(Object event) {
+        return String.format(PARAMETRIC_EVENT_WITHOUT_INTERFACE, event.getClass().getName());
     }
 
     public static String cyclicDependencyDetected(ComponentData<?> current, Deque<ComponentData<?>> visited) {

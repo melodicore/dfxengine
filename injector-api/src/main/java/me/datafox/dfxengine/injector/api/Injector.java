@@ -1,6 +1,7 @@
 package me.datafox.dfxengine.injector.api;
 
 import me.datafox.dfxengine.injector.api.annotation.Component;
+import me.datafox.dfxengine.injector.api.annotation.EventHandler;
 import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
 
 import java.util.List;
@@ -111,4 +112,13 @@ public interface Injector {
      * @param <R> type of the object requesting the {@link Component Components}
      */
     <T,R> List<T> getComponents(TypeRef<T> type, TypeRef<R> requesting);
+
+    /**
+     * Calls all {@link EventHandler EventHandlers} with the specified event that can accept its type as a parameter.
+     * If the event has type parameters, it must implement {@link ParametricEvent}.
+     *
+     * @param event event to be invoked
+     * @param <T> type of the event
+     */
+    <T> void invokeEvent(T event);
 }
