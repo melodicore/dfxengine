@@ -18,6 +18,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -287,7 +288,7 @@ public class InjectorImpl implements Injector {
      * @param events {@inheritDoc}
      */
     @Override
-    public void invokeEvents(List<?> events) {
+    public void invokeEvents(Collection<?> events) {
         events.forEach(this::invokeEventInternal);
     }
 

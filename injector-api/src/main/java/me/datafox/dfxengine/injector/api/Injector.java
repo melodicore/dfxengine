@@ -4,6 +4,7 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.EventHandler;
 import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -128,5 +129,5 @@ public interface Injector {
      *
      * @param events events to be invoked
      */
-    void invokeEvents(List<?> events);
+    void invokeEvents(Collection<?> events);
 }
