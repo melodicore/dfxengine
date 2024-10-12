@@ -8,6 +8,10 @@ import me.datafox.dfxengine.injector.api.annotation.Initialize;
  */
 @Component
 public class ExtendingParametricComponent extends Parametric<Double,String> implements ParametricInterface<Double> {
+    public ExtendingParametricComponent() {
+        super("extending");
+    }
+
     @Initialize
     private void init(Parametric<? extends Comparable<Double>,String> parametric) {
     }

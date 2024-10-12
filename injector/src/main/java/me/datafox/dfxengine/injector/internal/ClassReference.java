@@ -53,13 +53,16 @@ public class ClassReference<T> {
      * @return {@code true} if this class reference is assignable from the other class reference
      */
     public boolean isAssignableFrom(ClassReference<?> other) {
-        if(this.equals(other)) {
+        if(getType().equals(other.getType()) && getParameters().equals(other.getParameters())) {
             return true;
         }
+        if(other.isSup()) {
+            return isSup() || getType().equals(Object.class);
+        }
+        if(isSup()) {
+            return isAssignableTo(other);
+        }
         if(getParameters().isEmpty() && other.getParameters().isEmpty()) {
-            if(sup) {
-                return other.getType().isAssignableFrom(getType());
-            }
             return getType().isAssignableFrom(other.getType());
         }
         if(getParameters().size() == other.getParameters().size() && getType().equals(other.getType())) {
@@ -71,11 +74,7 @@ public class ClassReference<T> {
             return true;
         }
         if(other.getSuperclass() == null) {
-            if(sup || getType().isAssignableFrom(Object.class)) {
-                return true;
-            }
-        } else if(sup) {
-            if(other.isAssignableFrom(getSuperclass())) {
+            if(getType().isAssignableFrom(Object.class)) {
                 return true;
             }
         } else {
@@ -83,11 +82,34 @@ public class ClassReference<T> {
                 return true;
             }
         }
-        if(sup) {
-            return getInterfaces().stream().anyMatch(other::isAssignableFrom);
-        } else {
-            return other.getInterfaces().stream().anyMatch(this::isAssignableFrom);
+        return other.getInterfaces().stream().anyMatch(this::isAssignableFrom);
+    }
+
+    private boolean isAssignableTo(ClassReference<?> other) {
+        if(getType().equals(other.getType()) && getParameters().equals(other.getParameters())) {
+            return true;
         }
+        if(getParameters().isEmpty() && other.getParameters().isEmpty()) {
+            return other.getType().isAssignableFrom(getType());
+        }
+        if(getParameters().size() == other.getParameters().size() && getType().equals(other.getType())) {
+            for(int i = 0; i < getParameters().size(); i++) {
+                if(!getParameters().get(i).isAssignableFrom(other.getParameters().get(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        if(getSuperclass() == null) {
+            if(other.getType().isAssignableFrom(Object.class)) {
+                return true;
+            }
+        } else {
+            if(getSuperclass().isAssignableTo(other)) {
+                return true;
+            }
+        }
+        return getInterfaces().stream().anyMatch(i -> i.isAssignableTo(other));
     }
 
     /**
@@ -99,7 +121,7 @@ public class ClassReference<T> {
                 "<" + (parameters
                         .stream()
                         .map(ClassReference::getSignatureWithoutPackage)
-                        .collect(Collectors.joining(",")) + ">"));
+                        .collect(Collectors.joining(", ")) + ">"));
     }
 
     /**
@@ -111,7 +133,7 @@ public class ClassReference<T> {
                 "<" + (parameters
                         .stream()
                         .map(ClassReference::getSignatureWithoutPackage)
-                        .collect(Collectors.joining(",")) + ">"));
+                        .collect(Collectors.joining(", ")) + ">"));
     }
 
     /**
@@ -122,7 +144,7 @@ public class ClassReference<T> {
                 "<" + (parameters
                         .stream()
                         .map(ClassReference::getSignature)
-                        .collect(Collectors.joining(",")) + ">"));
+                        .collect(Collectors.joining(", ")) + ">"));
     }
 
     public TypeRef<T> toTypeRef() {

@@ -108,20 +108,47 @@ public class InjectorTest {
         var c2 = assertDoesNotThrow(() -> injector.getComponent(
                 TypeRef.of(Parametric.class, Number.class, StringBuilder.class)));
         var c3 = assertDoesNotThrow(() -> injector.getComponent(ExtendingParametricComponent.class));
+        assertThrows(NoDependenciesPresentException.class, () -> injector.getComponent(
+                TypeRef.of(Parametric.class, String.class, String.class)));
+        var c4 = assertDoesNotThrow(() -> injector.getComponent(
+                TypeRef.of(Parametric.class, String.class, CharSequence.class)));
+        var c5 = assertDoesNotThrow(() -> injector.getComponent(
+                TypeRef.of(Parametric.class, String.class, Appendable.class)));
         var l1 = assertDoesNotThrow(() -> injector.getComponents(
                 TypeRef.of(Parametric.class, Number.class, CharSequence.class)));
         var l2 = assertDoesNotThrow(() -> injector.getComponents(
                 TypeRef.of(Parametric.class, Object.class, Object.class)));
         var l3 = assertDoesNotThrow(() -> injector.getComponents(
                 TypeRef.of(Parametric.class, Number.class, Double.class)));
+        var l4 = assertDoesNotThrow(() -> injector.getComponents(
+                TypeRef.of(Parametric.class, TypeRef.of(Object.class), TypeRef.of(StringBuilder.class, true))
+        ));
+
+        assertEquals("extending", c1.getId());
+        assertEquals("method", c2.getId());
+        assertEquals("extending", c3.getId());
+        assertEquals("vague", c4.getId());
+        assertEquals("appendable", c5.getId());
 
         assertEquals(c1, c3);
         assertEquals(2, l1.size());
-        assertEquals(3, l2.size());
+        assertEquals(4, l2.size());
         assertTrue(l3.isEmpty());
+        assertEquals(3, l4.size());
         assertTrue(l1.contains(c1));
         assertTrue(l1.contains(c2));
         assertNotEquals(l1.indexOf(c1), l1.indexOf(c2));
+        assertTrue(l2.contains(c1));
+        assertTrue(l2.contains(c2));
+        assertTrue(l2.contains(c4));
+        assertTrue(l2.contains(c5));
+        assertNotEquals(l2.indexOf(c1), l2.indexOf(c2));
+        assertNotEquals(l2.indexOf(c1), l2.indexOf(c4));
+        assertNotEquals(l2.indexOf(c2), l2.indexOf(c4));
+        assertTrue(l4.contains(c2));
+        assertTrue(l4.contains(c4));
+        assertTrue(l4.contains(c5));
+
     }
 
     @Test

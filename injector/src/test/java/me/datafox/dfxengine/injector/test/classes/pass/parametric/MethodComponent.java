@@ -7,12 +7,17 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
  */
 public class MethodComponent {
     @Component
-    private Parametric<Number,StringBuilder> getParametricClass() {
-        return new Parametric<>();
+    private Parametric<Number, StringBuilder> getParametricClass() {
+        return new Parametric<>("method");
     }
 
     @Component
-    private Parametric<? ,? super StringBuilder> getVagueParametricClass() {
-        return new Parametric<>();
+    private Parametric<String, ? super CharSequence> getVagueParametricClass() {
+        return new Parametric<>("vague");
+    }
+
+    @Component
+    private Parametric<String, Appendable> getAppendable() {
+        return new Parametric<>("appendable");
     }
 }
