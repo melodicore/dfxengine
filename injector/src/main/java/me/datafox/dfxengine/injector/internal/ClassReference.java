@@ -53,7 +53,7 @@ public class ClassReference<T> {
      * @return {@code true} if this class reference is assignable from the other class reference
      */
     public boolean isAssignableFrom(ClassReference<?> other) {
-        if(getType().equals(other.getType()) && getParameters().equals(other.getParameters())) {
+        if(equals(other)) {
             return true;
         }
         if(other.isSup()) {

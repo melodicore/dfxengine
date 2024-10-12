@@ -90,20 +90,6 @@ public class SelfReference<T> extends ClassReference<T> {
 
     @Override
     public boolean isAssignableFrom(ClassReference<?> other) {
-        if(getParameters().isEmpty() && other.getParameters().isEmpty() && getType().isAssignableFrom(other.getType())) {
-            return true;
-        }
-        if(getParameters().size() == other.getParameters().size() && getType().equals(other.getType())) {
-            boolean success = true;
-            for(int i = 0; i < getParameters().size(); i++) {
-                if(!getParameters().get(i).getType().isAssignableFrom(other.getParameters().get(i).getType())) {
-                    success = false;
-                }
-            }
-            if(success) {
-                return true;
-            }
-        }
         return reference.isAssignableFrom(other);
     }
 

@@ -109,9 +109,9 @@ public class InjectorTest {
                 TypeRef.of(Parametric.class, Number.class, StringBuilder.class)));
         var c3 = assertDoesNotThrow(() -> injector.getComponent(ExtendingParametricComponent.class));
         assertThrows(NoDependenciesPresentException.class, () -> injector.getComponent(
-                TypeRef.of(Parametric.class, String.class, String.class)));
+                TypeRef.of(Parametric.class, StringBuilder.class, CharSequence.class)));
         var c4 = assertDoesNotThrow(() -> injector.getComponent(
-                TypeRef.of(Parametric.class, String.class, CharSequence.class)));
+                TypeRef.of(Parametric.class, StringBuilder.class, Object.class)));
         var c5 = assertDoesNotThrow(() -> injector.getComponent(
                 TypeRef.of(Parametric.class, String.class, Appendable.class)));
         var l1 = assertDoesNotThrow(() -> injector.getComponents(

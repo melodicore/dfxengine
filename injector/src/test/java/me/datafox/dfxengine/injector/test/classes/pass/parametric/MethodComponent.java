@@ -12,7 +12,7 @@ public class MethodComponent {
     }
 
     @Component
-    private Parametric<String, ? super CharSequence> getVagueParametricClass() {
+    private Parametric<StringBuilder, ? super CharSequence> getVagueParametricClass() {
         return new Parametric<>("vague");
     }
 
