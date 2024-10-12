@@ -56,11 +56,11 @@ public class ClassReference<T> {
         if(equals(other)) {
             return true;
         }
-        if(other.isSup()) {
-            return isSup() || getType().equals(Object.class);
-        }
         if(isSup()) {
             return isAssignableTo(other);
+        }
+        if(other.isSup()) {
+            return getType().equals(Object.class);
         }
         if(getParameters().isEmpty() && other.getParameters().isEmpty()) {
             return getType().isAssignableFrom(other.getType());
