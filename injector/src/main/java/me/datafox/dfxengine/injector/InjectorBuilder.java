@@ -1,6 +1,7 @@
 package me.datafox.dfxengine.injector;
 
 import io.github.classgraph.*;
+import me.datafox.dfxengine.injector.api.Injector;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.EventHandler;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
@@ -28,6 +29,22 @@ import static me.datafox.dfxengine.injector.utils.InjectorStrings.*;
  * @author datafox
  */
 public class InjectorBuilder {
+    private static ScanResult scan;
+
+    static {
+        LoggerFactory.getLogger(InjectorBuilder.class).info(SCANNING_CLASSPATH);
+        scan = new ClassGraph().enableAllInfo().enableSystemJarsAndModules().scan();
+    }
+
+    /**
+     * Disposes all data that would otherwise linger in memory. All injector instances will stop working after this
+     * method has been called. {@link Injector#dispose()} calls this method.
+     */
+    public static void dispose() {
+        scan.close();
+        scan = null;
+    }
+
     private final Logger logger;
     private final List<String> packageWhitelist;
     private final List<String> packageBlacklist;
@@ -139,9 +156,6 @@ public class InjectorBuilder {
      * @return the {@link InjectorImpl}
      */
     public InjectorImpl build() {
-        logger.info(SCANNING_CLASSPATH);
-        ScanResult scan = new ClassGraph().enableAllInfo().enableSystemJarsAndModules().scan();
-
         checkAndLogWhitelistAndBlacklist();
 
         ClassInfoList componentClasses = scan

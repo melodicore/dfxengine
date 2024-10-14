@@ -292,6 +292,14 @@ public class InjectorImpl implements Injector {
         events.forEach(this::invokeEventInternal);
     }
 
+    /**
+     * {@inheritDoc} Calls {@link InjectorBuilder#dispose()}.
+     */
+    @Override
+    public void dispose() {
+        InjectorBuilder.dispose();
+    }
+
     @SuppressWarnings("unchecked")
     private <T> void invokeEventInternal(T event) {
         TypeRef<T> eventType;

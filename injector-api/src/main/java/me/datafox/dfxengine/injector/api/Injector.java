@@ -130,4 +130,10 @@ public interface Injector {
      * @param events events to be invoked
      */
     void invokeEvents(Collection<?> events);
+
+    /**
+     * Disposes all data that would otherwise linger in memory. All injector instances will stop working after this
+     * method has been called.
+     */
+    void dispose();
 }
