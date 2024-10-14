@@ -48,6 +48,7 @@ import me.datafox.dfxengine.injector.test.classes.pass.primitive.PrimitiveDepend
 import me.datafox.dfxengine.injector.test.classes.pass.void_component.VoidComponentMethod;
 import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -291,6 +292,11 @@ public class InjectorTest {
 
         injector.invokeEvent(59d);
         assertEquals(4, c.events);
+        assertEquals(1, c.superEvents);
+        assertEquals(2, c.interfaceEvents);
+
+        injector.invokeEvents(List.of("hehe", new ParametricPredicateEvent<>(Serializable.class)));
+        assertEquals(7, c.events);
         assertEquals(1, c.superEvents);
         assertEquals(2, c.interfaceEvents);
     }

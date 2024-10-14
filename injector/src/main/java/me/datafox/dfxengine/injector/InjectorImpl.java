@@ -281,6 +281,11 @@ public class InjectorImpl implements Injector {
     @Override
     public void invokeEvents(Collection<?> events) {
         events.forEach(this::invokeEventInternal);
+        while(!eventQueue.isEmpty()) {
+            List<Object> copy = new ArrayList<>(eventQueue);
+            eventQueue.clear();
+            copy.forEach(this::invokeEventInternal);
+        }
     }
 
     /**

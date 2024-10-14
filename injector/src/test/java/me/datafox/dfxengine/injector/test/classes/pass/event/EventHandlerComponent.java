@@ -15,6 +15,7 @@ public class EventHandlerComponent extends EventHandlerSuper implements EventInt
 
     @EventHandler
     void event1(String str) {
+        System.out.println("String event called with \"" + str + "\"");
         events++;
     }
 
@@ -25,6 +26,7 @@ public class EventHandlerComponent extends EventHandlerSuper implements EventInt
 
     @EventHandler
     String event3(Predicate<? super String> predicate) {
+        System.out.println("Predicate event called");
         events++;
         return "";
     }
