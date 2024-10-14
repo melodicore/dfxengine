@@ -28,6 +28,8 @@ import me.datafox.dfxengine.injector.test.classes.pass.basic.StaticNonComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.event.EventHandlerComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.event.ParametricPredicateEvent;
 import me.datafox.dfxengine.injector.test.classes.pass.inheritance_order.ComponentInterface;
+import me.datafox.dfxengine.injector.test.classes.pass.inheritance_order.DefaultComponent;
+import me.datafox.dfxengine.injector.test.classes.pass.inheritance_order.OverridingComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithInitialize;
 import me.datafox.dfxengine.injector.test.classes.pass.initialize.ComponentWithStaticInitialize;
 import me.datafox.dfxengine.injector.test.classes.pass.list.MultipleComponent;
@@ -185,6 +187,8 @@ public class InjectorTest {
 
         assertTrue(l.contains(c));
         assertEquals(2, l.size());
+        assertInstanceOf(OverridingComponent.class, l.get(0));
+        assertInstanceOf(DefaultComponent.class, l.get(1));
     }
 
     @Test
