@@ -30,9 +30,9 @@ public class InjectorStrings {
     private static final String COMPONENT_METHOD_CLASSES_FOUND_SINGULAR = "Found %s class declaring component methods";
     private static final String COMPONENT_METHOD_CLASSES_FOUND_PLURAL = "Found %s classes declaring component methods";
     private static final String COMPONENT_METHOD_CLASSES = "Component method classes: %s";
-    private static final String EVENT_METHOD_CLASSES_FOUND_SINGULAR = "Found %s class declaring event methods";
-    private static final String EVENT_METHOD_CLASSES_FOUND_PLURAL = "Found %s classes declaring event methods";
-    private static final String EVENT_METHOD_CLASSES = "Event method classes: %s";
+    private static final String EVENT_METHOD_CLASSES_FOUND_SINGULAR = "Found %s class declaring event handler methods";
+    private static final String EVENT_METHOD_CLASSES_FOUND_PLURAL = "Found %s classes declaring event handler methods";
+    private static final String EVENT_METHOD_CLASSES = "Event method handler classes: %s";
     private static final String INSTANTIATED_CLASSES_FOUND_SINGULAR = "Found %s class to instantiate";
     private static final String INSTANTIATED_CLASSES_FOUND_PLURAL = "Found %s classes to instantiate";
     private static final String INSTANTIATED_CLASSES = "Instantiated classes: %s";
@@ -42,9 +42,9 @@ public class InjectorStrings {
     private static final String INVOKED_METHODS_FOUND_SINGULAR = "Found %s method to invoke";
     private static final String INVOKED_METHODS_FOUND_PLURAL = "Found %s methods to invoke";
     private static final String INVOKED_METHODS = "Invoked methods: %s";
-    private static final String EVENTS_FOUND_SINGULAR = "Found %s event";
-    private static final String EVENTS_FOUND_PLURAL = "Found %s events";
-    private static final String EVENTS = "Events: %s";
+    private static final String EVENTS_FOUND_SINGULAR = "Found %s event handler";
+    private static final String EVENTS_FOUND_PLURAL = "Found %s event handlers";
+    private static final String EVENTS = "Event handlers: %s";
     private static final String COMPONENTS_FOUND_SINGULAR = "Found %s declared component";
     private static final String COMPONENTS_FOUND_PLURAL = "Found %s declared components";
     private static final String COMPONENTS = "Declared components: %s";
@@ -64,8 +64,9 @@ public class InjectorStrings {
     private static final String BUILDING_COMPONENT_METHOD_DATA = "Building component data for class %s using method %s";
     private static final String PER_INSTANCE_VOID_COMPONENT =
             "Void component method %s has InstantiationPolicy.PER_INSTANCE, but void methods are only invoked once";
-    private static final String PER_INSTANCE_COMPONENT_EVENT = "Component %s has InstantiationPolicy.PER_INSTANCE " +
-            "but contains non-static event methods. Non-static event methods are not invoked in PER_INSTANCE components";
+    private static final String PER_INSTANCE_COMPONENT_EVENT =
+            "Component %s has InstantiationPolicy.PER_INSTANCE but contains non-static event handler methods. " +
+            "Non-static event handler methods are not invoked in PER_INSTANCE components";
     private static final String FINAL_FIELD_DEPENDENCY =
             "Field %s in class %s is annotated with @Inject but is final, only non-final fields can be injected";
     private static final String UNKNOWN_TYPE =
@@ -73,7 +74,8 @@ public class InjectorStrings {
     private static final String UNRESOLVED_TYPE_PARAMETER =
             "Component %s has unresolved type parameter, unresolved type parameters cannot be injected";
     private static final String INVALID_ARRAY = "Array %s cannot be resolved to a type";
-    private static final String EVENT_PARAMETER_COUNT = "Event method %s has %s parameters but exactly one is required";
+    private static final String EVENT_PARAMETER_COUNT =
+            "Event handler method %s has %s parameters but exactly one is required";
     private static final String PARAMETRIC_EVENT_WITHOUT_INTERFACE =
             "Event class %s has type parameters but does not implement ParametricEvent";
     private static final String NO_DEPENDENCIES = "A single Component %s was requested but none are present";
