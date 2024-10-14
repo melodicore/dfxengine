@@ -44,6 +44,8 @@ import static me.datafox.dfxengine.injector.utils.InjectorStrings.noDependencies
  * @author datafox
  */
 public class InjectorImpl implements Injector {
+    private static InjectorImpl instance;
+
     @Component
     private static InjectorImpl getInstance() {
         return instance;
@@ -70,7 +72,9 @@ public class InjectorImpl implements Injector {
         return LoggerFactory.getLogger(details.getRequesting().getType());
     }
 
-    private static InjectorImpl instance;
+    static void disposeInternal() {
+        instance = null;
+    }
 
     private final Logger logger;
 
@@ -100,19 +104,6 @@ public class InjectorImpl implements Injector {
                 .forEach(componentList::add);
         runAndClearInitializers();
         runAndClearVoidComponents();
-    }
-
-    private void runAndClearInitializers() {
-        initializerQueue.stream().sorted().forEach(Runnable::run);
-        initializerQueue.clear();
-    }
-
-    private void runAndClearVoidComponents() {
-        voidComponentQueue
-                .stream()
-                .sorted(Comparator.comparingInt(ComponentData::getOrder))
-                .forEach(this::invokeVoid);
-        voidComponentQueue.clear();
     }
 
     /**
@@ -300,6 +291,19 @@ public class InjectorImpl implements Injector {
         InjectorBuilder.dispose();
     }
 
+    private void runAndClearInitializers() {
+        initializerQueue.stream().sorted().forEach(Runnable::run);
+        initializerQueue.clear();
+    }
+
+    private void runAndClearVoidComponents() {
+        voidComponentQueue
+                .stream()
+                .sorted(Comparator.comparingInt(ComponentData::getOrder))
+                .forEach(this::invokeVoid);
+        voidComponentQueue.clear();
+    }
+
     @SuppressWarnings("unchecked")
     private <T> void invokeEventInternal(T event) {
         TypeRef<T> eventType;
@@ -346,7 +350,7 @@ public class InjectorImpl implements Injector {
                     .flatMap(Stream::ofNullable)
                     .collect(Collectors.toList()));
         } else {
-            Object returned = null;
+            Object returned;
             try {
                 eventData.getMethod().trySetAccessible();
                 returned = eventData.getMethod().invoke(null, event);

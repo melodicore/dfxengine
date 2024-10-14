@@ -43,6 +43,7 @@ public class InjectorBuilder {
     public static void dispose() {
         scan.close();
         scan = null;
+        InjectorImpl.disposeInternal();
     }
 
     private final Logger logger;
