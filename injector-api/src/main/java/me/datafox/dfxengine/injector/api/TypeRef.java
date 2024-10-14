@@ -37,7 +37,7 @@ public final class TypeRef<T> {
      * amount of provided parameters
      */
     @Builder
-    public TypeRef(Class<T> type, boolean sup, List<TypeRef<?>> parameters) {
+    public TypeRef(Class<T> type, boolean sup, @Singular List<TypeRef<?>> parameters) {
         if(type.getTypeParameters().length != parameters.size()) {
             StringBuilder sb = new StringBuilder();
             sb.append("Class ").append(type.getName()).append(" has ").append(type.getTypeParameters().length).append(" type parameter");
