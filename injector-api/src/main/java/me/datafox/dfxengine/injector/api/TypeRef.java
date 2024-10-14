@@ -31,6 +31,7 @@ public final class TypeRef<T> {
     /**
      * Constructs a type reference
      * @param type type to be represented
+     * @param sup {@code true} if this type reference refers to {@code ? super T}
      * @param parameters type parameters to be represented
      *
      * @throws ParameterCountMismatchException if the amount of parameters for the specified type is different to the
