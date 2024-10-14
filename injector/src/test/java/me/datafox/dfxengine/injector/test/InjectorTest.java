@@ -37,6 +37,7 @@ import me.datafox.dfxengine.injector.test.classes.pass.method_field.NonComponent
 import me.datafox.dfxengine.injector.test.classes.pass.order.Component2;
 import me.datafox.dfxengine.injector.test.classes.pass.parametric.ExtendingParametricComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.parametric.Parametric;
+import me.datafox.dfxengine.injector.test.classes.pass.parametric_super.*;
 import me.datafox.dfxengine.injector.test.classes.pass.per_instance.NonComponent2;
 import me.datafox.dfxengine.injector.test.classes.pass.per_instance.PerInstanceComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.per_instance.RequestingComponent;
@@ -130,7 +131,7 @@ public class InjectorTest {
         assertEquals("vague", c4.getId());
         assertEquals("appendable", c5.getId());
 
-        assertEquals(c1, c3);
+        assertSame(c1, c3);
         assertEquals(2, l1.size());
         assertEquals(4, l2.size());
         assertTrue(l3.isEmpty());
@@ -148,7 +149,6 @@ public class InjectorTest {
         assertTrue(l4.contains(c2));
         assertTrue(l4.contains(c4));
         assertTrue(l4.contains(c5));
-
     }
 
     @Test
@@ -289,6 +289,47 @@ public class InjectorTest {
         assertEquals(4, c.events);
         assertEquals(1, c.superEvents);
         assertEquals(2, c.interfaceEvents);
+    }
+
+    @Test
+    public void parametricSuperTest() {
+        var injector = injector(ComponentMethods.class);
+
+        var i13 = assertDoesNotThrow(() -> injector.getComponent(
+                TypeRef.of(ParametricClass.class, Interface1.class, Interface3.class)));
+        var i42 = assertDoesNotThrow(() -> injector.getComponent(
+                TypeRef.of(ParametricClass.class, Interface4.class, Interface2.class)));
+        var is45 = assertDoesNotThrow(() -> injector.getComponent(
+                TypeRef.of(ParametricClass.class, Object.class, Interface5.class)));
+
+        var c1 = assertDoesNotThrow(() -> injector.getComponent(
+                TypeRef.of(ParametricClass.class, TypeRef.of(Interface6.class, true), TypeRef.of(Interface5.class))));
+        assertThrows(NoDependenciesPresentException.class, () -> injector.getComponent(
+                TypeRef.of(ParametricClass.class, TypeRef.of(Interface2.class, true), TypeRef.of(Interface5.class))));
+        var c2 = assertDoesNotThrow(() -> injector.getComponent(
+                TypeRef.of(ParametricClass.class, TypeRef.of(Interface4.class, true), TypeRef.of(Interface2.class, true))));
+        var c3 = assertDoesNotThrow(() -> injector.getComponent(
+                TypeRef.of(ParametricClass.class, TypeRef.of(Interface4.class, true), TypeRef.of(Interface3.class, true))));
+        var c4 = assertDoesNotThrow(() -> injector.getComponent(
+                TypeRef.of(ParametricClass.class, TypeRef.of(Interface1.class), TypeRef.of(Interface4.class, true))));
+        var l1 = assertDoesNotThrow(() -> injector.getComponents(
+                TypeRef.of(ParametricClass.class, TypeRef.of(Interface4.class, true), TypeRef.object())));
+        var l2 = assertDoesNotThrow(() -> injector.getComponents(
+                TypeRef.of(ParametricClass.class, TypeRef.of(Interface1.class), TypeRef.of(Interface5.class, true))));
+
+        assertEquals("i13", i13.getId());
+        assertEquals("i42", i42.getId());
+        assertEquals("is45", is45.getId());
+
+        assertSame(is45, c1);
+        assertSame(i42, c2);
+        assertSame(i13, c3);
+        assertSame(i42, c4);
+
+        assertEquals(3, l1.size());
+        assertEquals(2, l2.size());
+        assertTrue(l1.containsAll(List.of(i13, i42, is45)));
+        assertTrue(l2.containsAll(List.of(i13, i42)));
     }
 
     @Test
