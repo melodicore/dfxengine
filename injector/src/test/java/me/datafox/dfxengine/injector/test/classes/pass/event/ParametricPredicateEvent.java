@@ -9,7 +9,7 @@ import java.util.function.Predicate;
  * @author datafox
  */
 public class ParametricPredicateEvent<T> implements Predicate<T>, ParametricEvent {
-    private Class<T> param;
+    private final Class<T> param;
 
     public ParametricPredicateEvent(Class<T> param) {
         this.param = param;
