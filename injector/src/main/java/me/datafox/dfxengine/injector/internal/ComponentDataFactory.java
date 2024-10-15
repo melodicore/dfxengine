@@ -389,9 +389,8 @@ public class ComponentDataFactory {
     }
 
     private String parseClass(ClassInfo info) {
-        return info.getTypeSignatureOrTypeDescriptor()
-                .toString()
-                .split(" class | interface ", 2)[1];
+        String str = " " + info.getTypeSignatureOrTypeDescriptor().toString();
+        return str.split(" class | interface ", 2)[1];
     }
 
     private String parseMethod(MethodInfo info) {
