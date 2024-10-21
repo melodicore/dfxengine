@@ -32,8 +32,8 @@ version in square brackets is the current version in the repository.
 | [Utils](utils)<sup>1</sup>   | Done (1.0.3)       | Utilities used by other modules                     |
 | [Values API](values-api)     | Done (1.1.2)       | Interfaces for the Values module                    |
 | [Values](values)             | Done (1.1.2)       | Mutable number values and a dynamic modifier system |
-| Entities API                 | Under construction | Interfaces for the Entities module                  |
-| Entities                     | Under construction | Data-oriented entity system                         |
+| [Entities API](entities-api) | Under construction | Interfaces for the Entities module                  |
+| [Entities](entities)         | Under construction | Data-oriented entity system                         |
 | [Collections](collections)   | Deprecated (1.0.2) | Collections for other modules and general usage     |
 
 1: These modules will get more features as they are required by other modules

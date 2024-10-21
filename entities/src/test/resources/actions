@@ -1,0 +1,85 @@
+{
+"id": "entityActionTest",
+"dependencies": [],
+"developer": "datafox",
+"spaces": [
+    {
+        "id": "values",
+        "groups": [],
+        "handles": [
+            {
+                "id": "value1",
+                "groups": [],
+                "tags": []
+            },
+            {
+                "id": "value2",
+                "groups": [],
+                "tags": []
+            }
+        ]
+    }
+],
+"entities": [
+    {
+        "handle": "entity",
+        "components": [
+            {
+                "handle": "component",
+                "data": [
+                    {
+                        "class": "value",
+                        "value": {
+                            "handle": "value",
+                            "type": "INT",
+                            "value": "5"
+                        }
+                    },
+                    {
+                        "class": "valueMap",
+                        "handle": "map",
+                        "space": "values",
+                        "values": [
+                            {
+                                "handle": "value1",
+                                "type": "FLOAT",
+                                "value": "69.0"
+                            },
+                            {
+                                "handle": "value2",
+                                "type": "DOUBLE",
+                                "value": "420.0"
+                            }
+                        ]
+                    }
+                ],
+                "links": [],
+                "actions": [
+                    {
+                        "class": "createEntityAction",
+                        "handle": "create"
+                    },
+                    {
+                        "class": "removeEntityAction",
+                        "handle": "remove"
+                    },
+                    {
+                        "class": "valueMapOperationAction",
+                        "handle": "map"
+                    },
+                    {
+                        "class": "valueOperationAction",
+                        "handle": "value"
+                    }
+                ]
+            }
+        ],
+        "singleton": true
+    },
+    {
+        "handle": "multi",
+        "components": []
+    }
+],
+"systems": []
+}
