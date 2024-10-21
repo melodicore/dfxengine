@@ -26,7 +26,8 @@ subhandles, as explained above in the section for handles. Two similar methods e
 `HandleManager` is a singleton class that manages all `Spaces` and `Handles`. It has two main methods, 
 `createSpace(String)` and `getOrCreateSpace(String)` which work in the same way as the methods for creating subhandles, 
 handles and groups, as explained above in the section for handles. It also contains references to the two special 
-spaces, accessible with `getSpaceSpace()` and `getTagSpace()`.
+spaces, accessible with `getSpaceSpace()` and `getTagSpace()`. The implementation, `HandleManagerImpl`, is annotated as 
+a `Component` for the [Injector](../injector) module and will be automatically instantiated by it.
 
 ## [`Group`](src/main/java/me/datafox/dfxengine/handles/GroupImpl.java)
 
