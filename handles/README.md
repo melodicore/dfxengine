@@ -81,5 +81,5 @@ with a method annotated with `@Component` that returns the desired configuration
 
 `Handled` is an interface in the Handles API that indicates that its implementing class is identified by a `Handle`.
 `Spaces` and `Groups` implement handled by default. `HandleMap` has a method `putHandled(T)` which puts an object into
-the map based on its identifying handle. Handled also implements `Comparable<Handled>` that where the comparison is 
-based on `Handle.compareTo(Handle)` using the identifying handles.
+the map based on its identifying handle. Handled also implements `Comparable<Handled>` where the comparison is based on 
+`Handle.compareTo(Handle)` using the identifying handles.
