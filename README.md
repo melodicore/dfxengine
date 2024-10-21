@@ -18,23 +18,23 @@ that are supported by Android's
 Here are the currently existing and planned modules. The version in parentheses is the current release on Maven and the
 version in square brackets is the current version in the repository.
 
-| Module                       | Status                | Description                                         |
-|------------------------------|-----------------------|-----------------------------------------------------|
-| [Dependencies](dependencies) | Done (1.0.4) \[1.0.5] | Data structure dependencies and invalidation        |
-| [Handles API](handles-api)   | Done (2.0.1) \[2.0.2] | Interfaces for the Handles module                   |
-| [Handles](handles)           | Done (2.0.1) \[2.0.2] | Dynamic enum-like structures for map keys           |
-| [Injector API](injector-api) | Done (2.0.1) \[2.1.0] | Annotations for the Injector module                 |
-| [Injector](injector)         | Done (2.0.1) \[2.1.0] | A dependency injector                               |
-| [Math API](math-api)         | Done (1.0.4)          | Interfaces for the Math module                      |
-| [Math](math)                 | Done (1.0.6) \[1.0.7] | Seamless wrapping and manipulation of number types  |
-| [Text API](text-api)         | Done (1.0.1)          | Interfaces for the Text module                      |
-| [Text](text)                 | Done (1.0.1) \[1.0.2] | Text handling and representation                    |
-| [Utils](utils)<sup>1</sup>   | Done (1.0.2)          | Utilities used by other modules                     |
-| [Values API](values-api)     | Done (1.1.1) \[1.1.2] | Interfaces for the Values module                    |
-| [Values](values)             | Done (1.1.1) \[1.1.2] | Mutable number values and a dynamic modifier system |
-| [Entities API](entities-api) | Under construction    | Interfaces for the Entities module                  |
-| [Entities](entities)         | Under construction    | Data-oriented entity system                         |
-| [Collections](collections)   | Deprecated (1.0.2)    | Collections for other modules and general usage     |
+| Module                       | Status             | Description                                         |
+|------------------------------|--------------------|-----------------------------------------------------|
+| [Dependencies](dependencies) | Done (1.0.5)       | Data structure dependencies and invalidation        |
+| [Handles API](handles-api)   | Done (2.0.2)       | Interfaces for the Handles module                   |
+| [Handles](handles)           | Done (2.0.2)       | Dynamic enum-like structures for map keys           |
+| [Injector API](injector-api) | Done (2.1.0)       | Annotations for the Injector module                 |
+| [Injector](injector)         | Done (2.1.0)       | A dependency injector                               |
+| [Math API](math-api)         | Done (1.0.5)       | Interfaces for the Math module                      |
+| [Math](math)                 | Done (1.0.7)       | Seamless wrapping and manipulation of number types  |
+| [Text API](text-api)         | Done (1.0.2)       | Interfaces for the Text module                      |
+| [Text](text)                 | Done (1.0.2)       | Text handling and representation                    |
+| [Utils](utils)<sup>1</sup>   | Done (1.0.3)       | Utilities used by other modules                     |
+| [Values API](values-api)     | Done (1.1.2)       | Interfaces for the Values module                    |
+| [Values](values)             | Done (1.1.2)       | Mutable number values and a dynamic modifier system |
+| [Entities API](entities-api) | Under construction | Interfaces for the Entities module                  |
+| [Entities](entities)         | Under construction | Data-oriented entity system                         |
+| [Collections](collections)   | Deprecated (1.0.2) | Collections for other modules and general usage     |
 
 1: These modules will get more features as they are required by other modules
 
