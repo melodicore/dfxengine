@@ -27,7 +27,7 @@ subhandles, as explained above in the section for handles. Two similar methods e
 `createSpace(String)` and `getOrCreateSpace(String)` which work in the same way as the methods for creating subhandles, 
 handles and groups, as explained above in the section for handles. It also contains references to the two special 
 spaces, accessible with `getSpaceSpace()` and `getTagSpace()`. The implementation, `HandleManagerImpl`, is annotated as 
-a `Component` for the [Injector](../injector) module and will be automatically instantiated by it.
+a `@Component` for the [Injector](../injector) module and will be automatically instantiated by it.
 
 ## [`Group`](src/main/java/me/datafox/dfxengine/handles/GroupImpl.java)
 
@@ -73,6 +73,9 @@ options are:
 * `orderedGroups` determines if groups within spaces should be ordered. Default is `true`
 * `orderedSubHandles` determines if subhandles within handles should be ordered. Default is `true`
 * `orderedTags` determines if tag handles within handles should be ordered. Default is `false`
+
+The default configuration is registered as a `@Component` for the [Injector](../injector) module and can be overridden 
+with a method annotated with `@Component` that returns the desired configuration.
 
 ## [`Handled`](../handles-api/src/main/java/me/datafox/dfxengine/handles/api/Handled.java)
 
