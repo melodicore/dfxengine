@@ -52,6 +52,11 @@ subprojects {
                 pom {
                     url = "https://engine.datafox.me"
                     scm {
+                        connection = "scm:git:git://git.datafox.me/datafox/dfxengine.git"
+                        developerConnection = "scm:git:ssh://git.datafox.me/datafox/dfxengine.git"
+                        url = "https://git.datafox.me/datafox/dfxengine"
+                    }
+                    scm {
                         connection = "scm:git:git://github.com/melodicore/dfxengine.git"
                         developerConnection = "scm:git:ssh://github.com/melodicore/dfxengine.git"
                         url = "https://github.com/melodicore/dfxengine"
