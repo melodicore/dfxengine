@@ -91,10 +91,10 @@ public abstract class AbstractDependency implements Dependency {
      */
     @Override
     public boolean addDependents(Collection<? extends Dependent> dependents) {
-        for(Dependent dependency : dependents) {
-            if(DependencyUtils.checkCyclicDependencies(this, dependency)) {
+        for(Dependent dependent : dependents) {
+            if(DependencyUtils.checkCyclicDependencies(this, dependent)) {
                 throw LogUtils.logExceptionAndGet(logger,
-                        DependencyStrings.cyclicDetected(dependency, this),
+                        DependencyStrings.cyclicDetected(dependent, this),
                         IllegalArgumentException::new);
             }
         }

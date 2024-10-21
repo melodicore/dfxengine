@@ -11,9 +11,9 @@ import me.datafox.dfxengine.dependencies.Dependency;
 @SuppressWarnings("MissingJavadoc")
 public class DependencyStrings {
     private static final String CYCLIC_DETECTED =
-            "Dependency %s cannot be added to Dependent %s, cyclic dependency chain detected";
+            "Dependent %s cannot be added to dependency %s, cyclic dependency chain detected";
 
-    public static String cyclicDetected(Dependent dependency, Dependency dependent) {
-        return String.format(CYCLIC_DETECTED, dependency, dependent);
+    public static String cyclicDetected(Dependent dependent, Dependency dependency) {
+        return String.format(CYCLIC_DETECTED, dependent, dependency);
     }
 }
