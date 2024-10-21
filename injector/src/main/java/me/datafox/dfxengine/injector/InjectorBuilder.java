@@ -31,9 +31,31 @@ import static me.datafox.dfxengine.injector.utils.InjectorStrings.*;
 public class InjectorBuilder {
     private static ScanResult scan;
 
-    static {
+    /**
+     * Scans the classpath with default settings.
+     */
+    public static void scan() {
         LoggerFactory.getLogger(InjectorBuilder.class).info(SCANNING_CLASSPATH);
         scan = new ClassGraph().enableAllInfo().enableSystemJarsAndModules().scan();
+    }
+
+    /**
+     * Loads an already scanned classpath.
+     *
+     * @param scan scanned classpath
+     */
+    public static void load(ScanResult scan) {
+        InjectorBuilder.scan = scan;
+    }
+
+    /**
+     * Loads an already scanned classpath from a json string.
+     *
+     * @param json scanned classpath serialized with {@link ScanResult#toJSON()}
+     */
+    public static void load(String json) {
+        LoggerFactory.getLogger(InjectorBuilder.class).info(LOADING_SCAN);
+        scan = ScanResult.fromJSON(json);
     }
 
     /**
@@ -41,8 +63,10 @@ public class InjectorBuilder {
      * method has been called. {@link Injector#dispose()} calls this method.
      */
     public static void dispose() {
-        scan.close();
-        scan = null;
+        if(scan != null) {
+            scan.close();
+            scan = null;
+        }
         InjectorImpl.disposeInternal();
     }
 
