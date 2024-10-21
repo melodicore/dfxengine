@@ -31,7 +31,7 @@ spaces, accessible with `getSpaceSpace()` and `getTagSpace()`.
 ## [`Group`](src/main/java/me/datafox/dfxengine/handles/GroupImpl.java)
 
 `Groups` are extra containers of `Handles` that are managed by `Spaces`. Like spaces, groups are identified by a handle,
-but these handles are always subhandles of the handle that identifies the group containing the group in question. 
+but these handles are always subhandles of the handle that identifies the space containing the group in question. 
 Handles can be added to a group with `getHandles().add(Object)`, the details of which are explained below in the section
 for `HandleSets`.
 
