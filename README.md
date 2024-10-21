@@ -20,7 +20,7 @@ version in square brackets is the current version in the repository.
 
 | Module                       | Status             | Description                                         |
 |------------------------------|--------------------|-----------------------------------------------------|
-| [Dependencies](dependencies) | Done (1.0.5)       | Data structure dependencies and invalidation        |
+| [Dependencies](dependencies) | Done (1.0.6)       | Data structure dependencies and invalidation        |
 | [Handles API](handles-api)   | Done (2.0.2)       | Interfaces for the Handles module                   |
 | [Handles](handles)           | Done (2.0.2)       | Dynamic enum-like structures for map keys           |
 | [Injector API](injector-api) | Done (2.1.0)       | Annotations for the Injector module                 |
