@@ -809,10 +809,38 @@ public class DelegatedValueMap implements ValueMap {
         return map.entrySet();
     }
 
-
+    /**
+     * @return a string representation of this map
+     */
     @Override
     public String toString() {
         return map.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return map.hashCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof DelegatedValueMap) {
+            return map.equals(((DelegatedValueMap) obj).map);
+        }
+        if(obj instanceof Map) {
+            return map.equals(obj);
+        }
+        return false;
     }
 
     private Stream<Value> getExisting(Collection<? extends Handle> handles) {
@@ -908,9 +936,12 @@ public class DelegatedValueMap implements ValueMap {
      * A view to a {@link ValueMap} with the {@link Numeral} representations of the {@link Value Values}.
      */
     public class NumeralMap implements Map<Handle,Numeral> {
+        private final ValueMap map;
+
         private final boolean modified;
 
         NumeralMap(boolean modified) {
+            this.map = DelegatedValueMap.this;
             this.modified = modified;
         }
 
@@ -1023,9 +1054,38 @@ public class DelegatedValueMap implements ValueMap {
             return DelegatedValueMap.this.entrySet().stream().map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(), getInternal(entry.getValue()))).collect(Collectors.toSet());
         }
 
+        /**
+         * @return a string representation of this map
+         */
         @Override
         public String toString() {
             return map.toString();
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @return {@inheritDoc}
+         */
+        @Override
+        public int hashCode() {
+            return map.hashCode();
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @return {@inheritDoc}
+         */
+        @Override
+        public boolean equals(Object obj) {
+            if(obj instanceof NumeralMap) {
+                return map.equals(((NumeralMap) obj).map);
+            }
+            if(obj instanceof Map) {
+                return map.equals(obj);
+            }
+            return false;
         }
 
         private Numeral getInternal(Value value) {
