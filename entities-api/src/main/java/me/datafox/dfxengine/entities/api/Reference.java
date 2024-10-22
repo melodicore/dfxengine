@@ -8,6 +8,6 @@ import java.util.stream.Stream;
  * @author datafox
  */
 @FunctionalInterface
-public interface Reference<T> {
-    Stream<T> get(HandleMap<T> map);
+public interface Reference {
+    <T> Stream<T> get(HandleMap<T> map);
 }

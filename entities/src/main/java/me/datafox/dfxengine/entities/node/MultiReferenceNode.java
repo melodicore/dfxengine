@@ -32,13 +32,13 @@ public class MultiReferenceNode<T> implements SupplierNode {
 
     private final List<NodeOutput<List<T>>> outputs;
 
-    private final Reference<Entity> entity;
+    private final Reference entity;
 
-    private final Reference<EntityComponent> component;
+    private final Reference component;
 
-    private final Reference<EntityData<T>> data;
+    private final Reference data;
 
-    public MultiReferenceNode(NodeTree tree, SingleDataType<T> type, Reference<Entity> entity, Reference<EntityComponent> component, Reference<EntityData<T>> data) {
+    public MultiReferenceNode(NodeTree tree, SingleDataType<T> type, Reference entity, Reference component, Reference data) {
         this.tree = tree;
         inputType = type;
         output = new NodeOutputImpl<>(this, type.toList());
