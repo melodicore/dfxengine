@@ -3,7 +3,8 @@ DFXEngine Text contains tools for generating text from various objects.
 ## [`TextFactory`](src/main/java/me/datafox/dfxengine/text/TextFactoryImpl.java)
 
 `TextFactory` is a singleton class that builds strings from `Text` objects and contains references to various tools to
-use in generation. Use the `build(Text)` and `build(Text...)` methods for generation.
+use in generation. Use the `build(Text)` and `build(Text...)` methods for generation. The implementation is annotated as
+a `@Component` for the [Injector](../injector) module and will be automatically instantiated by it.
 
 ## [`TextConfiguration`](src/main/java/me/datafox/dfxengine/text/utils/TextConfigurationImpl.java)
 
@@ -11,6 +12,7 @@ use in generation. Use the `build(Text)` and `build(Text...)` methods for genera
 is used to determine the type and default value of a configuration entry, and values to configuration entries may be
 static objects or a `Supplier<T>`. Configuration keys specific to a single class are contained in the class, and generic
 keys are in the `ConfigurationKeys` utility class. These generic keys are:
+
 * `ConfigurationKey<String> DELIMITER` determines the delimiter used in normal concatenation. The default value is ` `
 * `ConfigurationKey<String> LIST_DELIMITER` determines the delimiter used in list concatenation, which is when the last
   delimiter should be different from the other ones. The default value is <code>,&nbsp;</code>
@@ -91,15 +93,19 @@ implementations of number formatter:
       `ConfigurationKeys.LIST_LAST_DELIMITER` should be used instead of `ConfigurationKeys.DELIMITER`. The default value
       is `true`
 
+All `NumberFormatter` implementations are annotated with `@Component` for the [Injector](../injector) module and will be
+automatically instantiated by it.
+
 ## [`NumberSuffixFormatter`](../text-api/src/main/java/me/datafox/dfxengine/text/api/NumberSuffixFormatter.java)
 
 `NumberSuffixFormatter` is an interface that separates a `BigDecimal` number into a mantissa and an exponent. It is used
 by number formatters. There are three default implementations of number suffix formatter:
+
 * [`ExponentSuffixFormatter`](src/main/java/me/datafox/dfxengine/text/suffix/ExponentSuffixFormatter.java) splits a 
   number into a mantissa and an exponent based on two configuration keys:
     * `ConfigurationKey<Integer> INTERVAL` determines the interval of exponents. For values larger than 1, the 
       exponent is rounded down to the nearest multiple of the interval, and the mantissa is scaled accordingly. A value
-      of 3 is equivalent to engineering representation. Values smaller than ` are not allowed. The default value is 1
+      of 3 is equivalent to engineering representation. Values smaller than 1 are not allowed. The default value is 1
     * `ConfigurationKey<Boolean> EXPONENT_PLUS` determines if the exponent should be prefixed by a plus when it is 
       positive. The default value is `false`
 * [`CharDigitSuffixFormatter`](src/main/java/me/datafox/dfxengine/text/suffix/CharDigitSuffixFormatter.java) is 
@@ -126,19 +132,30 @@ by number formatters. There are three default implementations of number suffix f
     * `ConfigurationKey<Integer> INTERVAL` determines the interval of exponents, in the same way as 
       `CharDigitSuffixFormatter` does. The default suffixes should all use a value of 3. The default value is 3
 
+All `NumberSuffixFactory` implementations are annotated with `@Component` for the [Injector](../injector) module and 
+will be automatically instantiated by it.
+
 ## [`NameConverter<T>`](../text-api/src/main/java/me/datafox/dfxengine/text/api/NameConverter.java)
 
 `NameConverter<T>` is an interface that converts an object to a singular and optionally also a plural name. The name
 converter is used by `NameText<T>`. There are two default implementations of name converter:
+
 * [`HandleNameConverter`](src/main/java/me/datafox/dfxengine/text/converter/HandleNameConverter.java) converts a handle
   to a name by using its id. It is not plural capable
 * [`HandledNameConverter`](src/main/java/me/datafox/dfxengine/text/converter/HandledNameConverter.java) converts a
   handled object to a name by using its handle's id. It is not plural capable
 
+All `NameConverter<T>` implementations are annotated with `@Component` for the [Injector](../injector) module and will
+be automatically instantiated by it.
+
 ## [`PluralConverter`](../text-api/src/main/java/me/datafox/dfxengine/text/api/PluralConverter.java)
 
 `PluralConverter` is an interface that converts a singular string into plural form. The 
 [default implementation](src/main/java/me/datafox/dfxengine/text/converter/DefaultPluralConverter.java) has three rules:
+
 * If the string ends in `s`, `x` or `ch`, `es` is added to the end of the string
 * If the string ends in a consonant followed by `y`, the `y` is stripped and `ies` is added to the end of the string
 * In all other cases, `s` is added to the end of the string
+
+The implementation is annotated as a `@Component` for the [Injector](../injector) module and will be automatically 
+instantiated by it.

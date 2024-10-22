@@ -3,9 +3,9 @@ represent numbers.
 
 ## [`Value`](src/main/java/me/datafox/dfxengine/values/ValueImpl.java)
 
-`Value` is a mutable class that is identified with a handle and wraps two numerals, `base` and `value`. The base always
-stays the same unless changed directly by the value's method, and the value is calculated when the getter method is used
-based on modifiers attached to the value.
+`Value` is a mutable class that is identified with a handle from the [Handles](../handles) module and wraps two
+numerals, `base` and `value`. The base always stays the same unless changed directly by the value's method, and the 
+value is calculated when the getter method is used based on modifiers attached to the value.
 
 To avoid unnecessary calculations, the value is cached and invalidated when any of the attached modifiers
 change. The base can be changed with the `set(Numeral)` and various `apply` methods, and values can be compared against
@@ -17,7 +17,7 @@ to immutable values like normal.
 
 [`StaticValue`](src/main/java/me/datafox/dfxengine/values/StaticValue.java) is a special separate implementation of
 value that is completely immutable, including modifiers, and is not identified by a handle. These are most useful as
-parameters for modifiers.
+parameters for [modifiers](#modifier).
 
 ## [`ValueMap`](src/main/java/me/datafox/dfxengine/values/DelegatedValueMap.java)
 
@@ -27,14 +27,14 @@ values. Modifiers can also be attached to it, which are automatically attached t
 added after the modifier has been attached. Values removed from the map also have the map-specific modifiers removed
 from them.
 
-Just like values, value maps can also be immutable. All immutability rules apply, and a map may only contain mutable or
-immutable values, but never both.
+Just like values, value maps can also be immutable. A map may only contain mutable or immutable values, but never both.
 
 ## [`Operation`](../values-api/src/main/java/me/datafox/dfxengine/values/api/operation/Operation.java)
 
 `Operation` is an interface that represents a math operation. It takes in a source parameter and an arbitrary number of
 other parameters, the amount of which is determined by the `getParameterCount()` method. The method does not count the
 source parameter. There are two implementations of operation:
+
 * [`OperationChain`](src/main/java/me/datafox/dfxengine/values/operation/OperationChain.java) chains multiple operations
   together, using the previous operation's result as the source for the next one. The parameter count is the sum of
   child operation parameter counts, and parameters are given in order to the child operations
@@ -50,6 +50,7 @@ In addition to these operations, there are three extending interfaces that have 
 functional interfaces and can be created with a method reference to the operation methods in the
 [`Operations`](../math/src/main/java/me/datafox/dfxengine/math/utils/Operations.java) utility class from the Math
 module. These extending interfaces are:
+
 * [`SourceOperation`](../values-api/src/main/java/me/datafox/dfxengine/values/api/operation/SourceOperation.java)
   represents an operation that only takes in a source parameter
 * [`SingleParameterOperation`](../values-api/src/main/java/me/datafox/dfxengine/values/api/operation/SingleParameterOperation.java)
@@ -62,6 +63,7 @@ module. These extending interfaces are:
 `Modifier` is an interface that represents a math operation that can be calculated automatically. It has a priority 
 which determines the order of operations between multiple modifiers. A modifier can be attached to values and value maps
 to dynamically modify their values when retrieved. There are two default implementations of modifier:
+
 * [`OperationModifier`](src/main/java/me/datafox/dfxengine/values/modifier/OperationModifier.java) wraps an operation
   and value parameters. All parameter numerals are retrieved with `Value.getValue()`, so all modifiers attached to those
   values are also taken into account
