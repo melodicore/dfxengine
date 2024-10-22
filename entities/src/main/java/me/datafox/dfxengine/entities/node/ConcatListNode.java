@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ListConcatNode<T> extends CachingOutputNode {
+public class ConcatListNode<T> extends CachingOutputNode {
     private final NodeTree tree;
 
     private final List<NodeInput<List<T>>> inputs;
@@ -28,7 +28,7 @@ public class ListConcatNode<T> extends CachingOutputNode {
 
     private final List<NodeOutput<List<T>>> outputs;
 
-    public ListConcatNode(NodeTree tree, ListDataType<T> type, int inputCount) {
+    public ConcatListNode(NodeTree tree, ListDataType<T> type, int inputCount) {
         this.tree = tree;
         inputs = IntStream.range(0, inputCount)
                 .mapToObj(i -> new NodeInputImpl<>(this, type))
