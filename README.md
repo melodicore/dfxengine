@@ -15,8 +15,7 @@ that are supported by Android's
 
 ## Modules
 
-Here are the currently existing and planned modules. The version in parentheses is the current release on Maven and the
-version in square brackets is the current version in the repository.
+Here are the currently existing and planned modules:
 
 | Module                       | Status             | Description                                         |
 |------------------------------|--------------------|-----------------------------------------------------|
