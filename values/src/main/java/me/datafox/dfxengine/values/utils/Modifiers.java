@@ -241,7 +241,7 @@ public class Modifiers {
     }
 
     /**
-     * Wrapper for {@link Operations#root(Numeral, Numeral)}.
+     * Wrapper for {@link Operations#logN(Numeral, Numeral)}.
      *
      * @param priority priority for the {@link OperationModifier}
      * @param base base {@link Value} for the {@link OperationModifier}
@@ -252,7 +252,7 @@ public class Modifiers {
     }
 
     /**
-     * Wrapper for {@link Operations#root(Numeral, Numeral)} with reversed parameters.
+     * Wrapper for {@link Operations#logN(Numeral, Numeral)} with reversed parameters.
      *
      * @param priority priority for the {@link OperationModifier}
      * @param value value {@link Value} for the {@link OperationModifier}
