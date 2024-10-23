@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.entities.node;
+package me.datafox.dfxengine.entities.node.supplier;
 
 import lombok.Data;
 import me.datafox.dfxengine.entities.api.Context;
@@ -7,7 +7,8 @@ import me.datafox.dfxengine.entities.api.data.NodeData;
 import me.datafox.dfxengine.entities.api.node.NodeOutput;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
 import me.datafox.dfxengine.entities.api.node.SupplierNode;
-import me.datafox.dfxengine.entities.data.NodeDataImpl;
+import me.datafox.dfxengine.entities.exception.InvalidNodeException;
+import me.datafox.dfxengine.entities.node.NodeOutputImpl;
 import me.datafox.dfxengine.handles.api.Handle;
 
 import java.util.List;
@@ -19,8 +20,6 @@ import java.util.List;
 public class SingleReferenceNode<T> implements SupplierNode {
     private final NodeTree tree;
 
-    private final NodeOutput<T> output;
-
     private final List<NodeOutput<T>> outputs;
 
     private final Handle entity;
@@ -31,23 +30,24 @@ public class SingleReferenceNode<T> implements SupplierNode {
 
     public SingleReferenceNode(NodeTree tree, DataType<T> type, String entity, String component, String data, Context context) {
         this.tree = tree;
-        output = new NodeOutputImpl<>(this, type);
-        outputs = List.of(output);
+        outputs = List.of(new NodeOutputImpl<>(this, type));
         this.entity = context.getHandles().getEntityHandle(entity);
+        if(this.entity.getTags().contains(context.getHandles().getMultiEntityTag())) {
+            throw new InvalidNodeException();
+        }
         this.component = context.getHandles().getComponentHandle(component);
         this.data = context.getHandles().getDataHandle(data);
     }
 
     @Override
     public List<NodeData<?>> supply(Context context) {
-        return List.of(new NodeDataImpl<>(output.getType(),
+        return List.of((NodeData<?>) outputs.get(0).getType(),
                 context.getEngine()
-                        .getEntities()
-                        .get(entity)
+                        .getEntity(entity)
                         .getComponents()
                         .get(component)
-                        .getData(output.getType())
+                        .getData(outputs.get(0).getType())
                         .get(data)
-                        .getData()));
+                        .toNodeData());
     }
 }

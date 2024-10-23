@@ -15,6 +15,8 @@ public interface EntityHandles {
 
     Space getTreeSpace();
 
+    Handle getMultiEntityTag();
+
     default Handle getEntityHandle(String handle) {
         if(handle == null || handle.isBlank()) {
             return null;

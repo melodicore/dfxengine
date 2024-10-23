@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.entities.definition.node;
+package me.datafox.dfxengine.entities.definition;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

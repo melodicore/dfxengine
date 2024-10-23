@@ -2,7 +2,9 @@ package me.datafox.dfxengine.entities.data;
 
 import lombok.Data;
 import me.datafox.dfxengine.entities.api.data.DataType;
+import me.datafox.dfxengine.entities.api.data.EntityData;
 import me.datafox.dfxengine.entities.api.data.NodeData;
+import me.datafox.dfxengine.handles.api.Handle;
 
 /**
  * @author datafox
@@ -13,8 +15,8 @@ public class NodeDataImpl<T> implements NodeData<T> {
 
     private final T data;
 
-    public NodeDataImpl(DataType<T> type, T data) {
-        this.type = type;
-        this.data = data;
+    @Override
+    public EntityData<T> toEntityData(Handle handle) {
+        return new EntityDataImpl<>(handle, type, data);
     }
 }

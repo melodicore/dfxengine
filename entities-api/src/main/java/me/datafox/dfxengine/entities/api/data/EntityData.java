@@ -9,4 +9,6 @@ public interface EntityData<T> extends Handled {
     DataType<T> getType();
 
     T getData();
+
+    NodeData<T> toNodeData();
 }

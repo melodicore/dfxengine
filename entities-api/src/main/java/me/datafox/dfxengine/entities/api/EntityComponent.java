@@ -15,7 +15,7 @@ import java.util.List;
 public interface EntityComponent extends Handled {
     Entity getEntity();
 
-    <T> void putData(Handle handle, DataType<T> type, T data);
+    <T> void putData(EntityData<T> data);
 
     <T> HandleMap<EntityData<T>> getData(DataType<T> type);
 

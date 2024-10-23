@@ -1,11 +1,9 @@
-package me.datafox.dfxengine.entities.node;
+package me.datafox.dfxengine.entities.node.supplier;
 
 import lombok.Data;
 import me.datafox.dfxengine.entities.api.Context;
 import me.datafox.dfxengine.entities.api.Entity;
-import me.datafox.dfxengine.entities.api.EntityComponent;
 import me.datafox.dfxengine.entities.api.Reference;
-import me.datafox.dfxengine.entities.api.data.DataType;
 import me.datafox.dfxengine.entities.api.data.EntityData;
 import me.datafox.dfxengine.entities.api.data.NodeData;
 import me.datafox.dfxengine.entities.api.data.SingleDataType;
@@ -13,7 +11,7 @@ import me.datafox.dfxengine.entities.api.node.NodeOutput;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
 import me.datafox.dfxengine.entities.api.node.SupplierNode;
 import me.datafox.dfxengine.entities.data.NodeDataImpl;
-import me.datafox.dfxengine.handles.api.HandleMap;
+import me.datafox.dfxengine.entities.node.NodeOutputImpl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,9 +24,7 @@ import java.util.stream.Stream;
 public class MultiReferenceNode<T> implements SupplierNode {
     private final NodeTree tree;
 
-    private final SingleDataType<T> inputType;
-
-    private final NodeOutput<List<T>> output;
+    private final SingleDataType<T> type;
 
     private final List<NodeOutput<List<T>>> outputs;
 
@@ -40,9 +36,8 @@ public class MultiReferenceNode<T> implements SupplierNode {
 
     public MultiReferenceNode(NodeTree tree, SingleDataType<T> type, Reference entity, Reference component, Reference data) {
         this.tree = tree;
-        inputType = type;
-        output = new NodeOutputImpl<>(this, type.toList());
-        outputs = List.of(output);
+        this.type = type;
+        outputs = List.of(new NodeOutputImpl<>(this, type.toList()));
         this.entity = entity;
         this.component = component;
         this.data = data;
@@ -52,12 +47,13 @@ public class MultiReferenceNode<T> implements SupplierNode {
     public List<NodeData<?>> supply(Context context) {
         List<T> list = Stream.of(context.getEngine().getEntities())
                 .flatMap(entity::get)
+                .flatMap(List::stream)
                 .map(Entity::getComponents)
                 .flatMap(component::get)
-                .map(c -> c.getData(inputType))
+                .map(c -> c.getData(type))
                 .flatMap(data::get)
                 .map(EntityData::getData)
                 .collect(Collectors.toList());
-        return List.of(new NodeDataImpl<>(output.getType(), list));
+        return List.of(new NodeDataImpl<>(outputs.get(0).getType(), list));
     }
 }

@@ -9,8 +9,8 @@ import me.datafox.dfxengine.entities.api.definition.NodeDefinition;
 import me.datafox.dfxengine.entities.api.definition.NodeTreeDefinition;
 import me.datafox.dfxengine.entities.api.event.RunTreeEvent;
 import me.datafox.dfxengine.entities.api.node.*;
-import me.datafox.dfxengine.entities.definition.node.GroupInputNodeDefinition;
-import me.datafox.dfxengine.entities.definition.node.GroupOutputNodeDefinition;
+import me.datafox.dfxengine.entities.definition.node.group.GroupInputNodeDefinition;
+import me.datafox.dfxengine.entities.definition.node.group.GroupOutputNodeDefinition;
 import me.datafox.dfxengine.entities.exception.InvalidNodeException;
 
 import java.util.List;

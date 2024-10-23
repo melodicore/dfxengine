@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.entities.definition.node;
+package me.datafox.dfxengine.entities.definition.node.supplier;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,10 +8,9 @@ import me.datafox.dfxengine.entities.api.Context;
 import me.datafox.dfxengine.entities.api.definition.SupplierNodeDefinition;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
 import me.datafox.dfxengine.entities.data.SingleDataTypeImpl;
-import me.datafox.dfxengine.entities.node.SourceNode;
-import me.datafox.dfxengine.entities.utils.NumeralUtils;
+import me.datafox.dfxengine.entities.node.supplier.SourceNode;
 import me.datafox.dfxengine.math.api.Numeral;
-import me.datafox.dfxengine.math.api.NumeralType;
+import me.datafox.dfxengine.values.operation.MappingOperationChain;
 
 /**
  * @author datafox
@@ -20,15 +19,13 @@ import me.datafox.dfxengine.math.api.NumeralType;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NumeralSourceNodeDefinition implements SupplierNodeDefinition<SourceNode<Numeral>> {
-    public NumeralType type;
-
-    public String value;
+public class SpecialNumeralSourceNodeDefinition implements SupplierNodeDefinition<SourceNode<Numeral>> {
+    public int index;
 
     @Override
     public SourceNode<Numeral> build(NodeTree tree, Context context) {
         return new SourceNode<>(tree,
-                SingleDataTypeImpl.of(Numeral.class),
-                NumeralUtils.getNumeral(type, value));
+                SingleDataTypeImpl.of(Numeral.class, 1),
+                MappingOperationChain.resultNumeral(index));
     }
 }

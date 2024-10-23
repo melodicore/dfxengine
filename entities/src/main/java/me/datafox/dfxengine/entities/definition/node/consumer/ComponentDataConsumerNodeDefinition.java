@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.entities.definition.node;
+package me.datafox.dfxengine.entities.definition.node.consumer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import me.datafox.dfxengine.entities.api.data.DataType;
 import me.datafox.dfxengine.entities.api.definition.NodeDefinition;
 import me.datafox.dfxengine.entities.api.definition.NodeMapping;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
-import me.datafox.dfxengine.entities.node.ComponentDataConsumerNode;
+import me.datafox.dfxengine.entities.node.consumer.ComponentDataConsumerNode;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.entities.definition.node;
+package me.datafox.dfxengine.entities.definition.node.supplier;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,10 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.Context;
 import me.datafox.dfxengine.entities.api.data.DataType;
-import me.datafox.dfxengine.entities.api.definition.NodeDefinition;
 import me.datafox.dfxengine.entities.api.definition.SupplierNodeDefinition;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
-import me.datafox.dfxengine.entities.node.SingleReferenceNode;
+import me.datafox.dfxengine.entities.node.supplier.SingleReferenceNode;
 
 /**
  * @author datafox

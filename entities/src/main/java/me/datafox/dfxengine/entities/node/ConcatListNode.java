@@ -24,8 +24,6 @@ public class ConcatListNode<T> extends CachingOutputNode {
 
     private final List<NodeInput<List<T>>> inputs;
 
-    private final NodeOutput<List<T>> output;
-
     private final List<NodeOutput<List<T>>> outputs;
 
     public ConcatListNode(NodeTree tree, ListDataType<T> type, int inputCount) {
@@ -33,14 +31,13 @@ public class ConcatListNode<T> extends CachingOutputNode {
         inputs = IntStream.range(0, inputCount)
                 .mapToObj(i -> new NodeInputImpl<>(this, type))
                 .collect(Collectors.toUnmodifiableList());
-        output = new NodeOutputImpl<>(this, type);
-        outputs = List.of(output);
+        outputs = List.of(new NodeOutputImpl<>(this, type));
     }
 
     @Override
     protected List<NodeData<?>> calculateOutputs(List<NodeData<?>> inputs, Context context) {
-        return List.of(new NodeDataImpl<>(output.getType(),
-                output.getType().cast(inputs
+        return List.of(new NodeDataImpl<>(outputs.get(0).getType(),
+                outputs.get(0).getType().cast(inputs
                         .stream()
                         .map(NodeData::getData)
                         .map(o -> (List<?>) o)

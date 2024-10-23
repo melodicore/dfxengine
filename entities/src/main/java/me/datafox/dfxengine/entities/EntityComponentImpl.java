@@ -49,21 +49,25 @@ public class EntityComponentImpl implements EntityComponent {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void putData(Handle handle, DataType<T> type, T datum) {
+    public <T> void putData(EntityData<T> datum) {
         HandleMap<EntityData<T>> map;
-        if(data.containsKey(type)) {
-            map = (HandleMap<EntityData<T>>) data.get(type);
+        if(data.containsKey(datum.getType())) {
+            map = (HandleMap<EntityData<T>>) data.get(datum.getType());
         } else {
             map = new HashHandleMap<>(context.getHandles().getDataSpace());
-            data.put(type, map);
+            data.put(datum.getType(), map);
         }
-        map.put(handle, new EntityDataImpl<>(handle, type, datum));
+        map.putHandled(datum);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> HandleMap<EntityData<T>> getData(DataType<T> type) {
         return (HandleMap<EntityData<T>>) data.get(type);
+    }
+
+    public void clearData() {
+        data.clear();
     }
 
     public void addTree(NodeTree tree) {

@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.entities.definition.node;
+package me.datafox.dfxengine.entities.definition.node.group;
 
 import lombok.*;
 import me.datafox.dfxengine.entities.api.Context;
