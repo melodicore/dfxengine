@@ -1,7 +1,5 @@
 plugins {
     id "java-library"
-    id "maven-publish"
-    id "signing"
 }
 
 version = "$collectionsVersion"
@@ -26,13 +24,10 @@ test {
     useJUnitPlatform()
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            pom {
-                name = "DFXEngine Collections"
-                description = "Various collection classes"
-            }
-        }
+mavenPublishing {
+    coordinates(dfxengineGroup, name, version)
+    pom {
+        name = "DFXEngine Collections"
+        description = "Various collection classes"
     }
 }

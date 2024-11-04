@@ -3,6 +3,8 @@ package me.datafox.dfxengine.injector.utils;
 import io.github.classgraph.*;
 import me.datafox.dfxengine.injector.internal.ClassReference;
 import me.datafox.dfxengine.injector.internal.ComponentData;
+import me.datafox.dfxengine.injector.serialization.ExecutableData;
+import me.datafox.dfxengine.injector.serialization.FieldData;
 import me.datafox.dfxengine.utils.StringUtils;
 
 import java.lang.reflect.*;
@@ -237,23 +239,23 @@ public class InjectorStrings {
         return String.format(NO_CONSTRUCTOR, getName(info));
     }
 
-    public static String buildingComponentClassData(String classString, MethodInfo constructor) {
+    public static String buildingComponentClassData(String classString, ExecutableData constructor) {
         return String.format(BUILDING_COMPONENT_CLASS_DATA, classString, getMethodParameterString(constructor));
     }
 
-    public static String buildingVoidComponentData(MethodInfo method) {
+    public static String buildingVoidComponentData(ExecutableData method) {
         return String.format(BUILDING_VOID_COMPONENT_DATA, getMethodParameterString(method));
     }
 
-    public static String buildingComponentMethodData(String classString, MethodInfo method) {
+    public static String buildingComponentMethodData(String classString, ExecutableData method) {
         return String.format(BUILDING_COMPONENT_METHOD_DATA, classString, getMethodParameterString(method));
     }
 
-    public static String perInstanceVoidComponent(MethodInfo method) {
+    public static String perInstanceVoidComponent(ExecutableData method) {
         return String.format(PER_INSTANCE_VOID_COMPONENT, getMethodParameterString(method));
     }
 
-    public static String perInstanceComponentEvent(MethodInfo method) {
+    public static String perInstanceComponentEvent(ExecutableData method) {
         return String.format(PER_INSTANCE_COMPONENT_EVENT, getMethodParameterString(method));
     }
 
@@ -265,8 +267,8 @@ public class InjectorStrings {
         return String.format(MULTIPLE_DEPENDENCIES, reference.getSignature());
     }
 
-    public static String finalFieldDependency(FieldInfo field) {
-        return String.format(FINAL_FIELD_DEPENDENCY, getFieldParameterString(field), getName(field.getClassInfo()));
+    public static String finalFieldDependency(FieldData<?> field) {
+        return String.format(FINAL_FIELD_DEPENDENCY, getFieldParameterString(field), field.getName());
     }
 
     public static String unknownType(String classString) {
@@ -281,8 +283,8 @@ public class InjectorStrings {
         return String.format(INVALID_ARRAY, array);
     }
 
-    public static String eventParameterCount(MethodInfo event, int parameters) {
-        return String.format(EVENT_PARAMETER_COUNT, event.getName(), parameters);
+    public static String eventParameterCount(ExecutableData event, int parameters) {
+        return String.format(EVENT_PARAMETER_COUNT, event.getMethod(), parameters);
     }
 
     public static String parametricEventWithoutInterface(Object event) {
@@ -320,6 +322,17 @@ public class InjectorStrings {
                 ", ", " and "));
     }
 
+    private static String getMethodParameterString(ExecutableData method) {
+        String prefix = method.getSignature();
+        if(method.getMethod() != null) {
+            prefix += "." + method.getMethod();
+        }
+        return prefix +
+                "(" +
+                String.join(", ", method.getParameterSignatures()) +
+                ")";
+    }
+
     private static String getMethodParameterString(MethodInfo method) {
         String prefix = method.getClassName();
         if(!method.isConstructor()) {
@@ -353,6 +366,12 @@ public class InjectorStrings {
                         .map(ClassReference::getSignature)
                         .collect(Collectors.joining(", ")) +
                 ")";
+    }
+
+    private static String getFieldParameterString(FieldData<?> field) {
+        return field.getSignature() +
+                " " +
+                field.getName();
     }
 
     private static String getFieldParameterString(FieldInfo field) {

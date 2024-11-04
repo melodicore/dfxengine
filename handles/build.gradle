@@ -1,7 +1,5 @@
 plugins {
     id "java-library"
-    id "maven-publish"
-    id "signing"
 }
 
 version = "$handlesVersion"
@@ -28,13 +26,10 @@ test {
     useJUnitPlatform()
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            pom {
-                name = "DFXEngine Handles"
-                description = "Dynamic enum-like values to use for identification, such as map keys, and tools to manipulate them"
-            }
-        }
+mavenPublishing {
+    coordinates(dfxengineGroup, name, version)
+    pom {
+        name = "DFXEngine Handles"
+        description = "Dynamic enum-like values to use for identification, such as map keys, and tools to manipulate them"
     }
 }

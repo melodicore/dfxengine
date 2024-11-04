@@ -1,10 +1,16 @@
 package me.datafox.dfxengine.injector.test;
 
+import com.esotericsoftware.jsonbeans.Json;
+import com.esotericsoftware.jsonbeans.JsonSerializer;
+import com.esotericsoftware.jsonbeans.JsonValue;
+import com.esotericsoftware.jsonbeans.OutputType;
+import me.datafox.dfxengine.injector.ClassScanner;
 import me.datafox.dfxengine.injector.InjectorBuilder;
 import me.datafox.dfxengine.injector.InjectorImpl;
 import me.datafox.dfxengine.injector.api.TypeRef;
 import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
 import me.datafox.dfxengine.injector.exception.*;
+import me.datafox.dfxengine.injector.serialization.ClassHierarchy;
 import me.datafox.dfxengine.injector.test.classes.fail.constructor.multiple.ComponentWithMultipleConstructors;
 import me.datafox.dfxengine.injector.test.classes.fail.constructor.none.ComponentWithNoConstructor;
 import me.datafox.dfxengine.injector.test.classes.fail.dependency.cyclic.CyclicComponent1;
@@ -46,9 +52,10 @@ import me.datafox.dfxengine.injector.test.classes.pass.per_instance.RequestingCo
 import me.datafox.dfxengine.injector.test.classes.pass.primitive.PrimitiveComponentMethod;
 import me.datafox.dfxengine.injector.test.classes.pass.primitive.PrimitiveDependencyComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.void_component.VoidComponentMethod;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.function.Consumer;
@@ -63,21 +70,49 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author datafox
  */
 public class InjectorTest {
-    @BeforeAll
-    public static void doScan() {
-        InjectorBuilder.scan();
-    }
-
     private static InjectorImpl emptyInjector() {
-        return new InjectorBuilder()
-                .whitelistPackage("me.datafox.dfxengine.injector.test.classes.empty")
-                .build();
+        InjectorBuilder.load(ClassScanner
+                .builder()
+                .whitelistedPackage(Pattern.quote("me.datafox.dfxengine.injector.test.classes.empty"))
+                .build()
+                .scan());
+        return new InjectorBuilder().build();
     }
 
     private static InjectorImpl injector(Class<?> classFromPackageToWhitelist) {
-        return new InjectorBuilder()
-                .whitelistPackageRegex(Pattern.quote(classFromPackageToWhitelist.getPackageName()) + ".*")
-                .build();
+        InjectorBuilder.load(ClassScanner
+                .builder()
+                .whitelistedPackage(Pattern.quote(classFromPackageToWhitelist.getPackageName()) + ".*")
+                .build()
+                .scan());
+        return new InjectorBuilder().build();
+    }
+
+    @Test
+    public void serializationTest() throws IOException {
+        ClassHierarchy hierarchy = ClassScanner
+                .builder()
+                .whitelistedPackage(Pattern.quote("me.datafox.dfxengine.injector.test.classes.empty"))
+                .build()
+                .scan();
+        Json json = new Json(OutputType.json);
+        json.setSerializer(Class.class, new JsonSerializer<>() {
+            @Override
+            public void write(Json json, Class object, Class knownType) {
+                json.writeValue(object.getName());
+            }
+
+            @Override
+            public Class<?> read(Json json, JsonValue jsonData, Class type) {
+                try {
+                    return Class.forName(jsonData.asString());
+                } catch(ClassNotFoundException | NoClassDefFoundError e) {
+                    return null;
+                }
+            }
+        });
+        String jsonString = json.toJson(hierarchy);
+        Assertions.assertDoesNotThrow(() -> InjectorBuilder.load(json.fromJson(ClassHierarchy.class, jsonString)));
     }
 
     @Test

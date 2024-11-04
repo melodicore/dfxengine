@@ -1,7 +1,5 @@
 plugins {
     id "java-library"
-    id "maven-publish"
-    id "signing"
 }
 
 version = "$valuesVersion"
@@ -27,13 +25,10 @@ test {
     useJUnitPlatform()
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            pom {
-                name = "DFXEngine Math"
-                description = "Mutable number values and a dynamic modifier system"
-            }
-        }
+mavenPublishing {
+    coordinates(dfxengineGroup, name, version)
+    pom {
+        name = "DFXEngine Math"
+        description = "Mutable number values and a dynamic modifier system"
     }
 }

@@ -1,7 +1,5 @@
 plugins {
     id "java-library"
-    id "maven-publish"
-    id "signing"
 }
 
 version = "$mathVersion"
@@ -25,13 +23,10 @@ test {
     useJUnitPlatform()
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            pom {
-                name = "DFXEngine Math"
-                description = "Seamless wrapping and manipulation for numbers of different types"
-            }
-        }
+mavenPublishing {
+    coordinates(dfxengineGroup, name, version)
+    pom {
+        name = "DFXEngine Math"
+        description = "Seamless wrapping and manipulation for numbers of different types"
     }
 }
