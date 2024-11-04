@@ -26,11 +26,11 @@ Here are the currently existing and planned modules:
 | [Injector](injector)         | Done (2.1.1)       | A dependency injector                               |
 | [Math API](math-api)         | Done (1.0.5)       | Interfaces for the Math module                      |
 | [Math](math)                 | Done (1.0.7)       | Seamless wrapping and manipulation of number types  |
-| [Text API](text-api)         | Done (1.0.3)       | Interfaces for the Text module                      |
-| [Text](text)                 | Done (1.0.3)       | Text handling and representation                    |
+| [Text API](text-api)         | Done (1.0.4)       | Interfaces for the Text module                      |
+| [Text](text)                 | Done (1.0.4)       | Text handling and representation                    |
 | [Utils](utils)<sup>1</sup>   | Done (1.0.3)       | Utilities used by other modules                     |
-| [Values API](values-api)     | Done (1.1.2)       | Interfaces for the Values module                    |
-| [Values](values)             | Done (1.1.2)       | Mutable number values and a dynamic modifier system |
+| [Values API](values-api)     | Done (1.1.3)       | Interfaces for the Values module                    |
+| [Values](values)             | Done (1.1.3)       | Mutable number values and a dynamic modifier system |
 | Entities API                 | Under construction | Interfaces for the Entities module                  |
 | Entities                     | Under construction | Data-oriented entity system                         |
 | [Collections](collections)   | Deprecated (1.0.2) | Collections for other modules and general usage     |
