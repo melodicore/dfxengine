@@ -288,14 +288,6 @@ public class InjectorImpl implements Injector {
         }
     }
 
-    /**
-     * {@inheritDoc} Calls {@link InjectorBuilder#dispose()}.
-     */
-    @Override
-    public void dispose() {
-        InjectorBuilder.dispose();
-    }
-
     private void runAndClearInitializers() {
         initializerQueue.stream().sorted().forEach(Runnable::run);
         initializerQueue.clear();

@@ -13,4 +13,5 @@ module dfxengine.injector {
 
     exports me.datafox.dfxengine.injector;
     exports me.datafox.dfxengine.injector.exception;
+    exports me.datafox.dfxengine.injector.serialization;
 }

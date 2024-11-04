@@ -17,6 +17,7 @@ dependencies {
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
+    testImplementation "io.vacco.jsonbeans:jsonbeans:$jsonBeansVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 

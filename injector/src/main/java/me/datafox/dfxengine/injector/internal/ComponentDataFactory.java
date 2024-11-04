@@ -1,9 +1,5 @@
 package me.datafox.dfxengine.injector.internal;
 
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.FieldInfo;
-import io.github.classgraph.MethodInfo;
-import io.github.classgraph.MethodParameterInfo;
 import me.datafox.dfxengine.injector.api.InstantiationPolicy;
 import me.datafox.dfxengine.injector.api.TypeRef;
 import me.datafox.dfxengine.injector.api.annotation.Component;
@@ -14,13 +10,16 @@ import me.datafox.dfxengine.injector.exception.EventParameterCountException;
 import me.datafox.dfxengine.injector.exception.FinalFieldDependencyException;
 import me.datafox.dfxengine.injector.exception.InvalidArrayException;
 import me.datafox.dfxengine.injector.exception.UnresolvedOrUnknownTypeException;
+import me.datafox.dfxengine.injector.serialization.ClassData;
+import me.datafox.dfxengine.injector.serialization.ExecutableData;
+import me.datafox.dfxengine.injector.serialization.FieldData;
 import me.datafox.dfxengine.injector.utils.InjectorStrings;
 import me.datafox.dfxengine.injector.utils.InjectorUtils;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Array;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
 public class ComponentDataFactory {
     private final Logger logger;
 
-    private final Map<String,ClassInfo> classInfoMap;
+    private final Map<String,ClassData<?>> classDataMap;
 
     private final Set<String> visited;
 
@@ -42,121 +41,130 @@ public class ComponentDataFactory {
 
     private final Map<String, SelfReference<?>> references;
 
-    public ComponentDataFactory(Map<String,ClassInfo> classInfoMap) {
+    public ComponentDataFactory(Map<String, ClassData<?>> classDataMap) {
         logger = LoggerFactory.getLogger(getClass());
-        this.classInfoMap = classInfoMap;
+        this.classDataMap = classDataMap;
         visited = new HashSet<>();
         originals = new HashMap<>();
         references = new HashMap<>();
     }
 
     /**
-     * @param info constructor or method of a component
+     * @param data constructor or method of a component
      * @return {@link ComponentData} for the specified constructor or method
      * @param <T> type of the component
      */
-    public <T> ComponentData<T> buildComponentData(MethodInfo info) {
+    public <T> ComponentData<T> buildComponentData(ExecutableData data) {
         Component annotation = null;
         boolean voidType = false;
         ComponentData.ComponentDataBuilder<T> builder = ComponentData.builder();
-        if(info.isConstructor()) {
+        Executable executable = data.getExecutable();
+        if(executable instanceof Constructor) {
             //Create class component
-            String classString = parseClass(info.getClassInfo());
-            logger.debug(InjectorStrings.buildingComponentClassData(classString, info));
-            ClassReference<T> reference = buildClassReferenceEntry(classString);
-            builder.reference(reference).executable(info.loadClassAndGetConstructor());
-            if(info.getClassInfo().hasAnnotation(Component.class)) {
-                annotation = (Component) info.getClassInfo().getAnnotationInfo(Component.class).loadClassAndInstantiate();
+            logger.debug(InjectorStrings.buildingComponentClassData(data.getSignature(), data));
+            ClassReference<T> reference = buildClassReferenceEntry(data.getSignature());
+            builder.reference(reference).executable(executable);
+            if(data.getOwner().isAnnotationPresent(Component.class)) {
+                annotation = data.getOwner().getAnnotation(Component.class);
             }
             //Register fields with @Inject annotation
-            for(FieldInfo field : info.getClassInfo().getDeclaredFieldInfo().filter(f -> f.hasAnnotation(Inject.class))) {
-                if(field.isFinal()) {
+            for(Field field : data.getOwner().getDeclaredFields()) {
+                if(!field.isAnnotationPresent(Inject.class)) {
+                    continue;
+                }
+                FieldData<?> fieldData = data.getFields().get(field.getName());
+                if(Modifier.isFinal(field.getModifiers())) {
                     throw LogUtils.logExceptionAndGet(logger,
-                            InjectorStrings.finalFieldDependency(field),
+                            InjectorStrings.finalFieldDependency(fieldData),
                             FinalFieldDependencyException::new);
                 }
-                if(InstantiationPolicy.class.getName().equals(field.getTypeDescriptor().toString())) {
+                if(InstantiationPolicy.class.equals(field.getType())) {
                     continue;
                 }
                 builder.field(FieldReference
                         .builder()
-                        .field(field.loadClassAndGetField())
-                        .reference(buildClassReferenceEntry(field.getTypeSignatureOrTypeDescriptor().toString()))
+                        .field(field)
+                        .reference(buildClassReferenceEntry(fieldData.getSignature()))
                         .build());
             }
             //Register methods with @Initialize annotation
-            for(MethodInfo method : info.getClassInfo().getDeclaredMethodInfo().filter(m -> m.hasAnnotation(Initialize.class))) {
-                Initialize initialize = (Initialize) method.getAnnotationInfo(Initialize.class).loadClassAndInstantiate();
+            for(Method method : data.getOwner().getDeclaredMethods()) {
+                if(!method.isAnnotationPresent(Initialize.class)) {
+                    continue;
+                }
+                Initialize initialize = method.getAnnotation(Initialize.class);
                 InitializeReference.InitializeReferenceBuilder<T> initBuilder = InitializeReference
                         .<T>builder()
                         .priority(initialize.value())
                         .reference(reference)
-                        .method(method.loadClassAndGetMethod());
-                for(MethodParameterInfo param : method.getParameterInfo()) {
-                    if(InstantiationPolicy.class.getName().equals(param.getTypeDescriptor().toString())) {
+                        .method(method);
+                ExecutableData methodData = data.getMethods().get(method.getName());
+                for(String signature : methodData.getParameterSignatures()) {
+                    ClassReference<?> paramRef = buildClassReferenceEntry(signature);
+                    if(InstantiationPolicy.class.equals(paramRef.getType())) {
                         continue;
                     }
-                    initBuilder.parameter(buildClassReferenceEntry(param.getTypeSignatureOrTypeDescriptor().toString()));
+                    initBuilder.parameter(paramRef);
                 }
                 builder.initializer(initBuilder.build());
             }
         } else {
             //Create method component
-            String classString = parseMethod(info);
-            if("void".equals(classString)) {
-                logger.debug(InjectorStrings.buildingVoidComponentData(info));
+            if("void".equals(data.getSignature())) {
+                logger.debug(InjectorStrings.buildingVoidComponentData(data));
                 voidType = true;
             } else {
-                logger.debug(InjectorStrings.buildingComponentMethodData(classString, info));
-                builder.reference(buildClassReferenceEntry(classString));
+                logger.debug(InjectorStrings.buildingComponentMethodData(data.getSignature(), data));
+                builder.reference(buildClassReferenceEntry(data.getSignature()));
             }
-            builder.executable(info.loadClassAndGetMethod());
-            if(!info.isStatic()) {
-                builder.owner(buildClassReferenceEntry(parseClass(info.getClassInfo())));
+            builder.executable(data.getExecutable());
+            if(!Modifier.isStatic(executable.getModifiers())) {
+                builder.owner(buildClassReferenceEntry(classDataMap.get(data.getOwner().getName()).getSignature()));
             }
-            if(info.hasAnnotation(Component.class)) {
-                annotation = (Component) info.getAnnotationInfo(Component.class).loadClassAndInstantiate();
+            if(executable.isAnnotationPresent(Component.class)) {
+                annotation = executable.getAnnotation(Component.class);
             }
         }
         if(annotation != null) {
             builder.policy(annotation.value()).order(annotation.order());
             if(annotation.value().equals(InstantiationPolicy.PER_INSTANCE)) {
                 if(voidType) {
-                    logger.warn(InjectorStrings.perInstanceVoidComponent(info));
+                    logger.warn(InjectorStrings.perInstanceVoidComponent(data));
                 }
-                if(info.getClassInfo().hasDeclaredMethodAnnotation(EventHandler.class)) {
-                    logger.warn(InjectorStrings.perInstanceComponentEvent(info));
+                if(Arrays.stream(data.getOwner().getDeclaredMethods()).anyMatch(m -> m.isAnnotationPresent(EventHandler.class))) {
+                    logger.warn(InjectorStrings.perInstanceComponentEvent(data));
                 }
             }
         } else {
             builder.policy(InstantiationPolicy.ONCE).order(0);
         }
         //Register dependencies (constructor/method parameters)
-        for(MethodParameterInfo param : info.getParameterInfo()) {
-            if(InstantiationPolicy.class.getName().equals(param.getTypeDescriptor().toString())) {
+        for(String signature : data.getParameterSignatures()) {
+            ClassReference<?> paramRef = buildClassReferenceEntry(signature);
+            if(InstantiationPolicy.class.equals(paramRef.getType())) {
                 continue;
             }
-            builder.parameter(buildClassReferenceEntry(param.getTypeSignatureOrTypeDescriptor().toString()));
+            builder.parameter(paramRef);
         }
         return builder.build();
     }
 
-    public <T> EventData<T> buildEventData(MethodInfo info) {
-        if(info.getParameterInfo().length != 1) {
+    public <T> EventData<T> buildEventData(ExecutableData method) {
+        if(method.getParameters().length != 1) {
             throw LogUtils.logExceptionAndGet(logger,
-                    InjectorStrings.eventParameterCount(info, info.getParameterInfo().length),
+                    InjectorStrings.eventParameterCount(method, method.getParameters().length),
                     EventParameterCountException::new);
         }
 
         EventData.EventDataBuilder<T> builder = EventData
                 .<T>builder()
-                .event(buildClassReferenceEntry(info.getParameterInfo()[0].getTypeSignatureOrTypeDescriptor().toString()));
+                .event(buildClassReferenceEntry(method.getParameterSignatures().get(0)));
 
-        if(!info.isStatic()) {
-            builder.owner(buildClassReferenceEntry(parseClass(info.getClassInfo())));
+        if(!Modifier.isStatic(method.getExecutable().getModifiers())) {
+            builder.owner(buildClassReferenceEntry(classDataMap.get(method.getOwner().getName()).getSignature()));
         }
 
-        return builder.method(info.loadClassAndGetMethod()).build();
+        return builder.method((Method) method.getExecutable()).build();
     }
 
     public <T> ClassReference<T> buildClasReferenceFromTypeRef(TypeRef<T> typeRef) {
@@ -219,7 +227,7 @@ public class ComponentDataFactory {
         //If the class is a primitive, create a reference to the boxed version
         String className = getBoxedPrimitiveName(str);
         if(className != null) {
-            ClassReference<T> ref = buildClassReference(parseClass(classInfoMap.get(className)));
+            ClassReference<T> ref = buildClassReference(classDataMap.get(className).getSignature());
             originals.put(original, ref);
             return ref;
         }
@@ -231,13 +239,13 @@ public class ComponentDataFactory {
         }
         ClassReference.ClassReferenceBuilder<T> builder = ClassReference.<T>builder().sup(sup);
         //If the class does not have type parameters, superclasses or interfaces, create a reference to it.
-        if(classInfoMap.containsKey(str)) {
-            ClassReference<T> ref = builder.type((Class<T>) classInfoMap.get(str).loadClass()).build();
+        if(classDataMap.containsKey(str)) {
+            ClassReference<T> ref = builder.type((Class<T>) classDataMap.get(str).getType()).build();
             originals.put(original, ref);
             return ref;
         }
         //If the class is an interface and extends other interfaces, parse them
-        if(classInfoMap.get(str.split("[< ]", 2)[0]).isInterface()) {
+        if(classDataMap.get(str.split("[< ]", 2)[0]).getType().isInterface()) {
             if(InjectorUtils.removeTypes(str).contains(" extends ")) {
                 builder.interfaces(parseExtendsInterfaces(str).stream().map(this::buildClassReference).collect(Collectors.toList()));
                 str = InjectorUtils.splitWithoutTypes(str, " extends ", 2)[0];
@@ -260,12 +268,12 @@ public class ComponentDataFactory {
             str = str.split("<", 2)[0];
         }
         //If the class does not exist, throw an exception
-        if(!classInfoMap.containsKey(str)) {
+        if(!classDataMap.containsKey(str)) {
             throw LogUtils.logExceptionAndGet(logger,
                     InjectorStrings.unknownType(str),
                     UnresolvedOrUnknownTypeException::new);
         }
-        ClassReference<T> ref = builder.type((Class<T>) classInfoMap.get(str).loadClass()).build();
+        ClassReference<T> ref = builder.type((Class<T>) classDataMap.get(str).getType()).build();
         originals.put(original, ref);
         return ref;
     }
@@ -330,8 +338,8 @@ public class ComponentDataFactory {
             return str;
         }
         //If type parameters are not present, use parseClass(String)
-        if(classInfoMap.containsKey(str)) {
-            return sup + parseClass(classInfoMap.get(str));
+        if(classDataMap.containsKey(str)) {
+            return sup + classDataMap.get(str).getSignature();
         }
         String[] split = str.split("<", 2);
         /*
@@ -345,7 +353,7 @@ public class ComponentDataFactory {
         }
         //Replace generic type parameters in superclasses and interfaces with the child class's resolved parameters
         List<String> parameters = InjectorUtils.splitParameters(split[1]);
-        String classString = parseClass(classInfoMap.get(split[0]));
+        String classString = classDataMap.get(split[0]).getSignature();
         List<String> genericParameters = InjectorUtils.splitParameters(classString.split("<", 2)[1]);
         List<String> simpleGenericParameters = genericParameters.stream().map(s -> s.split(" ", 2)[0]).collect(Collectors.toList());
         for(int i = 0; i < parameters.size(); i++) {
@@ -373,8 +381,8 @@ public class ComponentDataFactory {
                     .type(type)
                     .build();
         }
-        if(classInfoMap.containsKey(str)) {
-            ClassReference<?> ref = buildClassReference(parseClass(classInfoMap.get(str)));
+        if(classDataMap.containsKey(str)) {
+            ClassReference<?> ref = buildClassReference(classDataMap.get(str).getSignature());
             return ClassReference
                     .<T>builder()
                     .type((Class<T>) Array.newInstance(ref.getType(), 0).getClass())
@@ -386,17 +394,6 @@ public class ComponentDataFactory {
         throw LogUtils.logExceptionAndGet(logger,
                 InjectorStrings.invalidArray(str),
                 InvalidArrayException::new);
-    }
-
-    private String parseClass(ClassInfo info) {
-        String str = " " + info.getTypeSignatureOrTypeDescriptor().toString();
-        return str.split(" class | interface ", 2)[1];
-    }
-
-    private String parseMethod(MethodInfo info) {
-        return info.getTypeSignatureOrTypeDescriptor()
-                .toString()
-                .split(" \\(", 2)[0];
     }
 
     public String getBoxedPrimitiveName(String className) {
@@ -484,7 +481,7 @@ public class ComponentDataFactory {
      * at all, or {@code false} if it has type parameters that are not present in the string
      */
     private boolean filterUnknownInterfaceParameters(String str) {
-        return !classInfoMap.containsKey(str) ||
-                classInfoMap.get(str).getTypeSignatureOrTypeDescriptor().getTypeParameters().isEmpty();
+        return !classDataMap.containsKey(str) ||
+                classDataMap.get(str).getType().getTypeParameters().length == 0;
     }
 }

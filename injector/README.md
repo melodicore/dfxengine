@@ -5,12 +5,12 @@ annotations and instantiates/invokes them automatically, resolving and injecting
 ## Important
 
 Before building the injector with `InjectorBuilder.build()`, you must first call one of the scan methods. The 
-`InjectorBuilder.scan()` method is recommended for most use cases, but if you need specific scan parameters you can 
-use `InjectorBuilder.load(ScanResult)`, or if your environment (Android, GraalVM) requires build time scanning, you can
-use `InjectorBuilder.load(String)` to load a json-serialized build time scan. The 
-[`BuildTimeScanner`](src/main/java/me/datafox/dfxengine/injector/BuildTimeScanner.java) class can be run with a single 
-argument in the form of a directory path, which outputs a file called `scan.json` to that directory. Refer to your build 
-environment's documentation on how to run the scan.
+`InjectorBuilder.scan()` method is recommended for most use cases, but if you need specific scan parameters or if your 
+environment (Android, GraalVM) requires build time scanning, you can use `InjectorBuilder.load(ClassHierarchy)`. 
+[`ClassHierarchy`](src/main/java/me/datafox/dfxengine/injector/serialization/ClassHierarchy.java) is a class 
+serializable by any serializer that supports serializing `Class<T>` objects, and the scanner makes sure to only include
+classes that can be retrieved with `Class.forName(String)`. You can generate it with the `scan()` methods in 
+[`ClassScanner`](src/main/java/me/datafox/dfxengine/injector/ClassScanner.java).
 
 ## Dependencies
 
