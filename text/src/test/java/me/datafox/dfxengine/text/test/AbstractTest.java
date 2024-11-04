@@ -8,6 +8,7 @@ import me.datafox.dfxengine.text.formatter.SplittingNumberFormatter;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
 import me.datafox.dfxengine.text.utils.TextHandles;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.lang.reflect.Field;
@@ -19,6 +20,11 @@ public class AbstractTest {
     protected Injector injector;
     protected TextFactory factory;
     protected TextHandles handles;
+
+    @BeforeAll
+    public static void beforeAll() {
+        InjectorBuilder.scan();
+    }
 
     @BeforeEach
     public void beforeEach() {
