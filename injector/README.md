@@ -2,6 +2,16 @@ DFXEngine Injector is a dependency injector. It scans the classpath for all clas
 annotations and instantiates/invokes them automatically, resolving and injecting dependencies as it does. From version
 2.0.0 onwards type parameters are supported as well.
 
+## Important
+
+Before building the injector with `InjectorBuilder.build()`, you must first call one of the scan methods. The 
+`InjectorBuilder.scan()` method is recommended for most use cases, but if you need specific scan parameters you can 
+use `InjectorBuilder.load(ScanResult)`, or if your environment (Android, GraalVM) requires build time scanning, you can
+use `InjectorBuilder.load(String)` to load a json-serialized build time scan. The 
+[`BuildTimeScanner`](src/main/java/me/datafox/dfxengine/injector/BuildTimeScanner.java) class can be run with a single 
+argument in the form of a directory path, which outputs a file called `scan.json` to that directory. Refer to your build 
+environment's documentation on how to run the scan.
+
 ## Dependencies
 
 Any class that is instantiated by the injector can be used as a dependency, and there are three different cases where

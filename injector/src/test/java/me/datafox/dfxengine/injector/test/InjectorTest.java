@@ -46,6 +46,7 @@ import me.datafox.dfxengine.injector.test.classes.pass.per_instance.RequestingCo
 import me.datafox.dfxengine.injector.test.classes.pass.primitive.PrimitiveComponentMethod;
 import me.datafox.dfxengine.injector.test.classes.pass.primitive.PrimitiveDependencyComponent;
 import me.datafox.dfxengine.injector.test.classes.pass.void_component.VoidComponentMethod;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -62,6 +63,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author datafox
  */
 public class InjectorTest {
+    @BeforeAll
+    public static void doScan() {
+        InjectorBuilder.scan();
+    }
+
     private static InjectorImpl emptyInjector() {
         return new InjectorBuilder()
                 .whitelistPackage("me.datafox.dfxengine.injector.test.classes.empty")

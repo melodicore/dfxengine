@@ -17,9 +17,11 @@ import java.util.stream.Collectors;
 @SuppressWarnings("MissingJavadoc")
 public class InjectorStrings {
     public static final String SCANNING_CLASSPATH = "Scanning classpath";
+    public static final String LOADING_SCAN = "Loading scanned classpath from json";
     public static final String BUILDING_DEPENDENCY_GRAPH = "Building dependency graph";
     public static final String CHECKING_CYCLIC = "Checking for cyclic dependencies";
     public static final String SOMETHING_WENT_WRONG = "Oh no, something went wrong!";
+    public static final String NO_OUTPUT_DIR = "Please specify output directory";
 
     private static final String WHITELIST_OR_BLACKLIST_PRESENT_SINGULAR = "%s %slist present with %s rule";
     private static final String WHITELIST_OR_BLACKLIST_PRESENT_PLURAL = "%s %slist present with %s rules";
