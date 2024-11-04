@@ -31,7 +31,7 @@ test {
 mavenPublishing {
     coordinates(dfxengineGroup, name, version)
     pom {
-        name = "DFXEngine Text API"
-        description = "API for DFXEngine Text"
+        name = "DFXEngine Text"
+        description = "Text generation, manipulation and representation"
     }
 }
