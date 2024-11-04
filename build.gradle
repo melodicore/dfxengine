@@ -1,13 +1,17 @@
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
-    id 'org.javamodularity.moduleplugin' version '1.8.15' apply false
+    id "org.javamodularity.moduleplugin" version "1.8.15" apply false
+    id "com.vanniktech.maven.publish" version "0.30.0" apply false
 }
 
 group = "$dfxengineGroup"
 
 subprojects {
     apply plugin: "java-library"
-    apply plugin: "maven-publish"
-    apply plugin: "signing"
+    apply plugin: "com.vanniktech.maven.publish"
     apply plugin: "org.javamodularity.moduleplugin"
 
     group = "$dfxengineGroup"
@@ -15,8 +19,6 @@ subprojects {
     java {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-        withJavadocJar()
-        withSourcesJar()
     }
 
     compileTestJava {
@@ -27,65 +29,33 @@ subprojects {
 
     repositories {
         mavenCentral()
-        maven {
-            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            credentials {
-                username = new File(rootDir.path + "/secrets/username").text
-                password = new File(rootDir.path + "/secrets/password").text
-            }
-        }
     }
 
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
+    mavenPublishing {
+        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+        configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
+        signAllPublications()
 
-                versionMapping {
-                    usage("java-api") {
-                        fromResolutionOf("runtimeClasspath")
-                    }
-                    usage("java-runtime") {
-                        fromResolutionResult()
-                    }
+        pom {
+            url = "https://engine.datafox.me"
+            scm {
+                connection = "scm:git:git://github.com/melodicore/dfxengine.git"
+                developerConnection = "scm:git:ssh://github.com/melodicore/dfxengine.git"
+                url = "https://github.com/melodicore/dfxengine"
+            }
+            licenses {
+                license {
+                    name = "The Apache License, Version 2.0"
+                    url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
                 }
-                pom {
-                    url = "https://engine.datafox.me"
-                    scm {
-                        connection = "scm:git:git://github.com/melodicore/dfxengine.git"
-                        developerConnection = "scm:git:ssh://github.com/melodicore/dfxengine.git"
-                        url = "https://github.com/melodicore/dfxengine"
-                    }
-                    licenses {
-                        license {
-                            name = "The Apache License, Version 2.0"
-                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                        }
-                    }
-                    developers {
-                        developer {
-                            id = "datafox"
-                            name = "Lauri \"datafox\" Heino"
-                            email = "datafox@datafox.me"
-                        }
-                    }
+            }
+            developers {
+                developer {
+                    id = "datafox"
+                    name = "Lauri \"datafox\" Heino"
+                    email = "datafox@datafox.me"
                 }
             }
         }
-
-        repositories {
-            maven {
-                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-                credentials {
-                    username = new File(rootDir.path + "/secrets/username").text
-                    password = new File(rootDir.path + "/secrets/password").text
-                }
-            }
-        }
-    }
-
-    signing {
-        useGpgCmd()
-        sign publishing.publications.mavenJava
     }
 }

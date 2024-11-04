@@ -1,7 +1,5 @@
 plugins {
     id "java-library"
-    id "maven-publish"
-    id "signing"
 }
 
 version = "$dependenciesVersion"
@@ -20,13 +18,10 @@ test {
     useJUnitPlatform()
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            pom {
-                name = "DFXEngine Dependencies"
-                description = "Tools to invalidate values that depend on other values"
-            }
-        }
+mavenPublishing {
+    coordinates(dfxengineGroup, name, version)
+    pom {
+        name = "DFXEngine Dependencies"
+        description = "Tools to invalidate values that depend on other values"
     }
 }

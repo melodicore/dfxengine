@@ -1,7 +1,5 @@
 plugins {
     id "java-library"
-    id "maven-publish"
-    id "signing"
 }
 
 version = "$injectorApiVersion"
@@ -11,13 +9,10 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            pom {
-                name = "DFXEngine Injector API"
-                description = "API for DFXEngine Injector"
-            }
-        }
+mavenPublishing {
+    coordinates(dfxengineGroup, name, version)
+    pom {
+        name = "DFXEngine Injector API"
+        description = "API for DFXEngine Injector"
     }
 }
