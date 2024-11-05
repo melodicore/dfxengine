@@ -6,5 +6,6 @@ package me.datafox.dfxengine.entities.api.node;
 public enum NodeTreeAttribute {
     INIT,
     CALLABLE,
+    SYSTEM,
     GROUP
 }

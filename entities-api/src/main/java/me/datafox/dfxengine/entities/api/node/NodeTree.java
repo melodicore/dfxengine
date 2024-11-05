@@ -1,6 +1,6 @@
 package me.datafox.dfxengine.entities.api.node;
 
-import me.datafox.dfxengine.entities.api.EntityComponent;
+import me.datafox.dfxengine.entities.api.NodeTreeOwner;
 import me.datafox.dfxengine.handles.api.Handle;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Set;
 public interface NodeTree extends Comparable<NodeTree> {
     Handle getHandle();
 
-    EntityComponent getComponent();
+    NodeTreeOwner getOwner();
 
     int getOrder();
 

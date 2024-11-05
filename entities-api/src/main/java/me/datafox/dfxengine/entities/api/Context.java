@@ -5,6 +5,7 @@ import me.datafox.dfxengine.entities.api.node.NodeGroup;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
 import me.datafox.dfxengine.handles.api.HandleManager;
 import me.datafox.dfxengine.injector.api.Injector;
+import me.datafox.dfxengine.math.api.Numeral;
 import org.slf4j.Logger;
 
 import java.util.Collection;
@@ -33,6 +34,10 @@ public interface Context {
 
     void setCurrentEntity(Entity entity);
 
+    EntitySystem getCurrentSystem();
+
+    void setCurrentSystem(EntitySystem system);
+
     EntityComponent getCurrentComponent();
 
     void setCurrentComponent(EntityComponent component);
@@ -55,5 +60,9 @@ public interface Context {
 
     default void invokeEvents(Collection<?> events) {
         getInjector().invokeEvents(events);
+    }
+
+    default Numeral getDelta() {
+        return getEngine().getDelta();
     }
 }

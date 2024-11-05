@@ -2,7 +2,7 @@ package me.datafox.dfxengine.entities.node;
 
 import lombok.Data;
 import me.datafox.dfxengine.entities.api.Context;
-import me.datafox.dfxengine.entities.api.EntityComponent;
+import me.datafox.dfxengine.entities.api.NodeTreeOwner;
 import me.datafox.dfxengine.entities.api.data.DataType;
 import me.datafox.dfxengine.entities.api.data.NodeData;
 import me.datafox.dfxengine.entities.api.definition.NodeDefinition;
@@ -59,14 +59,14 @@ public class NodeGroupImpl implements NodeGroup {
         }
         ((GroupInputNodeDefinition) inputDefinition).setConstructor(this::createInput);
         ((GroupOutputNodeDefinition) outputDefinition).setConstructor(this::createOutput);
-        delegate = context.getNodeFactory().buildTree(tree.getComponent(), definition);
+        delegate = context.getNodeFactory().buildTree(tree.getOwner(), definition);
         inputTypes = null;
         outputTypes = null;
     }
 
     @Override
-    public EntityComponent getComponent() {
-        return delegate.getComponent();
+    public NodeTreeOwner getOwner() {
+        return delegate.getOwner();
     }
 
     @Override

@@ -3,6 +3,7 @@ package me.datafox.dfxengine.entities;
 import me.datafox.dfxengine.entities.api.Context;
 import me.datafox.dfxengine.entities.api.EntityComponent;
 import me.datafox.dfxengine.entities.api.NodeFactory;
+import me.datafox.dfxengine.entities.api.NodeTreeOwner;
 import me.datafox.dfxengine.entities.api.definition.NodeDefinition;
 import me.datafox.dfxengine.entities.api.definition.NodeMapping;
 import me.datafox.dfxengine.entities.api.definition.NodeTreeDefinition;
@@ -25,9 +26,9 @@ public class NodeFactoryImpl implements NodeFactory {
     @Inject
     private Context context;
 
-    public NodeTree buildTree(EntityComponent component, NodeTreeDefinition definition) {
+    public NodeTree buildTree(NodeTreeOwner owner, NodeTreeDefinition definition) {
         NodeTreeImpl tree = new NodeTreeImpl(
-                definition.getHandle(), component, definition.getOrder(), definition.getAttributes(), context);
+                definition.getHandle(), owner, definition.getOrder(), definition.getAttributes(), context);
 
         definition.getNodes()
                 .stream()

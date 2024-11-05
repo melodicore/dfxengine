@@ -1,8 +1,11 @@
 package me.datafox.dfxengine.entities.api;
 
+import me.datafox.dfxengine.entities.api.definition.PackageDefinition;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleMap;
+import me.datafox.dfxengine.math.api.Numeral;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,4 +25,16 @@ public interface Engine {
     Entity createMultiEntity(String handle);
 
     Entity createMultiEntity(Handle handle);
+
+    List<Entity> createMultiEntities(Collection<Handle> handles);
+
+    boolean addPackage(PackageDefinition definition);
+
+    void loadPackages(boolean keepState);
+
+    Numeral getDelta();
+
+    void update(float delta);
+
+    void update(Numeral delta);
 }

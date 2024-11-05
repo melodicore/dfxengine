@@ -24,31 +24,24 @@ import java.util.List;
 public class ValueNode extends CachingOutputNode {
     private final NodeTree tree;
 
-    private final NodeInput<Handle> handle;
-
-    private final NodeInput<Numeral> numeral;
-
     private final List<NodeInput<?>> inputs;
-
-    private final NodeOutput<Value> output;
 
     private final List<NodeOutput<Value>> outputs;
 
     public ValueNode(NodeTree tree, boolean immutable) {
         this.tree = tree;
-        handle = new NodeInputImpl<>(this, SingleDataTypeImpl.of(Handle.class));
-        numeral = new NodeInputImpl<>(this, SingleDataTypeImpl.of(Numeral.class));
-        inputs = List.of(handle, numeral);
-        output = new NodeOutputImpl<>(this, SingleDataTypeImpl.of(Value.class, immutable ? 1 : 0));
-        outputs = List.of(output);
+        inputs = List.of(new NodeInputImpl<>(this, SingleDataTypeImpl.of(Handle.class)),
+                new NodeInputImpl<>(this, SingleDataTypeImpl.of(Numeral.class)));
+        outputs = List.of(new NodeOutputImpl<>(this,
+                SingleDataTypeImpl.of(Value.class, immutable ? 1 : 0)));
     }
 
     @Override
     protected List<NodeData<?>> calculateOutputs(List<NodeData<?>> inputs, Context context) {
         Handle handle = (Handle) inputs.get(0).getData();
         Numeral numeral = (Numeral) inputs.get(1).getData();
-        return List.of(new NodeDataImpl<>(output.getType(),
+        return List.of(new NodeDataImpl<>(outputs.get(0).getType(),
                 new ValueImpl(handle, numeral,
-                        output.getType().getVariation() == 1)));
+                        outputs.get(0).getType().getVariation() == 1)));
     }
 }

@@ -38,6 +38,9 @@ public class ContextImpl implements Context {
     private Entity currentEntity;
 
     @Setter
+    private EntitySystem currentSystem;
+
+    @Setter
     private EntityComponent currentComponent;
 
     @Setter

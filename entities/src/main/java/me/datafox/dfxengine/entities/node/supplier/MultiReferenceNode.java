@@ -24,9 +24,9 @@ import java.util.stream.Stream;
 public class MultiReferenceNode<T> implements SupplierNode {
     private final NodeTree tree;
 
-    private final SingleDataType<T> type;
-
     private final List<NodeOutput<List<T>>> outputs;
+
+    private final SingleDataType<T> type;
 
     private final Reference entity;
 
@@ -36,8 +36,8 @@ public class MultiReferenceNode<T> implements SupplierNode {
 
     public MultiReferenceNode(NodeTree tree, SingleDataType<T> type, Reference entity, Reference component, Reference data) {
         this.tree = tree;
-        this.type = type;
         outputs = List.of(new NodeOutputImpl<>(this, type.toList()));
+        this.type = type;
         this.entity = entity;
         this.component = component;
         this.data = data;

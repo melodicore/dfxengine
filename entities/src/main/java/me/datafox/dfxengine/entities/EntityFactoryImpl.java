@@ -3,6 +3,8 @@ package me.datafox.dfxengine.entities;
 import me.datafox.dfxengine.entities.api.*;
 import me.datafox.dfxengine.entities.api.definition.ComponentDefinition;
 import me.datafox.dfxengine.entities.api.definition.EntityDefinition;
+import me.datafox.dfxengine.entities.api.definition.SystemDefinition;
+import me.datafox.dfxengine.entities.utils.NumeralUtils;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 
@@ -27,6 +29,19 @@ public class EntityFactoryImpl implements EntityFactory {
                 .forEach(entity::addComponent);
 
         return entity;
+    }
+
+    @Override
+    public EntitySystem buildSystem(SystemDefinition definition) {
+        EntitySystemImpl system = new EntitySystemImpl(NumeralUtils.getNumeral(
+                definition.getIntervalType(), definition.getIntervalValue()));
+
+        definition.getTrees()
+                .stream()
+                .map(tree -> nodeFactory.buildTree(system, tree))
+                .forEach(system::addTree);
+
+        return system;
     }
 
     private EntityComponent buildComponent(Entity entity, ComponentDefinition definition) {

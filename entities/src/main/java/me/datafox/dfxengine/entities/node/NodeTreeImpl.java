@@ -2,7 +2,7 @@ package me.datafox.dfxengine.entities.node;
 
 import lombok.Data;
 import me.datafox.dfxengine.entities.api.Context;
-import me.datafox.dfxengine.entities.api.EntityComponent;
+import me.datafox.dfxengine.entities.api.NodeTreeOwner;
 import me.datafox.dfxengine.entities.api.node.Node;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
 import me.datafox.dfxengine.entities.api.node.NodeTreeAttribute;
@@ -18,7 +18,7 @@ import java.util.*;
 public class NodeTreeImpl implements NodeTree {
     private final Handle handle;
 
-    private final EntityComponent component;
+    private final NodeTreeOwner owner;
 
     private final int order;
 
@@ -28,12 +28,12 @@ public class NodeTreeImpl implements NodeTree {
 
     private final Set<NodeTreeAttribute> attributes;
 
-    public NodeTreeImpl(String handle, EntityComponent component, int order, Collection<NodeTreeAttribute> attributes, Context context) {
+    public NodeTreeImpl(String handle, NodeTreeOwner owner, int order, Collection<NodeTreeAttribute> attributes, Context context) {
         if(handle == null && attributes != null && attributes.contains(NodeTreeAttribute.CALLABLE)) {
             throw new InvalidNodeTreeException("NodeTree is marked as callable but does not have a Handle");
         }
         this.handle = context.getHandles().getTreeHandle(handle);
-        this.component = component;
+        this.owner = owner;
         this.order = order;
         nodesInternal = new ArrayList<>();
         nodes = Collections.unmodifiableList(nodesInternal);

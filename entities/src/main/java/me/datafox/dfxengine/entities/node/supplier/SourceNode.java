@@ -19,14 +19,14 @@ import java.util.List;
 public class SourceNode<T> implements SupplierNode {
     private final NodeTree tree;
 
-    private final List<NodeData<?>> dataList;
-
     private final List<NodeOutput<T>> outputs;
+
+    private final List<NodeData<?>> dataList;
 
     public SourceNode(NodeTree tree, DataType<T> type, T data) {
         this.tree = tree;
-        dataList = List.of(new NodeDataImpl<>(type, data));
         outputs = List.of(new NodeOutputImpl<>(this, type));
+        dataList = List.of(new NodeDataImpl<>(type, data));
     }
 
     @Override

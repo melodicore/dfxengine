@@ -7,5 +7,5 @@ import me.datafox.dfxengine.entities.api.node.NodeTree;
  * @author datafox
  */
 public interface NodeFactory {
-    NodeTree buildTree(EntityComponent component, NodeTreeDefinition definition);
+    NodeTree buildTree(NodeTreeOwner owner, NodeTreeDefinition definition);
 }
