@@ -1,8 +1,6 @@
 package me.datafox.dfxengine.injector.test;
 
 import com.esotericsoftware.jsonbeans.Json;
-import com.esotericsoftware.jsonbeans.JsonSerializer;
-import com.esotericsoftware.jsonbeans.JsonValue;
 import com.esotericsoftware.jsonbeans.OutputType;
 import me.datafox.dfxengine.injector.ClassScanner;
 import me.datafox.dfxengine.injector.InjectorBuilder;
@@ -55,7 +53,6 @@ import me.datafox.dfxengine.injector.test.classes.pass.void_component.VoidCompon
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.function.Consumer;
@@ -89,28 +86,13 @@ public class InjectorTest {
     }
 
     @Test
-    public void serializationTest() throws IOException {
+    public void serializationTest() {
         ClassHierarchy hierarchy = ClassScanner
                 .builder()
                 .whitelistedPackage(Pattern.quote("me.datafox.dfxengine.injector.test.classes.empty"))
                 .build()
                 .scan();
         Json json = new Json(OutputType.json);
-        json.setSerializer(Class.class, new JsonSerializer<>() {
-            @Override
-            public void write(Json json, Class object, Class knownType) {
-                json.writeValue(object.getName());
-            }
-
-            @Override
-            public Class<?> read(Json json, JsonValue jsonData, Class type) {
-                try {
-                    return Class.forName(jsonData.asString());
-                } catch(ClassNotFoundException | NoClassDefFoundError e) {
-                    return null;
-                }
-            }
-        });
         String jsonString = json.toJson(hierarchy);
         Assertions.assertDoesNotThrow(() -> InjectorBuilder.load(json.fromJson(ClassHierarchy.class, jsonString)));
     }
