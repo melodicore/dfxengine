@@ -59,3 +59,20 @@ subprojects {
         }
     }
 }
+
+apply plugin: "java"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "org.slf4j:slf4j-api:$slf4jVersion"
+}
+
+task allJavadoc(type: Javadoc, group: "documentation") {
+    source sourceSets.main.allJava + subprojects.sourceSets.main.allJava
+    classpath = files(sourceSets.main.compileClasspath) + files(subprojects.sourceSets.main.compileClasspath)
+    destinationDir = file(layout.buildDirectory.dir("docs/javadoc-all"))
+    exclude "module-info.java"
+}
