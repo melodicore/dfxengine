@@ -75,4 +75,7 @@ task allJavadoc(type: Javadoc, group: "documentation") {
     classpath = files(sourceSets.main.compileClasspath) + files(subprojects.sourceSets.main.compileClasspath)
     destinationDir = file(layout.buildDirectory.dir("docs/javadoc-all"))
     exclude "module-info.java"
+    exclude "**/internal/**"
+    exclude "**/handles/utils/**"
+    exclude "**/injector/utils/**"
 }
