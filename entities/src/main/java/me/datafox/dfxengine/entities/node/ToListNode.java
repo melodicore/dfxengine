@@ -3,6 +3,7 @@ package me.datafox.dfxengine.entities.node;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.datafox.dfxengine.entities.api.Context;
+import me.datafox.dfxengine.entities.api.data.ListDataType;
 import me.datafox.dfxengine.entities.api.data.NodeData;
 import me.datafox.dfxengine.entities.api.data.SingleDataType;
 import me.datafox.dfxengine.entities.api.node.NodeInput;
@@ -22,22 +23,28 @@ import java.util.stream.IntStream;
 public class ToListNode<T> extends CachingOutputNode {
     private final NodeTree tree;
 
-    private final List<NodeInput<T>> inputs;
+    private final SingleDataType<T> type;
 
-    private final List<NodeOutput<List<T>>> outputs;
+    private final ListDataType<T> listType;
+
+    private final List<NodeInput<?>> inputs;
+
+    private final List<NodeOutput<?>> outputs;
 
     public ToListNode(NodeTree tree, SingleDataType<T> type, int inputCount) {
         this.tree = tree;
+        this.type = type;
+        listType = type.toList();
         inputs = IntStream.range(0, inputCount)
                 .mapToObj(i -> new NodeInputImpl<>(this, type))
                 .collect(Collectors.toUnmodifiableList());
-        outputs = List.of(new NodeOutputImpl<>(this, type.toList()));
+        outputs = List.of(new NodeOutputImpl<>(this, listType));
     }
 
     @Override
     protected List<NodeData<?>> calculateOutputs(List<NodeData<?>> inputs, Context context) {
-        return List.of(new NodeDataImpl<>(outputs.get(0).getType(),
-                outputs.get(0).getType().cast(inputs
+        return List.of(new NodeDataImpl<>(listType,
+                listType.cast(inputs
                         .stream()
                         .map(NodeData::getData)
                         .collect(Collectors.toUnmodifiableList()))));

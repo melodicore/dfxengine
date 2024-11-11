@@ -22,12 +22,15 @@ import java.util.stream.IntStream;
 public class ConcatListNode<T> extends CachingOutputNode {
     private final NodeTree tree;
 
-    private final List<NodeInput<List<T>>> inputs;
+    private final ListDataType<T> type;
 
-    private final List<NodeOutput<List<T>>> outputs;
+    private final List<NodeInput<?>> inputs;
+
+    private final List<NodeOutput<?>> outputs;
 
     public ConcatListNode(NodeTree tree, ListDataType<T> type, int inputCount) {
         this.tree = tree;
+        this.type = type;
         inputs = IntStream.range(0, inputCount)
                 .mapToObj(i -> new NodeInputImpl<>(this, type))
                 .collect(Collectors.toUnmodifiableList());
@@ -36,8 +39,8 @@ public class ConcatListNode<T> extends CachingOutputNode {
 
     @Override
     protected List<NodeData<?>> calculateOutputs(List<NodeData<?>> inputs, Context context) {
-        return List.of(new NodeDataImpl<>(outputs.get(0).getType(),
-                outputs.get(0).getType().cast(inputs
+        return List.of(new NodeDataImpl<>(type,
+                type.cast(inputs
                         .stream()
                         .map(NodeData::getData)
                         .map(o -> (List<?>) o)

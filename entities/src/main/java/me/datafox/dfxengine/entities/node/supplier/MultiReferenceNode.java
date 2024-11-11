@@ -5,6 +5,7 @@ import me.datafox.dfxengine.entities.api.Context;
 import me.datafox.dfxengine.entities.api.Entity;
 import me.datafox.dfxengine.entities.api.Reference;
 import me.datafox.dfxengine.entities.api.data.EntityData;
+import me.datafox.dfxengine.entities.api.data.ListDataType;
 import me.datafox.dfxengine.entities.api.data.NodeData;
 import me.datafox.dfxengine.entities.api.data.SingleDataType;
 import me.datafox.dfxengine.entities.api.node.NodeOutput;
@@ -24,9 +25,11 @@ import java.util.stream.Stream;
 public class MultiReferenceNode<T> implements SupplierNode {
     private final NodeTree tree;
 
-    private final List<NodeOutput<List<T>>> outputs;
-
     private final SingleDataType<T> type;
+
+    private final ListDataType<T> listType;
+
+    private final List<NodeOutput<?>> outputs;
 
     private final Reference entity;
 
@@ -36,8 +39,9 @@ public class MultiReferenceNode<T> implements SupplierNode {
 
     public MultiReferenceNode(NodeTree tree, SingleDataType<T> type, Reference entity, Reference component, Reference data) {
         this.tree = tree;
-        outputs = List.of(new NodeOutputImpl<>(this, type.toList()));
         this.type = type;
+        listType = type.toList();
+        outputs = List.of(new NodeOutputImpl<>(this, listType));
         this.entity = entity;
         this.component = component;
         this.data = data;
@@ -54,6 +58,6 @@ public class MultiReferenceNode<T> implements SupplierNode {
                 .flatMap(data::get)
                 .map(EntityData::getData)
                 .collect(Collectors.toList());
-        return List.of(new NodeDataImpl<>(outputs.get(0).getType(), list));
+        return List.of(new NodeDataImpl<>(listType, list));
     }
 }

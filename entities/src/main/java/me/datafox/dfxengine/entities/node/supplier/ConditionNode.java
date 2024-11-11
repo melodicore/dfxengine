@@ -24,7 +24,7 @@ public class ConditionNode implements SupplierNode {
 
     private final NodeTree tree;
 
-    private final List<NodeOutput<Boolean>> outputs;
+    private final List<NodeOutput<?>> outputs;
 
     private final Condition condition;
 

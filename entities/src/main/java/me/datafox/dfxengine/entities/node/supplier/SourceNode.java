@@ -19,7 +19,7 @@ import java.util.List;
 public class SourceNode<T> implements SupplierNode {
     private final NodeTree tree;
 
-    private final List<NodeOutput<T>> outputs;
+    private final List<NodeOutput<?>> outputs;
 
     private final List<NodeData<?>> dataList;
 

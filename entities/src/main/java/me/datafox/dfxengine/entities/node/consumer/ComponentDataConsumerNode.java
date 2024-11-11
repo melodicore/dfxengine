@@ -20,7 +20,7 @@ import java.util.List;
 public class ComponentDataConsumerNode<T> implements ConsumerNode {
     private final NodeTree tree;
 
-    private final List<NodeInput<T>> inputs;
+    private final List<NodeInput<?>> inputs;
 
     private final Handle handle;
 

@@ -20,7 +20,7 @@ import java.util.List;
 public class SingleReferenceNode<T> implements SupplierNode {
     private final NodeTree tree;
 
-    private final List<NodeOutput<T>> outputs;
+    private final List<NodeOutput<?>> outputs;
 
     private final Handle entity;
 

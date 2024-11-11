@@ -21,10 +21,10 @@ public interface ListDataType<T> extends DataType<List<T>> {
     }
 
     @Override
-    DataType<T> toSingle();
+    SingleDataType<T> toSingle();
 
     @Override
-    default DataType<List<T>> toList() {
+    default ListDataType<T> toList() {
         return this;
     }
 }

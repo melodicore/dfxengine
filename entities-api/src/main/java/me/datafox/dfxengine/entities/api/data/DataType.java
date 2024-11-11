@@ -12,9 +12,9 @@ public interface DataType<T> {
 
     boolean isList();
 
-    DataType<?> toSingle();
+    SingleDataType<?> toSingle();
 
-    DataType<?> toList();
+    ListDataType<?> toList();
 
     boolean canCast(Object o);
 

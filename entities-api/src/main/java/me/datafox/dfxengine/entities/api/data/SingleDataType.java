@@ -1,7 +1,5 @@
 package me.datafox.dfxengine.entities.api.data;
 
-import java.util.List;
-
 /**
  * @author datafox
  */
@@ -17,10 +15,10 @@ public interface SingleDataType<T> extends DataType<T> {
     }
 
     @Override
-    default DataType<T> toSingle() {
+    default SingleDataType<T> toSingle() {
         return this;
     }
 
     @Override
-    DataType<List<T>> toList();
+    ListDataType<T> toList();
 }

@@ -24,7 +24,9 @@ import java.util.stream.Stream;
 public class MultiListReferenceNode<T> implements SupplierNode {
     private final NodeTree tree;
 
-    private final List<NodeOutput<List<T>>> outputs;
+    private final ListDataType<T> type;
+
+    private final List<NodeOutput<?>> outputs;
 
     private final Reference entity;
 
@@ -34,6 +36,7 @@ public class MultiListReferenceNode<T> implements SupplierNode {
 
     public MultiListReferenceNode(NodeTree tree, ListDataType<T> type, Reference entity, Reference component, Reference data) {
         this.tree = tree;
+        this.type = type;
         outputs = List.of(new NodeOutputImpl<>(this, type));
         this.entity = entity;
         this.component = component;
@@ -47,11 +50,11 @@ public class MultiListReferenceNode<T> implements SupplierNode {
                 .flatMap(List::stream)
                 .map(Entity::getComponents)
                 .flatMap(component::get)
-                .map(c -> c.getData(outputs.get(0).getType()))
+                .map(c -> c.getData(type))
                 .flatMap(data::get)
                 .map(EntityData::getData)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
-        return List.of(new NodeDataImpl<>(outputs.get(0).getType(), list));
+        return List.of(new NodeDataImpl<>(type, list));
     }
 }

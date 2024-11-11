@@ -22,7 +22,7 @@ public class BooleanSelectNode<T> extends CachingOutputNode {
 
     private final List<NodeInput<?>> inputs;
 
-    private final List<NodeOutput<T>> outputs;
+    private final List<NodeOutput<?>> outputs;
 
     public BooleanSelectNode(NodeTree tree, DataType<T> type) {
         this.tree = tree;

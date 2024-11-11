@@ -21,14 +21,20 @@ import java.util.function.Function;
 public class FunctionNode<T, R> extends CachingOutputNode {
     private final NodeTree tree;
 
-    private final List<NodeInput<T>> inputs;
+    private final DataType<T> inputType;
 
-    private final List<NodeOutput<R>> outputs;
+    private final DataType<R> outputType;
+
+    private final List<NodeInput<?>> inputs;
+
+    private final List<NodeOutput<?>> outputs;
 
     private final Function<T, R> function;
 
     public FunctionNode(NodeTree tree, DataType<T> inputType, DataType<R> outputType, Function<T,R> function) {
         this.tree = tree;
+        this.inputType = inputType;
+        this.outputType = outputType;
         this.inputs = List.of(new NodeInputImpl<>(this, inputType));
         this.outputs = List.of(new NodeOutputImpl<>(this, outputType));
         this.function = function;
@@ -36,7 +42,7 @@ public class FunctionNode<T, R> extends CachingOutputNode {
 
     @Override
     protected List<NodeData<?>> calculateOutputs(List<NodeData<?>> inputs, Context context) {
-        return List.of(new NodeDataImpl<>(outputs.get(0).getType(),
-                function.apply(this.inputs.get(0).getType().cast(inputs.get(0).getData()))));
+        return List.of(new NodeDataImpl<>(outputType,
+                function.apply(inputType.cast(inputs.get(0).getData()))));
     }
 }

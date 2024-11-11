@@ -1,10 +1,10 @@
 package me.datafox.dfxengine.entities.data;
 
-import lombok.*;
-import me.datafox.dfxengine.entities.api.data.DataType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import me.datafox.dfxengine.entities.api.data.ListDataType;
 import me.datafox.dfxengine.entities.api.data.SingleDataType;
-
-import java.util.List;
 
 /**
  * @author datafox
@@ -18,7 +18,7 @@ public class SingleDataTypeImpl<T> implements SingleDataType<T> {
     private int variation;
 
     @Override
-    public DataType<List<T>> toList() {
+    public ListDataType<T> toList() {
         return ListDataTypeImpl.of(type, variation);
     }
 
