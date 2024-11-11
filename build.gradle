@@ -72,8 +72,9 @@ dependencies {
 
 task allJavadoc(type: Javadoc, group: "documentation") {
     source sourceSets.main.allJava + subprojects.sourceSets.main.allJava
-    classpath = files(sourceSets.main.compileClasspath) + files(subprojects.sourceSets.main.compileClasspath)
+    classpath = files(subprojects.sourceSets.main.compileClasspath) + files(subprojects.sourceSets.main.output)
     destinationDir = file(layout.buildDirectory.dir("docs/javadoc-all"))
+    title "DFXEngine"
     exclude "module-info.java"
     exclude "**/internal/**"
     exclude "**/handles/utils/**"
