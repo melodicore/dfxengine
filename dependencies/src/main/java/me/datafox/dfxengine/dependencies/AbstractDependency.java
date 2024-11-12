@@ -14,10 +14,9 @@ import java.util.stream.Stream;
 /**
  * <p>
  * A class with values that values of other classes depend on. A class with values depending on the implementing class
- * should implement {@link Dependent}, and all dependencies should be added to the class implementing this interface
- * with {@link #addDependent(Dependent)} or {@link #addDependents(Collection)}. The implementation of these methods
- * must check for cyclic dependencies and throw {@link IllegalArgumentException} if one would be caused by the
- * operation.
+ * should implement {@link Dependent}, and all dependents should be added to the class implementing this interface with
+ * {@link #addDependent(Dependent)} or {@link #addDependents(Collection)}. The implementation of these methods must
+ * check for cyclic dependencies and throw {@link IllegalArgumentException} if one would be caused by the operation.
  * </p>
  * <p>
  * The cyclic dependency detection in this class will only detect dependent dependencies that implement both
@@ -29,16 +28,18 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractDependency implements Dependency {
     /**
-     * {@link Logger} for this dependent.
+     * {@link Logger} for this dependency.
      */
     protected final Logger logger;
 
     /**
-     * Set of {@link Dependent Dependencies} for this dependent.
+     * Set of {@link Dependent Dependents} for this dependency.
      */
     protected final Set<Dependent> dependents;
 
     /**
+     * Protected constructor for {@link AbstractDependency}.
+     *
      * @param logger {@link Logger} for this dependent
      */
     protected AbstractDependency(Logger logger) {
@@ -47,6 +48,8 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
@@ -103,6 +106,8 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @param dependent {@inheritDoc}
      * @return {@inheritDoc}
      */
@@ -112,6 +117,8 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @param dependents {@inheritDoc}
      * @return {@inheritDoc}
      */
@@ -121,6 +128,8 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @param dependent {@inheritDoc}
      * @return {@inheritDoc}
      */
@@ -130,6 +139,8 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @param dependents {@inheritDoc}
      * @return {@inheritDoc}
      */
@@ -162,6 +173,8 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
@@ -170,6 +183,8 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override

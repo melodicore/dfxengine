@@ -7,9 +7,9 @@ import java.util.Collection;
 /**
  * <p>
  * A class with values that values of other classes depend on. A class with values depending on the implementing class
- * should implement {@link Dependent}, and all dependencies should be added to the class implementing this interface
- * with {@link #addDependent(Dependent)} or {@link #addDependents(Collection)}. The implementation of these methods
- * must check for cyclic dependencies and throw {@link IllegalArgumentException} if one would be caused by the
+ * should implement {@link Dependent}, and all dependents should be added to the class implementing this interface with
+ * {@link #addDependent(Dependent)} or {@link #addDependents(Collection)}. The implementation of these methods must
+ * check for cyclic dependencies and throw {@link IllegalArgumentException} if one would be caused by the
  * operation.
  * </p>
  * <p>
@@ -26,6 +26,8 @@ import java.util.Collection;
  */
 public abstract class DependencyDependent extends AbstractDependency implements Dependent {
     /**
+     * Protected constructor for {@link DependencyDependent}.
+     *
      * @param logger {@link Logger} for this dependent
      */
     protected DependencyDependent(Logger logger) {

@@ -1,4 +1,6 @@
 /**
+ * Dependencies is a simple library for handling arbitrary dependency graphs and invalidation.
+ *
  * @author datafox
  */
 module dfxengine.dependencies {

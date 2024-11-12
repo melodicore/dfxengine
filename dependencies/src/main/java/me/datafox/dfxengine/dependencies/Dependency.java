@@ -14,6 +14,8 @@ import java.util.stream.Stream;
  */
 public interface Dependency {
     /**
+     * Returns all {@link Dependent Dependents} that depend on this class.
+     *
      * @return all {@link Dependent Dependents} that depend on this class
      */
     Collection<Dependent> getDependents();
@@ -46,24 +48,32 @@ public interface Dependency {
     boolean addDependents(Collection<? extends Dependent> dependencies);
 
     /**
+     * Removes a {@link Dependent} from this dependency.
+     *
      * @param dependent {@link Dependent} to be removed
      * @return {@code true} if the registered {@link Dependent Dependents} changed as a result of this operation
      */
     boolean removeDependent(Dependent dependent);
 
     /**
+     * Removes {@link Dependent Dependents} from this dependency.
+     *
      * @param dependents {@link Dependent Dependents} to be removed
      * @return {@code true} if the registered {@link Dependent Dependents} changed as a result of this operation
      */
     boolean removeDependents(Collection<? extends Dependent> dependents);
 
     /**
+     * Checks if a {@link Dependent} is present in this dependency.
+     *
      * @param dependent {@link Dependent} to be checked for
      * @return {@code true} if the specified {@link Dependent} is registered to this class
      */
     boolean containsDependent(Dependent dependent);
 
     /**
+     * Checks if {@link Dependent Dependents} are present in this dependency.
+     *
      * @param dependents {@link Dependent Dependents} to be checked for
      * @return {@code true} if all the specified {@link Dependent Dependents} are registered to this class
      */
@@ -92,11 +102,16 @@ public interface Dependency {
     boolean containsDependentsRecursive(Collection<? extends Dependent> dependents);
 
     /**
+     * Returns a {@link Stream} of all {@link Dependent Dependents} that are registered to this class.
+     *
      * @return {@link Stream} of all {@link Dependent Dependents} that are registered to this class
      */
     Stream<Dependent> dependentStream();
 
     /**
+     * Returns a {@link Stream} of all {@link Dependent Dependents} that are registered to this class or any of its
+     * dependents that also implement dependency, recursively.
+     *
      * @return {@link Stream} of all {@link Dependent Dependents} that are registered to this class or any of its
      * dependents that also implement dependency, recursively
      */
