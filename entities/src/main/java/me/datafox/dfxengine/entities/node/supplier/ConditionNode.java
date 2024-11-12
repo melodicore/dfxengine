@@ -1,8 +1,8 @@
 package me.datafox.dfxengine.entities.node.supplier;
 
 import lombok.Data;
-import me.datafox.dfxengine.entities.api.Condition;
-import me.datafox.dfxengine.entities.api.Context;
+import me.datafox.dfxengine.entities.api.condition.Condition;
+import me.datafox.dfxengine.entities.api.component.Context;
 import me.datafox.dfxengine.entities.api.data.NodeData;
 import me.datafox.dfxengine.entities.api.node.NodeOutput;
 import me.datafox.dfxengine.entities.api.node.NodeTree;

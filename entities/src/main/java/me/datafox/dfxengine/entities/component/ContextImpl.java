@@ -1,8 +1,11 @@
-package me.datafox.dfxengine.entities;
+package me.datafox.dfxengine.entities.component;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.datafox.dfxengine.entities.api.*;
+import me.datafox.dfxengine.entities.api.component.*;
+import me.datafox.dfxengine.entities.api.entity.Entity;
+import me.datafox.dfxengine.entities.api.entity.EntityComponent;
+import me.datafox.dfxengine.entities.api.entity.EntitySystem;
 import me.datafox.dfxengine.entities.api.node.Node;
 import me.datafox.dfxengine.entities.api.node.NodeGroup;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
@@ -15,7 +18,7 @@ import org.slf4j.Logger;
 /**
  * @author datafox
  */
-@Component
+@Component(order = Integer.MAX_VALUE)
 @Getter
 public class ContextImpl implements Context {
     private Injector injector;
@@ -33,6 +36,8 @@ public class ContextImpl implements Context {
     private NodeFactory nodeFactory;
 
     private NodeResolver nodeResolver;
+
+    private SerializationHandler<?, ?> serializer;
 
     @Setter
     private Entity currentEntity;
@@ -60,7 +65,8 @@ public class ContextImpl implements Context {
                            Engine engine,
                            EntityFactory entityFactory,
                            NodeFactory nodeFactory,
-                           NodeResolver nodeResolver) {
+                           NodeResolver nodeResolver,
+                           SerializationHandler<?,?> serializer) {
         this.injector = injector;
         this.logger = logger;
         this.handleManager = handleManager;
@@ -69,5 +75,6 @@ public class ContextImpl implements Context {
         this.entityFactory = entityFactory;
         this.nodeFactory = nodeFactory;
         this.nodeResolver = nodeResolver;
+        this.serializer = serializer;
     }
 }

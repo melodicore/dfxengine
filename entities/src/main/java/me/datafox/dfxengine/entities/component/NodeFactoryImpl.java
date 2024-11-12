@@ -1,9 +1,8 @@
-package me.datafox.dfxengine.entities;
+package me.datafox.dfxengine.entities.component;
 
-import me.datafox.dfxengine.entities.api.Context;
-import me.datafox.dfxengine.entities.api.EntityComponent;
-import me.datafox.dfxengine.entities.api.NodeFactory;
-import me.datafox.dfxengine.entities.api.NodeTreeOwner;
+import me.datafox.dfxengine.entities.api.component.Context;
+import me.datafox.dfxengine.entities.api.component.NodeFactory;
+import me.datafox.dfxengine.entities.api.entity.NodeTreeOwner;
 import me.datafox.dfxengine.entities.api.definition.NodeDefinition;
 import me.datafox.dfxengine.entities.api.definition.NodeMapping;
 import me.datafox.dfxengine.entities.api.definition.NodeTreeDefinition;
@@ -21,7 +20,7 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
 /**
  * @author datafox
  */
-@Component
+@Component(order = Integer.MAX_VALUE)
 public class NodeFactoryImpl implements NodeFactory {
     @Inject
     private Context context;

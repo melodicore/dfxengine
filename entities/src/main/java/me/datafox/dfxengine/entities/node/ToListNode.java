@@ -2,7 +2,7 @@ package me.datafox.dfxengine.entities.node;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.datafox.dfxengine.entities.api.Context;
+import me.datafox.dfxengine.entities.api.component.Context;
 import me.datafox.dfxengine.entities.api.data.ListDataType;
 import me.datafox.dfxengine.entities.api.data.NodeData;
 import me.datafox.dfxengine.entities.api.data.SingleDataType;

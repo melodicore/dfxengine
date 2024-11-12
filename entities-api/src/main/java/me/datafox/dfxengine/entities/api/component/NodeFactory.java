@@ -1,5 +1,6 @@
-package me.datafox.dfxengine.entities.api;
+package me.datafox.dfxengine.entities.api.component;
 
+import me.datafox.dfxengine.entities.api.entity.NodeTreeOwner;
 import me.datafox.dfxengine.entities.api.definition.NodeTreeDefinition;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
 

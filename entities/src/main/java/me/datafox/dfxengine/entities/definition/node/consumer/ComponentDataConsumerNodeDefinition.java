@@ -4,12 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.datafox.dfxengine.entities.api.Context;
+import me.datafox.dfxengine.entities.api.component.Context;
 import me.datafox.dfxengine.entities.api.data.DataType;
 import me.datafox.dfxengine.entities.api.definition.NodeDefinition;
 import me.datafox.dfxengine.entities.api.definition.NodeMapping;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
 import me.datafox.dfxengine.entities.node.consumer.ComponentDataConsumerNode;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
+import me.datafox.dfxengine.entities.serialization.DefaultElement;
+import me.datafox.dfxengine.entities.utils.SerializationUtils;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 import java.util.List;
 
@@ -21,20 +25,25 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComponentDataConsumerNodeDefinition<T> implements NodeDefinition<ComponentDataConsumerNode<T>> {
-    public NodeMapping mapping;
+    public List<NodeMapping> mappings;
 
     public DataType<T> type;
 
     public String handle;
 
     @Override
-    public List<NodeMapping> getMappings() {
-        return List.of(mapping);
-    }
-
-    @Override
     public ComponentDataConsumerNode<T> build(NodeTree tree, Context context) {
         return new ComponentDataConsumerNode<>(tree, type, handle, context);
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("data", ComponentDataConsumerNodeDefinition.class);
+    }
+
+    @Component
+    public static DefaultElement getDefaultElement() {
+        return SerializationUtils.getNodeMappingsDefaultElement(ComponentDataConsumerNodeDefinition.class);
     }
 }
 

@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Singular;
 import me.datafox.dfxengine.entities.api.definition.NodeTreeDefinition;
 import me.datafox.dfxengine.entities.api.definition.SystemDefinition;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
+import me.datafox.dfxengine.entities.serialization.DefaultElement;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.math.api.NumeralType;
 
 import java.util.ArrayList;
@@ -28,5 +31,15 @@ public class SystemDefinitionImpl implements SystemDefinition {
         this.intervalType = intervalType;
         this.intervalValue = intervalValue;
         this.trees = new ArrayList<>(trees);
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("system", SystemDefinitionImpl.class);
+    }
+
+    @Component
+    public static DefaultElement getDefaultElement() {
+        return new DefaultElement(SystemDefinitionImpl.class, "trees", NodeTreeDefinitionImpl.class);
     }
 }

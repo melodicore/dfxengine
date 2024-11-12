@@ -19,17 +19,19 @@ module dfxengine.entities {
     requires dfxengine.values;
     requires dfxengine.utils;
 
-    exports me.datafox.dfxengine.entities;
+    exports me.datafox.dfxengine.entities.component;
     exports me.datafox.dfxengine.entities.data;
     exports me.datafox.dfxengine.entities.definition;
     exports me.datafox.dfxengine.entities.definition.node;
-    exports me.datafox.dfxengine.entities.exception;
-    exports me.datafox.dfxengine.entities.node;
-    exports me.datafox.dfxengine.entities.reference;
-    exports me.datafox.dfxengine.entities.utils;
-    exports me.datafox.dfxengine.entities.definition.node.supplier;
     exports me.datafox.dfxengine.entities.definition.node.consumer;
     exports me.datafox.dfxengine.entities.definition.node.group;
+    exports me.datafox.dfxengine.entities.definition.node.supplier;
+    exports me.datafox.dfxengine.entities.definition.node.supplier.operation;
+    exports me.datafox.dfxengine.entities.entity;
+    exports me.datafox.dfxengine.entities.exception;
+    exports me.datafox.dfxengine.entities.node;
     exports me.datafox.dfxengine.entities.node.consumer;
     exports me.datafox.dfxengine.entities.node.supplier;
+    exports me.datafox.dfxengine.entities.reference;
+    exports me.datafox.dfxengine.entities.serialization;
 }

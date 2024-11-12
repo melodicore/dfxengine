@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.entities.api;
+package me.datafox.dfxengine.entities.api.reference;
 
 import me.datafox.dfxengine.handles.api.HandleMap;
 

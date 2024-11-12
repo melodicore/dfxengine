@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.datafox.dfxengine.entities.api.Context;
+import me.datafox.dfxengine.entities.api.component.Context;
 import me.datafox.dfxengine.entities.api.definition.SupplierNodeDefinition;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
 import me.datafox.dfxengine.entities.data.SingleDataTypeImpl;
 import me.datafox.dfxengine.entities.node.supplier.SourceNode;
 import me.datafox.dfxengine.handles.api.Handle;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 /**
  * @author datafox
@@ -30,5 +32,10 @@ public class HandleSourceNodeDefinition implements SupplierNodeDefinition<Source
                 context.getHandleManager()
                         .getOrCreateSpace(space)
                         .getOrCreateHandle(handle));
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("handleSource", HandleSourceNodeDefinition.class);
     }
 }

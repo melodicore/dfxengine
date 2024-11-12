@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.entities.api;
+package me.datafox.dfxengine.entities.api.entity;
 
 import me.datafox.dfxengine.entities.api.data.DataType;
 import me.datafox.dfxengine.entities.api.data.EntityData;

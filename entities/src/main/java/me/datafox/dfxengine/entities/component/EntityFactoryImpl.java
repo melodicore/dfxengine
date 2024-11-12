@@ -1,6 +1,14 @@
-package me.datafox.dfxengine.entities;
+package me.datafox.dfxengine.entities.component;
 
-import me.datafox.dfxengine.entities.api.*;
+import me.datafox.dfxengine.entities.api.component.Context;
+import me.datafox.dfxengine.entities.api.component.EntityFactory;
+import me.datafox.dfxengine.entities.api.component.NodeFactory;
+import me.datafox.dfxengine.entities.api.entity.Entity;
+import me.datafox.dfxengine.entities.api.entity.EntityComponent;
+import me.datafox.dfxengine.entities.api.entity.EntitySystem;
+import me.datafox.dfxengine.entities.entity.EntityComponentImpl;
+import me.datafox.dfxengine.entities.entity.EntityImpl;
+import me.datafox.dfxengine.entities.entity.EntitySystemImpl;
 import me.datafox.dfxengine.entities.api.definition.ComponentDefinition;
 import me.datafox.dfxengine.entities.api.definition.EntityDefinition;
 import me.datafox.dfxengine.entities.api.definition.SystemDefinition;
@@ -11,7 +19,7 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
 /**
  * @author datafox
  */
-@Component
+@Component(order = Integer.MAX_VALUE)
 public class EntityFactoryImpl implements EntityFactory {
     @Inject
     private Context context;

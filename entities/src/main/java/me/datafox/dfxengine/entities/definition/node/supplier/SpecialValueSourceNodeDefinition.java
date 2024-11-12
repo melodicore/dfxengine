@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.datafox.dfxengine.entities.api.Context;
+import me.datafox.dfxengine.entities.api.component.Context;
 import me.datafox.dfxengine.entities.api.definition.SupplierNodeDefinition;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
 import me.datafox.dfxengine.entities.data.SingleDataTypeImpl;
 import me.datafox.dfxengine.entities.node.supplier.SourceNode;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.values.api.Value;
 import me.datafox.dfxengine.values.modifier.MappingOperationModifier;
 
@@ -27,5 +29,10 @@ public class SpecialValueSourceNodeDefinition implements SupplierNodeDefinition<
         return new SourceNode<>(tree,
                 SingleDataTypeImpl.of(Value.class, 3),
                 MappingOperationModifier.resultValue(index));
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("specialValueSource", SpecialValueSourceNodeDefinition.class);
     }
 }

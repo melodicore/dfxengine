@@ -1,6 +1,6 @@
 package me.datafox.dfxengine.entities.api.node;
 
-import me.datafox.dfxengine.entities.api.NodeTreeOwner;
+import me.datafox.dfxengine.entities.api.entity.NodeTreeOwner;
 import me.datafox.dfxengine.handles.api.Handle;
 
 import java.util.List;

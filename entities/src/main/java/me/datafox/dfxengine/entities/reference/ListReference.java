@@ -1,12 +1,13 @@
 package me.datafox.dfxengine.entities.reference;
 
 import lombok.*;
-import me.datafox.dfxengine.entities.api.Reference;
+import me.datafox.dfxengine.entities.api.reference.Reference;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
 import me.datafox.dfxengine.handles.api.HandleMap;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -27,5 +28,10 @@ public class ListReference implements Reference {
         return handles.stream()
                 .map(map::get)
                 .flatMap(Stream::ofNullable);
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("listRef", ListReference.class);
     }
 }

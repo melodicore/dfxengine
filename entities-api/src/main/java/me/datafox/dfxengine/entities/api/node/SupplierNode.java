@@ -1,6 +1,6 @@
 package me.datafox.dfxengine.entities.api.node;
 
-import me.datafox.dfxengine.entities.api.Context;
+import me.datafox.dfxengine.entities.api.component.Context;
 import me.datafox.dfxengine.entities.api.data.NodeData;
 
 import java.util.List;

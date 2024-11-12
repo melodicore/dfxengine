@@ -1,9 +1,9 @@
 package me.datafox.dfxengine.entities.node.supplier;
 
 import lombok.Data;
-import me.datafox.dfxengine.entities.api.Context;
-import me.datafox.dfxengine.entities.api.Entity;
-import me.datafox.dfxengine.entities.api.Reference;
+import me.datafox.dfxengine.entities.api.component.Context;
+import me.datafox.dfxengine.entities.api.entity.Entity;
+import me.datafox.dfxengine.entities.api.reference.Reference;
 import me.datafox.dfxengine.entities.api.data.EntityData;
 import me.datafox.dfxengine.entities.api.data.ListDataType;
 import me.datafox.dfxengine.entities.api.data.NodeData;

@@ -1,5 +1,8 @@
-package me.datafox.dfxengine.entities.api;
+package me.datafox.dfxengine.entities.api.component;
 
+import me.datafox.dfxengine.entities.api.entity.Entity;
+import me.datafox.dfxengine.entities.api.entity.EntityComponent;
+import me.datafox.dfxengine.entities.api.entity.EntitySystem;
 import me.datafox.dfxengine.entities.api.node.Node;
 import me.datafox.dfxengine.entities.api.node.NodeGroup;
 import me.datafox.dfxengine.entities.api.node.NodeTree;

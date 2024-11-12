@@ -1,6 +1,6 @@
 package me.datafox.dfxengine.entities.api.definition;
 
-import me.datafox.dfxengine.entities.api.Context;
+import me.datafox.dfxengine.entities.api.component.Context;
 import me.datafox.dfxengine.entities.api.node.Node;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
 

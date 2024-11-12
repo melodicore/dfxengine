@@ -1,8 +1,8 @@
 package me.datafox.dfxengine.entities.node;
 
 import lombok.Data;
-import me.datafox.dfxengine.entities.api.Context;
-import me.datafox.dfxengine.entities.api.NodeTreeOwner;
+import me.datafox.dfxengine.entities.api.component.Context;
+import me.datafox.dfxengine.entities.api.entity.NodeTreeOwner;
 import me.datafox.dfxengine.entities.api.node.Node;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
 import me.datafox.dfxengine.entities.api.node.NodeTreeAttribute;

@@ -1,9 +1,15 @@
-package me.datafox.dfxengine.entities;
+package me.datafox.dfxengine.entities.component;
 
 import lombok.Getter;
-import me.datafox.dfxengine.entities.api.*;
+import me.datafox.dfxengine.entities.api.component.Engine;
+import me.datafox.dfxengine.entities.api.component.EntityFactory;
+import me.datafox.dfxengine.entities.api.component.NodeResolver;
+import me.datafox.dfxengine.entities.api.component.SerializationHandler;
 import me.datafox.dfxengine.entities.api.definition.EntityDefinition;
 import me.datafox.dfxengine.entities.api.definition.PackageDefinition;
+import me.datafox.dfxengine.entities.api.entity.Entity;
+import me.datafox.dfxengine.entities.api.entity.EntityComponent;
+import me.datafox.dfxengine.entities.api.entity.EntitySystem;
 import me.datafox.dfxengine.entities.api.node.NodeTreeAttribute;
 import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
@@ -22,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * @author datafox
  */
-@Component
+@Component(order = Integer.MAX_VALUE)
 @Getter
 public class EngineImpl implements Engine {
     private static final Numeral ZERO = Numerals.of(0);
@@ -32,6 +38,8 @@ public class EngineImpl implements Engine {
     private final EntityHandlesImpl handles;
 
     private final NodeResolver resolver;
+
+    private final SerializationHandler<?, ?> serializer;
 
     private final List<PackageDefinition> packages;
 
@@ -50,10 +58,11 @@ public class EngineImpl implements Engine {
     private Numeral delta;
 
     @Inject
-    public EngineImpl(EntityFactory factory, EntityHandlesImpl handles, NodeResolver resolver) {
+    public EngineImpl(EntityFactory factory, EntityHandlesImpl handles, NodeResolver resolver, SerializationHandler<?, ?> serializer) {
         this.factory = factory;
         this.handles = handles;
         this.resolver = resolver;
+        this.serializer = serializer;
         packages = new ArrayList<>();
         multiEntityDefinitions = new HashHandleMap<>(handles.getEntitySpace());
         entitiesInternal = new HashHandleMap<>(handles.getEntitySpace());

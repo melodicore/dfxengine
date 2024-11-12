@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.data.ListDataType;
 import me.datafox.dfxengine.entities.api.data.SingleDataType;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 /**
  * @author datafox
@@ -33,5 +35,10 @@ public class SingleDataTypeImpl<T> implements SingleDataType<T> {
 
     public static <T> SingleDataTypeImpl<T> of(Class<T> type) {
         return of(type, 0);
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("single", SingleDataTypeImpl.class);
     }
 }

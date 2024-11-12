@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.datafox.dfxengine.entities.api.Context;
-import me.datafox.dfxengine.entities.api.Reference;
+import me.datafox.dfxengine.entities.api.component.Context;
 import me.datafox.dfxengine.entities.api.data.SingleDataType;
 import me.datafox.dfxengine.entities.api.definition.SupplierNodeDefinition;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
+import me.datafox.dfxengine.entities.api.reference.Reference;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
 import me.datafox.dfxengine.entities.node.supplier.MultiReferenceNode;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 /**
  * @author datafox
@@ -30,5 +32,10 @@ public class MultiReferenceNodeDefinition<T> implements SupplierNodeDefinition<M
     @Override
     public MultiReferenceNode<T> build(NodeTree tree, Context context) {
         return new MultiReferenceNode<>(tree, type, entity, component, data);
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("multiRef", MultiReferenceNodeDefinition.class);
     }
 }

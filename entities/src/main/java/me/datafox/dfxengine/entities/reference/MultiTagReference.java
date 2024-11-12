@@ -4,8 +4,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
-import me.datafox.dfxengine.entities.api.Reference;
+import me.datafox.dfxengine.entities.api.reference.Reference;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
 import me.datafox.dfxengine.handles.api.HandleMap;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,5 +29,10 @@ public class MultiTagReference implements Reference {
     @Override
     public <T> Stream<T> get(HandleMap<T> map) {
         return map.getByTags(tags).stream();
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("multiTagRef", MultiTagReference.class);
     }
 }

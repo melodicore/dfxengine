@@ -1,7 +1,7 @@
-package me.datafox.dfxengine.entities;
+package me.datafox.dfxengine.entities.entity;
 
 import lombok.Data;
-import me.datafox.dfxengine.entities.api.EntitySystem;
+import me.datafox.dfxengine.entities.api.entity.EntitySystem;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
 import me.datafox.dfxengine.math.api.Numeral;
 

@@ -1,8 +1,8 @@
 package me.datafox.dfxengine.entities.node.consumer;
 
 import lombok.Data;
-import me.datafox.dfxengine.entities.api.Context;
-import me.datafox.dfxengine.entities.api.EntityComponent;
+import me.datafox.dfxengine.entities.api.component.Context;
+import me.datafox.dfxengine.entities.api.entity.EntityComponent;
 import me.datafox.dfxengine.entities.api.data.DataType;
 import me.datafox.dfxengine.entities.api.data.NodeData;
 import me.datafox.dfxengine.entities.api.node.ConsumerNode;

@@ -1,9 +1,9 @@
-package me.datafox.dfxengine.entities;
+package me.datafox.dfxengine.entities.component;
 
-import me.datafox.dfxengine.entities.api.Context;
-import me.datafox.dfxengine.entities.api.EntityComponent;
-import me.datafox.dfxengine.entities.api.EntitySystem;
-import me.datafox.dfxengine.entities.api.NodeResolver;
+import me.datafox.dfxengine.entities.api.component.Context;
+import me.datafox.dfxengine.entities.api.entity.EntityComponent;
+import me.datafox.dfxengine.entities.api.entity.EntitySystem;
+import me.datafox.dfxengine.entities.api.component.NodeResolver;
 import me.datafox.dfxengine.entities.api.data.NodeData;
 import me.datafox.dfxengine.entities.api.event.RunTreesEvent;
 import me.datafox.dfxengine.entities.exception.InvalidNodeTreeException;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 /**
  * @author datafox
  */
-@Component
+@Component(order = Integer.MAX_VALUE)
 public class NodeResolverImpl implements NodeResolver {
     @Inject
     private Context context;

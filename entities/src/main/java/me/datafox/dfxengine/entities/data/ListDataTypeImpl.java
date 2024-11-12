@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.entities.api.data.ListDataType;
 import me.datafox.dfxengine.entities.api.data.SingleDataType;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 import java.util.List;
 
@@ -38,5 +40,10 @@ public class ListDataTypeImpl<T> implements ListDataType<T> {
 
     public static <T> ListDataTypeImpl<T> of(Class<T> type, int variation) {
         return new ListDataTypeImpl<>(type, variation);
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("list", ListDataTypeImpl.class);
     }
 }

@@ -4,11 +4,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
-import me.datafox.dfxengine.entities.api.Context;
+import me.datafox.dfxengine.entities.api.component.Context;
 import me.datafox.dfxengine.entities.api.definition.NodeDefinition;
 import me.datafox.dfxengine.entities.api.definition.NodeMapping;
 import me.datafox.dfxengine.entities.api.node.NodeTree;
 import me.datafox.dfxengine.entities.node.ValueNode;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
+import me.datafox.dfxengine.entities.serialization.DefaultElement;
+import me.datafox.dfxengine.entities.utils.SerializationUtils;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,5 +36,15 @@ public class ValueNodeDefinition implements NodeDefinition<ValueNode> {
     @Override
     public ValueNode build(NodeTree tree, Context context) {
         return new ValueNode(tree, immutable);
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("value", ValueNodeDefinition.class);
+    }
+
+    @Component
+    public static DefaultElement getDefaultElement() {
+        return SerializationUtils.getNodeMappingsDefaultElement(ValueNodeDefinition.class);
     }
 }

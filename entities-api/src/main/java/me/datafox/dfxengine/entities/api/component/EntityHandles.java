@@ -1,4 +1,4 @@
-package me.datafox.dfxengine.entities.api;
+package me.datafox.dfxengine.entities.api.component;
 
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;

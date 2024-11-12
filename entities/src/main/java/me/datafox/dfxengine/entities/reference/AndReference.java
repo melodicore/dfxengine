@@ -4,9 +4,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
-import me.datafox.dfxengine.entities.api.Reference;
+import me.datafox.dfxengine.entities.api.reference.Reference;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
 import me.datafox.dfxengine.entities.utils.StreamUtils;
 import me.datafox.dfxengine.handles.api.HandleMap;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,5 +33,10 @@ public class AndReference implements Reference {
                 .map(r -> r.get(map))
                 .reduce(StreamUtils::reduceSame)
                 .orElse(Stream.empty());
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("andRef", AndReference.class);
     }
 }

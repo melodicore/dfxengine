@@ -1,7 +1,7 @@
-package me.datafox.dfxengine.entities;
+package me.datafox.dfxengine.entities.component;
 
 import lombok.Data;
-import me.datafox.dfxengine.entities.api.EntityHandles;
+import me.datafox.dfxengine.entities.api.component.EntityHandles;
 import me.datafox.dfxengine.entities.api.definition.HandleDefinition;
 import me.datafox.dfxengine.entities.api.definition.SpaceDefinition;
 import me.datafox.dfxengine.handles.api.Handle;
@@ -13,7 +13,7 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
 /**
  * @author datafox
  */
-@Component
+@Component(order = Integer.MAX_VALUE)
 @Data
 public class EntityHandlesImpl implements EntityHandles {
     private final HandleManager handleManager;
