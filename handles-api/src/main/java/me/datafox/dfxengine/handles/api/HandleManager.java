@@ -8,21 +8,29 @@ package me.datafox.dfxengine.handles.api;
  */
 public interface HandleManager {
     /**
+     * Returns the {@link Space} containing {@link Handle Handles} used for identifying spaces.
+     *
      * @return {@link Space} containing {@link Handle Handles} used for identifying spaces
      */
     Space getSpaceSpace();
 
     /**
+     * Returns the {@link Space} containing tag {@link Handle Handles}.
+     *
      * @return {@link Space} containing tag {@link Handle Handles}
      */
     Space getTagSpace();
 
     /**
+     * Returns an unmodifiable {@link HandleMap} containing all {@link Space Spaces} managed by this handle manager.
+     *
      * @return unmodifiable {@link HandleMap} containing all {@link Space Spaces} managed by this handle manager
      */
     HandleMap<Space> getSpaces();
 
     /**
+     * Creates a new {@link Space} with the specified id.
+     *
      * @param id {@link String} id for the new {@link Space}
      * @return created {@link Space}
      * @throws NullPointerException if the id is {@code null}

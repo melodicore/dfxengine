@@ -7,18 +7,22 @@ package me.datafox.dfxengine.handles.api;
  */
 public interface Group extends Handled {
     /**
+     * Returns the {@link HandleManager} managing this group.
+     *
      * @return {@link HandleManager} managing this group
      */
     HandleManager getHandleManager();
 
     /**
+     * Returns the {@link Space} associated with this group.
+     *
      * @return {@link Space} associated with this group
      */
     Space getSpace();
 
     /**
-     * The returned {@link HandleSet} is modifiable and {@link Handle Handles} may be added to or removed from it at
-     * will.
+     * Returns the {@link HandleSet} containing the {@link Handle Handles} of this group. The returned set is modifiable
+     * and handles may be added to or removed from it at will.
      *
      * @return {@link HandleSet} containing the {@link Handle Handles} of this group
      */

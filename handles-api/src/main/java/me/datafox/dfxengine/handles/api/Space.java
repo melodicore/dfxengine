@@ -7,11 +7,16 @@ package me.datafox.dfxengine.handles.api;
  */
 public interface Space extends Handled {
     /**
+     * Returns the {@link HandleManager} managing this space.
+     *
      * @return {@link HandleManager} managing this space
      */
     HandleManager getHandleManager();
 
     /**
+     * Returns an unmodifiable {@link HandleSet} containing the {@link Handle Handles} of this space, excluding
+     * subhandles.
+     *
      * @return unmodifiable {@link HandleSet} containing the {@link Handle Handles} of this space, excluding subhandles
      */
     HandleSet getHandles();
@@ -55,11 +60,15 @@ public interface Space extends Handled {
     Handle getOrCreateHandle(String id);
 
     /**
+     * Returns an unmodifiable {@link HandleMap} containing the {@link Group Groups} of this space.
+     *
      * @return unmodifiable {@link HandleMap} containing the {@link Group Groups} of this space
      */
     HandleMap<Group> getGroups();
 
     /**
+     * Creates a {@link Group} with the specified id.
+     *
      * @param id {@link String} id for the new {@link Group}
      * @return created {@link Group}
      * @throws NullPointerException if the id is {@code null}

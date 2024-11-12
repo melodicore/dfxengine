@@ -7,6 +7,8 @@ package me.datafox.dfxengine.handles.api;
  */
 public interface Handled extends Comparable<Handled> {
     /**
+     * Returns the identifying {@link Handle} of this object.
+     *
      * @return identifying {@link Handle} of this object
      */
     Handle getHandle();

@@ -67,7 +67,7 @@ public interface HandleMap<T> extends Map<Handle, T> {
     Collection<T> getByTag(Object tag);
 
     /**
-     * Returns all values mapped to keys containing the specified tag. The tags may be {@link Handle Handles} or their
+     * Returns all values mapped to keys containing the specified tags. The tags may be {@link Handle Handles} or their
      * {@link String} ids.
      *
      * @param tags tag {@link Handle Handles} or their {@link String} ids
@@ -132,9 +132,9 @@ public interface HandleMap<T> extends Map<Handle, T> {
     T remove(Object key);
 
     /**
-     * Copies all of the mappings from the specified map to this map. The effect of this call is equivalent to that
-     * of calling {@link #put(Handle, Object)} on this map once for each mapping from key to value in the specified map.
-     * All {@link Handle} keys must be present in this map's associated {@link Space}.
+     * Copies all mappings from the specified map to this map. The effect of this call is equivalent to that of calling
+     * {@link #put(Handle, Object)} on this map once for each mapping from key to value in the specified map. All
+     * {@link Handle} keys must be present in this map's associated {@link Space}.
      *
      * @param map mappings to be stored in this map
      * @throws UnsupportedOperationException if the {@code putAll} operation is not supported by this map

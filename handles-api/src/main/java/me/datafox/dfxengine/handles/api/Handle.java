@@ -24,33 +24,43 @@ package me.datafox.dfxengine.handles.api;
  */
 public interface Handle extends Comparable<Handle> {
     /**
+     * Returns the {@link HandleManager} managing this handle.
+     *
      * @return {@link HandleManager} managing this handle
      */
     HandleManager getHandleManager();
 
     /**
+     * Returns the {@link Space} that this handle is contained in.
+     *
      * @return {@link Space} that this handle is contained in
      */
     Space getSpace();
 
     /**
+     * Returns the {@link String} id of this handle.
+     *
      * @return {@link String} id of this handle
      */
     String getId();
 
     /**
+     * Returns the index of this handle.
+     *
      * @return index of this handle
      */
     int getIndex();
 
     /**
-     * Returns {@code -1} if this handle is not a subhandle.
+     * Returns the sub-index of this handle, or {@code -1} if this handle is not a subhandle.
      *
      * @return sub-index of this handle
      */
     int getSubIndex();
 
     /**
+     * Returns the subhandles contained in this handle, or an empty set if this handle is not a subhandle.
+     *
      * @return subhandles contained in this handle
      */
     HandleSet getSubHandles();
@@ -87,13 +97,16 @@ public interface Handle extends Comparable<Handle> {
     Handle getOrCreateSubHandle(String id);
 
     /**
-     * The returned {@link HandleSet} is modifiable and tags may be added to or removed from it at will.
+     * Returns a {@link HandleSet} containing the tags of this handle. The returned set is modifiable and tags may be
+     * added to or removed from it at will.
      *
      * @return {@link HandleSet} containing the tags of this handle
      */
     HandleSet getTags();
 
     /**
+     * Returns {@code true} if this handle is a subhandle.
+     *
      * @return {@code true} if this handle is a subhandle
      */
     boolean isSubHandle();
