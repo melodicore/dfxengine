@@ -25,7 +25,3 @@ mavenPublishing {
         description = "Tools to invalidate values that depend on other values"
     }
 }
-
-javadoc {
-    exclude "me.datafox.dfxengine.dependencies.utils.*"
-}
