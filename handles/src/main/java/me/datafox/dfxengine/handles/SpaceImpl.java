@@ -27,6 +27,12 @@ public class SpaceImpl implements Space {
     private final HandleSet handles;
     private final HandleMap<Group> groups;
 
+    /**
+     * Package-private constructor for {@link SpaceImpl}.
+     *
+     * @param handle {@link Handle} for identifying this space
+     * @param handleManager {@link HandleManager} managing this space
+     */
     SpaceImpl(Handle handle, HandleManager handleManager) {
         this.handle = handle;
         this.handleManager = handleManager;
@@ -158,6 +164,11 @@ public class SpaceImpl implements Space {
         return createGroupInternal(id);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@inheritDoc}
+     */
     @Override
     public String toString() {
         return String.format("Space(%s, [%s])",

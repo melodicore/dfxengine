@@ -1,4 +1,6 @@
 /**
+ * Handles is a module for creating and managing dynamic identifier handles.
+ *
  * @author datafox
  */
 module dfxengine.handles {

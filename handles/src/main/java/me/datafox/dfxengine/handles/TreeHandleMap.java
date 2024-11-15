@@ -32,6 +32,8 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
     private final Map<String,Handle> ids;
 
     /**
+     * Public constructor for {@link TreeHandleMap}.
+     *
      * @param space {@link Space} to be associated with this map
      * @param logger {@link Logger} for this map
      */
@@ -43,12 +45,13 @@ public class TreeHandleMap<T> extends TreeMap<Handle,T> implements HandleMap<T> 
     }
 
     /**
-     * Uses {@link LoggerFactory#getLogger(Class)} with {@link TreeHandleMap TreeHandleMap.class}.
+     * Public constructor for {@link TreeHandleMap}. Uses {@link LoggerFactory#getLogger(Class)} with
+     * {@link TreeHandleMap TreeHandleMap.class}.
      *
      * @param space {@link Space} to be associated with this map
      */
     public TreeHandleMap(Space space) {
-        this(space, LoggerFactory.getLogger(HashHandleMap.class));
+        this(space, LoggerFactory.getLogger(TreeHandleMap.class));
     }
 
     /**

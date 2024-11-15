@@ -23,6 +23,7 @@ import static me.datafox.dfxengine.handles.utils.HandleStrings.UNMODIFIABLE_SET;
  *
  * @author datafox
  */
+@SuppressWarnings("MissingJavadoc")
 public class UnmodifiableHandleSet implements HandleSet {
     private final Logger logger;
     private final HandleSet set;

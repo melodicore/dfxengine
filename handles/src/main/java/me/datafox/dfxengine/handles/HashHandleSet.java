@@ -30,6 +30,8 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     private final Map<String,Handle> ids;
 
     /**
+     * Public constructor for {@link HashHandleSet}.
+     *
      * @param space {@link Space} to be associated with this set
      * @param logger {@link Logger} for this set
      */
@@ -41,12 +43,13 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     }
 
     /**
-     * Uses {@link LoggerFactory#getLogger(Class)} with {@link HashHandleSet HashHandleSet.class}.
+     * Public constructor for {@link HashHandleSet}. Uses {@link LoggerFactory#getLogger(Class)} with
+     * {@link HashHandleSet HashHandleSet.class}.
      *
      * @param space {@link Space} to be associated with this set
      */
     public HashHandleSet(Space space) {
-        this(space, LoggerFactory.getLogger(HashHandleMap.class));
+        this(space, LoggerFactory.getLogger(HashHandleSet.class));
     }
 
     /**

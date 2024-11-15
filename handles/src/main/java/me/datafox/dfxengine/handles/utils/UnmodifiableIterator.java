@@ -14,6 +14,7 @@ import static me.datafox.dfxengine.handles.utils.HandleStrings.UNMODIFIABLE_SET;
  *
  * @author datafox
  */
+@SuppressWarnings("MissingJavadoc")
 public class UnmodifiableIterator<T> implements Iterator<T> {
     private final Logger logger;
     private final Iterator<T> it;

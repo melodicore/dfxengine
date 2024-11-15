@@ -33,7 +33,3 @@ mavenPublishing {
         description = "Dynamic enum-like values to use for identification, such as map keys, and tools to manipulate them"
     }
 }
-
-javadoc {
-    exclude "me.datafox.dfxengine.handles.utils.*"
-}

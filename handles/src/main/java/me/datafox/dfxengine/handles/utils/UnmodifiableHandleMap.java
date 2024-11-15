@@ -23,6 +23,7 @@ import static me.datafox.dfxengine.handles.utils.HandleStrings.UNMODIFIABLE_MAP;
  *
  * @author datafox
  */
+@SuppressWarnings("MissingJavadoc")
 public class UnmodifiableHandleMap<T> implements HandleMap<T> {
     private final Logger logger;
     private final HandleMap<T> map;

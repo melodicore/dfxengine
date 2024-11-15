@@ -33,6 +33,14 @@ public class HandleImpl implements Handle {
     private final HandleSet subHandles;
     private final HandleSet tags;
 
+    /**
+     * Package-private constructor for {@link HandleImpl}.
+     *
+     * @param space {@link Space} containing this handle
+     * @param id {@link String} id for this handle
+     * @param index index of this handle in the space
+     * @param subIndex sub-index for this handle
+     */
     HandleImpl(Space space, String id, int index, int subIndex) {
         handleManager = space.getHandleManager();
         logger = ((HandleManagerImpl) handleManager).getLogger();
@@ -136,6 +144,11 @@ public class HandleImpl implements Handle {
         return Integer.compare(subIndex, o.getSubIndex());
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@inheritDoc}
+     */
     @Override
     public String toString() {
         return String.format("%s@%s", getId(), space.getHandle().getId());

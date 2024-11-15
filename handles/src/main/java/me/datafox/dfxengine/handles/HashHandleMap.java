@@ -35,6 +35,8 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
     private final Map<String,Handle> ids;
 
     /**
+     * Public constructor for {@link HashHandleMap}.
+     *
      * @param space {@link Space} to be associated with this map
      * @param logger {@link Logger} for this map
      */
@@ -46,7 +48,8 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
     }
 
     /**
-     * Uses {@link LoggerFactory#getLogger(Class)} with {@link HashHandleMap HashHandleMap.class}.
+     * Public constructor for {@link HashHandleMap}. Uses {@link LoggerFactory#getLogger(Class)} with
+     * {@link HashHandleMap HashHandleMap.class}.
      *
      * @param space {@link Space} to be associated with this map
      */

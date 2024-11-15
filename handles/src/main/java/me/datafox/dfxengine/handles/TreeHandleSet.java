@@ -27,6 +27,8 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
     private final Map<String,Handle> ids;
 
     /**
+     * Public constructor for {@link TreeHandleSet}.
+     *
      * @param space {@link Space} to be associated with this set
      * @param logger {@link Logger} for this set
      */
@@ -38,12 +40,13 @@ public class TreeHandleSet extends TreeSet<Handle> implements HandleSet {
     }
 
     /**
-     * Uses {@link LoggerFactory#getLogger(Class)} with {@link TreeHandleSet TreeHandleSet.class}.
+     * Public constructor for {@link TreeHandleSet}. Uses {@link LoggerFactory#getLogger(Class)} with
+     * {@link TreeHandleSet TreeHandleSet.class}.
      *
      * @param space {@link Space} to be associated with this set
      */
     public TreeHandleSet(Space space) {
-        this(space, LoggerFactory.getLogger(HashHandleMap.class));
+        this(space, LoggerFactory.getLogger(TreeHandleSet.class));
     }
 
     /**

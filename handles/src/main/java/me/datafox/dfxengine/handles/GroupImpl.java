@@ -21,6 +21,12 @@ public class GroupImpl implements Group {
     private final Space space;
     private final HandleSet handles;
 
+    /**
+     * Package-private constructor for {@link GroupImpl}.
+     *
+     * @param handle {@link Handle} for identifying this group
+     * @param space {@link Space} containing this group
+     */
     GroupImpl(Handle handle, Space space) {
         this.handle = handle;
         handleManager = handle.getHandleManager();
@@ -32,6 +38,11 @@ public class GroupImpl implements Group {
                 new HashHandleSet(space, logger);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@inheritDoc}
+     */
     @Override
     public String toString() {
         return String.format("Group(%s, [%s])",

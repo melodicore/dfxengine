@@ -31,6 +31,8 @@ public class HandleManagerImpl implements HandleManager {
     private final HandleManagerConfiguration configuration;
 
     /**
+     * Public constructor for {@link HandleManagerImpl}.
+     *
      * @param logger {@link Logger} for the handle manager
      * @param configuration {@link HandleManagerConfiguration} for the handle manager
      */
