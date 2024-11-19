@@ -16,13 +16,15 @@ import java.util.Optional;
  */
 public class TextConfigurationImpl implements TextConfiguration {
     /**
-     * {@link TextFactory} associated with this configuration
+     * {@link TextFactory} associated with this configuration.
      */
     @Getter
     private final TextFactory factory;
     private final Map<ConfigurationKey<?>,ConfigurationValue<?>> configuration;
 
     /**
+     * Public constructor for {@link TextConfigurationImpl}.
+     *
      * @param factory {@link TextFactory} to be associated with this configuration
      */
     public TextConfigurationImpl(TextFactory factory) {
@@ -36,9 +38,11 @@ public class TextConfigurationImpl implements TextConfiguration {
     }
 
     /**
-     * @param key {@inheritDoc}
-     * @param value {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * Associates the specified {@link ConfigurationKey} with the specified {@link ConfigurationValue}.
+     *
+     * @param key {@link ConfigurationKey} to be used
+     * @param value {@link ConfigurationValue} to be used
+     * @param <T> type of the object returned by the {@link ConfigurationValue}
      */
     @Override
     public <T> void set(ConfigurationKey<T> key, ConfigurationValue<T> value) {
@@ -46,9 +50,11 @@ public class TextConfigurationImpl implements TextConfiguration {
     }
 
     /**
-     * @param key {@inheritDoc}
-     * @param value {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * Associates the specified {@link ConfigurationKey} with the specified value.
+     *
+     * @param key {@link ConfigurationKey} to be used
+     * @param value object to be used
+     * @param <T> type of the object
      */
     @Override
     public <T> void set(ConfigurationKey<T> key, T value) {
@@ -56,9 +62,9 @@ public class TextConfigurationImpl implements TextConfiguration {
     }
 
     /**
-     * {@inheritDoc}
+     * Applies all entries of the provided configuration to this one, overwriting any existing entries if present.
      *
-     * @param configuration {@inheritDoc}
+     * @param configuration {@link TextConfiguration} to be applied
      */
     @Override
     public void set(TextConfiguration configuration) {
@@ -66,9 +72,12 @@ public class TextConfigurationImpl implements TextConfiguration {
     }
 
     /**
-     * @param key {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * Returns the value associated with the specified {@link ConfigurationKey}, or its default value if none is
+     * present.
+     *
+     * @param key {@link ConfigurationKey} to be used
+     * @return object associated with the key, or the default value if none is present
+     * @param <T> type of the object
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -80,7 +89,9 @@ public class TextConfigurationImpl implements TextConfiguration {
     }
 
     /**
-     * @return {@inheritDoc}
+     * Returns an unmodifiable {@link Map} containing all entries of this configuration.
+     *
+     * @return Unmodifiable {@link Map} containing all entries of this configuration
      */
     @Override
     public Map<ConfigurationKey<?>,ConfigurationValue<?>> getAll() {
@@ -88,8 +99,10 @@ public class TextConfigurationImpl implements TextConfiguration {
     }
 
     /**
-     * @param key {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * Clears the value associated with the specified {@link ConfigurationKey}.
+     *
+     * @param key {@link ConfigurationKey} associated with the value to be cleared
+     * @param <T> type of the value
      */
     @Override
     public <T> void clear(ConfigurationKey<T> key) {
@@ -97,7 +110,7 @@ public class TextConfigurationImpl implements TextConfiguration {
     }
 
     /**
-     * {@inheritDoc}
+     * Clears all entries from this configuration.
      */
     @Override
     public void clear() {
@@ -105,7 +118,9 @@ public class TextConfigurationImpl implements TextConfiguration {
     }
 
     /**
-     * @return {@inheritDoc}
+     * Returns a unique configuration instance containing all entries of this configuration.
+     *
+     * @return unique configuration instance containing all entries of this configuration
      */
     @Override
     public TextConfiguration copy() {
@@ -113,6 +128,8 @@ public class TextConfigurationImpl implements TextConfiguration {
     }
 
     /**
+     * Returns a {@link Builder} for a configuration.
+     *
      * @param factory {@link TextFactory} to be associated with the builder
      * @return {@link Builder} for a configuration
      */
@@ -133,6 +150,8 @@ public class TextConfigurationImpl implements TextConfiguration {
         }
 
         /**
+         * Registers a {@link ConfigurationKey} and a value to this builder.
+         *
          * @param key {@link ConfigurationKey} to be registered to the configuration
          * @param value static value to be associated with the key
          * @return this builder
@@ -144,6 +163,8 @@ public class TextConfigurationImpl implements TextConfiguration {
         }
 
         /**
+         * Registers a {@link ConfigurationKey} and a {@link ConfigurationValue} to this builder.
+         *
          * @param key {@link ConfigurationKey} to be registered to the configuration
          * @param value {@link ConfigurationValue} to be associated with the key
          * @return this builder
@@ -155,7 +176,7 @@ public class TextConfigurationImpl implements TextConfiguration {
         }
 
         /**
-         * Clears all values registered to the configuration
+         * Clears all values registered to the configuration.
          *
          * @return this builder
          */
@@ -165,6 +186,8 @@ public class TextConfigurationImpl implements TextConfiguration {
         }
 
         /**
+         * Builds a {@link TextConfiguration} with the registered values.
+         *
          * @return {@link TextConfiguration} with the registered values
          */
         public TextConfigurationImpl build() {

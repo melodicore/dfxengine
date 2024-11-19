@@ -2,6 +2,7 @@ package me.datafox.dfxengine.text.text;
 
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.text.api.*;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
 import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import me.datafox.dfxengine.values.api.Value;
@@ -25,6 +26,8 @@ public class ValueText extends AbstractText {
     private final Supplier<Value> supplier;
 
     /**
+     * Public constructor for {@link ValueText}.
+     *
      * @param supplier {@link Supplier} for the {@link Value} to be used
      * @param configuration extra {@link TextConfiguration} to be used by this text
      */
@@ -34,12 +37,23 @@ public class ValueText extends AbstractText {
     }
 
     /**
+     * Public constructor for {@link ValueText}.
+     *
      * @param supplier {@link Supplier} for the {@link Value} to be used
      */
     public ValueText(Supplier<Value> supplier) {
         this(supplier, null);
     }
 
+    /**
+     * Returns a {@link String}.
+     *
+     * @param factory {@link TextFactory} for generation
+     * @param configuration {@link TextConfiguration} for generation
+     * @return generated {@link String}
+     *
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
+     */
     @Override
     protected String generate(TextFactory factory, TextConfiguration configuration) {
         Numeral numeral = configuration.get(USE_MODIFIED) ? supplier.get().getValue() : supplier.get().getBase();

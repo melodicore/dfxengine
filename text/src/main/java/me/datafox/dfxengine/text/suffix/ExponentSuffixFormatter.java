@@ -39,10 +39,16 @@ public class ExponentSuffixFormatter implements NumberSuffixFormatter {
     public static final ConfigurationKey<Boolean> EXPONENT_PLUS = ConfigurationKey.of(false);
 
     private final Logger logger;
+
+    /**
+     * Identifying {@link Handle} of this formatter.
+     */
     @Getter
     private final Handle handle;
 
     /**
+     * Public constructor for {@link ExponentSuffixFormatter}.
+     *
      * @param logger {@link Logger} for this formatter
      * @param handles {@link TextHandles} to be used for this formatter's {@link Handle}
      */
@@ -53,12 +59,15 @@ public class ExponentSuffixFormatter implements NumberSuffixFormatter {
     }
 
     /**
-     * @param number {@inheritDoc}
-     * @param factory {@inheritDoc}
-     * @param configuration {@inheritDoc}
-     * @return {@inheritDoc}
+     * Formats a {@link BigDecimal} to an {@link Output}.
      *
-     * @throws TextConfigurationException {@inheritDoc}
+     * @param number number to format
+     * @param factory {@link TextFactory} for formatting
+     * @param configuration {@link TextConfiguration} for formatting
+     * @return {@link Output} containing the scaled number and a suffix, or the {@link Output} of
+     * {@link TextFactory#getDefaultNumberSuffixFormatter()} if the number cannot be formatted by this formatter
+     *
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this formatter
      */
     @Override
     public Output format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
@@ -88,7 +97,10 @@ public class ExponentSuffixFormatter implements NumberSuffixFormatter {
     }
 
     /**
-     * @return {@inheritDoc}. Always returns {@code true}
+     * Returns {@code true} if this formatter can format any {@link BigDecimal} number. This formatter can format any
+     * {@link BigDecimal} number.
+     *
+     * @return {@code true}, because this formatter can format any {@link BigDecimal} number
      */
     @Override
     public boolean isInfinite() {

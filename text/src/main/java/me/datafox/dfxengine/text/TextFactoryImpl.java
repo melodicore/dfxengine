@@ -32,6 +32,10 @@ import static me.datafox.dfxengine.text.utils.ConfigurationKeys.*;
 @Component
 public class TextFactoryImpl implements TextFactory {
     private final Logger logger;
+
+    /**
+     * {@link HandleManager} used by this factory.
+     */
     @Getter
     private final HandleManager handleManager;
     private final Map<Object, Name<?>> names;
@@ -43,6 +47,8 @@ public class TextFactoryImpl implements TextFactory {
     private PluralConverter pluralConverter;
 
     /**
+     * Public constructor for {@link TextFactoryImpl}.
+     *
      * @param logger {@link Logger} for this factory
      * @param handleManager {@link HandleManager} for this factory
      * @param handles {@link TextHandles} for this factory
@@ -77,8 +83,10 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param text {@inheritDoc}
-     * @return {@inheritDoc}
+     * Builds a {@link Text} object into a {@link String}.
+     *
+     * @param text {@link Text} object to build
+     * @return {@link String} representation of the text
      */
     @Override
     public String build(Text text) {
@@ -86,8 +94,10 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param texts {@inheritDoc}
-     * @return {@inheritDoc}
+     * Builds a list of {@link Text} objects into a {@link String}.
+     *
+     * @param texts {@link Text} objects to build
+     * @return {@link String} representation of the texts
      */
     @Override
     public String build(List<Text> texts) {
@@ -100,12 +110,13 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * {@inheritDoc}
+     * Creates and registers a {@link Name} for the specified object. The {@link PluralConverter} is used to generate
+     * the plural form.
      *
-     * @param object {@inheritDoc}
-     * @param name {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * @param object object to be named
+     * @param name name for the object in singular form
+     * @return {@link Name} associated with the object
+     * @param <T> type of the object to be named
      */
     @Override
     public <T> Name<T> createName(T object, String name) {
@@ -113,11 +124,13 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param object {@inheritDoc}
-     * @param singular {@inheritDoc}
-     * @param plural {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * Creates and registers a {@link Name} for the specified object.
+     *
+     * @param object object to be named
+     * @param singular name for the object in singular form
+     * @param plural name for the object in plural form
+     * @return {@link Name} associated with the object
+     * @param <T> type of the object to be named
      */
     @Override
     public <T> Name<T> createName(T object, String singular, String plural) {
@@ -132,9 +145,11 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param name {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * Registers a {@link Name}.
+     *
+     * @param name {@link Name} object
+     * @return previous {@link Name} associated with the owner, or {@code null} if no previous mapping is present
+     * @param <T> type of the object to be named
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -143,9 +158,14 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param object {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * Returns the singular name of the specified object. If a {@link Name} associated with the object is present, it is
+     * returned. Otherwise, a new Name is created using {@link NameConverter} if a valid one is present or
+     * {@link Object#toString()} if not. The {@link PluralConverter} will be used for the plural form if the
+     * {@link NameConverter} is not plural capable or not present.
+     *
+     * @param object object to be named
+     * @return {@link Name} associated with the object
+     * @param <T> type of the object to be named
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -174,10 +194,15 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param object {@inheritDoc}
-     * @param plural {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * Returns the name of the specified object. If a {@link Name} associated with the object is present, it is used.
+     * Otherwise, a new Name is created using {@link NameConverter} if a valid one is present or
+     * {@link Object#toString()} if not. The {@link PluralConverter} will be used for the plural form if the
+     * {@link NameConverter} is not plural capable or not present.
+     *
+     * @param object object to be named
+     * @param plural if {@code true}, the plural form is returned
+     * @return name of the object
+     * @param <T> type of the object to be named
      */
     @Override
     public <T> String getName(T object, boolean plural) {
@@ -186,8 +211,10 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param converter {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * Registers a {@link NameConverter}.
+     *
+     * @param converter {@link NameConverter} to be registered
+     * @param <T> type of the object that this {@link NameConverter} is capable of converting
      */
     @Override
     public <T> void addNameConverter(NameConverter<T> converter) {
@@ -199,9 +226,11 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param type {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * Returns a {@link NameConverter} for the specified type.
+     *
+     * @param type {@link Class} of the object to be named
+     * @return {@link NameConverter} associated with the type or any of its interfaces or superclasses
+     * @param <T> type of the object to be named
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -221,7 +250,9 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param formatter {@inheritDoc}
+     * Registers a {@link NumberFormatter}.
+     *
+     * @param formatter {@link NumberFormatter} to be registered
      */
     @Override
     public void addNumberFormatter(NumberFormatter formatter) {
@@ -233,8 +264,10 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param handle {@inheritDoc}
-     * @return {@inheritDoc}
+     * Returns the {@link NumberFormatter} with the specified {@link Handle}.
+     *
+     * @param handle {@link Handle} of a {@link NumberFormatter}
+     * @return {@link NumberFormatter} associated with the {@link Handle} or {@code null} if none is present
      */
     @Override
     public NumberFormatter getNumberFormatter(Handle handle) {
@@ -242,8 +275,10 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param configuration {@inheritDoc}
-     * @return {@inheritDoc}
+     * Returns the {@link NumberFormatter} associated with the specified {@link TextConfiguration}.
+     *
+     * @param configuration {@link TextConfiguration} to be used
+     * @return {@link NumberFormatter} configured in the {@link TextConfiguration} or {@code null} if none is present
      */
     @Override
     public NumberFormatter getNumberFormatter(TextConfiguration configuration) {
@@ -251,9 +286,11 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * {@inheritDoc}
+     * Registers a {@link NumberSuffixFormatter}. If no default suffix formatter is set and the specified suffix
+     * formatter can format any number ({@link NumberSuffixFormatter#isInfinite()} returns {@code true}), it will be set
+     * as default.
      *
-     * @param formatter {@inheritDoc}
+     * @param formatter {@link NumberSuffixFormatter} to be registered
      */
     @Override
     public void addNumberSuffixFormatter(NumberSuffixFormatter formatter) {
@@ -268,8 +305,10 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param handle {@inheritDoc}
-     * @return {@inheritDoc}
+     * Returns the {@link NumberSuffixFormatter} with the specified {@link Handle}.
+     *
+     * @param handle {@link Handle} of a {@link NumberSuffixFormatter}
+     * @return {@link NumberSuffixFormatter} associated with the {@link Handle} or {@code null} if none is present
      */
     @Override
     public NumberSuffixFormatter getNumberSuffixFormatter(Handle handle) {
@@ -277,8 +316,11 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param configuration {@inheritDoc}
-     * @return {@inheritDoc}
+     * Returns the {@link NumberSuffixFormatter} associated with the specified {@link TextConfiguration}.
+     *
+     * @param configuration {@link TextConfiguration} to be used
+     * @return {@link NumberSuffixFormatter} configured in the {@link TextConfiguration} or {@code null} if none is
+     * present
      */
     @Override
     public NumberSuffixFormatter getNumberSuffixFormatter(TextConfiguration configuration) {
@@ -288,9 +330,10 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the default {@link NumberSuffixFormatter}. The default suffix formatter must be capable of formatting any
+     * number ({@link NumberSuffixFormatter#isInfinite()} returns {@code true}).
      *
-     * @param formatter {@inheritDoc}
+     * @param formatter {@link NumberSuffixFormatter} to be set as default
      */
     @Override
     public void setDefaultNumberSuffixFormatter(NumberSuffixFormatter formatter) {
@@ -302,7 +345,9 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @return {@inheritDoc}
+     * Returns the default {@link NumberSuffixFormatter}.
+     *
+     * @return default {@link NumberSuffixFormatter} or {@code null} if none is present
      */
     @Override
     public NumberSuffixFormatter getDefaultNumberSuffixFormatter() {
@@ -310,9 +355,10 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * {@inheritDoc}
+     * Clears current {@link TextConfiguration} and applies the provided one to it. This method should not overwrite the
+     * current {@link TextConfiguration} instance and only alter its state.
      *
-     * @param configuration {@inheritDoc}
+     * @param configuration {@link TextConfiguration} to be applied
      */
     @Override
     public void setConfiguration(TextConfiguration configuration) {
@@ -321,7 +367,9 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @return {@inheritDoc}
+     * This method should always return the same {@link TextConfiguration} instance.
+     *
+     * @return current {@link TextConfiguration}
      */
     @Override
     public TextConfiguration getConfiguration() {
@@ -329,7 +377,9 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @param converter {@inheritDoc}
+     * Registers the {@link PluralConverter} to be used.
+     *
+     * @param converter {@link PluralConverter} to be registered
      */
     @Override
     public void setPluralConverter(PluralConverter converter) {
@@ -337,13 +387,20 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * @return {@inheritDoc}
+     * Returns the registered {@link PluralConverter} or {@code null} if none is present.
+     *
+     * @return registered {@link PluralConverter} or {@code null} if none is present
      */
     @Override
     public PluralConverter getPluralConverter() {
         return pluralConverter;
     }
 
+    /**
+     * Registers the specified {@link TextConfiguration TextConfigurations} to this factory.
+     *
+     * @param configurations {@link TextConfiguration TextConfigurations} to be registered
+     */
     @Initialize
     public void initialize(List<TextConfiguration> configurations) {
         configurations.forEach(this::setConfiguration);

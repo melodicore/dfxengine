@@ -1,10 +1,8 @@
 package me.datafox.dfxengine.text.text;
 
 import me.datafox.dfxengine.math.api.Numeral;
-import me.datafox.dfxengine.text.api.NumberFormatter;
-import me.datafox.dfxengine.text.api.Text;
-import me.datafox.dfxengine.text.api.TextConfiguration;
-import me.datafox.dfxengine.text.api.TextFactory;
+import me.datafox.dfxengine.text.api.*;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
 import me.datafox.dfxengine.text.utils.internal.TextStrings;
 
@@ -20,6 +18,8 @@ public class NumeralText extends AbstractText {
     private final Supplier<Numeral> supplier;
 
     /**
+     * Public constructor for {@link NumeralText}.
+     *
      * @param supplier {@link Supplier} for the {@link Numeral} to be used
      * @param configuration extra {@link TextConfiguration} to be used by this text
      */
@@ -29,12 +29,23 @@ public class NumeralText extends AbstractText {
     }
 
     /**
+     * Public constructor for {@link NumeralText}.
+     *
      * @param supplier {@link Supplier} for the {@link Numeral} to be used
      */
     public NumeralText(Supplier<Numeral> supplier) {
         this(supplier, null);
     }
 
+    /**
+     * Returns a {@link String}.
+     *
+     * @param factory {@link TextFactory} for generation
+     * @param configuration {@link TextConfiguration} for generation
+     * @return generated {@link String}
+     *
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
+     */
     @Override
     protected String generate(TextFactory factory, TextConfiguration configuration) {
         NumberFormatter formatter = factory.getNumberFormatter(configuration);

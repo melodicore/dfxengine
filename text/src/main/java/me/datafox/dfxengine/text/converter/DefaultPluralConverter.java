@@ -14,8 +14,11 @@ import me.datafox.dfxengine.text.api.PluralConverter;
 @Component(order = Integer.MAX_VALUE)
 public class DefaultPluralConverter implements PluralConverter {
     /**
-     * @param singular {@inheritDoc}
-     * @return {@inheritDoc}
+     * Converts a singular noun into its plural form. See {@link DefaultPluralConverter} on how the plural form is
+     * determined.
+     *
+     * @param singular singular form of a noun
+     * @return plural form of the provided noun, or {@code null} if the singular is {@code null}
      */
     @Override
     public String convert(String singular) {

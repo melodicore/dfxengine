@@ -7,7 +7,7 @@ import me.datafox.dfxengine.text.api.NumberSuffixFormatter;
 import java.math.BigDecimal;
 
 /**
- * Contains all string literals used for logging in this module.
+ * All string literals used for logging in the Text module.
  *
  * @author datafox
  */

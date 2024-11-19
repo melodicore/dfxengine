@@ -1,4 +1,6 @@
 /**
+ * Text generation, manipulation and representation.
+ *
  * @author datafox
  */
 module dfxengine.text {

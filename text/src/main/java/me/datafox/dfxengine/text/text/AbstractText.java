@@ -18,6 +18,8 @@ public abstract class AbstractText implements Text {
     protected final TextConfiguration configuration;
 
     /**
+     * Protected constructor for {@link AbstractText}.
+     *
      * @param configuration extra {@link TextConfiguration} to be used by this text
      */
     protected AbstractText(TextConfiguration configuration) {
@@ -26,14 +28,14 @@ public abstract class AbstractText implements Text {
     }
 
     /**
-     * {@inheritDoc} Extending classes should not override this method and should use
+     * Returns a {@link String}. Extending classes should not override this method and should use
      * {@link #generate(TextFactory, TextConfiguration)} instead.
      *
-     * @param factory {@inheritDoc}
-     * @param configuration {@inheritDoc}
-     * @return {@inheritDoc}
+     * @param factory {@link TextFactory} for generation
+     * @param configuration {@link TextConfiguration} for generation
+     * @return generated {@link String}
      *
-     * @throws TextConfigurationException {@inheritDoc}
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
      */
     @Override
     public String get(TextFactory factory, TextConfiguration configuration) {
@@ -45,9 +47,9 @@ public abstract class AbstractText implements Text {
     }
 
     /**
-     * Implementation should use the provided {@link TextConfiguration} and not {@link TextFactory#getConfiguration()}.
-     * The reference to {@link TextFactory} is provided for access to objects like {@link Name Names} and
-     * {@link NumberFormatter NumberFormatters}.
+     * Returns a {@link String}. Implementation should use the provided {@link TextConfiguration} and not
+     * {@link TextFactory#getConfiguration()}. The reference to {@link TextFactory} is provided for access to objects
+     * like {@link Name Names} and {@link NumberFormatter NumberFormatters}.
      *
      * @param factory {@link TextFactory} for generation
      * @param configuration {@link TextConfiguration} for generation

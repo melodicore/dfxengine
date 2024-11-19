@@ -1,9 +1,7 @@
 package me.datafox.dfxengine.text.text;
 
-import me.datafox.dfxengine.text.api.ConfigurationKey;
-import me.datafox.dfxengine.text.api.Text;
-import me.datafox.dfxengine.text.api.TextConfiguration;
-import me.datafox.dfxengine.text.api.TextFactory;
+import me.datafox.dfxengine.text.api.*;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 
 import java.util.function.Function;
 
@@ -18,6 +16,8 @@ public class ConfigurationText<T> extends AbstractText {
     private final Function<T, String> function;
 
     /**
+     * Public constructor for {@link ConfigurationText}.
+     *
      * @param key {@link ConfigurationKey} to be used
      * @param function {@link Function} to convert the configuration value to a {@link String}
      * @param configuration extra {@link TextConfiguration} to be used by this text
@@ -29,6 +29,8 @@ public class ConfigurationText<T> extends AbstractText {
     }
 
     /**
+     * Public constructor for {@link ConfigurationText}.
+     *
      * @param key {@link ConfigurationKey} to be used
      * @param function {@link Function} to convert the configuration value to a {@link String}
      */
@@ -36,6 +38,15 @@ public class ConfigurationText<T> extends AbstractText {
         this(key, function, null);
     }
 
+    /**
+     * Returns a {@link String}.
+     *
+     * @param factory {@link TextFactory} for generation
+     * @param configuration {@link TextConfiguration} for generation
+     * @return generated {@link String}
+     *
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
+     */
     @Override
     protected String generate(TextFactory factory, TextConfiguration configuration) {
         return function.apply(configuration.get(key));

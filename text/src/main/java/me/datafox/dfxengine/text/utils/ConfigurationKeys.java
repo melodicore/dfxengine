@@ -45,6 +45,11 @@ public class ConfigurationKeys {
      */
     public static final ConfigurationKey<Handle> NUMBER_SUFFIX_FORMATTER = ConfigurationKey.of();
 
+    /**
+     * Public constructor for {@link ConfigurationKeys}.
+     *
+     * @param handles {@link TextHandles} for this class
+     */
     @Inject
     public ConfigurationKeys(TextHandles handles) {
         if(NUMBER_FORMATTER.getDefaultValue() == null) {

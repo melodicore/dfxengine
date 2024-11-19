@@ -12,6 +12,7 @@ import me.datafox.dfxengine.text.utils.TextHandles;
 import me.datafox.dfxengine.text.utils.TextUtils;
 import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import me.datafox.dfxengine.utils.LogUtils;
+import me.datafox.dfxengine.utils.StringUtils;
 import org.slf4j.Logger;
 
 import java.math.BigDecimal;
@@ -91,10 +92,16 @@ public class SplittingNumberFormatter implements NumberFormatter {
     public static final ConfigurationKey<Boolean> USE_LIST_DELIMITER = ConfigurationKey.of(true);
 
     private final Logger logger;
+
+    /**
+     * Identifying {@link Handle} of this formatter.
+     */
     @Getter
     private final Handle handle;
 
     /**
+     * Public constructor for {@link SplittingNumberFormatter}.
+     *
      * @param logger {@link Logger} for this formatter
      * @param handles {@link TextHandles} to be used for this formatter's {@link Handle}
      */
@@ -108,12 +115,14 @@ public class SplittingNumberFormatter implements NumberFormatter {
     }
 
     /**
-     * @param number {@inheritDoc}
-     * @param factory {@inheritDoc}
-     * @param configuration {@inheritDoc}
-     * @return {@inheritDoc}
+     * Formats a {@link BigDecimal} to a {@link String}.
      *
-     * @throws TextConfigurationException {@inheritDoc}
+     * @param number number to be formatter
+     * @param factory {@link TextFactory} for formatting
+     * @param configuration {@link TextConfiguration} for formatting
+     * @return {@link String} representation of the number
+     *
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this formatter
      */
     @Override
     public String format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
@@ -154,8 +163,9 @@ public class SplittingNumberFormatter implements NumberFormatter {
             }
         }
         if(configuration.get(USE_LIST_DELIMITER)) {
-            return TextUtils.join(configuration.get(LIST_DELIMITER),
-                    configuration.get(LIST_LAST_DELIMITER), out);
+            return StringUtils.joining(out,
+                    configuration.get(LIST_DELIMITER),
+                    configuration.get(LIST_LAST_DELIMITER));
         } else {
             return String.join(configuration.get(DELIMITER), out);
         }
@@ -202,7 +212,8 @@ public class SplittingNumberFormatter implements NumberFormatter {
         private final String plural;
 
         /**
-         * This method uses the name as both singular and plural form. It does <b>not</b> use a {@link PluralConverter}.
+         * Returns a split with the specified multiplier and name. This method uses the name as both singular and plural
+         * form. It does <b>not</b> use a {@link PluralConverter}.
          *
          * @param multiplier {@link BigDecimal} multiplier for the split
          * @param name name of the split
@@ -213,6 +224,8 @@ public class SplittingNumberFormatter implements NumberFormatter {
         }
 
         /**
+         * Returns a split with the specified multiplier and names.
+         *
          * @param multiplier {@link BigDecimal} multiplier for the split
          * @param singular name of the split in singular form
          * @param plural name of the split in plural form

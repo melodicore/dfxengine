@@ -66,6 +66,8 @@ public class TextHandles {
     private final Handle charDigitSuffixFormatter;
 
     /**
+     * Public constructor for {@link TextHandles}.
+     *
      * @param handleManager {@link HandleManager} to be used for initializing the {@link Space Spaces} and
      * {@link Handle Handles}
      */

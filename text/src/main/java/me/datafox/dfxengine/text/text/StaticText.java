@@ -1,8 +1,7 @@
 package me.datafox.dfxengine.text.text;
 
-import me.datafox.dfxengine.text.api.Text;
-import me.datafox.dfxengine.text.api.TextConfiguration;
-import me.datafox.dfxengine.text.api.TextFactory;
+import me.datafox.dfxengine.text.api.*;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 
 /**
  * A {@link Text} implementation that returns a predetermined {@link String}. This {@link Text} does not use any
@@ -14,6 +13,8 @@ public class StaticText implements Text {
     private final String text;
 
     /**
+     * Public constructor for {@link StaticText}.
+     *
      * @param text {@link String} to be returned by this text
      */
     public StaticText(String text) {
@@ -21,9 +22,13 @@ public class StaticText implements Text {
     }
 
     /**
+     * Returns a {@link String}.
+     *
      * @param factory ignored parameter
      * @param configuration ignored parameter
-     * @return predetermined {@link String}
+     * @return associated {@link String}
+     *
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
      */
     @Override
     public String get(TextFactory factory, TextConfiguration configuration) {

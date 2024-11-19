@@ -43,10 +43,16 @@ public class SimpleNumberFormatter implements NumberFormatter {
     public static final ConfigurationKey<Boolean> STRIP_ZEROS = ConfigurationKey.of(true);
 
     private final Logger logger;
+
+    /**
+     * Identifying {@link Handle} of this formatter.
+     */
     @Getter
     private final Handle handle;
 
     /**
+     * Public constructor for {@link SimpleNumberFormatter}.
+     *
      * @param logger {@link Logger} for this formatter
      * @param handles {@link TextHandles} to be used for this formatter's {@link Handle}
      */
@@ -57,12 +63,14 @@ public class SimpleNumberFormatter implements NumberFormatter {
     }
 
     /**
-     * @param number {@inheritDoc}
-     * @param factory {@inheritDoc}
-     * @param configuration {@inheritDoc}
-     * @return {@inheritDoc}
+     * Formats a {@link BigDecimal} to a {@link String}.
      *
-     * @throws TextConfigurationException {@inheritDoc}
+     * @param number number to be formatter
+     * @param factory {@link TextFactory} for formatting
+     * @param configuration {@link TextConfiguration} for formatting
+     * @return {@link String} representation of the number
+     *
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this formatter
      */
     @Override
     public String format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {

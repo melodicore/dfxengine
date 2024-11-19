@@ -4,8 +4,9 @@ import me.datafox.dfxengine.text.api.ConfigurationKey;
 import me.datafox.dfxengine.text.api.Text;
 import me.datafox.dfxengine.text.api.TextConfiguration;
 import me.datafox.dfxengine.text.api.TextFactory;
+import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
-import me.datafox.dfxengine.text.utils.TextUtils;
+import me.datafox.dfxengine.utils.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +34,8 @@ public class ChainedText extends AbstractText {
     private final List<Text> texts;
 
     /**
+     * Public constructor for {@link ChainedText}.
+     *
      * @param texts {@link Text Texts} to be chained together
      * @param configuration extra {@link TextConfiguration} to be used by this text
      */
@@ -42,21 +45,33 @@ public class ChainedText extends AbstractText {
     }
 
     /**
+     * Public constructor for {@link ChainedText}.
+     *
      * @param texts {@link Text Texts} to be chained together
      */
     public ChainedText(List<Text> texts) {
         this(texts, null);
     }
 
+    /**
+     * Returns a {@link String}.
+     *
+     * @param factory {@link TextFactory} for generation
+     * @param configuration {@link TextConfiguration} for generation
+     * @return generated {@link String}
+     *
+     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
+     */
     @Override
     protected String generate(TextFactory factory, TextConfiguration configuration) {
         Stream<String> stream = texts
                 .stream()
                 .map(t -> t.get(factory, configuration));
         if(configuration.get(USE_LIST_DELIMITER)) {
-            return TextUtils.join(configuration.get(LIST_DELIMITER),
-                    configuration.get(LIST_LAST_DELIMITER),
-                    stream.collect(Collectors.toList()));
+            return StringUtils.joining(
+                    stream.collect(Collectors.toList()),
+                    configuration.get(LIST_DELIMITER),
+                    configuration.get(LIST_LAST_DELIMITER));
         } else {
             return stream.collect(Collectors.joining(configuration.get(DELIMITER)));
         }

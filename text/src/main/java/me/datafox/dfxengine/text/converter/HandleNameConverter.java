@@ -15,7 +15,9 @@ import java.util.Optional;
 @Component(order = Integer.MAX_VALUE)
 public class HandleNameConverter implements NameConverter<Handle> {
     /**
-     * @return {@inheritDoc}. Always returns {@link Handle Handle.class}
+     * Returns the type of the object that this converter can convert. Always returns {@link Handle Handle.class}.
+     *
+     * @return type of the object that this converter can convert
      */
     @Override
     public Class<Handle> getType() {
@@ -23,7 +25,9 @@ public class HandleNameConverter implements NameConverter<Handle> {
     }
 
     /**
-     * @return {@inheritDoc}. Always returns {@code false}
+     * Returns {@code true} if this converter can also convert to plural form. Always returns {@code false}.
+     *
+     * @return {@code false}, because this converter can also convert to plural form
      */
     @Override
     public boolean isPluralCapable() {
@@ -31,8 +35,10 @@ public class HandleNameConverter implements NameConverter<Handle> {
     }
 
     /**
-     * @param object {@inheritDoc}
-     * @return {@inheritDoc}
+     * Converts an object to its given name in singular form.
+     *
+     * @param object object to be converted
+     * @return name of the object in singular form
      */
     @Override
     public String convert(Handle object) {
@@ -42,8 +48,11 @@ public class HandleNameConverter implements NameConverter<Handle> {
     }
 
     /**
-     * @param object ignored parameter
-     * @return {@inheritDoc}. Always returns {@code null}
+     * Converts an object to its given name in singular form, or returns {@code null} if this converter does not support
+     * plural form. This converter does not support plural form.
+     *
+     * @param object object to be converted
+     * @return {@code null}, because this converter does not support plural form
      */
     @Override
     public String convertPlural(Handle object) {
