@@ -24,8 +24,11 @@ public class MapComparisonContext extends ComparisonContext {
     private final Numeral treatNonExistingAs = null;
 
     /**
-     * @return {@link Numeral} to be used as an input if a {@link Handle} key is requested that is not present in
-     * the {@link ValueMap}, or {@code null} if these Handles should be ignored instead
+     * Returns a {@link Numeral} to be used as an input if a {@link Handle} key is requested that is not present in the
+     * {@link ValueMap}, or {@code null} if these handles should be ignored instead.
+     *
+     * @return {@link Numeral} to be used as an input if a {@link Handle} key is requested that is not present in the
+     * {@link ValueMap}, or {@code null} if these handles should be ignored instead
      */
     public Numeral treatNonExistingAs() {
         return treatNonExistingAs;
@@ -34,7 +37,9 @@ public class MapComparisonContext extends ComparisonContext {
     private static MapComparisonContext defaults = null;
 
     /**
-     * @return MapComparisonContext with default values
+     * Returns a map comparison context with default values.
+     *
+     * @return Map comparison context with default values
      */
     public static MapComparisonContext defaults() {
         if(defaults == null) {

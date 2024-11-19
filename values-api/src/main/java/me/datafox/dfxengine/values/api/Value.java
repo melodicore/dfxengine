@@ -1,8 +1,8 @@
 package me.datafox.dfxengine.values.api;
 
-import me.datafox.dfxengine.dependencies.Dependent;
-import me.datafox.dfxengine.dependencies.DependencyDependent;
 import me.datafox.dfxengine.dependencies.Dependency;
+import me.datafox.dfxengine.dependencies.DependencyDependent;
+import me.datafox.dfxengine.dependencies.Dependent;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.math.api.Numeral;
@@ -42,34 +42,44 @@ import java.util.Collection;
  */
 public interface Value extends Dependent, Dependency, Handled {
     /**
+     * Returns the {@link Handle} associated with this value.
+     *
      * @return {@link Handle} associated with this value, or {@code null} if this value is static
      */
     @Override
     Handle getHandle();
 
     /**
+     * Returns the base {@link Numeral} of this value.
+     *
      * @return base {@link Numeral} of this value
      */
     Numeral getBase();
 
     /**
+     * Returns the base {@link Numeral} of this value with all {@link Modifier Modifiers} of this value applied to it.
+     *
      * @return base {@link Numeral} of this value with all {@link Modifier Modifiers} of this value applied to it
      */
     Numeral getValue();
 
     /**
+     * Returns {@code true} if this value is static.
+     *
      * @return {@code true} if this value is static
      */
     boolean isStatic();
 
     /**
-     * Static values are always immutable.
+     * Returns {@code true} if this value is immutable. Static values are always immutable.
      * 
      * @return {@code true} if this value is immutable
      */
     boolean isImmutable();
 
     /**
+     * Returns {@code true} if the base {@link Numeral} of this value can be converted to the specified type.
+     *
      * @param type {@link NumeralType} to be checked for
      * @return {@code true} if the base {@link Numeral} of this value can be converted to the specified type
      *
@@ -80,6 +90,9 @@ public interface Value extends Dependent, Dependency, Handled {
     boolean canConvert(NumeralType type);
 
     /**
+     * Converts the base {@link Numeral} to the specified type, or throws an exception if the value is outside the
+     * specified type's bounds.
+     *
      * @param type {@link NumeralType} for the base {@link Numeral} of this value to be converted to
      * @return {@code true} if the base {@link Numeral} of this value was changed as a result of this operation
      *
@@ -93,6 +106,9 @@ public interface Value extends Dependent, Dependency, Handled {
     boolean convert(NumeralType type);
 
     /**
+     * Converts the base {@link Numeral} to the specified type, or does nothing if the conversion would throw an
+     * {@link ExtendedArithmeticException}.
+     *
      * @param type {@link NumeralType} for the base {@link Numeral} of this value to be converted to
      * @return {@code true} if the base {@link Numeral} of this value was changed as a result of this operation
      *
@@ -103,8 +119,9 @@ public interface Value extends Dependent, Dependency, Handled {
     boolean convertIfAllowed(NumeralType type);
 
     /**
-     * If the base {@link Numeral} does not represent an integer value ({@link NumeralType#isInteger()} is {@code false}
-     * for {@link Numeral#getType()}), converts it to the smallest integer type that hold the represented value.
+     * Converts the base {@link Numeral} to an integer value. If the base {@link Numeral} does not represent an integer
+     * value ({@link NumeralType#isInteger()} is {@code false} for {@link Numeral#getType()}), converts it to the
+     * smallest integer type that hold the represented value.
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
      *
@@ -113,8 +130,9 @@ public interface Value extends Dependent, Dependency, Handled {
     boolean toInteger();
 
     /**
-     * If the base {@link Numeral} does not represent a decimal value ({@link NumeralType#isDecimal()} is {@code false}
-     * for {@link Numeral#getType()}), converts it to the smallest decimal type that hold the represented value.
+     * Converts the base {@link Numeral} to a decimal value. If the base {@link Numeral} does not represent a decimal
+     * value ({@link NumeralType#isDecimal()} is {@code false} for {@link Numeral#getType()}), converts it to the
+     * smallest decimal type that hold the represented value.
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
      *
@@ -131,6 +149,8 @@ public interface Value extends Dependent, Dependency, Handled {
     boolean toSmallestType();
 
     /**
+     * Sets the base {@link Numeral} to the specified value.
+     *
      * @param value value to replace the current base {@link Numeral}
      *
      * @throws UnsupportedOperationException if this value is immutable
@@ -138,6 +158,8 @@ public interface Value extends Dependent, Dependency, Handled {
     void set(Numeral value);
 
     /**
+     * Applies a {@link SourceOperation} to the base {@link Numeral} of this value.
+     *
      * @param operation {@link SourceOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      *
@@ -146,6 +168,8 @@ public interface Value extends Dependent, Dependency, Handled {
     void apply(SourceOperation operation, MathContext context);
 
     /**
+     * Applies a {@link SingleParameterOperation} to the base {@link Numeral} of this value.
+     *
      * @param operation {@link SingleParameterOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      * @param parameter parameter for the operation
@@ -155,6 +179,8 @@ public interface Value extends Dependent, Dependency, Handled {
     void apply(SingleParameterOperation operation, MathContext context, Numeral parameter);
 
     /**
+     * Applies a {@link DualParameterOperation} to the base {@link Numeral} of this value.
+     *
      * @param operation {@link DualParameterOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      * @param parameter1 first parameter for the operation
@@ -165,6 +191,8 @@ public interface Value extends Dependent, Dependency, Handled {
     void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2);
 
     /**
+     * Applies an {@link Operation} to the base {@link Numeral} of this value.
+     *
      * @param operation {@link Operation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      * @param parameters parameters for the operation
@@ -176,6 +204,8 @@ public interface Value extends Dependent, Dependency, Handled {
     void apply(Operation operation, MathContext context, Numeral ... parameters);
 
     /**
+     * Compares this value to a {@link Numeral} using the specified {@link Comparison}.
+     *
      * @param comparison {@link Comparison} to be used
      * @param context {@link ComparisonContext} for the comparison
      * @param other {@link Numeral} to be compared with
@@ -184,48 +214,63 @@ public interface Value extends Dependent, Dependency, Handled {
     boolean compare(Comparison comparison, ComparisonContext context, Numeral other);
 
     /**
+     * Returns the {@link Modifier Modifiers} associated with this value.
+     *
      * @return {@link Modifier Modifiers} associated with this value
      */
     Collection<Modifier> getModifiers();
 
     /**
+     * Registers a {@link Modifier} to this value.
+     *
      * @param modifier {@link Modifier} to be added
      * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
      */
     boolean addModifier(Modifier modifier);
 
     /**
+     * Registers {@link Modifier Modifiers} to this value.
+     *
      * @param modifiers {@link Modifier Modifiers} to be added
      * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
      */
     boolean addModifiers(Collection<? extends Modifier> modifiers);
 
     /**
+     * Removes a {@link Modifier} from this value.
+     *
      * @param modifier {@link Modifier} to be removed
      * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
      */
     boolean removeModifier(Modifier modifier);
 
     /**
+     * Removes {@link Modifier Modifiers} from this value.
+     *
      * @param modifiers {@link Modifier Modifiers} to be removed
      * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
      */
     boolean removeModifiers(Collection<? extends Modifier> modifiers);
 
     /**
+     * Checks if a {@link Modifier} is present in this value.
+     *
      * @param modifier {@link Modifier} to be checked for
      * @return {@code true} if the specified {@link Modifier} is associated with this value
      */
     boolean containsModifier(Modifier modifier);
 
     /**
+     * Checks if {@link Modifier Modifiers} are present in this value.
+     *
      * @param modifiers {@link Modifier Modifiers} to be checked for
      * @return {@code true} if all of the specified {@link Modifier Modifiers} are associated with this value
      */
     boolean containsModifiers(Collection<? extends Modifier> modifiers);
 
     /**
-     * Uses {@link MathContext#defaults()} for context.
+     * Applies a {@link SourceOperation} to the base {@link Numeral} of this value. Uses {@link MathContext#defaults()}
+     * for context.
      *
      * @param operation {@link SourceOperation} to be applied to the base {@link Numeral}
      *
@@ -236,7 +281,8 @@ public interface Value extends Dependent, Dependency, Handled {
     }
 
     /**
-     * Uses {@link MathContext#defaults()} for context.
+     * Applies a {@link SingleParameterOperation} to the base {@link Numeral} of this value. Uses
+     * {@link MathContext#defaults()} for context.
      *
      * @param operation {@link SingleParameterOperation} to be applied to the base {@link Numeral}
      * @param parameter parameter for the operation
@@ -248,7 +294,8 @@ public interface Value extends Dependent, Dependency, Handled {
     }
 
     /**
-     * Uses {@link MathContext#defaults()} for context.
+     * Applies a {@link DualParameterOperation} to the base {@link Numeral} of this value. Uses
+     * {@link MathContext#defaults()} for context.
      *
      * @param operation {@link DualParameterOperation} to be applied to the base {@link Numeral}
      * @param parameter1 first parameter for the operation
@@ -261,7 +308,8 @@ public interface Value extends Dependent, Dependency, Handled {
     }
 
     /**
-     * Uses {@link MathContext#defaults()} for context.
+     * Applies an {@link Operation} to the base {@link Numeral} of this value. Uses {@link MathContext#defaults()} for
+     * context.
      *
      * @param operation {@link Operation} to be applied to the base {@link Numeral}
      * @param parameters parameters for the operation
@@ -275,7 +323,8 @@ public interface Value extends Dependent, Dependency, Handled {
     }
 
     /**
-     * Uses {@link ComparisonContext#defaults()} for context.
+     * Compares this value to a {@link Numeral} using the specified {@link Comparison}. Uses
+     * {@link ComparisonContext#defaults()} for context.
      *
      * @param comparison {@link Comparison} to be used
      * @param other {@link Numeral} to be compared with

@@ -9,6 +9,8 @@ import me.datafox.dfxengine.math.api.Numeral;
  */
 public interface SingleParameterOperation extends Operation {
     /**
+     * Applies this operation to the specified source {@link Numeral} with the specified parameter.
+     *
      * @param source source {@link Numeral} for this operation
      * @param parameter parameter {@link Numeral} for this operation
      * @return resulting {@link Numeral} of this operation
@@ -16,7 +18,9 @@ public interface SingleParameterOperation extends Operation {
     Numeral apply(Numeral source, Numeral parameter);
 
     /**
-     * @return the amount of parameters this operation expects (1)
+     * Returns the amount of parameters this operation expects. Always returns {@code 1}.
+     *
+     * @return amount of parameters this operation expects
      */
     @Override
     default int getParameterCount() {
@@ -24,12 +28,14 @@ public interface SingleParameterOperation extends Operation {
     }
 
     /**
-     * It is recommended to use {@link #apply(Numeral, Numeral)} where possible instead.
+     * Applies this operation to the specified source {@link Numeral} with the specified parameters. It is recommended
+     * to use {@link #apply(Numeral, Numeral)} where possible instead.
      *
      * @param source source {@link Numeral} for this operation
      * @param parameters parameter {@link Numeral Numerals} for this operation
      * @return resulting {@link Numeral} of this operation
-     * @throws IllegalArgumentException if the amount of parameters is not equal to {@link #getParameterCount()} (1)
+     *
+     * @throws IllegalArgumentException if the amount of parameters is not equal to {@link #getParameterCount()}
      */
     @Override
     default Numeral apply(Numeral source, Numeral ... parameters) {

@@ -36,6 +36,9 @@ public class MathContext {
     private final boolean convertToDecimal = false;
 
     /**
+     * Returns the {@link NumeralType} that the resulting {@link Numeral} from this operation should be converted to, or
+     * {@code null} if no conversion should be done.
+     *
      * @return {@link NumeralType} that the resulting {@link Numeral} from this operation should be converted to, or
      * {@code null} if no conversion should be done
      */
@@ -44,6 +47,10 @@ public class MathContext {
     }
 
     /**
+     * Returns {@code true} if the conversion determined by {@link #convertResultTo()} should be ignored when the
+     * resulting {@link Numeral} from this operation if the conversion cannot be done, or {@code false} if an
+     * {@link ExtendedArithmeticException} should be thrown instead.
+     *
      * @return {@code true} if the conversion determined by {@link #convertResultTo()} should be ignored when the
      * resulting {@link Numeral} from this operation if the conversion cannot be done, or {@code false} if an
      * {@link ExtendedArithmeticException} should be thrown instead.
@@ -54,6 +61,8 @@ public class MathContext {
     }
 
     /**
+     * Returns {@code true} if the input and parameter {@link Numeral Numerals} should be converted to a decimal type
+     * before the operation, or {@code false} otherwise.
      * @return {@code true} if the input and parameter {@link Numeral Numerals} should be converted to a decimal type
      * before the operation, or {@code false} otherwise.
      */
@@ -64,7 +73,9 @@ public class MathContext {
     private static MathContext defaults = null;
 
     /**
-     * @return MathContext with default values
+     * Returns a math context with default values.
+     *
+     * @return Math context with default values
      */
     public static MathContext defaults() {
         if(defaults == null) {

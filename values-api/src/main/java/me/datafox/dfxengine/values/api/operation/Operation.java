@@ -15,11 +15,15 @@ import java.util.function.BiFunction;
  */
 public interface Operation extends BiFunction<Numeral, Numeral[], Numeral> {
     /**
-     * @return the amount of parameters this operation expects
+     * Returns the amount of parameters this operation expects.
+     *
+     * @return amount of parameters this operation expects
      */
     int getParameterCount();
 
     /**
+     * Applies this operation to the specified source {@link Numeral} with the specified parameters.
+     *
      * @param source source {@link Numeral} for this operation
      * @param parameters parameter {@link Numeral Numerals} for this operation
      * @return resulting {@link Numeral} of this operation

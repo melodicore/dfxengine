@@ -23,11 +23,15 @@ import java.util.Map;
  */
 public interface ValueMap extends HandleMap<Value> {
     /**
+     * Returns {@code true} if this map is for immutable {@link Value Values}.
+     *
      * @return {@code true} if this map is for immutable {@link Value Values}
      */
     boolean isImmutable();
 
     /**
+     * Converts all {@link Value Values} in this map to the specified type.
+     *
      * @param type {@link NumeralType} for the {@link Value Values} to be converted to
      *
      * @throws ExtendedArithmeticException if any of the {@link Value Values} in this map cannot be converted to the
@@ -40,7 +44,8 @@ public interface ValueMap extends HandleMap<Value> {
     void convert(NumeralType type);
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Converts all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified type.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param handles {@link Handle Handles} of the {@link Value Values} to be converted
      * @param type {@link NumeralType} for the {@link Value Values} to be converted to
@@ -55,7 +60,8 @@ public interface ValueMap extends HandleMap<Value> {
     void convert(Collection<? extends Handle> handles, NumeralType type);
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Converts all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified types.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param types map of {@link Handle Handles} and {@link NumeralType NumeralTypes} for the {@link Value Values}
      * represented by those Handles to be converted to.
@@ -70,6 +76,7 @@ public interface ValueMap extends HandleMap<Value> {
     void convert(Map<? extends Handle, NumeralType> types);
 
     /**
+     * Converts all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified type.
      * Only converts {@link Value Values} of this map that can be converted to the specified type. In other words, calls
      * {@link Numeral#convertIfAllowed(NumeralType)} on every Value of this map.
      *
@@ -113,6 +120,8 @@ public interface ValueMap extends HandleMap<Value> {
     void toSmallestType(Collection<? extends Handle> handles);
 
     /**
+     * Sets all {@link Value Values} of this map to the specified value.
+     *
      * @param value {@link Numeral} for all {@link Value Values} of this map to be set to
      *
      * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
@@ -120,7 +129,8 @@ public interface ValueMap extends HandleMap<Value> {
     void set(Numeral value);
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Sets all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified value.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param context {@link MapMathContext} for this operation
      * @param handles {@link Handle Handles} of the values to be changed
@@ -131,7 +141,8 @@ public interface ValueMap extends HandleMap<Value> {
     void set(MapMathContext context, Collection<? extends Handle> handles, Numeral value);
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Sets all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified values.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param context {@link MapMathContext} for this operation
      * @param values map of {@link Handle Handles} to be changed and {@link Numeral Numerals} for the specified
@@ -142,6 +153,8 @@ public interface ValueMap extends HandleMap<Value> {
     void set(MapMathContext context, Map<? extends Handle, Numeral> values);
 
     /**
+     * Applies a {@link SourceOperation} to all {@link Value Values} of this map.
+     *
      * @param operation {@link SourceOperation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
      *
@@ -150,7 +163,8 @@ public interface ValueMap extends HandleMap<Value> {
     void apply(SourceOperation operation, MathContext context);
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies a {@link SourceOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link SourceOperation} to be applied to specified {@link Value Values} of this map
      * @param context {@link MapMathContext} for the operation
@@ -161,6 +175,8 @@ public interface ValueMap extends HandleMap<Value> {
     void apply(SourceOperation operation, MapMathContext context, Collection<? extends Handle> handles);
 
     /**
+     * Applies a {@link SingleParameterOperation} to all {@link Value Values} of this map.
+     *
      * @param operation {@link SingleParameterOperation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
      * @param parameter parameter for the operation
@@ -170,7 +186,8 @@ public interface ValueMap extends HandleMap<Value> {
     void apply(SingleParameterOperation operation, MathContext context, Numeral parameter);
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies a {@link SingleParameterOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link SingleParameterOperation} to be applied to specified {@link Value Values} of this map
      * @param context {@link MapMathContext} for the operation
@@ -183,7 +200,8 @@ public interface ValueMap extends HandleMap<Value> {
                Collection<? extends Handle> handles, Numeral parameter);
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies a {@link SingleParameterOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link SingleParameterOperation} to be applied to specified {@link Value Values} of this map
      * @param context {@link MapMathContext} for the operation
@@ -195,6 +213,8 @@ public interface ValueMap extends HandleMap<Value> {
     void apply(SingleParameterOperation operation, MapMathContext context, Map<? extends Handle, Numeral> parameters);
 
     /**
+     * Applies a {@link DualParameterOperation} to all {@link Value Values} of this map.
+     *
      * @param operation {@link DualParameterOperation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
      * @param parameter1 first parameter for the operation
@@ -205,7 +225,8 @@ public interface ValueMap extends HandleMap<Value> {
     void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2);
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies a {@link DualParameterOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link DualParameterOperation} to be applied to specified {@link Value Values} of this map
      * @param context {@link MapMathContext} for the operation
@@ -219,6 +240,8 @@ public interface ValueMap extends HandleMap<Value> {
                Collection<? extends Handle> handles, Numeral parameter1, Numeral parameter2);
 
     /**
+     * Applies an {@link Operation} to all {@link Value Values} of this map.
+     *
      * @param operation {@link Operation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
      * @param parameters parameters for the operation
@@ -230,7 +253,8 @@ public interface ValueMap extends HandleMap<Value> {
     void apply(Operation operation, MathContext context, Numeral ... parameters);
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies an {@link Operation} to all {@link Value Values} of this map with the specified {@link Handle Handles}.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link Operation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
@@ -245,7 +269,8 @@ public interface ValueMap extends HandleMap<Value> {
                Collection<? extends Handle> handles, Numeral ... parameters);
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies an {@link Operation} to all {@link Value Values} of this map with the specified {@link Handle Handles}.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link Operation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
@@ -259,6 +284,8 @@ public interface ValueMap extends HandleMap<Value> {
     void apply(Operation operation, MapMathContext context, Map<? extends Handle, Numeral[]> parameters);
 
     /**
+     * Compares all {@link Value Values} in this map to a {@link Numeral} using the specified {@link Comparison}.
+     *
      * @param comparison {@link Comparison} to be used
      * @param context {@link ComparisonContext} for the comparison
      * @param other {@link Numeral} to be compared to
@@ -267,6 +294,9 @@ public interface ValueMap extends HandleMap<Value> {
     boolean compare(Comparison comparison, ComparisonContext context, Numeral other);
 
     /**
+     * Compares all {@link Value Values} in this map with the specified {@link Handle Handles} to a {@link Numeral}
+     * using the specified {@link Comparison}.
+     *
      * @param comparison {@link Comparison} to be used
      * @param context {@link MapComparisonContext} for the comparison
      * @param handles {@link Handle Handles} of the {@link Value Values} to be compared
@@ -278,6 +308,9 @@ public interface ValueMap extends HandleMap<Value> {
                     Collection<? extends Handle> handles, Numeral other);
 
     /**
+     * Compares all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified
+     * {@link Numeral Numerals} using the specified {@link Comparison}.
+     *
      * @param comparison {@link Comparison} to be used
      * @param context {@link MapComparisonContext} for the comparison
      * @param others map of {@link Handle Handles} of the {@link Value Values} to be compared and
@@ -288,26 +321,34 @@ public interface ValueMap extends HandleMap<Value> {
     boolean compare(Comparison comparison, MapComparisonContext context, Map<? extends Handle, Numeral> others);
 
     /**
+     * Returns a {@link Map} containing all entries of this map, but with the return value of {@link Value#getBase()} as
+     * the map values. The returned map does not have any state and instead provides a view to this map.
+     *
      * @return {@link Map} containing all entries of this map, but with the return value of {@link Value#getBase()} as
-     * the map values. The returned map does not have any state and instead provides a view to this map
+     * the map values.
      */
     Map<Handle, Numeral> getBaseNumeralMap();
 
     /**
+     * Returns a {@link Map} containing all entries of this map, but with the return value of {@link Value#getValue()}
+     * as the map values. The returned map does not have any state and instead provides a view to this map.
+     *
      * @return {@link Map} containing all entries of this map, but with the return value of {@link Value#getValue()} as
-     * the map values. The returned map does not have any state and instead provides a view to this map
+     * the map values.
      */
     Map<Handle, Numeral> getValueNumeralMap();
 
     /**
+     * Returns the {@link Modifier Modifiers} associated with this map.
+     *
      * @return {@link Modifier Modifiers} associated with this map
      */
     Collection<Modifier> getModifiers();
 
     /**
-     * {@link Modifier Modifiers} added to this map will be added to all {@link Value Values} of this map, including
-     * ones that are added to this map after this operation. To add a modifier to a single value, use
-     * {@link Value#addModifier(Modifier)} instead.
+     * Registers a {@link Modifier} to this map. Modifiers added to this map will be added to all {@link Value Values}
+     * of this map, including ones that are added to this map after this operation. To add a modifier to a single value,
+     * use {@link Value#addModifier(Modifier)} instead.
      *
      * @param modifier {@link Modifier} to be added
      * @return {@code true} if the {@link Modifier Modifiers} of this map changed as a result of this operation
@@ -315,9 +356,9 @@ public interface ValueMap extends HandleMap<Value> {
     boolean addModifier(Modifier modifier);
 
     /**
-     * {@link Modifier Modifiers} added to this map will be added to all {@link Value Values} of this map, including
-     * ones that are added to this map after this operation. To add modifiers to a single value, use
-     * {@link Value#addModifiers(Collection)}} instead.
+     * Registers {@link Modifier Modifiers} to this map. Modifiers added to this map will be added to all
+     * {@link Value Values} of this map, including ones that are added to this map after this operation. To add
+     * modifiers to a single value, use {@link Value#addModifiers(Collection)}} instead.
      *
      * @param modifiers {@link Modifier Modifiers} to be added
      * @return {@code true} if the {@link Modifier Modifiers} of this map changed as a result of this operation
@@ -325,31 +366,40 @@ public interface ValueMap extends HandleMap<Value> {
     boolean addModifiers(Collection<? extends Modifier> modifiers);
 
     /**
+     * Removes a {@link Modifier} from this map.
+     *
      * @param modifier {@link Modifier} to be removed
      * @return {@code true} if the {@link Modifier Modifiers} of this map changed as a result of this operation
      */
     boolean removeModifier(Modifier modifier);
 
     /**
+     * Removes {@link Modifier Modifiers} from this map.
+     *
      * @param modifiers {@link Modifier Modifiers} to be removed
      * @return {@code true} if the {@link Modifier Modifiers} of this map changed as a result of this operation
      */
     boolean removeModifiers(Collection<? extends Modifier> modifiers);
 
     /**
+     * Checks if a {@link Modifier} is present in this map.
+     *
      * @param modifier {@link Modifier} to be checked for
      * @return {@code true} if the specified {@link Modifier} is associated with this map
      */
     boolean containsModifier(Modifier modifier);
 
     /**
+     * Checks if {@link Modifier Modifiers} are present in this map.
+     *
      * @param modifiers {@link Modifier Modifiers} to be checked for
      * @return {@code true} if all of the specified {@link Modifier Modifiers} are associated with this map
      */
     boolean containsModifiers(Collection<? extends Modifier> modifiers);
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored. Uses
+     * Sets all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified value.
+     * Handles that are not a part of this map's associated {@link Space} are ignored. Uses
      * {@link MapMathContext#defaults()} for context.
      *
      * @param handles {@link Handle Handles} of the values to be changed
@@ -360,7 +410,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored. Uses
+     * Sets all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified values.
+     * Handles that are not a part of this map's associated {@link Space} are ignored. Uses
      * {@link MapMathContext#defaults()} for context.
      *
      * @param values map of {@link Handle Handles} to be changed and {@link Numeral Numerals} for the specified
@@ -371,7 +422,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * Uses {@link MathContext#defaults()} for context.
+     * Applies a {@link SourceOperation} to all {@link Value Values} of this map. Uses {@link MathContext#defaults()}
+     * for context.
      *
      * @param operation {@link SourceOperation} to be applied to all {@link Value Values} of this map
      */
@@ -380,7 +432,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored. Uses
+     * Applies a {@link SourceOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored. Uses
      * {@link MapMathContext#defaults()} for context.
      *
      * @param operation {@link SourceOperation} to be applied to specified {@link Value Values} of this map
@@ -391,7 +444,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * Uses {@link MathContext#defaults()} for context.
+     * Applies a {@link SingleParameterOperation} to all {@link Value Values} of this map. Uses
+     * {@link MathContext#defaults()} for context.
      *
      * @param operation {@link SingleParameterOperation} to be applied to all {@link Value Values} of this map
      * @param parameter parameter for the operation
@@ -401,7 +455,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored. Uses
+     * Applies a {@link SingleParameterOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored. Uses
      * {@link MapMathContext#defaults()} for context.
      *
      * @param operation {@link SingleParameterOperation} to be applied to specified {@link Value Values} of this map
@@ -413,7 +468,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored. Uses
+     * Applies a {@link SingleParameterOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored. Uses
      * {@link MapMathContext#defaults()} for context.
      *
      * @param operation {@link SingleParameterOperation} to be applied to specified {@link Value Values} of this map
@@ -425,7 +481,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * Uses {@link MathContext#defaults()} for context.
+     * Applies a {@link DualParameterOperation} to all {@link Value Values} of this map. Uses
+     * {@link MathContext#defaults()} for context.
      *
      * @param operation {@link DualParameterOperation} to be applied to all {@link Value Values} of this map
      * @param parameter1 first parameter for the operation
@@ -436,7 +493,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored. Uses
+     * Applies a {@link DualParameterOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored. Uses
      * {@link MapMathContext#defaults()} for context.
      *
      * @param operation {@link DualParameterOperation} to be applied to specified {@link Value Values} of this map
@@ -450,7 +508,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * Uses {@link MathContext#defaults()} for context.
+     * Applies an {@link Operation} to all {@link Value Values} of this map. Uses {@link MathContext#defaults()} for
+     * context.
      *
      * @param operation {@link Operation} to be applied to all {@link Value Values} of this map
      * @param parameters parameters for the operation
@@ -463,7 +522,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored. Uses
+     * Applies an {@link Operation} to all {@link Value Values} of this map with the specified {@link Handle Handles}.
+     * Handles that are not a part of this map's associated {@link Space} are ignored. Uses
      * {@link MapMathContext#defaults()} for context.
      *
      * @param operation {@link Operation} to be applied to all {@link Value Values} of this map
@@ -478,7 +538,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored. Uses
+     * Applies an {@link Operation} to all {@link Value Values} of this map with the specified {@link Handle Handles}.
+     * Handles that are not a part of this map's associated {@link Space} are ignored. Uses
      * {@link MapMathContext#defaults()} for context.
      *
      * @param operation {@link Operation} to be applied to all {@link Value Values} of this map
@@ -493,7 +554,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * Uses {@link ComparisonContext#defaults()} for context.
+     * Compares all {@link Value Values} in this map to a {@link Numeral} using the specified {@link Comparison}. Uses
+     * {@link ComparisonContext#defaults()} for context.
      *
      * @param comparison {@link Comparison} to be used
      * @param other {@link Numeral} to be compared to
@@ -504,7 +566,8 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * Uses {@link MapComparisonContext#defaults()} for context.
+     * Compares all {@link Value Values} in this map with the specified {@link Handle Handles} to a {@link Numeral}
+     * using the specified {@link Comparison}. Uses {@link MapComparisonContext#defaults()} for context.
      *
      * @param comparison {@link Comparison} to be used
      * @param handles {@link Handle Handles} of the {@link Value Values} to be compared
@@ -517,7 +580,9 @@ public interface ValueMap extends HandleMap<Value> {
     }
 
     /**
-     * Uses {@link MapComparisonContext#defaults()} for context.
+     * Compares all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified
+     * {@link Numeral Numerals} using the specified {@link Comparison}. Uses {@link MapComparisonContext#defaults()} for
+     * context.
      *
      * @param comparison {@link Comparison} to be used
      * @param others map of {@link Handle Handles} of the {@link Value Values} to be compared and

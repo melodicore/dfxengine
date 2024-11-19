@@ -1,4 +1,6 @@
 /**
+ * Interfaces for mutable number values and a dynamic modifier system.
+ *
  * @author datafox
  */
 open module dfxengine.values.api {

@@ -10,17 +10,30 @@ import java.util.function.Function;
  * A Modifier represents a math operation that can be attached to a {@link Value} or a {@link ValueMap}. When calling
  * {@link Value#getValue()}, the base numeral of that value will be processed through all modifiers associated with the
  * value, in the order specified by {@link #getPriority()}. The operation is specified by implementing
- * {@link #apply(Object)}.
+ * {@link #apply(Numeral)}.
  *
  * @author datafox
  */
 public interface Modifier extends Dependent, Dependency, Function<Numeral, Numeral>, Comparable<Modifier> {
     /**
+     * Returns the priority of this modifier.
+     *
      * @return priority of this modifier
      */
     int getPriority();
 
     /**
+     * Applies this modifier to a {@link Numeral} and returns the result.
+     *
+     * @param source {@link Numeral} to be modified
+     * @return result of the modifier
+     */
+    @Override
+    Numeral apply(Numeral source);
+
+    /**
+     * Compares this modifier to another.
+     *
      * @param other modifier to be compared
      * @return a negative integer, zero, or a positive integer as this modifier's priority is less than, equal to, or
      * greater than the specified modifier's priority

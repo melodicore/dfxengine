@@ -22,6 +22,9 @@ public class ComparisonContext {
     private final boolean useModifiedValue = false;
 
     /**
+     * Returns {@code true} if the result of {@link Value#getValue()} should be used for the {@link Comparison}, or
+     * {@code false} if the result of {@link Value#getBase()} should be used instead.
+     *
      * @return {@code true} if the result of {@link Value#getValue()} should be used for the {@link Comparison}, or
      * {@code false} if the result of {@link Value#getBase()} should be used instead
      */
@@ -32,7 +35,9 @@ public class ComparisonContext {
     private static ComparisonContext defaults = null;
 
     /**
-     * @return ComparisonContext with default values
+     * Returns a comparison context with default values.
+     *
+     * @return Comparison context with default values
      */
     public static ComparisonContext defaults() {
         if(defaults == null) {

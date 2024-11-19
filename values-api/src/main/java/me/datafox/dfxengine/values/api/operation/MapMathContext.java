@@ -24,8 +24,11 @@ public class MapMathContext extends MathContext {
     private final Numeral createNonExistingAs = null;
 
     /**
-     * @return {@link Numeral} to be used as an input if a {@link Handle} key is requested that is not present in
+     * Returns the {@link Numeral} to be used as an input if a {@link Handle} key is requested that is not present in
      * the {@link ValueMap}, or {@code null} if these Handles should be ignored instead
+     *
+     * @return {@link Numeral} to be used as an input if a {@link Handle} key is requested that is not present in the
+     * {@link ValueMap}, or {@code null} if these Handles should be ignored instead
      */
     public Numeral createNonExistingAs() {
         return createNonExistingAs;
@@ -34,7 +37,9 @@ public class MapMathContext extends MathContext {
     private static MapMathContext defaults = null;
 
     /**
-     * @return MapMathContext with default values
+     * Returns a map math context with default values.
+     *
+     * @return Map math context with default values
      */
     public static MapMathContext defaults() {
         if(defaults == null) {

@@ -9,13 +9,17 @@ import me.datafox.dfxengine.math.api.Numeral;
  */
 public interface SourceOperation extends Operation {
     /**
+     * Applies this operation to the specified source {@link Numeral}.
+     *
      * @param source source {@link Numeral} for this operation
      * @return resulting {@link Numeral} of this operation
      */
     Numeral apply(Numeral source);
 
     /**
-     * @return the amount of parameters this operation expects (0)
+     * Returns the amount of parameters this operation expects. Always returns {@code 0}.
+     *
+     * @return amount of parameters this operation expects
      */
     @Override
     default int getParameterCount() {
@@ -23,12 +27,14 @@ public interface SourceOperation extends Operation {
     }
 
     /**
-     * It is recommended to use {@link #apply(Numeral)} where possible instead.
+     * Applies this operation to the specified source {@link Numeral}. It is recommended to use {@link #apply(Numeral)}
+     * where possible instead.
      *
      * @param source source {@link Numeral} for this operation
      * @param parameters parameter {@link Numeral Numerals} for this operation
      * @return resulting {@link Numeral} of this operation
-     * @throws IllegalArgumentException if the amount of parameters is not equal to {@link #getParameterCount()} (0)
+     *
+     * @throws IllegalArgumentException if the amount of parameters is not equal to {@link #getParameterCount()}
      */
     @Override
     default Numeral apply(Numeral source, Numeral ... parameters) {
