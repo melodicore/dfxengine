@@ -59,9 +59,10 @@ public interface Handle extends Comparable<Handle> {
     int getSubIndex();
 
     /**
-     * Returns the subhandles contained in this handle, or an empty set if this handle is not a subhandle.
+     * Returns the {@link HandleSet} containing the subhandles of this handle, or an empty set if this handle is a
+     * subhandle.
      *
-     * @return subhandles contained in this handle
+     * @return {@link HandleSet} containing the subhandles of this handle
      */
     HandleSet getSubHandles();
 
