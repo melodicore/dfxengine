@@ -35,7 +35,15 @@ public abstract class DependencyDependent extends AbstractDependency implements 
     }
 
     /**
-     * {@inheritDoc} Instead of overriding this method, {@link #onInvalidate()} should be overridden instead.
+     * <p>
+     * Invalidates the class implementing this interface. In practice, this should invalidate the caches of any values
+     * that are dependent on values of other classes. Because this method may be called multiple times, it is not
+     * recommended to recalculate the cached value in this method, and instead create an invalidated flag that is set
+     * in this method, and recalculate the value in its getter method if the flag is set.
+     * </p>
+     * <p>
+     * Instead of overriding this method, {@link #onInvalidate()} should be overridden instead.
+     * <p>
      */
     @Override
     public void invalidate() {

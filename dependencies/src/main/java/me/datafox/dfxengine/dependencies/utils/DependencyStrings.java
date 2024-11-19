@@ -4,7 +4,7 @@ import me.datafox.dfxengine.dependencies.Dependent;
 import me.datafox.dfxengine.dependencies.Dependency;
 
 /**
- * Contains all string literals used for logging in this module.
+ * All string literals used for logging in the Dependencies module.
  *
  * @author datafox
  */

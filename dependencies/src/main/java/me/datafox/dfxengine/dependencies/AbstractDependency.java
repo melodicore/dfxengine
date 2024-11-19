@@ -48,9 +48,9 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns all {@link Dependent Dependents} that depend on this class.
      *
-     * @return {@inheritDoc}
+     * @return all {@link Dependent Dependents} that depend on this class
      */
     @Override
     public Collection<Dependent> getDependents() {
@@ -58,7 +58,7 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Calls {@link Dependent#invalidate()} on all {@link Dependent Dependents} of this class.
      */
     @Override
     public void invalidateDependents() {
@@ -66,12 +66,13 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Register a {@link Dependent} that depends on this class. The method must check for cyclic dependencies and throw
+     * {@link IllegalArgumentException} if one is detected.
      *
-     * @param dependent {@inheritDoc}
-     * @return {@inheritDoc}
+     * @param dependent {@link Dependent} that depends on this class
+     * @return {@code true} if the registered {@link Dependent Dependents} changed as a result of this operation
      *
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws IllegalArgumentException if this operation would cause a cyclic dependency
      */
     @Override
     public boolean addDependent(Dependent dependent) {
@@ -85,12 +86,13 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Register {@link Dependent Dependents} that depends on this class. The method must check for cyclic dependencies
+     * and throw {@link IllegalArgumentException} if one is detected.
      *
-     * @param dependents {@inheritDoc}
-     * @return {@inheritDoc}
+     * @param dependents {@link Dependent Dependents} that depend on this class
+     * @return {@code true} if the registered {@link Dependent Dependents} changed as a result of this operation
      *
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @throws IllegalArgumentException if this operation would cause a cyclic dependency
      */
     @Override
     public boolean addDependents(Collection<? extends Dependent> dependents) {
@@ -106,10 +108,10 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Removes a {@link Dependent} from this dependency.
      *
-     * @param dependent {@inheritDoc}
-     * @return {@inheritDoc}
+     * @param dependent {@link Dependent} to be removed
+     * @return {@code true} if the registered {@link Dependent Dependents} changed as a result of this operation
      */
     @Override
     public boolean removeDependent(Dependent dependent) {
@@ -117,10 +119,10 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Removes {@link Dependent Dependents} from this dependency.
      *
-     * @param dependents {@inheritDoc}
-     * @return {@inheritDoc}
+     * @param dependents {@link Dependent Dependents} to be removed
+     * @return {@code true} if the registered {@link Dependent Dependents} changed as a result of this operation
      */
     @Override
     public boolean removeDependents(Collection<? extends Dependent> dependents) {
@@ -128,10 +130,10 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Checks if a {@link Dependent} is present in this dependency.
      *
-     * @param dependent {@inheritDoc}
-     * @return {@inheritDoc}
+     * @param dependent {@link Dependent} to be checked for
+     * @return {@code true} if the specified {@link Dependent} is registered to this class
      */
     @Override
     public boolean containsDependent(Dependent dependent) {
@@ -139,10 +141,10 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Checks if {@link Dependent Dependents} are present in this dependency.
      *
-     * @param dependents {@inheritDoc}
-     * @return {@inheritDoc}
+     * @param dependents {@link Dependent Dependents} to be checked for
+     * @return {@code true} if all the specified {@link Dependent Dependents} are registered to this class
      */
     @Override
     public boolean containsDependents(Collection<? extends Dependent> dependents) {
@@ -150,10 +152,13 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Checks if the specified {@link Dependent} is registered to this class or any of its dependents that also
+     * implement dependent, recursively. In practice any dependent that depends on this class, directly or indirectly,
+     * would cause this method to return {@code true}.
      *
-     * @param dependent {@inheritDoc}
-     * @return {@inheritDoc}
+     * @param dependent {@link Dependent} to be checked for
+     * @return {@code true} if the specified {@link Dependent} is registered to this class or any of its dependents that
+     * also implement dependent, recursively
      */
     @Override
     public boolean containsDependentRecursive(Dependent dependent) {
@@ -161,10 +166,13 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Checks if all the specified {@link Dependent Dependents} are registered to this class or any of its dependencies
+     * that also implement dependent, recursively. In practice any collection of dependencies that depend on this class,
+     * directly or indirectly, would cause this method to return {@code true}.
      *
-     * @param dependents {@inheritDoc}
-     * @return {@inheritDoc}
+     * @param dependents {@link Dependent Dependencies} to be checked for
+     * @return {@code true} if the specified {@link Dependent Dependencies} are registered to this class or any of its
+     * dependencies that also implement dependent, recursively
      */
     @Override
     public boolean containsDependentsRecursive(Collection<? extends Dependent> dependents) {
@@ -173,9 +181,9 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns a {@link Stream} of all {@link Dependent Dependents} that are registered to this class.
      *
-     * @return {@inheritDoc}
+     * @return {@link Stream} of all {@link Dependent Dependents} that are registered to this class
      */
     @Override
     public Stream<Dependent> dependentStream() {
@@ -183,9 +191,11 @@ public abstract class AbstractDependency implements Dependency {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns a {@link Stream} of all {@link Dependent Dependents} that are registered to this class or any of its
+     * dependents that also implement dependency, recursively.
      *
-     * @return {@inheritDoc}
+     * @return {@link Stream} of all {@link Dependent Dependents} that are registered to this class or any of its
+     * dependents that also implement dependency, recursively
      */
     @Override
     public Stream<Dependent> recursiveDependentStream() {

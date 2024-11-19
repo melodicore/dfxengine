@@ -40,12 +40,12 @@ public interface Dependency {
      * Register {@link Dependent Dependents} that depends on this class. The method must check for cyclic dependencies
      * and throw {@link IllegalArgumentException} if one is detected.
      *
-     * @param dependencies {@link Dependent Dependencies} that depend on this class
+     * @param dependents {@link Dependent Dependents} that depend on this class
      * @return {@code true} if the registered {@link Dependent Dependents} changed as a result of this operation
      *
      * @throws IllegalArgumentException if this operation would cause a cyclic dependency
      */
-    boolean addDependents(Collection<? extends Dependent> dependencies);
+    boolean addDependents(Collection<? extends Dependent> dependents);
 
     /**
      * Removes a {@link Dependent} from this dependency.

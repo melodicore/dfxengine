@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * Utilities used internally in this module.
+ * Utilities used internally in the Dependencies module.
  *
  * @author datafox
  */
