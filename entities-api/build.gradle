@@ -18,13 +18,10 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            pom {
-                name = "DFXEngine Text API"
-                description = "API for DFXEngine Text"
-            }
-        }
+mavenPublishing {
+    coordinates(dfxengineGroup, name, version)
+    pom {
+        name = "DFXEngine Entities API"
+        description = "API for DFXEngine Entities"
     }
 }

@@ -33,13 +33,10 @@ test {
     useJUnitPlatform()
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            pom {
-                name = "DFXEngine Handles"
-                description = "Dynamic enum-like values to use for identification, such as map keys, and tools to manipulate them"
-            }
-        }
+mavenPublishing {
+    coordinates(dfxengineGroup, name, version)
+    pom {
+        name = "DFXEngine Entities"
+        description = "Node-based entity system with an emphasis on serialization"
     }
 }
