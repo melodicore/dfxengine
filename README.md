@@ -20,12 +20,12 @@ Here are the currently existing and planned modules:
 | Module                       | Status                   | Description                                         |
 |------------------------------|--------------------------|-----------------------------------------------------|
 | [Dependencies](dependencies) | Done (1.0.6)<sup>2</sup> | Data structure dependencies and invalidation        |
-| [Handles API](handles-api)   | Done (2.0.2)             | Interfaces for the Handles module                   |
+| [Handles API](handles-api)   | Done (2.0.3)<sup>2</sup> | Interfaces for the Handles module                   |
 | [Handles](handles)           | Done (2.0.4)<sup>2</sup> | Dynamic enum-like structures for map keys           |
-| [Injector API](injector-api) | Done (2.1.1)             | Annotations for the Injector module                 |
+| [Injector API](injector-api) | Done (2.1.2)<sup>2</sup> | Annotations for the Injector module                 |
 | [Injector](injector)         | Done (2.1.2)<sup>2</sup> | A dependency injector                               |
-| [Math API](math-api)         | Done (1.0.5)             | Interfaces for the Math module                      |
-| [Math](math)                 | Done (1.0.7)             | Seamless wrapping and manipulation of number types  |
+| [Math API](math-api)         | Done (1.0.6)<sup>2</sup> | Interfaces for the Math module                      |
+| [Math](math)                 | Done (1.0.8)<sup>2</sup> | Seamless wrapping and manipulation of number types  |
 | [Text API](text-api)         | Done (1.0.5)<sup>2</sup> | Interfaces for the Text module                      |
 | [Text](text)                 | Done (1.0.5)<sup>2</sup> | Text handling and representation                    |
 | [Utils](utils)<sup>1</sup>   | Done (1.0.3)             | Utilities used by other modules                     |
