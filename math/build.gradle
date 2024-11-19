@@ -27,6 +27,6 @@ mavenPublishing {
     coordinates(dfxengineGroup, name, version)
     pom {
         name = "DFXEngine Math"
-        description = "Seamless wrapping and manipulation for numbers of different types"
+        description = "Immutable number type with automatic type promotion"
     }
 }
