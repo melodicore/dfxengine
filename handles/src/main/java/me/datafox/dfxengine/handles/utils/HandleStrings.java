@@ -4,7 +4,7 @@ import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.Space;
 
 /**
- * Contains all string literals used for logging in this module.
+ * All string literals used for logging in the Handles module.
  *
  * @author datafox
  */

@@ -20,10 +20,22 @@ import static me.datafox.dfxengine.handles.utils.HandleUtils.checkId;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SpaceImpl implements Space {
+    /**
+     * {@link Logger} of this space.
+     */
     private final Logger logger;
+
+    /**
+     * Identifying {@link Handle} of this space.
+     */
     @EqualsAndHashCode.Include
     private final Handle handle;
+
+    /**
+     * {@link HandleManager} managing this space.
+     */
     private final HandleManager handleManager;
+
     private final HandleSet handles;
     private final HandleMap<Group> groups;
 
@@ -47,9 +59,10 @@ public class SpaceImpl implements Space {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns an unmodifiable {@link HandleSet} containing the {@link Handle Handles} of this space, excluding
+     * subhandles.
      *
-     * @return {@inheritDoc}
+     * @return unmodifiable {@link HandleSet} containing the {@link Handle Handles} of this space, excluding subhandles
      */
     @Override
     public HandleSet getHandles() {
@@ -57,9 +70,11 @@ public class SpaceImpl implements Space {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns an unmodifiable {@link HandleSet} containing the {@link Handle Handles} of this space, including
+     * subhandles. Please note that unlike {@link #getHandles()}, the handle set returned by this method does not
+     * reflect handles created after calling this method.
      *
-     * @return {@inheritDoc}
+     * @return unmodifiable {@link HandleSet} containing the {@link Handle Handles} of this space, including subhandles
      */
     @Override
     public HandleSet getAllHandles() {
@@ -77,13 +92,15 @@ public class SpaceImpl implements Space {
     }
 
     /**
-     * {@inheritDoc}
+     * Creates a new {@link Handle}. Throws {@link UnsupportedOperationException} if this is the space containing
+     * handles of spaces ({@link HandleManager#getSpaceSpace()}, use {@link HandleManager#createSpace(String)} instead).
      *
-     * @param id {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws UnsupportedOperationException {@inheritDoc}
+     * @param id {@link String} id for the new {@link Handle}
+     * @return created {@link Handle}
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or
+     * more than one colon ({@code :}), or if a {@link Handle} with the given id already exists in this space
+     * @throws UnsupportedOperationException if this is the space containing {@link Handle Handles} of spaces
      */
     @Override
     public Handle createHandle(String id) {
@@ -97,13 +114,18 @@ public class SpaceImpl implements Space {
     }
 
     /**
-     * {@inheritDoc}
+     * Creates a {@link Handle} with the specified id if it does not already exist and returns the handle with that id.
+     * Throws {@link UnsupportedOperationException} if this is the space containing handles of spaces
+     * ({@link HandleManager#getSpaceSpace()}) and a handle with the specified id is not present. Use
+     * {@link HandleManager#getOrCreateSpace(String)} instead.
      *
-     * @param id {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws UnsupportedOperationException {@inheritDoc}
+     * @param id {@link String} id for the {@link Handle}
+     * @return created or pre-existing {@link Handle}
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or
+     * more than one colon ({@code :})
+     * @throws UnsupportedOperationException if this is the space containing {@link Handle Handles} of spaces and a
+     * handle with the specified id is not present
      */
     @Override
     public Handle getOrCreateHandle(String id) {
@@ -115,9 +137,9 @@ public class SpaceImpl implements Space {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns an unmodifiable {@link HandleMap} containing the {@link Group Groups} of this space.
      *
-     * @return {@inheritDoc}
+     * @return unmodifiable {@link HandleMap} containing the {@link Group Groups} of this space
      */
     @Override
     public HandleMap<Group> getGroups() {
@@ -125,12 +147,13 @@ public class SpaceImpl implements Space {
     }
 
     /**
-     * {@inheritDoc}
+     * Creates a {@link Group} with the specified id.
      *
      * @param id {@link String} id for the new {@link Group}
-     * @return {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @return created {@link Group}
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or the
+     * colon ({@code :}), or if a {@link Group} with the given id already exists in this space
      */
     @Override
     public Group createGroup(String id) {
@@ -146,12 +169,13 @@ public class SpaceImpl implements Space {
     }
 
     /**
-     * {@inheritDoc}
+     * Creates a {@link Group} with the specified id if it does not already exist and returns the group with that id.
      *
-     * @param id {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @param id {@link String} id for the {@link Group}
+     * @return created or pre-existing {@link Group}
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or the
+     * colon ({@code :})
      */
     @Override
     public Group getOrCreateGroup(String id) {
@@ -165,9 +189,9 @@ public class SpaceImpl implements Space {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the {@link String} representation of this space.
      *
-     * @return {@inheritDoc}
+     * @return {@link String} representation of this space
      */
     @Override
     public String toString() {

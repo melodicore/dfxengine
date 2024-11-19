@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import static me.datafox.dfxengine.handles.utils.HandleStrings.*;
 
 /**
+ * Utilities used internally in the Handles module.
+ *
  * @author datafox
  */
 @SuppressWarnings("MissingJavadoc")

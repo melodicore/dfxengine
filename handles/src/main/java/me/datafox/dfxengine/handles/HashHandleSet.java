@@ -1,6 +1,5 @@
 package me.datafox.dfxengine.handles;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleSet;
@@ -23,8 +22,11 @@ import static me.datafox.dfxengine.handles.utils.HandleUtils.*;
  * @author datafox
  */
 public class HashHandleSet extends HashSet<Handle> implements HandleSet {
-    @Getter(AccessLevel.PROTECTED)
     private final Logger logger;
+
+    /**
+     * {@link Space} associated with this set.
+     */
     @Getter
     private final Space space;
     private final Map<String,Handle> ids;
@@ -53,11 +55,11 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the {@link Handle} in this set with the specified {@link String} id, or {@code null} if none is present.
      *
-     * @param id {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
+     * @param id {@link String} id of a {@link Handle}
+     * @return {@link Handle} with the given id, or {@code null} if none is present
+     * @throws NullPointerException  if the specified id is {@code null}
      */
     @Override
     public Handle get(String id) {
@@ -66,13 +68,14 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     }
 
     /**
-     * {@inheritDoc}
+     * Creates a {@link Handle} with the specified id if one does not already exist and adds it to this set.
      *
-     * @param id {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws UnsupportedOperationException {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @param id id for the new {@link Handle}
+     * @return created or pre-existing {@link Handle}
+     * @throws UnsupportedOperationException if the {@code add} operation is not supported by this set
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or
+     * more than one colon ({@code :})
      */
     @Override
     public Handle add(String id) {
@@ -82,9 +85,10 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns an unmodifiable version of this set. All changes made to the original set will be reflected in the
+     * returned one.
      *
-     * @return {@inheritDoc}
+     * @return unmodifiable version of this set
      */
     @Override
     public HandleSet unmodifiable() {
@@ -92,13 +96,14 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns all {@link Handle Handles} in this set containing the specified tag. The tag may be a {@link Handle} or
+     * its {@link String} id.
      *
-     * @param tag {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @param tag tag {@link Handle} or its {@link String} id
+     * @return all {@link Handle Handles} in this set containing the specified tag
+     * @throws ClassCastException if the tag is not a {@link Handle} or a {@link String}
+     * @throws NullPointerException if the tag is {@code null}
+     * @throws IllegalArgumentException if the {@link Handle} is not a tag
      */
     @Override
     public Collection<Handle> getByTag(Object tag) {
@@ -110,13 +115,15 @@ public class HashHandleSet extends HashSet<Handle> implements HandleSet {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns all {@link Handle Handles} in this set containing the specified tags. The tags may be
+     * {@link Handle Handles} or their {@link String} ids.
      *
-     * @param tags {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @param tags tag {@link Handle Handles} or their {@link String} ids
+     * @return all {@link Handle Handles} in this set containing the specified tags
+     * @throws ClassCastException if any of the tags is not a {@link Handle} or a {@link String}
+     * @throws NullPointerException if the specified collection contains one or more {@code null} elements or if the
+     * collection itself is {@code null}
+     * @throws IllegalArgumentException if any of the {@link Handle Handles} is not a tag
      */
     @Override
     public Collection<Handle> getByTags(Collection<?> tags) {

@@ -15,10 +15,25 @@ import java.util.stream.Collectors;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class GroupImpl implements Group {
+    /**
+     * Identifying {@link Handle} of this group.
+     */
     @EqualsAndHashCode.Include
     private final Handle handle;
+
+    /**
+     * {@link HandleManager} managing this group.
+     */
     private final HandleManager handleManager;
+
+    /**
+     * {@link Space} associated with this group
+     */
     private final Space space;
+
+    /**
+     * {@link HandleSet} containing the {@link Handle Handles} of this group.
+     */
     private final HandleSet handles;
 
     /**
@@ -39,9 +54,9 @@ public class GroupImpl implements Group {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the {@link String} representation of this group.
      *
-     * @return {@inheritDoc}
+     * @return {@link String} representation of this group
      */
     @Override
     public String toString() {

@@ -30,6 +30,10 @@ import static me.datafox.dfxengine.handles.utils.HandleUtils.checkTag;
  */
 public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> {
     private final Logger logger;
+
+    /**
+     * {@link Space} associated with this map.
+     */
     @Getter
     private final Space space;
     private final Map<String,Handle> ids;
@@ -58,12 +62,13 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
     }
 
     /**
-     * {@inheritDoc}
+     * Returns {@code true} if this map contains a mapping for all the specified keys. The keys may either be
+     * {@link Handle Handles} or their {@link String} ids.
      *
-     * @param keys {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
+     * @param keys {@link Handle} keys or their {@link String} ids whose presence in this map is to be tested
+     * @return {@code true} if this map contains a mapping for all the specified keys
+     * @throws ClassCastException if any of the keys are of an inappropriate type for this map
+     * @throws NullPointerException if any of the keys is {@code null}
      */
     @Override
     public boolean containsKeys(Collection<?> keys) {
@@ -74,14 +79,17 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
     }
 
     /**
-     * {@inheritDoc}
+     * Associates a {@link Handled} value with its associated {@link Handle}. If the map previously contained a mapping
+     * for the key, the old value is replaced by the specified value. The {@link Handle} key must be present in this
+     * map's associated {@link Space}.
      *
-     * @param value {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws UnsupportedOperationException {@inheritDoc}
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @param value {@link Handled} value to be associated with its associated {@link Handle} key
+     * @return the previous value associated with the key, or {@code null} if none was present
+     * @throws UnsupportedOperationException if the {@code put} operation is not supported by this map
+     * @throws ClassCastException if the value does not implement {@link Handled}
+     * @throws NullPointerException if the specified value is {@code null}
+     * @throws IllegalArgumentException if the value's associated {@link Handle} is not present in this map's associated
+     * {@link Space}
      */
     @Override
     public T putHandled(T value) {
@@ -94,9 +102,10 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
     }
 
     /**
-     * {@inheritDoc}
+     * Returns an unmodifiable version of this map. All changes made to the original map will be reflected in the
+     * returned one.
      *
-     * @return {@inheritDoc}
+     * @return unmodifiable version of this map
      */
     @Override
     public HandleMap<T> unmodifiable() {
@@ -104,13 +113,14 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
     }
 
     /**
-     * {@inheritDoc}
+     * Returns all values mapped to keys containing the specified tag. The tag may be a {@link Handle} or its
+     * {@link String} id.
      *
-     * @param tag {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @param tag tag {@link Handle} or its {@link String} id
+     * @return all values mapped to keys containing the specified tag
+     * @throws ClassCastException if the tag is not a {@link Handle} or a {@link String}
+     * @throws NullPointerException if the tag is {@code null}
+     * @throws IllegalArgumentException if the {@link Handle} is not a tag
      */
     @Override
     public Collection<T> getByTag(Object tag) {
@@ -124,13 +134,14 @@ public class HashHandleMap<T> extends HashMap<Handle,T> implements HandleMap<T> 
     }
 
     /**
-     * {@inheritDoc}
+     * Returns all values mapped to keys containing the specified tags. The tags may be {@link Handle Handles} or their
+     * {@link String} ids.
      *
-     * @param tags {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws ClassCastException {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @param tags tag {@link Handle Handles} or their {@link String} ids
+     * @return all values mapped to keys containing the specified tags
+     * @throws ClassCastException if any of the tags are not {@link Handle Handles} or a {@link String Strings}
+     * @throws NullPointerException if any of the tags is {@code null}
+     * @throws IllegalArgumentException if any of the {@link Handle Handles} is not a tag
      */
     @Override
     public Collection<T> getByTags(Collection<?> tags) {

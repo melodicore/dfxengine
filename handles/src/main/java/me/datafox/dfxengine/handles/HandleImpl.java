@@ -2,10 +2,7 @@ package me.datafox.dfxengine.handles;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import me.datafox.dfxengine.handles.api.Handle;
-import me.datafox.dfxengine.handles.api.HandleManager;
-import me.datafox.dfxengine.handles.api.HandleSet;
-import me.datafox.dfxengine.handles.api.Space;
+import me.datafox.dfxengine.handles.api.*;
 import me.datafox.dfxengine.handles.utils.HandleUtils;
 import me.datafox.dfxengine.utils.LogUtils;
 import org.slf4j.Logger;
@@ -20,17 +17,45 @@ import static me.datafox.dfxengine.handles.utils.HandleStrings.*;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class HandleImpl implements Handle {
+    /**
+     * {@link HandleManager} managing this handle.
+     */
     @EqualsAndHashCode.Include
     private final HandleManager handleManager;
+
+    /**
+     * {@link Logger} of this handle.
+     */
     private final Logger logger;
+
+    /**
+     * {@link Space} that this handle is contained in.
+     */
     @EqualsAndHashCode.Include
     private final Space space;
+
+    /**
+     * {@link String} id of this handle.
+     */
     private final String id;
+
+    /**
+     * Index of this handle.
+     */
     @EqualsAndHashCode.Include
     private final int index;
+
+    /**
+     * Sub-index of this handle.
+     */
     @EqualsAndHashCode.Include
     private final int subIndex;
+
     private final HandleSet subHandles;
+
+    /**
+     * {@link HandleSet} containing the tags of this handle.
+     */
     private final HandleSet tags;
 
     /**
@@ -58,9 +83,10 @@ public class HandleImpl implements Handle {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the {@link HandleSet} containing the subhandles of this handle, or an empty set if this handle is a
+     * subhandle.
      *
-     * @return {@inheritDoc}
+     * @return {@link HandleSet} containing the subhandles of this handle
      */
     @Override
     public HandleSet getSubHandles() {
@@ -68,13 +94,17 @@ public class HandleImpl implements Handle {
     }
 
     /**
-     * {@inheritDoc}
+     * Creates a new subhandle. Throws {@link UnsupportedOperationException} if this handle is a subhandle or is
+     * associated with a {@link Space} (subhandles for space handles are used exclusively for {@link Group Groups},
+     * use {@link Space#createGroup(String)} instead).
      *
-     * @param id {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws UnsupportedOperationException {@inheritDoc}
+     * @param id {@link String} id for the new subhandle
+     * @return created subhandle
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or the
+     * colon ({@code :}), or if a subhandle with the given id already exists in this handle
+     * @throws UnsupportedOperationException if this handle is a subhandle or if this handle is associated with a
+     * {@link Space}
      */
     @Override
     public Handle createSubHandle(String id) {
@@ -91,13 +121,18 @@ public class HandleImpl implements Handle {
     }
 
     /**
-     * {@inheritDoc}
+     * Creates a subhandle with the specified id if it does not already exist and returns the subhandle with that id.
+     * Throws {@link UnsupportedOperationException} if this handle is a subhandle or is associated with a {@link Space}
+     * (subhandles for space handles are used exclusively for {@link Group Groups}) and a subhandle with the specified
+     * id is not present. Use {@link Space#getOrCreateGroup(String)}.
      *
-     * @param id {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
-     * @throws UnsupportedOperationException {@inheritDoc}
+     * @param id {@link String} id for the subhandle
+     * @return created or pre-existing subhandle
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or the
+     * colon ({@code :})
+     * @throws UnsupportedOperationException if this handle is a subhandle or if this handle is associated with a
+     * {@link Space} and a subhandle with the specified id is not present
      */
     @Override
     public Handle getOrCreateSubHandle(String id) {
@@ -112,9 +147,9 @@ public class HandleImpl implements Handle {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns {@code true} if this handle is a subhandle.
      *
-     * @return {@inheritDoc}
+     * @return {@code true} if this handle is a subhandle
      */
     @Override
     public boolean isSubHandle() {
@@ -145,9 +180,9 @@ public class HandleImpl implements Handle {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the {@link String} representation of this handle.
      *
-     * @return {@inheritDoc}
+     * @return {@link String} representation of this handle
      */
     @Override
     public String toString() {

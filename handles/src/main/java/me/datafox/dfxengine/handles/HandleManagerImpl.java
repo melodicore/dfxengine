@@ -20,13 +20,28 @@ import static me.datafox.dfxengine.handles.utils.HandleStrings.*;
  */
 @Component(order = Integer.MAX_VALUE)
 public class HandleManagerImpl implements HandleManager {
+    /**
+     * {@link Logger} of this handle manager.
+     */
     @Getter(AccessLevel.PACKAGE)
     private final Logger logger;
+
+    /**
+     * {@link Space} containing {@link Handle Handles} used for identifying spaces.
+     */
     @Getter
     private final Space spaceSpace;
+
+    /**
+     * {@link Space} containing tag {@link Handle Handles}.
+     */
     @Getter
     private final Space tagSpace;
     private final HandleMap<Space> spaces;
+
+    /**
+     * {@link HandleManagerConfiguration} for this handle manager.
+     */
     @Getter(AccessLevel.PACKAGE)
     private final HandleManagerConfiguration configuration;
 
@@ -50,9 +65,9 @@ public class HandleManagerImpl implements HandleManager {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns an unmodifiable {@link HandleMap} containing all {@link Space Spaces} managed by this handle manager.
      *
-     * @return {@inheritDoc}
+     * @return unmodifiable {@link HandleMap} containing all {@link Space Spaces} managed by this handle manager
      */
     @Override
     public HandleMap<Space> getSpaces() {
@@ -60,12 +75,13 @@ public class HandleManagerImpl implements HandleManager {
     }
 
     /**
-     * {@inheritDoc}
+     * Creates a new {@link Space} with the specified id.
      *
-     * @param id {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @param id {@link String} id for the new {@link Space}
+     * @return created {@link Space}
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or the
+     * colon ({@code :}), or if a {@link Space} with the given id already exists
      */
     @Override
     public Space createSpace(String id) {
@@ -79,12 +95,13 @@ public class HandleManagerImpl implements HandleManager {
     }
 
     /**
-     * {@inheritDoc}
+     * Creates a {@link Space} with the specified id if it does not already exist and returns the space with that id.
      *
-     * @param id {@inheritDoc}
-     * @return {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     * @throws IllegalArgumentException {@inheritDoc}
+     * @param id {@link String} id for the {@link Space}
+     * @return created or pre-existing {@link Space}
+     * @throws NullPointerException if the id is {@code null}
+     * @throws IllegalArgumentException if the id is empty, blank, contains non-ASCII or non-printable characters or the
+     * colon ({@code :})
      */
     @Override
     public Space getOrCreateSpace(String id) {
@@ -159,11 +176,12 @@ public class HandleManagerImpl implements HandleManager {
         }
 
     }
-    class SpaceHandle extends HandleImpl {
 
+    class SpaceHandle extends HandleImpl {
         SpaceHandle(Space space, String id, int index, int subIndex) {
             super(space, id, index, subIndex);
         }
+
         @Override
         public Handle createSubHandle(String id) {
             throw LogUtils.logExceptionAndGet(logger,
