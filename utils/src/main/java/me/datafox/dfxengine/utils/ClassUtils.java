@@ -16,9 +16,11 @@ import java.util.stream.Stream;
  */
 public class ClassUtils {
     /**
+     * Returns a {@link Stream} of the class and all superclasses and superinterfaces of the class.
+     *
      * @param aClass class
      * @param <T> type of the class
-     * @return Stream of the class and all superclasses and superinterfaces of the class
+     * @return {@link Stream} of the class and all superclasses and superinterfaces of the class
      */
     public static <T> Stream<Class<? super T>> getSuperclassesFor(Class<? super T> aClass) {
         return Stream.concat(
@@ -28,6 +30,8 @@ public class ClassUtils {
     }
 
     /**
+     * Returns a list of all declared constructors of the class with the annotation.
+     *
      * @param aClass class
      * @param annotation annotation
      * @param <T> type of the class
@@ -45,6 +49,8 @@ public class ClassUtils {
     }
 
     /**
+     * Returns a list of all declared fields of the class with the annotation.
+     *
      * @param aClass class
      * @param annotation annotation
      * @param <T> type of the class
@@ -58,6 +64,8 @@ public class ClassUtils {
     }
 
     /**
+     * Returns a list of all declared methods of the class with the annotation.
+     *
      * @param aClass class
      * @param annotation annotation
      * @param <T> type of the class
@@ -71,10 +79,14 @@ public class ClassUtils {
     }
 
     /**
+     * Returns an {@link Optional} containing the first annotation in the array matching the type, or empty if no
+     * matches are found.
+     *
      * @param arr array of annotations
      * @param annotationType annotation type
      * @param <T> type of the annotation
-     * @return Optional containing the first annotation in the array matching the type, or empty if no matches are found
+     * @return {@link Optional} containing the first annotation in the array matching the type, or empty if no matches
+     * are found
      */
     public static <T extends Annotation> Optional<T> getAnnotationFromArray(Annotation[] arr, Class<T> annotationType) {
         return Arrays
@@ -85,23 +97,29 @@ public class ClassUtils {
     }
 
     /**
+     * Returns a {@link Stream} of the object cast to the specified {@link Class}, or an empty stream if the object
+     * cannot be cast to the specified class.
+     *
      * @param input object to be checked
      * @param aClass {@link Class}
      * @param <T> type of the input
      * @param <C> type to be cast to
-     * @return {@link Stream} of the object cast to the specified {@link Class}, or an empty Stream if the object cannot
-     * be cast to the specified Class
+     * @return {@link Stream} of the object cast to the specified {@link Class}, or an empty stream if the object cannot
+     * be cast to the specified class
      */
     public static <T,C> Stream<C> filterInstanceAndCast(T input, Class<C> aClass) {
         return aClass.isInstance(input) ? Stream.of(aClass.cast(input)) : Stream.empty();
     }
 
     /**
+     * Returns a {@link Function} that returns a {@link Stream} of the object cast to the specified {@link Class}, or an
+     * empty stream if the object cannot be cast to the specified class.
+     *
      * @param aClass {@link Class}
      * @param <T> type of the input
      * @param <C> type to be cast to
      * @return {@link Function} that returns a {@link Stream} of the object cast to the specified {@link Class}, or an
-     * empty Stream if the object cannot be cast to the specified Class
+     * empty stream if the object cannot be cast to the specified class
      */
     public static <T,C> Function<T,Stream<C>> filterInstanceAndCast(Class<C> aClass) {
         return input -> filterInstanceAndCast(input, aClass);

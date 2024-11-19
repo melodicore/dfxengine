@@ -28,6 +28,8 @@ public class StringUtils {
     }
 
     /**
+     * Returns the name of a class.
+     *
      * @param aClass class
      * @param <T> type of the class
      * @return {@link String} representation of the class in <i>ClassName.class</i> format
@@ -37,6 +39,8 @@ public class StringUtils {
     }
 
     /**
+     * Returns the name of a type.
+     *
      * @param type type
      * @return {@link String} representation of the type in <i>ClassName.class</i> format
      */
@@ -51,6 +55,8 @@ public class StringUtils {
     }
 
     /**
+     * Returns the name of a constructor with its parameters.
+     *
      * @param constructor constructor
      * @param <T> type of the constructor
      * @return {@link String} representation of the constructor in <i>ClassName(Param1.class,Param2.class)</i> format
@@ -63,6 +69,8 @@ public class StringUtils {
     }
 
     /**
+     * Capitalizes a {@link String}.
+     *
      * @param str {@link String} to be capitalized
      * @return capitalized {@link String}
      */
@@ -72,6 +80,8 @@ public class StringUtils {
     }
 
     /**
+     * Joins the specified elements together using the specified separator and last separator.
+     *
      * @param elements {@link CharSequence} elements to be joined
      * @param separator separator to be used
      * @param lastSeparator separator to be used before the last element, or {@code null} if the normal separator should
