@@ -4,11 +4,6 @@ plugins {
 
 version = "$mathApiVersion"
 
-dependencies {
-    compileOnly "org.projectlombok:lombok:$lombokVersion"
-    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
-}
-
 mavenPublishing {
     coordinates(dfxengineGroup, name, version)
     pom {
