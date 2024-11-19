@@ -12,9 +12,9 @@ import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 @FunctionalInterface
 public interface Text {
     /**
-     * Implementation should use the provided {@link TextConfiguration} and not {@link TextFactory#getConfiguration()}.
-     * The reference to {@link TextFactory} is provided for access to objects like {@link Name Names} and
-     * {@link NumberFormatter NumberFormatters}.
+     * Returns a {@link String}. Implementation should use the provided {@link TextConfiguration} and not
+     * {@link TextFactory#getConfiguration()}. The reference to {@link TextFactory} is provided for access to objects
+     * like {@link Name Names} and {@link NumberFormatter NumberFormatters}.
      *
      * @param factory {@link TextFactory} for generation
      * @param configuration {@link TextConfiguration} for generation

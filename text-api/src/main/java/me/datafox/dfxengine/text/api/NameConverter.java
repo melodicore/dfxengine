@@ -8,22 +8,31 @@ package me.datafox.dfxengine.text.api;
  */
 public interface NameConverter<T> {
     /**
+     * Returns the type of the object that this converter can convert.
+     *
      * @return type of the object that this converter can convert
      */
     Class<T> getType();
 
     /**
+     * Returns {@code true} if this converter can also convert to plural form.
+     *
      * @return {@code true} if this converter can also convert to plural form
      */
     boolean isPluralCapable();
 
     /**
+     * Converts an object to its given name in singular form.
+     *
      * @param object object to be converted
      * @return name of the object in singular form
      */
     String convert(T object);
 
     /**
+     * Converts an object to its given name in singular form, or returns {@code null} if this converter does not support
+     * plural form.
+     *
      * @param object object to be converted
      * @return name of the object in singular form, or {@code null} if this converter does not support plural form
      */

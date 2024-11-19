@@ -26,6 +26,8 @@ public final class ConfigurationKey<T> {
     private T defaultValue;
 
     /**
+     * Sets the default value for this configuration key.
+     *
      * @param defaultValue value to be set as the default value
      * @throws UnsupportedOperationException if the default value has already been set
      */
@@ -37,6 +39,8 @@ public final class ConfigurationKey<T> {
     }
 
     /**
+     * Returns a configuration key with the specified default value.
+     *
      * @param defaultValue default value for the configuration key
      * @return new {@link ConfigurationKey} with the specified default value
      * @param <T> type of the value of this configuration key
@@ -46,7 +50,8 @@ public final class ConfigurationKey<T> {
     }
 
     /**
-     * Any class calling this method must also call {@link #setDefaultValue(Object)} on the returned configuration key.
+     * Returns a configuration key without a default value. Any class calling this method must also call
+     * {@link #setDefaultValue(Object)} on the returned configuration key.
      *
      * @return new {@link ConfigurationKey} with the specified default value
      * @param <T> type of the value of this configuration key

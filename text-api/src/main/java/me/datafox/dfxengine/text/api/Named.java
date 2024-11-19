@@ -10,7 +10,9 @@ package me.datafox.dfxengine.text.api;
  */
 public interface Named<T> {
     /**
-     * @return {@link Name of this object}
+     * Returns the name of this object.
+     *
+     * @return {@link Name} of this object
      */
     Name<T> getName();
 }

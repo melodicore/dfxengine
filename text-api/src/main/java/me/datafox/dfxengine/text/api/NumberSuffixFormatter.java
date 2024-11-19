@@ -13,6 +13,8 @@ import java.math.BigDecimal;
  */
 public interface NumberSuffixFormatter extends Handled {
     /**
+     * Formats a {@link BigDecimal} to an {@link Output}.
+     *
      * @param number number to format
      * @param factory {@link TextFactory} for formatting
      * @param configuration {@link TextConfiguration} for formatting
@@ -24,6 +26,8 @@ public interface NumberSuffixFormatter extends Handled {
     Output format(BigDecimal number, TextFactory factory, TextConfiguration configuration);
 
     /**
+     * Returns {@code true} if this formatter can format any {@link BigDecimal} number.
+     *
      * @return {@code true} if this formatter can format any {@link BigDecimal} number
      */
     boolean isInfinite();

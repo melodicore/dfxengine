@@ -10,8 +10,8 @@ package me.datafox.dfxengine.text.api;
 @FunctionalInterface
 public interface ConfigurationValue<T> {
     /**
-     * When writing implementations, the developer should be careful when using the provided {@link TextConfiguration}
-     * to avoid cyclic method calls
+     * Returns the configured value. When writing implementations, the developer should be careful when using the
+     * provided {@link TextConfiguration} to avoid cyclic method calls
      *
      * @param factory {@link TextFactory} for generating the configuration value
      * @param configuration {@link TextConfiguration} for generating the configuration value

@@ -13,6 +13,8 @@ import java.math.BigDecimal;
  */
 public interface NumberFormatter extends Handled {
     /**
+     * Formats a {@link BigDecimal} to a {@link String}.
+     *
      * @param number number to be formatter
      * @param factory {@link TextFactory} for formatting
      * @param configuration {@link TextConfiguration} for formatting

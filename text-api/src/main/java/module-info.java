@@ -1,4 +1,6 @@
 /**
+ * Text generation, manipulation and representation. This module contains interfaces.
+ *
  * @author datafox
  */
 open module dfxengine.text.api {
