@@ -9,6 +9,11 @@ import me.datafox.dfxengine.injector.api.TypeRef;
  * @author datafox
  */
 public class ParameterCountMismatchException extends RuntimeException {
+    /**
+     * Public constructor for {@link ParameterCountMismatchException}.
+     *
+     * @param message details for this exception
+     */
     public ParameterCountMismatchException(String message) {
         super(message);
     }

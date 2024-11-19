@@ -1,4 +1,7 @@
 /**
+ * Injector is a module containing a dependency injector and an event handling system. This module contains all of its
+ * annotations and interfaces and some simple classes.
+ *
  * @author datafox
  */
 open module dfxengine.injector.api {

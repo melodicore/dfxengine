@@ -17,19 +17,28 @@ import java.util.stream.Stream;
  * {@code TypeRef.of(Component.class, TypeRef.of(Type1.class), TypeRef.of(Type2.class, TypeRef.of(Type3.class)));}. The
  * constructor checks for parameter count and throws an exception if an invalid amount of type parameters.
  *
+ * @param <T> type of the referenced {@link Class}
+ *
  * @author datafox
  */
 @Data
 public final class TypeRef<T> {
+    /**
+     * {@link Class} of the referenced type
+     */
     private final Class<T> type;
 
+    /**
+     * {@code true} if this type reference refers to a super type ({@code ? super T}).
+     */
     private final boolean sup;
 
     @Singular
     private final List<TypeRef<?>> parameters;
 
     /**
-     * Constructs a type reference
+     * Public constructor for {@link TypeRef}.
+     *
      * @param type type to be represented
      * @param sup {@code true} if this type reference refers to {@code ? super T}
      * @param parameters type parameters to be represented
@@ -75,7 +84,10 @@ public final class TypeRef<T> {
     }
 
     /**
-     * @return String representation of this type reference in the format "{@code Type<Parameter,Other<Child>>}"
+     * Returns the {@link String} representation of this type reference in the format
+     * "{@code Type<Parameter,Other<Child>>}" without packages.
+     *
+     * @return {@link String} representation of this type reference in the format "{@code Type<Parameter,Other<Child>>}"
      * without packages
      */
     public String toStringWithoutPackage() {
@@ -87,7 +99,10 @@ public final class TypeRef<T> {
     }
 
     /**
-     * @return String representation of this type reference in the format "{@code Type<Parameter,Other<Child>>}"
+     * Returns the {@link String} representation of this type reference in the format
+     * "{@code Type<Parameter,Other<Child>>}" with the parameters without packages.
+     *
+     * @return {@link String} representation of this type reference in the format "{@code Type<Parameter,Other<Child>>}"
      * with the parameters without packages
      */
     public String toStringParametersWithoutPackage() {
@@ -99,7 +114,10 @@ public final class TypeRef<T> {
     }
 
     /**
-     * @return String representation of this type reference in the format "{@code Type<Parameter,Other<Child>>}"
+     * Returns the {@link String} representation of this type reference in the format
+     * "{@code Type<Parameter,Other<Child>>}".
+     *
+     * @return {@link String} representation of this type reference in the format "{@code Type<Parameter,Other<Child>>}"
      */
     @Override
     public String toString() {
@@ -111,6 +129,8 @@ public final class TypeRef<T> {
     }
 
     /**
+     * Returns the type reference for {@link Object}.
+     *
      * @return type reference for {@link Object}
      */
     public static TypeRef<Object> object() {
@@ -120,6 +140,8 @@ public final class TypeRef<T> {
     }
 
     /**
+     * Returns a type reference with the given parameters.
+     *
      * @param type type for the type reference
      * @param parameters parameters for the type reference
      * @return type reference for the specified parameters
@@ -135,6 +157,8 @@ public final class TypeRef<T> {
     }
 
     /**
+     * Returns a type reference with the given parameters.
+     *
      * @param type type for the type reference
      * @param sup {@code true} if the type reference refers to {@code ? super T}
      * @param parameters parameters for the type reference
@@ -151,6 +175,8 @@ public final class TypeRef<T> {
     }
 
     /**
+     * Returns a type reference with the given parameters.
+     *
      * @param type type for the type reference
      * @param parameters parameters for the type reference
      * @return type reference for the specified parameters
@@ -161,6 +187,8 @@ public final class TypeRef<T> {
     }
 
     /**
+     * Returns a type reference with the given parameters.
+     *
      * @param type type for the type reference
      * @param sup {@code true} if the type reference refers to {@code ? super T}
      * @param parameters parameters for the type reference
@@ -172,6 +200,8 @@ public final class TypeRef<T> {
     }
 
     /**
+     * Returns a type reference with the given parameters.
+     *
      * @param type type for the type reference
      * @param firstParameter first parameter for the type reference
      * @param parameters other parameters for the type reference
@@ -190,6 +220,8 @@ public final class TypeRef<T> {
     }
 
     /**
+     * Returns a type reference with the given parameters.
+     *
      * @param type type for the type reference
      * @param sup {@code true} if the type reference refers to {@code ? super T}
      * @param firstParameter first parameter for the type reference

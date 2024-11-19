@@ -14,7 +14,13 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
 @Builder
 @Data
 public final class InstantiationDetails {
+    /**
+     * {@link TypeRef} of the instantiated component.
+     */
     private final TypeRef<?> type;
 
+    /**
+     * {@link TypeRef} of the component that requested the instantiated component.
+     */
     private final TypeRef<?> requesting;
 }

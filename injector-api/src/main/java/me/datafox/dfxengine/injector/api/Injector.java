@@ -36,7 +36,7 @@ public interface Injector {
     <T> T getComponent(TypeRef<T> type);
 
     /**
-     * Returns a single {@link Component} of the specified type. If the Component has
+     * Returns a single {@link Component} of the specified type. If the component has
      * {@link InstantiationPolicy#PER_INSTANCE} and depends on {@link InstantiationDetails}, the {@code requesting}
      * parameter will be used for {@link InstantiationDetails}. If the {@link Class} has type parameters, use
      * {@link #getComponent(TypeRef)} instead.
@@ -52,7 +52,7 @@ public interface Injector {
     <T,R> T getComponent(Class<T> type, Class<R> requesting);
 
     /**
-     * Returns a single {@link Component} of the specified type. If the Component has
+     * Returns a single {@link Component} of the specified type. If the component has
      * {@link InstantiationPolicy#PER_INSTANCE} and depends on {@link InstantiationDetails}, the {@code requesting}
      * parameter will be used for {@link InstantiationDetails}.
      *
@@ -86,7 +86,7 @@ public interface Injector {
     <T> List<T> getComponents(TypeRef<T> type);
 
     /**
-     * Returns {@link Component Components} of the specified type. If any of the Components have
+     * Returns {@link Component Components} of the specified type. If any of the components have
      * {@link InstantiationPolicy#PER_INSTANCE} and depend on {@link InstantiationDetails}, the {@code requesting}
      * parameter will be used for {@link InstantiationDetails}. If the {@link Class} has type parameters, use
      * {@link #getComponent(TypeRef)} instead. Otherwise, an exception is thrown.
@@ -102,7 +102,7 @@ public interface Injector {
     <T,R> List<T> getComponents(Class<T> type, Class<R> requesting);
 
     /**
-     * Returns {@link Component Components} of the specified type. If any of the Components hav
+     * Returns {@link Component Components} of the specified type. If any of the components have
      * {@link InstantiationPolicy#PER_INSTANCE} and depend on {@link InstantiationDetails}, the {@code requesting}
      * parameter will be used for {@link InstantiationDetails}.
      *
