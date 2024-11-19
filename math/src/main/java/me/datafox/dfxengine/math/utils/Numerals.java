@@ -24,6 +24,8 @@ public class Numerals {
     private static final Logger logger = LoggerFactory.getLogger(Numerals.class);
 
     /**
+     * Returns an {@link IntNumeral} representing the specified value.
+     *
      * @param i {@code int} value
      * @return {@link IntNumeral} representing specified value
      */
@@ -32,6 +34,8 @@ public class Numerals {
     }
 
     /**
+     * Returns a {@link LongNumeral} representing the specified value.
+     *
      * @param l {@code long} value
      * @return {@link LongNumeral} representing specified value
      */
@@ -40,6 +44,8 @@ public class Numerals {
     }
 
     /**
+     * Returns a {@link BigIntNumeral} representing the specified value.
+     *
      * @param bi {@link BigInteger} value
      * @return {@link BigIntNumeral} representing specified value
      */
@@ -48,6 +54,8 @@ public class Numerals {
     }
 
     /**
+     * Returns a {@link FloatNumeral} representing the specified value.
+     *
      * @param f {@code float} value
      * @return {@link FloatNumeral} representing specified value
      */
@@ -56,6 +64,8 @@ public class Numerals {
     }
 
     /**
+     * Returns a {@link DoubleNumeral} representing the specified value.
+     *
      * @param d {@code double} value
      * @return {@link DoubleNumeral} representing specified value
      */
@@ -64,6 +74,8 @@ public class Numerals {
     }
 
     /**
+     * Returns a {@link BigDecNumeral} representing the specified value.
+     *
      * @param bd {@link BigDecimal} value
      * @return {@link BigDecNumeral} representing specified value
      */
@@ -72,9 +84,9 @@ public class Numerals {
     }
 
     /**
-     * If the specified {@link String} represents an integer, a {@link BigIntNumeral} is returned. Otherwise, a
-     * {@link BigDecNumeral} is returned. A string is considered to represent an integer if it does not contain any of
-     * the characters {@code .}, {@code e} or {@code E}.
+     * Returns a numeral representing the specified value. If the specified {@link String} represents an integer, a
+     * {@link BigIntNumeral} is returned. Otherwise, a {@link BigDecNumeral} is returned. A string is considered to
+     * represent an integer if it does not contain the characters {@code .}, {@code e} or {@code E}.
      *
      * @param str {@link String} representation of a numeric value
      * @return {@link Numeral} representing specified value
@@ -90,8 +102,9 @@ public class Numerals {
     }
 
     /**
-     * If the {@link Number} is not an instance of {@link Integer}, {@link Long}, {@link BigInteger}, {@link Float},
-     * {@link Double} or {@link BigDecimal}, this method attempts to parse the number using {@link Number#toString()}.
+     * Returns a numeral representing the specified value. If the {@link Number} is not an instance of {@link Integer},
+     * {@link Long}, {@link BigInteger}, {@link Float}, {@link Double} or {@link BigDecimal}, this method attempts to
+     * parse the number using {@link Number#toString()}.
      *
      * @param number {@link Number} value
      * @return {@link Numeral} representing the specified value
@@ -121,6 +134,8 @@ public class Numerals {
     }
 
     /**
+     * Checks if the numeral represents the number zero.
+     *
      * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the specified value represents the number zero
      *
@@ -158,6 +173,8 @@ public class Numerals {
 
 
     /**
+     * Checks if the numeral represents the number one.
+     *
      * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the specified value represents the number one
      *
@@ -194,6 +211,9 @@ public class Numerals {
     }
 
     /**
+     * Checks if the numeral represents an even number. A decimal number is only even if it does not have a decimal
+     * part.
+     *
      * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the {@link Numeral} represents an even number. For decimal Numerals, the number must not
      * have a decimal part for {@code true} to be returned;
@@ -232,6 +252,8 @@ public class Numerals {
     }
 
     /**
+     * Compares two numerals together based on their values.
+     *
      * @param numeral first {@link Numeral} to compare
      * @param other second {@link Numeral} to compare
      * @return 0 if the {@link Numeral} values represent the same number, 1 if the first Numeral represents a larger
@@ -267,6 +289,8 @@ public class Numerals {
     }
 
     /**
+     * Returns the most significant type of two types.
+     *
      * @param type1 first {@link NumeralType}
      * @param type2 second {@link NumeralType}
      * @return the most significant type of specified values
@@ -284,18 +308,10 @@ public class Numerals {
     }
 
     /**
-     * <p>
      * Returns the most significant {@link NumeralType}. The significance of a type is determined by how large numerical
-     * values it can represent. If any of the specified types is a {@link NumeralType#isDecimal() decimal type}, the
-     * return value of this method is also a decimal type. If any of the specified types is {@code null}, the return
-     * value is also {@code null}. {@code null} check takes precedence over all other checks.
-     * </p>
-     * <p>
-     * Therefore, if any of the specified types is {@link NumeralType#BIG_DEC BIG_DEC}, BIG_DEC is also returned.
-     * BIG_DEC is also returned if any of the specified types is {@link NumeralType#BIG_INT BIG_INT} and another is
-     * a decimal type. In all other cases the specified type with the highest
-     * {@link NumeralType#getSignificance() significance} will be returned.
-     * </p>
+     * values it can represent. If any of the specified types is {@link NumeralType#BIG_INT BIG_INT} and another is a
+     * decimal type, {@link NumeralType#BIG_DEC BIG_DEC} is returned. In all other cases the specified type with the
+     * highest {@link NumeralType#ordinal() ordinal} will be returned.
      *
      * @param types types to be checked
      * @return the most significant type
@@ -336,7 +352,7 @@ public class Numerals {
                 return BIG_DEC;
             }
 
-            if(type.getSignificance() > significantType.getSignificance()) {
+            if(type.ordinal() > significantType.ordinal()) {
                 significantType = type;
             }
         }

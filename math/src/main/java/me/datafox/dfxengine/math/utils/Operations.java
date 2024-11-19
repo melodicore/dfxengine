@@ -28,6 +28,8 @@ public class Operations {
     private static MathContext CONTEXT = MathContext.DECIMAL128;
 
     /**
+     * Returns the current {@link MathContext} for {@link BigDecimal} operations.
+     *
      * @return current {@link MathContext} for {@link BigDecimal} operations
      */
     public static MathContext getContext() {
@@ -35,6 +37,8 @@ public class Operations {
     }
 
     /**
+     * Sets the current {@link MathContext} for {@link BigDecimal} operations.
+     *
      * @param context {@link MathContext} for {@link BigDecimal} operations
      */
     public static void setContext(MathContext context) {
@@ -780,6 +784,8 @@ public class Operations {
     }
 
     /**
+     * Adds two {@code ints} together. Promotes to {@code long} if the result would overflow.
+     *
      * @param augend augend
      * @param addend addend
      * @return result of the addition
@@ -795,6 +801,8 @@ public class Operations {
     }
 
     /**
+     * Adds two {@code longs} together. Promotes to {@link BigInteger} if the result would overflow.
+     *
      * @param augend augend
      * @param addend addend
      * @return result of the addition
@@ -810,6 +818,8 @@ public class Operations {
     }
 
     /**
+     * Adds two {@link BigInteger BigIntegers} together.
+     *
      * @param augend augend
      * @param addend addend
      * @return result of the addition
@@ -819,6 +829,8 @@ public class Operations {
     }
 
     /**
+     * Adds two {@code floats} together. Promotes to {@code double} if the result would overflow.
+     *
      * @param augend augend
      * @param addend addend
      * @return result of the addition
@@ -834,6 +846,8 @@ public class Operations {
     }
 
     /**
+     * Adds two {@code doubles} together. Promotes to {@link BigDecimal} if the result would overflow.
+     *
      * @param augend augend
      * @param addend addend
      * @return result of the addition
@@ -849,6 +863,8 @@ public class Operations {
     }
 
     /**
+     * Adds two {@link BigDecimal BigDecimals} together.
+     *
      * @param augend augend
      * @param addend addend
      * @return result of the addition
@@ -858,6 +874,8 @@ public class Operations {
     }
 
     /**
+     * Subtracts an {@code int} from another. Promotes to {@code long} if the result would overflow.
+     *
      * @param minuend minuend
      * @param subtrahend subtrahend
      * @return result of the subtraction
@@ -873,6 +891,8 @@ public class Operations {
     }
 
     /**
+     * Subtracts a {@code long} from another. Promotes to {@link BigInteger} if the result would overflow.
+     *
      * @param minuend minuend
      * @param subtrahend subtrahend
      * @return result of the subtraction
@@ -888,6 +908,8 @@ public class Operations {
     }
 
     /**
+     * Subtracts a {@link BigInteger} from another.
+     *
      * @param minuend minuend
      * @param subtrahend subtrahend
      * @return result of the subtraction
@@ -897,6 +919,8 @@ public class Operations {
     }
 
     /**
+     * Subtracts a {@code float} from another. Promotes to {@code double} if the result would overflow.
+     *
      * @param minuend minuend
      * @param subtrahend subtrahend
      * @return result of the subtraction
@@ -912,6 +936,8 @@ public class Operations {
     }
 
     /**
+     * Subtracts a {@code double} from another. Promotes to {@link BigDecimal} if the result would overflow.
+     *
      * @param minuend minuend
      * @param subtrahend subtrahend
      * @return result of the subtraction
@@ -927,6 +953,8 @@ public class Operations {
     }
 
     /**
+     * Subtracts a {@link BigDecimal} from another.
+     *
      * @param minuend minuend
      * @param subtrahend subtrahend
      * @return result of the subtraction
@@ -936,6 +964,8 @@ public class Operations {
     }
 
     /**
+     * Multiplies two {@code ints} together. Promotes to {@code long} if the result would overflow.
+     *
      * @param multiplicand multiplicand
      * @param multiplier multiplier
      * @return result of the multiplication
@@ -951,6 +981,8 @@ public class Operations {
     }
 
     /**
+     * Multiplies two {@code longs} together. Promotes to {@link BigInteger} if the result would overflow.
+     *
      * @param multiplicand multiplicand
      * @param multiplier multiplier
      * @return result of the multiplication
@@ -971,6 +1003,8 @@ public class Operations {
     }
 
     /**
+     * Multiplies two {@link BigInteger BigIntegers} together.
+     *
      * @param multiplicand multiplicand
      * @param multiplier multiplier
      * @return result of the multiplication
@@ -980,6 +1014,8 @@ public class Operations {
     }
 
     /**
+     * Multiplies two {@code floats} together. Promotes to {@code double} if the result would overflow.
+     *
      * @param multiplicand multiplicand
      * @param multiplier multiplier
      * @return result of the multiplication
@@ -995,6 +1031,8 @@ public class Operations {
     }
 
     /**
+     * Multiplies two {@code doubles} together. Promotes to {@link BigDecimal} if the result would overflow.
+     *
      * @param multiplicand multiplicand
      * @param multiplier multiplier
      * @return result of the multiplication
@@ -1010,6 +1048,8 @@ public class Operations {
     }
 
     /**
+     * Multiplies two {@link BigDecimal BigDecimals} together.
+     *
      * @param multiplicand multiplicand
      * @param multiplier multiplier
      * @return result of the multiplication
@@ -1019,6 +1059,8 @@ public class Operations {
     }
 
     /**
+     * Divides an {@code int} by another.
+     *
      * @param dividend dividend
      * @param divisor divisor
      * @return result of the division
@@ -1028,6 +1070,8 @@ public class Operations {
     }
 
     /**
+     * Divides a {@code long} by another.
+     *
      * @param dividend dividend
      * @param divisor divisor
      * @return result of the division
@@ -1037,6 +1081,8 @@ public class Operations {
     }
 
     /**
+     * Divides a {@link BigInteger} by another.
+     *
      * @param dividend dividend
      * @param divisor divisor
      * @return result of the division
@@ -1046,6 +1092,9 @@ public class Operations {
     }
 
     /**
+     * Divides a {@code float} by another. Promotes to {@code double} or {@link BigDecimal} if the result would
+     * overflow.
+     *
      * @param dividend dividend
      * @param divisor divisor
      * @return result of the division
@@ -1061,6 +1110,8 @@ public class Operations {
     }
 
     /**
+     * Divides a {@code double} by another. Promotes to {@link BigDecimal} if the result would overflow.
+     *
      * @param dividend dividend
      * @param divisor divisor
      * @return result of the division
@@ -1076,6 +1127,8 @@ public class Operations {
     }
 
     /**
+     * Divides a {@link BigDecimal} by another.
+     *
      * @param dividend dividend
      * @param divisor divisor
      * @return result of the division
@@ -1085,6 +1138,9 @@ public class Operations {
     }
 
     /**
+     * Raises an {@code int} to an exponent. Promotes to {@code long} or {@link BigInteger} if the result would
+     * overflow.
+     *
      * @param base base
      * @param exponent exponent
      * @return result of the exponentiation
@@ -1104,6 +1160,8 @@ public class Operations {
     }
 
     /**
+     * Raises a {@code long} to an exponent. Promotes to {@link BigInteger} if the result would overflow.
+     *
      * @param base base
      * @param exponent exponent
      * @return result of the exponentiation
@@ -1119,6 +1177,8 @@ public class Operations {
     }
 
     /**
+     * Raises a {@link BigInteger} to an exponent.
+     *
      * @param base base
      * @param exponent exponent
      * @return result of the exponentiation
@@ -1132,6 +1192,9 @@ public class Operations {
     }
 
     /**
+     * Raises a {@code float} to an exponent. Promotes to {@code double} or {@link BigDecimal} if the result would
+     * overflow.
+     *
      * @param base base
      * @param exponent exponent
      * @return result of the exponentiation
@@ -1151,6 +1214,8 @@ public class Operations {
     }
 
     /**
+     * Raises a {@code double} to an exponent. Promotes to {@link BigDecimal} if the result would overflow.
+     *
      * @param base base
      * @param exponent exponent
      * @return result of the exponentiation
@@ -1166,6 +1231,8 @@ public class Operations {
     }
 
     /**
+     * Raises a {@link BigDecimal} to an exponent.
+     *
      * @param base base
      * @param exponent exponent
      * @return result of the exponentiation
@@ -1175,6 +1242,9 @@ public class Operations {
     }
 
     /**
+     * Calculates {@code e} raised to the power of an {@code int}. Promotes to {@code long} or {@link BigInteger} if the
+     * result would overflow.
+     *
      * @param value value
      * @return natural exponent of the value
      */
@@ -1193,6 +1263,9 @@ public class Operations {
     }
 
     /**
+     * Calculates {@code e} raised to the power of a {@code long}. Promotes to {@link BigInteger} if the result would
+     * overflow.
+     *
      * @param value value
      * @return natural exponent of the value
      */
@@ -1205,6 +1278,8 @@ public class Operations {
     }
 
     /**
+     * Calculates {@code e} raised to the power of a {@link BigInteger}.
+     *
      * @param value exponent
      * @return natural exponent of value
      */
@@ -1213,6 +1288,9 @@ public class Operations {
     }
 
     /**
+     * Calculates {@code e} raised to the power of a {@code float}. Promotes to {@code double} or {@link BigDecimal} if
+     * the result would overflow.
+     *
      * @param value value
      * @return natural exponent of the value
      */
@@ -1231,6 +1309,9 @@ public class Operations {
     }
 
     /**
+     * Calculates {@code e} raised to the power of a {@code double}. Promotes to {@link BigDecimal} if the result would
+     * overflow.
+     *
      * @param value value
      * @return natural exponent of the value
      */
@@ -1245,6 +1326,8 @@ public class Operations {
     }
 
     /**
+     * Calculates {@code e} raised to the power of a {@link BigDecimal}.
+     *
      * @param value value
      * @return natural exponent of the value
      */
@@ -1253,6 +1336,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the square root of an {@code int}.
+     *
      * @param value value
      * @return square root of value
      */
@@ -1261,6 +1346,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the square root of a {@code long}.
+     *
      * @param value value
      * @return square root of value
      */
@@ -1269,6 +1356,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the square root of a {@link BigInteger}.
+     *
      * @param value value
      * @return square root of value
      */
@@ -1277,6 +1366,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the square root of a {@code float}.
+     *
      * @param value value
      * @return square root of value
      */
@@ -1285,6 +1376,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the square root of a {@code double}.
+     *
      * @param value value
      * @return square root of value
      */
@@ -1293,6 +1386,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the square root of a {@link BigDecimal}.
+     *
      * @param value value
      * @return square root of value
      */
@@ -1301,6 +1396,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the cube root of an {@code int}.
+     *
      * @param value value
      * @return cube root of value
      */
@@ -1309,6 +1406,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the cube root of a {@code long}.
+     *
      * @param value value
      * @return cube root of value
      */
@@ -1317,6 +1416,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the cube root of a {@link BigInteger}.
+     *
      * @param value value
      * @return cube root of value
      */
@@ -1325,6 +1426,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the cube root of a {@code float}.
+     *
      * @param value value
      * @return cube root of value
      */
@@ -1333,6 +1436,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the cube root of a {@code double}.
+     *
      * @param value value
      * @return cube root of value
      */
@@ -1341,6 +1446,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the cube root of a {@link BigDecimal}.
+     *
      * @param value value
      * @return cube root of value
      */
@@ -1349,6 +1456,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the root of an {@code int} in the base of another.
+     *
      * @param value value
      * @param base base of the root
      * @return root of the value in the specified base
@@ -1362,6 +1471,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the root of a {@code long} in the base of another.
+     *
      * @param value value
      * @param base base of the root
      * @return root of the value in the specified base
@@ -1375,6 +1486,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the root of a {@link BigInteger} in the base of another.
+     *
      * @param value value
      * @param base base of the root
      * @return root of the value in the specified base
@@ -1391,6 +1504,9 @@ public class Operations {
     }
 
     /**
+     * Calculates the root of a {@code float} in the base of another. Promotes to {@code double} or {@link BigDecimal}
+     * if the result would overflow.
+     *
      * @param value value
      * @param base base of the root
      * @return root of the value in the specified base
@@ -1416,6 +1532,9 @@ public class Operations {
     }
 
     /**
+     * Calculates the root of a {@code double} in the base of another. Promotes to {@link BigDecimal} if the result
+     * would overflow.
+     *
      * @param value value
      * @param base base of the root
      * @return root of the value in the specified base
@@ -1437,6 +1556,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the root of a {@link BigDecimal} in the base of another.
+     *
      * @param value value
      * @param base base of the root
      * @return root of the value in the specified base
@@ -1450,6 +1571,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the natural logarithm of an {@code int}.
+     *
      * @param value value
      * @return natural logarithm of the value
      */
@@ -1458,6 +1581,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the natural logarithm of a {@code long}.
+     *
      * @param value value
      * @return natural logarithm of the value
      */
@@ -1466,6 +1591,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the natural logarithm of a {@link BigInteger}.
+     *
      * @param value value
      * @return natural logarithm of the value
      */
@@ -1474,6 +1601,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the natural logarithm of a {@code float}.
+     *
      * @param value value
      * @return natural logarithm of the value
      */
@@ -1482,6 +1611,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the natural logarithm of a {@code double}.
+     *
      * @param value value
      * @return natural logarithm of the value
      */
@@ -1490,6 +1621,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the natural logarithm of a {@link BigDecimal}.
+     *
      * @param value value
      * @return natural logarithm of the value
      */
@@ -1498,6 +1631,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the binary logarithm of an {@code int}.
+     *
      * @param value value
      * @return binary logarithm of the value
      */
@@ -1506,6 +1641,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the binary logarithm of a {@code long}.
+     *
      * @param value value
      * @return binary logarithm of the value
      */
@@ -1514,6 +1651,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the binary logarithm of a {@link BigInteger}.
+     *
      * @param value value
      * @return binary logarithm of the value
      */
@@ -1522,6 +1661,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the binary logarithm of a {@code float}.
+     *
      * @param value value
      * @return binary logarithm of the value
      */
@@ -1530,6 +1671,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the binary logarithm of a {@code double}.
+     *
      * @param value value
      * @return binary logarithm of the value
      */
@@ -1538,6 +1681,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the binary logarithm of a {@link BigDecimal}.
+     *
      * @param value value
      * @return binary logarithm of the value
      */
@@ -1546,6 +1691,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the base 10 logarithm of an {@code int}.
+     *
      * @param value value
      * @return base 10 logarithm of the value
      */
@@ -1554,6 +1701,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the base 10 logarithm of a {@code long}.
+     *
      * @param value value
      * @return base 10 logarithm of the value
      */
@@ -1562,6 +1711,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the base 10 logarithm of a {@link BigInteger}.
+     *
      * @param value value
      * @return base 10 logarithm of the value
      */
@@ -1570,6 +1721,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the base 10 logarithm of a {@code float}.
+     *
      * @param value value
      * @return base 10 logarithm of the value
      */
@@ -1578,6 +1731,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the base 10 logarithm of a {@code double}.
+     *
      * @param value value
      * @return base 10 logarithm of the value
      */
@@ -1586,6 +1741,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the base 10 logarithm of a {@link BigDecimal}.
+     *
      * @param value value
      * @return base 10 logarithm of the value
      */
@@ -1594,6 +1751,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the logarithm of an {@code int} in the base of another.
+     *
      * @param value value
      * @param base base
      * @return logarithm of the value in the specified base
@@ -1603,6 +1762,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the logarithm of a {@code long} in the base of another.
+     *
      * @param value value
      * @param base base
      * @return logarithm of the value in the specified base
@@ -1612,6 +1773,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the logarithm of a {@link BigInteger} in the base of another.
+     *
      * @param value value
      * @param base base
      * @return logarithm of the value in the specified base
@@ -1623,6 +1786,9 @@ public class Operations {
     }
 
     /**
+     * Calculates the logarithm of a {@code float} in the base of another. Promotes to {@code double} or
+     * {@link BigDecimal} if the result would overflow.
+     *
      * @param value value
      * @param base base
      * @return logarithm of the value in the specified base
@@ -1642,6 +1808,9 @@ public class Operations {
     }
 
     /**
+     * Calculates the logarithm of a {@code double} in the base of another. Promotes to {@link BigDecimal} if the result
+     * would overflow.
+     *
      * @param value value
      * @param base base
      * @return logarithm of the value in the specified base
@@ -1657,6 +1826,8 @@ public class Operations {
     }
 
     /**
+     * Calculates the logarithm of a {@link BigDecimal} in the base of another.
+     *
      * @param value value
      * @param base base
      * @return logarithm of the value in the specified base
@@ -1667,6 +1838,9 @@ public class Operations {
     }
 
     /**
+     * Linearly interpolates an {@code int} between a minimum and maximum value. Promotes to {@code long} if the result
+     * would overflow.
+     *
      * @param value value to be interpolated
      * @param min minimum value
      * @param max maximum value
@@ -1683,6 +1857,9 @@ public class Operations {
     }
 
     /**
+     * Linearly interpolates a {@code long} between a minimum and maximum value. Promotes to {@link BigDecimal} if the
+     * result would overflow.
+     *
      * @param value value to be interpolated
      * @param min minimum value
      * @param max maximum value
@@ -1716,6 +1893,8 @@ public class Operations {
     }
 
     /**
+     * Linearly interpolates a {@link BigInteger} between a minimum and maximum value.
+     *
      * @param value value to be interpolated
      * @param min minimum value
      * @param max maximum value
@@ -1726,6 +1905,9 @@ public class Operations {
     }
 
     /**
+     * Linearly interpolates a {@code float} between a minimum and maximum value. Promotes to {@code double} or
+     * {@link BigDecimal} if the result would overflow.
+     *
      * @param value value to be interpolated
      * @param min minimum value
      * @param max maximum value
@@ -1742,6 +1924,9 @@ public class Operations {
     }
 
     /**
+     * Linearly interpolates a {@code double} between a minimum and maximum value. Promotes to {@link BigDecimal} if the
+     * result would overflow.
+     *
      * @param value value to be interpolated
      * @param min minimum value
      * @param max maximum value
@@ -1758,6 +1943,8 @@ public class Operations {
     }
 
     /**
+     * Linearly interpolates a {@link BigDecimal} between a minimum and maximum value.
+     *
      * @param value value to be interpolated
      * @param min minimum value
      * @param max maximum value

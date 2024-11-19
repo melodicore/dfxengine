@@ -4,7 +4,7 @@ import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
 
 /**
- * Contains all string literals used for logging in this module.
+ * All string literals used for logging in the Math module.
  *
  * @author datafox
  */

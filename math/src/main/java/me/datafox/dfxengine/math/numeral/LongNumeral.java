@@ -19,6 +19,8 @@ public final class LongNumeral extends AbstractNumeral {
     private final long number;
 
     /**
+     * Public constructor for {@link LongNumeral}.
+     *
      * @param number {@code long} to be associated with this numeral
      */
     public LongNumeral(long number) {
@@ -27,7 +29,9 @@ public final class LongNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the {@link Number} backing this numeral
+     * Returns the {@link Number} backing this numeral.
+     *
+     * @return {@link Number} backing this numeral
      */
     @Override
     public Number getNumber() {
@@ -35,13 +39,20 @@ public final class LongNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the backing {@code long} of this numeral
+     * Returns the value of this numeral as a {@code long}.
+     *
+     * @return value of this numeral as a {@code long}
      */
     @Override
     public long longValue() {
         return number;
     }
 
+    /**
+     * Returns the {@link Logger} for this numeral.
+     *
+     * @return {@link Logger} for this numeral
+     */
     @Override
     protected Logger getLogger() {
         return logger;

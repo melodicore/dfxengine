@@ -21,6 +21,8 @@ public final class BigDecNumeral extends AbstractNumeral {
     private final BigDecimal number;
 
     /**
+     * Public constructor for {@link BigDecNumeral}.
+     *
      * @param number {@link BigDecimal} to be associated with this numeral
      */
     public BigDecNumeral(BigDecimal number) {
@@ -29,6 +31,8 @@ public final class BigDecNumeral extends AbstractNumeral {
     }
 
     /**
+     * Public constructor for {@link BigDecNumeral}.
+     *
      * @param val {@link String} representation of the {@link BigDecimal} to be associated with this numeral
      */
     public BigDecNumeral(String val) {
@@ -36,6 +40,8 @@ public final class BigDecNumeral extends AbstractNumeral {
     }
 
     /**
+     * Public constructor for {@link BigDecNumeral}.
+     *
      * @param val {@code long} representation of the {@link BigDecimal} to be associated with this numeral
      */
     public BigDecNumeral(long val) {
@@ -43,6 +49,8 @@ public final class BigDecNumeral extends AbstractNumeral {
     }
 
     /**
+     * Public constructor for {@link BigDecNumeral}.
+     *
      * @param val {@code double} representation of the {@link BigDecimal} to be associated with this numeral
      */
     public BigDecNumeral(double val) {
@@ -50,7 +58,9 @@ public final class BigDecNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the {@link Number} backing this numeral
+     * Returns the {@link Number} backing this numeral.
+     *
+     * @return {@link Number} backing this numeral
      */
     @Override
     public Number getNumber() {
@@ -58,13 +68,20 @@ public final class BigDecNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the backing {@link BigDecimal} of this numeral
+     * Returns the value of this numeral as a {@link BigDecimal}.
+     *
+     * @return value of this numeral as a {@link BigDecimal}
      */
     @Override
     public BigDecimal bigDecValue() {
         return number;
     }
 
+    /**
+     * Returns the {@link Logger} for this numeral.
+     *
+     * @return {@link Logger} for this numeral
+     */
     @Override
     protected Logger getLogger() {
         return logger;

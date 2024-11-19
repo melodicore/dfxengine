@@ -19,6 +19,8 @@ public final class IntNumeral extends AbstractNumeral {
     private final int number;
 
     /**
+     * Public constructor for {@link IntNumeral}.
+     *
      * @param number {@code int} to be associated with this numeral
      */
     public IntNumeral(int number) {
@@ -27,7 +29,9 @@ public final class IntNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the {@link Number} backing this numeral
+     * Returns the {@link Number} backing this numeral.
+     *
+     * @return {@link Number} backing this numeral
      */
     @Override
     public Number getNumber() {
@@ -35,13 +39,20 @@ public final class IntNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the backing {@code int} of this numeral
+     * Returns the value of this numeral as an {@code int}.
+     *
+     * @return value of this numeral as an {@code int}
      */
     @Override
     public int intValue() {
         return number;
     }
 
+    /**
+     * Returns the {@link Logger} for this numeral.
+     *
+     * @return {@link Logger} for this numeral
+     */
     @Override
     protected Logger getLogger() {
         return logger;

@@ -1,4 +1,6 @@
 /**
+ * Immutable number type with automatic type promotion and math operations for it.
+ *
  * @author datafox
  */
 module dfxengine.math {

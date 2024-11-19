@@ -23,6 +23,8 @@ public class Conversion {
     private static final Logger logger = LoggerFactory.getLogger(Conversion.class);
 
     /**
+     * Converts a {@link Numeral} to an {@code int}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@code int} representation of the specified value
      *
@@ -71,6 +73,8 @@ public class Conversion {
     }
 
     /**
+     * Converts a {@link Numeral} to a {@code long}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@code long} representation of the specified value
      *
@@ -118,6 +122,8 @@ public class Conversion {
     }
 
     /**
+     * Converts a {@link Numeral} to a {@link BigInteger}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@link BigInteger} representation of the specified value
      *
@@ -158,6 +164,8 @@ public class Conversion {
     }
 
     /**
+     * Converts a {@link Numeral} to a {@code float}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@code float} representation of the specified value
      *
@@ -205,6 +213,8 @@ public class Conversion {
 
 
     /**
+     * Converts a {@link Numeral} to a {@code double}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@code double} representation of the specified value
      *
@@ -250,6 +260,8 @@ public class Conversion {
     }
 
     /**
+     * Converts a {@link Numeral} to a {@link BigDecimal}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@link BigDecimal} representation of the specified value
      *
@@ -289,6 +301,8 @@ public class Conversion {
     }
 
     /**
+     * Converts a {@link Numeral} to the smallest type that can hold its value.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return a {@link Numeral} backed with the smallest type that can hold the specified Numeral's value. This method
      * does not convert between integer and decimal types.
@@ -343,6 +357,9 @@ public class Conversion {
     }
 
     /**
+     * Converts a {@link Numeral} to the smallest integer type that can hold its value, returning the input numeral if
+     * it already is an integer.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return a {@link Numeral} backed with the smallest integer type that can hold the specified Numeral's value,
      * unless the Numeral is already an integer, in which case the specified Numeral is returned
@@ -375,6 +392,9 @@ public class Conversion {
     }
 
     /**
+     * Converts a {@link Numeral} to the smallest decimal type that can hold its value, returning the input numeral if
+     * it already is a decimal.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return a {@link Numeral} backed with the smallest decimal type that can hold the specified Numeral's value,
      * unless the Numeral is already a decimal, in which case the specified Numeral is returned
@@ -407,6 +427,8 @@ public class Conversion {
     }
 
     /**
+     * Converts a numeral to the specified type.
+     *
      * @param numeral {@link Numeral} to be converted
      * @param type type for the {@link Numeral} to be converted to
      * @return a {@link Numeral} backed with the specified type
@@ -447,6 +469,8 @@ public class Conversion {
     }
 
     /**
+     * Converts a numeral to an {@link IntNumeral}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@link Numeral} backed by an {@code int} with the specified Numeral's value
      *
@@ -466,6 +490,8 @@ public class Conversion {
     }
 
     /**
+     * Converts a numeral to a {@link LongNumeral}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@link Numeral} backed by a {@code long} with the specified Numeral's value
      *
@@ -485,6 +511,8 @@ public class Conversion {
     }
 
     /**
+     * Converts a numeral to a {@link BigIntNumeral}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@link Numeral} backed by a {@link BigInteger} with the specified Numeral's value
      *
@@ -502,6 +530,8 @@ public class Conversion {
     }
 
     /**
+     * Converts a numeral to a {@link FloatNumeral}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@link Numeral} backed by a {@code float} with the specified Numeral's value
      *
@@ -522,6 +552,8 @@ public class Conversion {
 
 
     /**
+     * Converts a numeral to a {@link DoubleNumeral}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@link Numeral} backed by a {@code double} with the specified Numeral's value
      *
@@ -542,6 +574,8 @@ public class Conversion {
 
 
     /**
+     * Converts a numeral to a {@link BigDecNumeral}.
+     *
      * @param numeral {@link Numeral} to be converted
      * @return {@link Numeral} backed by a {@link BigDecimal} with the specified Numeral's value
      *

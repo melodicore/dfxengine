@@ -24,6 +24,8 @@ public final class FloatNumeral extends AbstractNumeral {
     private final float number;
 
     /**
+     * Public constructor for {@link FloatNumeral}.
+     *
      * @param number {@code float} to be associated with this numeral
      *
      * @throws IllegalArgumentException if the {@code float} is {@code NaN} or infinite.
@@ -47,7 +49,9 @@ public final class FloatNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the {@link Number} backing this numeral
+     * Returns the {@link Number} backing this numeral.
+     *
+     * @return {@link Number} backing this numeral
      */
     @Override
     public Number getNumber() {
@@ -55,7 +59,9 @@ public final class FloatNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the backing {@code float} of this numeral
+     * Returns the value of this numeral as a {@code float}.
+     *
+     * @return value of this numeral as a {@code float}
      */
     @Override
     public float floatValue() {
@@ -63,11 +69,11 @@ public final class FloatNumeral extends AbstractNumeral {
     }
 
     /**
-     * Conversion from {@code float} to {@link BigInteger} is done using
-     * {@link #bigDecValue()}{@link BigDecimal#toBigInteger() .toBigInteger()}, which uses the {@link String}
+     * Returns the value of this numeral as a {@link BigInteger}. Conversion from {@code float} to {@link BigInteger} is
+     * done using {@link #bigDecValue()}{@link BigDecimal#toBigInteger() .toBigInteger()}, which uses the {@link String}
      * representation to round inaccuracies.
      *
-     * @return the value of this numeral as a {@link BigInteger}
+     * @return value of this numeral as a {@link BigInteger}
      */
     @Override
     public BigInteger bigIntValue() {
@@ -75,10 +81,10 @@ public final class FloatNumeral extends AbstractNumeral {
     }
 
     /**
-     * Conversion from {@code float} to {@code double} is done using the {@link String} representation to round
-     * inaccuracies.
+     * Returns the value of this numeral as a {@code double}. Conversion from {@code float} to {@code double} is done
+     * using the {@link String} representation to round inaccuracies.
      *
-     * @return the value of this numeral as a {@code double}
+     * @return value of this numeral as a {@code double}
      */
     @Override
     public double doubleValue() {
@@ -86,8 +92,8 @@ public final class FloatNumeral extends AbstractNumeral {
     }
 
     /**
-     * Conversion from {@code float} to {@link BigDecimal} is done using the {@link String} representation to round
-     * inaccuracies.
+     * Returns the value of this numeral as a {@link BigDecimal}. Conversion from {@code float} to {@link BigDecimal} is
+     * done using the {@link String} representation to round inaccuracies.
      *
      * @return the value of this numeral as a {@link BigDecimal}
      */
@@ -96,6 +102,11 @@ public final class FloatNumeral extends AbstractNumeral {
         return new BigDecimal(Float.toString(number));
     }
 
+    /**
+     * Returns the {@link Logger} for this numeral.
+     *
+     * @return {@link Logger} for this numeral
+     */
     @Override
     protected Logger getLogger() {
         return logger;

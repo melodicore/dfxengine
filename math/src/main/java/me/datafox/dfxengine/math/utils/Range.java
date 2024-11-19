@@ -99,6 +99,8 @@ public class Range {
     public static final BigInteger INT_MAX_DOUBLE = DEC_MAX_DOUBLE.toBigInteger();
 
     /**
+     * Checks if the specified {@link Numeral} is outside the allowed range of the type.
+     *
      * @param numeral {@link Numeral} to be checked
      * @param type type to be checked
      * @return {@code true} if the specified {@link Numeral} is outside the allowed range of the type
@@ -136,6 +138,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link Numeral} is outside the allowed range of an {@code int}.
+     *
      * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the specified {@link Numeral} is smaller than {@link Integer#MIN_VALUE} or greater than
      * {@link Integer#MAX_VALUE}
@@ -173,6 +177,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link Numeral} is outside the allowed range of a {@code long}.
+     *
      * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the specified {@link Numeral} is smaller than {@link Long#MIN_VALUE} or greater than
      * {@link Long#MAX_VALUE}
@@ -209,6 +215,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link Numeral} is outside the allowed range of a {@code float}.
+     *
      * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the specified {@link Numeral} is smaller than {@link Float#MAX_VALUE -Float.MAX_VALUE}
      * or greater than {@link Float#MAX_VALUE}
@@ -244,6 +252,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link Numeral} is outside the allowed range of a {@code double}.
+     *
      * @param numeral {@link Numeral} to be checked
      * @return {@code true} if the specified {@link Numeral} is smaller than {@link Double#MAX_VALUE -Double.MAX_VALUE}
      * or greater than {@link Double#MAX_VALUE}
@@ -278,6 +288,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@code long} is outside the allowed range of an {@code int}.
+     *
      * @param l {@code long} to be checked
      * @return {@code true} if the {@code long} is smaller than {@link Integer#MIN_VALUE} or greater than
      * {@link Integer#MAX_VALUE}
@@ -287,6 +299,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link BigInteger} is outside the allowed range of an {@code int}.
+     *
      * @param bi {@link BigInteger} to be checked
      * @return {@code true} if the {@link BigInteger} is smaller than {@link Integer#MIN_VALUE} or greater than
      * {@link Integer#MAX_VALUE}
@@ -296,6 +310,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@code float} is outside the allowed range of an {@code int}.
+     *
      * @param f {@code float} to be checked
      * @return {@code true} if the {@code float} is smaller than {@link Integer#MIN_VALUE} or greater than
      * {@link Integer#MAX_VALUE}
@@ -305,6 +321,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@code double} is outside the allowed range of an {@code int}.
+     *
      * @param d {@code double} to be checked
      * @return {@code true} if the {@code double} is smaller than {@link Integer#MIN_VALUE} or greater than
      * {@link Integer#MAX_VALUE}
@@ -314,6 +332,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link BigDecimal} is outside the allowed range of an {@code int}.
+     *
      * @param bd {@link BigDecimal} to be checked
      * @return {@code true} if the {@link BigDecimal} is smaller than {@link Integer#MIN_VALUE} or greater than
      * {@link Integer#MAX_VALUE}
@@ -323,6 +343,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link BigInteger} is outside the allowed range of a {@code long}.
+     *
      * @param bi {@link BigInteger} to be checked
      * @return {@code true} if the {@link BigInteger} is smaller than {@link Long#MIN_VALUE} or greater than
      * {@link Long#MAX_VALUE}
@@ -332,6 +354,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@code float} is outside the allowed range of a {@code long}.
+     *
      * @param f {@code float} to be checked
      * @return {@code true} if the {@code float} is smaller than {@link Long#MIN_VALUE} or greater than
      * {@link Long#MAX_VALUE}
@@ -341,6 +365,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@code double} is outside the allowed range of a {@code long}.
+     *
      * @param d {@code double} to be checked
      * @return {@code true} if the {@code double} is smaller than {@link Long#MIN_VALUE} or greater than
      * {@link Long#MAX_VALUE}
@@ -350,6 +376,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link BigDecimal} is outside the allowed range of a {@code long}.
+     *
      * @param bd {@link BigDecimal} to be checked
      * @return {@code true} if the {@link BigDecimal} is smaller than {@link Long#MIN_VALUE} or greater than
      * {@link Long#MAX_VALUE}
@@ -359,6 +387,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link BigInteger} is outside the allowed range of a {@code float}.
+     *
      * @param bi {@link BigInteger} to be checked
      * @return {@code true} if the {@link BigInteger} is smaller than {@link Float#MAX_VALUE -Float.MAX_VALUE} or
      * greater than {@link Float#MAX_VALUE}
@@ -368,6 +398,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@code double} is outside the allowed range of a {@code float}.
+     *
      * @param d {@code double} to be checked
      * @return {@code true} if the {@code double} is smaller than {@link Float#MAX_VALUE -Float.MAX_VALUE} or
      * greater than {@link Float#MAX_VALUE}
@@ -377,6 +409,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link BigDecimal} is outside the allowed range of a {@code float}.
+     *
      * @param bd {@link BigDecimal} to be checked
      * @return {@code true} if the {@link BigDecimal} is smaller than {@link Float#MAX_VALUE -Float.MAX_VALUE} or
      * greater than {@link Float#MAX_VALUE}
@@ -386,6 +420,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link BigInteger} is outside the allowed range of a {@code double}.
+     *
      * @param bi {@link BigInteger} to be checked
      * @return {@code true} if the {@link BigInteger} is smaller than {@link Double#MAX_VALUE -Double.MAX_VALUE} or
      * greater than {@link Double#MAX_VALUE}
@@ -395,6 +431,8 @@ public class Range {
     }
 
     /**
+     * Checks if the specified {@link BigDecimal} is outside the allowed range of a {@code double}.
+     *
      * @param bd {@link BigDecimal} to be checked
      * @return {@code true} if the {@link BigDecimal} is smaller than {@link Double#MAX_VALUE -Double.MAX_VALUE} or
      * greater than {@link Double#MAX_VALUE}

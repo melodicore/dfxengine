@@ -29,13 +29,20 @@ abstract class AbstractNumeral implements Numeral {
 
     private final Logger logger;
 
+    /**
+     * Package-private constructor for {@link AbstractNumeral}.
+     *
+     * @param type type of the numeral
+     */
     AbstractNumeral(NumeralType type) {
         this.type = type;
         logger = getLogger();
     }
 
     /**
-     * @return the backing {@link Number}'s type
+     * Returns the type of the backing {@link Number}
+     *
+     * @return type of the backing {@link Number}
      */
     @Override
     public NumeralType getType() {
@@ -43,6 +50,8 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
+     * Checks if this numeral can be converted to the specified type.
+     *
      * @param type type to be checked for
      * @return {@code true} if this numeral can be converted to the specified type
      *
@@ -56,10 +65,13 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
-     * @param type type for this numeral to be converted to
-     * @return a numeral backed with the specified type
+     * Converts this numeral to the specified type, or throws an exception if the value is outside the specified type's
+     * bounds.
      *
-     * @throws ExtendedArithmeticException if the value of this numeral is outside the provided type's bounds
+     * @param type type for this numeral to be converted to
+     * @return numeral backed with the specified type
+     *
+     * @throws ExtendedArithmeticException if the value of this numeral is outside the specified type's bounds
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
      * the elements of {@link NumeralType}. This should never happen
@@ -70,9 +82,12 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
+     * Converts this numeral to the specified type, or returns itself if the value is outside the specified type's
+     * bounds.
+     *
      * @param type type for this numeral to be converted to
-     * @return a numeral backed with the specified type, unless the value of this numeral is outside the specified
-     * type's bounds, in which case this numeral is returned
+     * @return numeral backed with the specified type, unless the value of this numeral is outside the specified type's
+     * bounds, in which case this numeral is returned
      *
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
@@ -90,8 +105,11 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
-     * @return a numeral backed with the smallest integer type that can hold this numeral's value, unless this numeral
-     * is already an integer, in which case this numeral is returned
+     * Converts this numeral to the smallest integer type that can hold this numeral's value, or returns itself if it is
+     * already an integer.
+     *
+     * @return numeral backed with the smallest integer type that can hold this numeral's value, unless this numeral is
+     * already an integer, in which case this numeral is returned
      */
     @Override
     public Numeral toInteger() {
@@ -99,8 +117,11 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
-     * @return a numeral backed with the smallest decimal type that can hold this numeral's value, unless this numeral
-     * is already a decimal, in which case this numeral is returned
+     * Converts this numeral to the smallest decimal type that can hold this numeral's value, or returns itself if it is
+     * already a decimal.
+     *
+     * @return numeral backed with the smallest decimal type that can hold this numeral's value, unless this numeral is
+     * already a decimal, in which case this numeral is returned
      */
     @Override
     public Numeral toDecimal() {
@@ -108,8 +129,10 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
-     * @return a numeral backed with the smallest type that can hold this numeral's value. This method does not convert
+     * Converts this numeral to the smallest type that can hold this numeral's value. his method does not convert
      * between integer and decimal types.
+     *
+     * @return numeral backed with the smallest type that can hold this numeral's value.
      */
     @Override
     public Numeral toSmallestType() {
@@ -117,10 +140,12 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
-     * @return the value of this numeral as an {@code int}
+     * Returns the value of this numeral as an {@code int}.
      *
-     * @throws ExtendedArithmeticException if the value of this numeral is smaller than {@link Integer#MIN_VALUE} or
-     * greater than {@link Integer#MAX_VALUE}
+     * @return value of this numeral as an {@code int}
+     *
+     * @throws ExtendedArithmeticException if the value of this numeral is smaller than {@link Integer#MIN_VALUE} or greater
+     * than {@link Integer#MAX_VALUE}
      */
     @Override
     public int intValue() {
@@ -128,10 +153,12 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
-     * @return the value of this numeral as a {@code long}
+     * Returns the value of this numeral as a {@code long}.
      *
-     * @throws ExtendedArithmeticException if the value of this numeral is smaller than {@link Long#MIN_VALUE} or
-     * greater than {@link Long#MAX_VALUE}
+     * @return value of this numeral as a {@code long}
+     *
+     * @throws ExtendedArithmeticException if the value of this numeral is smaller than {@link Long#MIN_VALUE} or greater
+     * than {@link Long#MAX_VALUE}
      */
     @Override
     public long longValue() {
@@ -139,7 +166,9 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
-     * @return the value of this numeral as a {@link BigInteger}
+     * Returns the value of this numeral as a {@link BigInteger}.
+     *
+     * @return value of this numeral as a {@link BigInteger}
      */
     @Override
     public BigInteger bigIntValue() {
@@ -147,10 +176,12 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
-     * @return the value of this numeral as a {@code float}
+     * Returns the value of this numeral as a {@code float}.
      *
-     * @throws ExtendedArithmeticException if the value of this numeral is smaller than
-     * {@link Float#MAX_VALUE -Float.MAX_VALUE} or greater than {@link Float#MAX_VALUE}
+     * @return value of this numeral as a {@code float}
+     *
+     * @throws ExtendedArithmeticException if the value of this numeral is smaller than {@link Float#MAX_VALUE -Float.MAX_VALUE}
+     * or greater than {@link Float#MAX_VALUE}
      */
     @Override
     public float floatValue() {
@@ -158,7 +189,9 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
-     * @return the value of this numeral as a {@code double}
+     * Returns the value of this numeral as a {@code double}.
+     *
+     * @return value of this numeral as a {@code double}
      *
      * @throws ExtendedArithmeticException if the value of this numeral is smaller than
      * {@link Double#MAX_VALUE -Double.MAX_VALUE} or greater than {@link Double#MAX_VALUE}
@@ -169,7 +202,9 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
-     * @return the value of this numeral as a {@link BigDecimal}
+     * Returns the value of this numeral as a {@link BigDecimal}.
+     *
+     * @return value of this numeral as a {@link BigDecimal}
      */
     @Override
     public BigDecimal bigDecValue() {
@@ -177,6 +212,8 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
+     * Returns the {@link String} representation of this numeral in format <i>Type(value)</i>.
+     *
      * @return {@link String} representation of this numeral in format <i>Type(value)</i>
      */
     @Override
@@ -206,6 +243,8 @@ abstract class AbstractNumeral implements Numeral {
     }
 
     /**
+     * Returns the {@link Logger} for this numeral.
+     *
      * @return {@link Logger} for this numeral
      */
     protected abstract Logger getLogger();

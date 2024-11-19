@@ -21,6 +21,8 @@ public final class BigIntNumeral extends AbstractNumeral {
     private final BigInteger number;
 
     /**
+     * Public constructor for {@link BigIntNumeral}.
+     *
      * @param number {@link BigInteger} to be associated with this numeral
      */
     public BigIntNumeral(BigInteger number) {
@@ -29,6 +31,8 @@ public final class BigIntNumeral extends AbstractNumeral {
     }
 
     /**
+     * Public constructor for {@link BigIntNumeral}.
+     *
      * @param val {@link String} representation of the {@link BigInteger} to be associated with this numeral
      */
     public BigIntNumeral(String val) {
@@ -36,6 +40,8 @@ public final class BigIntNumeral extends AbstractNumeral {
     }
 
     /**
+     * Public constructor for {@link BigIntNumeral}.
+     *
      * @param val {@code long} representation of the {@link BigInteger} to be associated with this numeral
      */
     public BigIntNumeral(long val) {
@@ -43,7 +49,9 @@ public final class BigIntNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the {@link Number} backing this numeral
+     * Returns the {@link Number} backing this numeral.
+     *
+     * @return {@link Number} backing this numeral
      */
     @Override
     public Number getNumber() {
@@ -51,13 +59,20 @@ public final class BigIntNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the backing {@link BigInteger} of this numeral
+     * Returns the value of this numeral as a {@link BigInteger}.
+     *
+     * @return value of this numeral as a {@link BigInteger}
      */
     @Override
     public BigInteger bigIntValue() {
         return number;
     }
 
+    /**
+     * Returns the {@link Logger} for this numeral.
+     *
+     * @return {@link Logger} for this numeral
+     */
     @Override
     protected Logger getLogger() {
         return logger;

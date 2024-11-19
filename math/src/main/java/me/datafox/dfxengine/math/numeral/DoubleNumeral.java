@@ -21,6 +21,8 @@ public final class DoubleNumeral extends AbstractNumeral {
     private final double number;
 
     /**
+     * Public constructor for {@link DoubleNumeral}.
+     *
      * @param number {@code double} to be associated with this numeral
      *
      * @throws IllegalArgumentException if the {@code double} is {@code NaN} or infinite.
@@ -44,7 +46,9 @@ public final class DoubleNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the {@link Number} backing this numeral
+     * Returns the {@link Number} backing this numeral.
+     *
+     * @return {@link Number} backing this numeral
      */
     @Override
     public Number getNumber() {
@@ -52,13 +56,20 @@ public final class DoubleNumeral extends AbstractNumeral {
     }
 
     /**
-     * @return the backing {@code double} of this numeral
+     * Returns the value of this numeral as a {@code double}.
+     *
+     * @return value of this numeral as a {@code double}
      */
     @Override
     public double doubleValue() {
         return number;
     }
 
+    /**
+     * Returns the {@link Logger} for this numeral.
+     *
+     * @return {@link Logger} for this numeral
+     */
     @Override
     protected Logger getLogger() {
         return logger;
