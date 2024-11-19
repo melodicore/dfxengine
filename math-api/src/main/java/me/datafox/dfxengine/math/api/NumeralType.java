@@ -12,42 +12,42 @@ public enum NumeralType {
     /**
      * Value that represents an {@code int} or {@link Integer}.
      */
-    INT(true, 0),
+    INT(true),
 
     /**
      * Value that represents a {@code long} or {@link Long}.
      */
-    LONG(true, 1),
+    LONG(true),
 
     /**
      * Value that represents a {@link BigInteger}.
      */
-    BIG_INT(true, 2),
+    BIG_INT(true),
 
     /**
      * Value that represents a {@code float} or {@link Float}.
      */
-    FLOAT(false, 3),
+    FLOAT(false),
 
     /**
      * Value that represents a {@code double} or {@link Double}.
      */
-    DOUBLE(false, 4),
+    DOUBLE(false),
 
     /**
      * Value that represents a {@link BigDecimal}.
      */
-    BIG_DEC(false, 5);
+    BIG_DEC(false);
 
     private final boolean integer;
-    private final int significance;
 
-    NumeralType(boolean integer, int significance) {
+    NumeralType(boolean integer) {
         this.integer = integer;
-        this.significance = significance;
     }
 
     /**
+     * Returns {@code true} if this value represents an integer type ({@code int}, {@code long}, {@link BigInteger}).
+     *
      * @return {@code true} if this value represents an integer type ({@code int}, {@code long}, {@link BigInteger})
      */
     public boolean isInteger() {
@@ -55,16 +55,11 @@ public enum NumeralType {
     }
 
     /**
+     * Returns {@code true} if this value represents a decimal type ({@code float}, {@code double}, {@link BigDecimal}).
+     *
      * @return {@code true} if this value represents a decimal type ({@code float}, {@code double}, {@link BigDecimal})
      */
     public boolean isDecimal() {
         return !integer;
-    }
-
-    /**
-     * @return the significance of this value
-     */
-    public int getSignificance() {
-        return significance;
     }
 }

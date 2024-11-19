@@ -14,16 +14,22 @@ import java.math.BigInteger;
  */
 public interface Numeral extends Comparable<Numeral> {
     /**
-     * @return the {@link Number} backing this numeral
+     * Returns the {@link Number} backing this numeral.
+     *
+     * @return {@link Number} backing this numeral
      */
     Number getNumber();
 
     /**
-     * @return the backing {@link Number}'s type
+     * Returns the type of the backing {@link Number}
+     *
+     * @return type of the backing {@link Number}
      */
     NumeralType getType();
 
     /**
+     * Checks if this numeral can be converted to the specified type.
+     *
      * @param type type to be checked for
      * @return {@code true} if this numeral can be converted to the specified type
      *
@@ -34,8 +40,11 @@ public interface Numeral extends Comparable<Numeral> {
     boolean canConvert(NumeralType type);
 
     /**
+     * Converts this numeral to the specified type, or throws an exception if the value is outside the specified type's
+     * bounds.
+     *
      * @param type type for this numeral to be converted to
-     * @return a numeral backed with the specified type
+     * @return numeral backed with the specified type
      *
      * @throws ExtendedArithmeticException if the value of this numeral is outside the specified type's bounds
      * @throws NullPointerException if the specified type is {@code null}
@@ -45,9 +54,12 @@ public interface Numeral extends Comparable<Numeral> {
     Numeral convert(NumeralType type);
 
     /**
+     * Converts this numeral to the specified type, or returns itself if the value is outside the specified type's
+     * bounds.
+     *
      * @param type type for this numeral to be converted to
-     * @return a numeral backed with the specified type, unless the value of this numeral is outside the specified
-     * type's bounds, in which case this numeral is returned
+     * @return numeral backed with the specified type, unless the value of this numeral is outside the specified type's
+     * bounds, in which case this numeral is returned
      *
      * @throws NullPointerException if the specified type is {@code null}
      * @throws IllegalArgumentException if the specified type is not {@code null}, but it is not recognised as any of
@@ -56,25 +68,35 @@ public interface Numeral extends Comparable<Numeral> {
     Numeral convertIfAllowed(NumeralType type);
 
     /**
-     * @return a numeral backed with the smallest integer type that can hold this numeral's value, unless this numeral
-     * is already an integer, in which case this numeral is returned
+     * Converts this numeral to the smallest integer type that can hold this numeral's value, or returns itself if it is
+     * already an integer.
+     *
+     * @return numeral backed with the smallest integer type that can hold this numeral's value, unless this numeral is
+     * already an integer, in which case this numeral is returned
      */
     Numeral toInteger();
 
     /**
-     * @return a numeral backed with the smallest decimal type that can hold this numeral's value, unless this numeral
-     * is already a decimal, in which case this numeral is returned
+     * Converts this numeral to the smallest decimal type that can hold this numeral's value, or returns itself if it is
+     * already a decimal.
+     *
+     * @return numeral backed with the smallest decimal type that can hold this numeral's value, unless this numeral is
+     * already a decimal, in which case this numeral is returned
      */
     Numeral toDecimal();
 
     /**
-     * @return a numeral backed with the smallest type that can hold this numeral's value. This method does not convert
+     * Converts this numeral to the smallest type that can hold this numeral's value. his method does not convert
      * between integer and decimal types.
+     *
+     * @return numeral backed with the smallest type that can hold this numeral's value.
      */
     Numeral toSmallestType();
 
     /**
-     * @return the value of this numeral as an {@code int}
+     * Returns the value of this numeral as an {@code int}.
+     *
+     * @return value of this numeral as an {@code int}
      *
      * @throws ExtendedArithmeticException if the value of this numeral is smaller than {@link Integer#MIN_VALUE} or greater
      * than {@link Integer#MAX_VALUE}
@@ -82,7 +104,9 @@ public interface Numeral extends Comparable<Numeral> {
     int intValue();
 
     /**
-     * @return the value of this numeral as a {@code long}
+     * Returns the value of this numeral as a {@code long}.
+     *
+     * @return value of this numeral as a {@code long}
      *
      * @throws ExtendedArithmeticException if the value of this numeral is smaller than {@link Long#MIN_VALUE} or greater
      * than {@link Long#MAX_VALUE}
@@ -90,12 +114,16 @@ public interface Numeral extends Comparable<Numeral> {
     long longValue();
 
     /**
-     * @return the value of this numeral as a {@link BigInteger}
+     * Returns the value of this numeral as a {@link BigInteger}.
+     *
+     * @return value of this numeral as a {@link BigInteger}
      */
     BigInteger bigIntValue();
 
     /**
-     * @return the value of this numeral as a {@code float}
+     * Returns the value of this numeral as a {@code float}.
+     *
+     * @return value of this numeral as a {@code float}
      *
      * @throws ExtendedArithmeticException if the value of this numeral is smaller than {@link Float#MAX_VALUE -Float.MAX_VALUE}
      * or greater than {@link Float#MAX_VALUE}
@@ -103,7 +131,9 @@ public interface Numeral extends Comparable<Numeral> {
     float floatValue();
 
     /**
-     * @return the value of this numeral as a {@code double}
+     * Returns the value of this numeral as a {@code double}.
+     *
+     * @return value of this numeral as a {@code double}
      *
      * @throws ExtendedArithmeticException if the value of this numeral is smaller than
      * {@link Double#MAX_VALUE -Double.MAX_VALUE} or greater than {@link Double#MAX_VALUE}
@@ -111,7 +141,9 @@ public interface Numeral extends Comparable<Numeral> {
     double doubleValue();
 
     /**
-     * @return the value of this numeral as a {@link BigDecimal}
+     * Returns the value of this numeral as a {@link BigDecimal}.
+     *
+     * @return value of this numeral as a {@link BigDecimal}
      */
     BigDecimal bigDecValue();
 }
