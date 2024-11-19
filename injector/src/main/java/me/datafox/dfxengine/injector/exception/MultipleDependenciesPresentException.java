@@ -11,6 +11,11 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
  * @author datafox
  */
 public class MultipleDependenciesPresentException extends RuntimeException {
+    /**
+     * Public constructor for {@link MultipleDependenciesPresentException}.
+     *
+     * @param message details for this exception
+     */
     public MultipleDependenciesPresentException(String message) {
         super(message);
     }

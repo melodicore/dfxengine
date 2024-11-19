@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import static me.datafox.dfxengine.injector.utils.InjectorStrings.*;
 
 /**
- * Builder for the {@link InjectorImpl}. For general information, see the
+ * Builder for the {@link InjectorImpl Injector}. For general information, see the
  * <a href="https://engine.datafox.me/doku.php?id=injector">wiki</a>.
  *
  * @author datafox

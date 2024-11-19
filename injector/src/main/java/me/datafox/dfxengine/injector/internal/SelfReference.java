@@ -7,10 +7,15 @@ import me.datafox.dfxengine.injector.api.TypeRef;
 import java.util.List;
 
 /**
+ * A reference to a {@link ClassReference} used to avoid cyclic references.
+ *
+ * @param <T> type of the referenced {@link ClassReference}
+ *
  * @author datafox
  */
 @Setter
 @Getter
+@SuppressWarnings("MissingJavadoc")
 public class SelfReference<T> extends ClassReference<T> {
     private ClassReference<T> reference;
 

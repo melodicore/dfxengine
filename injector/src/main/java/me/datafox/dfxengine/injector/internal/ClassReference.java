@@ -10,10 +10,13 @@ import java.util.stream.Collectors;
 /**
  * A reference to a {@link Class} used internally by this module.
  *
+ * @param <T> type of the referenced {@link Class}
+ *
  * @author datafox
  */
-@Data
 @Builder
+@Data
+@SuppressWarnings("MissingJavadoc")
 public class ClassReference<T> {
     private final Class<T> type;
 

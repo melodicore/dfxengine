@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
  *
  * @author datafox
  */
+@SuppressWarnings("MissingJavadoc")
 public class ComponentDataFactory {
     private final Logger logger;
 
@@ -54,7 +55,7 @@ public class ComponentDataFactory {
      * @return {@link ComponentData} for the specified constructor or method
      * @param <T> type of the component
      */
-    public <T> ComponentData<T> buildComponentData(ExecutableData data) {
+    public <T> ComponentData<T> buildComponentData(ExecutableData<?> data) {
         Component annotation = null;
         boolean voidType = false;
         ComponentData.ComponentDataBuilder<T> builder = ComponentData.builder();
@@ -98,7 +99,7 @@ public class ComponentDataFactory {
                         .priority(initialize.value())
                         .reference(reference)
                         .method(method);
-                ExecutableData methodData = data.getMethods().get(method.getName());
+                ExecutableData<?> methodData = data.getMethods().get(method.getName());
                 for(String signature : methodData.getParameterSignatures()) {
                     ClassReference<?> paramRef = buildClassReferenceEntry(signature);
                     if(InstantiationPolicy.class.equals(paramRef.getType())) {
@@ -149,7 +150,7 @@ public class ComponentDataFactory {
         return builder.build();
     }
 
-    public <T> EventData<T> buildEventData(ExecutableData method) {
+    public <T> EventData<T> buildEventData(ExecutableData<?> method) {
         if(method.getParameters().length != 1) {
             throw LogUtils.logExceptionAndGet(logger,
                     InjectorStrings.eventParameterCount(method, method.getParameters().length),

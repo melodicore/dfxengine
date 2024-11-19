@@ -8,6 +8,11 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
  * @author datafox
  */
 public class FinalFieldDependencyException extends RuntimeException {
+    /**
+     * Public constructor for {@link FinalFieldDependencyException}.
+     *
+     * @param message details for this exception
+     */
     public FinalFieldDependencyException(String message) {
         super(message);
     }

@@ -5,13 +5,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.datafox.dfxengine.injector.utils.InjectorUtils;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
+
 /**
+ * A serializable class that represents a {@link Field} with type parameters.
+ *
+ * @param <T> type of the {@link Class} that holds the represented {@link Field}
+ *
  * @author datafox
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public final class FieldData<T> {
+public final class FieldData<T> implements Serializable {
+    private static final long serialVersionUID = 1000L;
+
     public String name;
 
     public String typeName;

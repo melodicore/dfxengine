@@ -6,6 +6,11 @@ package me.datafox.dfxengine.injector.exception;
  * @author datafox
  */
 public class InvalidArrayException extends RuntimeException {
+    /**
+     * Public constructor for {@link InvalidArrayException}.
+     *
+     * @param message details for this exception
+     */
     public InvalidArrayException(String message) {
         super(message);
     }

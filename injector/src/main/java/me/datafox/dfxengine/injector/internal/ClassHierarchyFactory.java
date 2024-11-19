@@ -20,8 +20,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
+ * Factory that builds a {@link ClassHierarchy}.
+ *
  * @author datafox
  */
+@SuppressWarnings("MissingJavadoc")
 public class ClassHierarchyFactory {
     private final Logger logger;
 
@@ -49,10 +52,11 @@ public class ClassHierarchyFactory {
                 .collect(Collectors.toList());
     }
 
-    private Optional<ClassData<?>> parseClass(ClassInfo info) {
-        Class<?> type;
+    @SuppressWarnings("unchecked")
+    private <T> Optional<ClassData<T>> parseClass(ClassInfo info) {
+        Class<T> type;
         try {
-            type = info.loadClass();
+            type = (Class<T>) info.loadClass();
             Class.forName(type.getName());
         } catch(Throwable e) {
             if(logIgnored) {
@@ -67,20 +71,21 @@ public class ClassHierarchyFactory {
         return Optional.of(new ClassData<>(type, str));
     }
 
-    private List<ExecutableData> parseMethods(List<MethodInfo> methods) {
+    private List<ExecutableData<?>> parseMethods(List<MethodInfo> methods) {
         return methods
                 .stream()
                 .map(this::parseMethod)
                 .collect(Collectors.toList());
     }
 
-    private ExecutableData parseMethod(MethodInfo info) {
+    @SuppressWarnings("unchecked")
+    private <T> ExecutableData<T> parseMethod(MethodInfo info) {
         List<String> parameters = Arrays
                 .stream(info.getParameterInfo())
                 .map(MethodParameterInfo::getTypeSignatureOrTypeDescriptor)
                 .map(TypeSignature::toString)
                 .collect(Collectors.toList());
-        ClassData<?> data = parseClass(info.getClassInfo()).orElseThrow();
+        ClassData<T> data = (ClassData<T>) parseClass(info.getClassInfo()).orElseThrow();
         if(info.isConstructor()) {
             List<FieldData<?>> fields = info
                     .getClassInfo()
@@ -89,18 +94,18 @@ public class ClassHierarchyFactory {
                     .filter(f -> f.hasAnnotation(Inject.class))
                     .map(f -> new FieldData<>(f.getName(), f.loadClassAndGetField().getType(), f.getTypeSignatureOrTypeDescriptor().toString()))
                     .collect(Collectors.toList());
-            List<ExecutableData> methods = info
+            List<ExecutableData<?>> methods = info
                     .getClassInfo()
                     .getDeclaredMethodInfo()
                     .stream()
                     .filter(m -> m.hasAnnotation(Initialize.class))
                     .map(this::parseMethod)
                     .collect(Collectors.toList());
-            return new ExecutableData(info.loadClassAndGetConstructor(), data.getType(), data.getSignature(), parameters, fields, methods);
+            return new ExecutableData<>(info.loadClassAndGetConstructor(), data.getType(), data.getSignature(), parameters, fields, methods);
         }
         String signature = info.getTypeSignatureOrTypeDescriptor()
                 .toString()
                 .split(" \\(", 2)[0];
-        return new ExecutableData(info.loadClassAndGetMethod(), info.getClassInfo().loadClass(), signature, parameters, List.of(), List.of());
+        return new ExecutableData<>(info.loadClassAndGetMethod(), (Class<T>) info.getClassInfo().loadClass(), signature, parameters, List.of(), List.of());
     }
 }

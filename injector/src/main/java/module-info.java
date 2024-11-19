@@ -1,4 +1,6 @@
 /**
+ * Injector is a module containing a dependency injector and an event handling system.
+ *
  * @author datafox
  */
 

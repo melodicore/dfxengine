@@ -10,6 +10,11 @@ import me.datafox.dfxengine.injector.api.ParametricEvent;
  * @author datafox
  */
 public class ParametricEventWithoutInterfaceException extends RuntimeException {
+    /**
+     * Public constructor for {@link ParametricEventWithoutInterfaceException}.
+     *
+     * @param message details for this exception
+     */
     public ParametricEventWithoutInterfaceException(String message) {
         super(message);
     }

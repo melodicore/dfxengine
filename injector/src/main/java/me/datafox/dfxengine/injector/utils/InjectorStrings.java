@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Contains all string literals used for logging in this module.
+ * All string literals used for logging in the Injector module.
  *
  * @author datafox
  */
@@ -86,6 +86,7 @@ public class InjectorStrings {
     private static final String MULTIPLE_DEPENDENCIES =
             "A single Component %s was requested but multiple are present";
     private static final String CYCLIC_DEPENDENCY_DETECTED = "Detected a cyclic dependency: %s";
+    private static final String UNLOADABLE_CLASS = "Could not load class %s";
 
     public static String packageWhitelistPresent(int rules) {
         return String.format(rules == 1 ?
@@ -304,6 +305,10 @@ public class InjectorStrings {
                 .map(ClassReference::getActualReference)
                 .map(ClassReference::getSignature)
                 .collect(Collectors.joining(" -> ")));
+    }
+
+    public static String unloadableClass(String className) {
+        return String.format(UNLOADABLE_CLASS, className);
     }
 
     private static String forClassInfoList(String str, ClassInfoList classes) {

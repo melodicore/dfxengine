@@ -10,6 +10,11 @@ import me.datafox.dfxengine.injector.api.annotation.Inject;
  * @author datafox
  */
 public class ComponentClassWithMultipleValidConstructorsException extends RuntimeException {
+    /**
+     * Public constructor for {@link ComponentClassWithMultipleValidConstructorsException}.
+     *
+     * @param message details for this exception
+     */
     public ComponentClassWithMultipleValidConstructorsException(String message) {
         super(message);
     }

@@ -10,6 +10,11 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
  * @author datafox
  */
 public class NoDependenciesPresentException extends RuntimeException {
+    /**
+     * Public constructor for {@link NoDependenciesPresentException}.
+     *
+     * @param message details for this exception
+     */
     public NoDependenciesPresentException(String message) {
         super(message);
     }

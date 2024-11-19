@@ -8,6 +8,11 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
  * @author datafox
  */
 public class UnresolvedOrUnknownTypeException extends RuntimeException {
+    /**
+     * Public constructor for {@link UnresolvedOrUnknownTypeException}.
+     *
+     * @param message details for this exception
+     */
     public UnresolvedOrUnknownTypeException(String message) {
         super(message);
     }

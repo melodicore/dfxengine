@@ -25,6 +25,8 @@ import java.util.stream.Stream;
 import static me.datafox.dfxengine.injector.utils.InjectorStrings.*;
 
 /**
+ * A class for scanning a full classpath into a {@link ClassHierarchy}.
+ *
  * @author datafox
  */
 public class ClassScanner {

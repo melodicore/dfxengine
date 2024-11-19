@@ -1,10 +1,14 @@
 package me.datafox.dfxengine.injector.utils;
 
+import me.datafox.dfxengine.injector.exception.UnloadableClassException;
+import me.datafox.dfxengine.utils.LogUtils;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contains various utilities used internally by this module.
+ * Utilities used internally by the Injector module.
  *
  * @author datafox
  */
@@ -106,7 +110,10 @@ public class InjectorUtils {
         try {
             return (Class<T>) Class.forName(name);
         } catch(ClassNotFoundException e) {
-            throw new RuntimeException("Could not load class " + name);
+            throw LogUtils.logExceptionAndGet(
+                    LoggerFactory.getLogger(InjectorUtils.class),
+                    InjectorStrings.unloadableClass(name),
+                    UnloadableClassException::new);
         }
     }
 }

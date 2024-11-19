@@ -8,6 +8,11 @@ import me.datafox.dfxengine.injector.api.annotation.Component;
  * @author datafox
  */
 public class CyclicDependencyException extends RuntimeException {
+    /**
+     * Public constructor for {@link CyclicDependencyException}.
+     *
+     * @param message details for this exception
+     */
     public CyclicDependencyException(String message) {
         super(message);
     }

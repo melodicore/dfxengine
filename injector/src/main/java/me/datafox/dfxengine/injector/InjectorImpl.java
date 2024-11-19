@@ -2,6 +2,7 @@ package me.datafox.dfxengine.injector;
 
 import me.datafox.dfxengine.injector.api.*;
 import me.datafox.dfxengine.injector.api.annotation.Component;
+import me.datafox.dfxengine.injector.api.annotation.EventHandler;
 import me.datafox.dfxengine.injector.api.exception.ParameterCountMismatchException;
 import me.datafox.dfxengine.injector.exception.MultipleDependenciesPresentException;
 import me.datafox.dfxengine.injector.exception.NoDependenciesPresentException;
@@ -72,10 +73,6 @@ public class InjectorImpl implements Injector {
         return LoggerFactory.getLogger(details.getRequesting().getType());
     }
 
-    static void disposeInternal() {
-        instance = null;
-    }
-
     private final Logger logger;
 
     private final ComponentDataFactory factory;
@@ -90,6 +87,13 @@ public class InjectorImpl implements Injector {
 
     private final List<Object> eventQueue;
 
+    /**
+     * Package-private constructor for {@link InjectorImpl}.
+     *
+     * @param factory {@link ComponentDataFactory} for this injector
+     * @param components {@link Stream} of all {@link ComponentData} for this injector
+     * @param eventData {@link List} of all {@link EventData} for this injector
+     */
     InjectorImpl(ComponentDataFactory factory, Stream<ComponentData<?>> components, List<EventData<?>> eventData) {
         instance = this;
         logger = LoggerFactory.getLogger(InjectorImpl.class);
@@ -107,13 +111,15 @@ public class InjectorImpl implements Injector {
     }
 
     /**
-     * {@inheritDoc} An exception is also thrown if multiple Components or no Components are present.
+     * Returns a single {@link Component} of the specified type. If the {@link Class} has type parameters, use
+     * {@link #getComponent(TypeRef)} instead. Otherwise, an exception is thrown. An exception is also thrown if
+     * multiple components or no components are present.
      *
-     * @param type {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * @param type type of the {@link Component} to be requested
+     * @return {@link Component} of the specified type
+     * @param <T> type of the {@link Component} to be requested
      *
-     * @throws ParameterCountMismatchException {@inheritDoc}
+     * @throws ParameterCountMismatchException if the {@link Class} has type parameters
      * @throws MultipleDependenciesPresentException if multiple {@link Component Components} with the specified type are
      * present
      * @throws NoDependenciesPresentException if no {@link Component Components} with the specified type are present
@@ -128,11 +134,12 @@ public class InjectorImpl implements Injector {
     }
 
     /**
-     * {@inheritDoc} If multiple Components or no Components are present, an exception is thrown.
+     * Returns a single {@link Component} of the specified type. If multiple components or no components are present,
+     * an exception is thrown.
      *
-     * @param type {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * @param type type of the {@link Component} to be requested
+     * @return {@link Component} of the specified type
+     * @param <T> type of the {@link Component} to be requested
      *
      * @throws MultipleDependenciesPresentException if multiple {@link Component Components} with the specified type are
      * present
@@ -144,15 +151,19 @@ public class InjectorImpl implements Injector {
     }
 
     /**
-     * {@inheritDoc} An exception is also thrown if multiple Components or no Components are present.
+     * Returns a single {@link Component} of the specified type. If the component has
+     * {@link InstantiationPolicy#PER_INSTANCE} and depends on {@link InstantiationDetails}, the {@code requesting}
+     * parameter will be used for {@link InstantiationDetails}. If the {@link Class} has type parameters, use
+     * {@link #getComponent(TypeRef)} instead. An exception is also thrown if multiple components or no components are
+     * present.
      *
-     * @param type {@inheritDoc}
-     * @param requesting {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
-     * @param <R> {@inheritDoc}
+     * @param type type of the {@link Component} to be requested
+     * @param requesting type of the object requesting the {@link Component}
+     * @return {@link Component} of the specified type
+     * @param <T> type of the {@link Component} to be requested
+     * @param <R> type of the object requesting the {@link Component}
      *
-     * @throws ParameterCountMismatchException {@inheritDoc}
+     * @throws ParameterCountMismatchException if the type or requesting {@link Class} has type parameters
      * @throws MultipleDependenciesPresentException if multiple {@link Component Components} with the specified type are
      * present
      * @throws NoDependenciesPresentException if no {@link Component Components} with the specified type are present
@@ -167,13 +178,16 @@ public class InjectorImpl implements Injector {
     }
 
     /**
-     * {@inheritDoc} If multiple Components or no Components are present, an exception is thrown.
+     * Returns a single {@link Component} of the specified type. If the component has
+     * {@link InstantiationPolicy#PER_INSTANCE} and depends on {@link InstantiationDetails}, the {@code requesting}
+     * parameter will be used for {@link InstantiationDetails}. If multiple components or no components are present, an
+     * exception is thrown.
      *
-     * @param type {@inheritDoc}
-     * @param requesting {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
-     * @param <R> {@inheritDoc}
+     * @param type type of the {@link Component} to be requested
+     * @param requesting type of the object requesting the {@link Component}
+     * @return {@link Component} of the specified type
+     * @param <T> type of the {@link Component} to be requested
+     * @param <R> type of the object requesting the {@link Component}
      *
      * @throws MultipleDependenciesPresentException if multiple {@link Component Components} with the specified type are
      * present
@@ -193,13 +207,14 @@ public class InjectorImpl implements Injector {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns {@link Component Components} of the specified type. If the {@link Class} has type parameters, use
+     * {@link #getComponents(TypeRef)} instead. Otherwise, an exception is thrown.
      *
-     * @param type {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * @param type type of the {@link Component Components} to be requested
+     * @return {@link List} of {@link Component Components} of the specified type
+     * @param <T> type of the {@link Component Components} to be requested
      *
-     * @throws ParameterCountMismatchException {@inheritDoc}
+     * @throws ParameterCountMismatchException if the {@link Class} has type parameters
      */
     @Override
     public <T> List<T> getComponents(Class<T> type) {
@@ -211,11 +226,11 @@ public class InjectorImpl implements Injector {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns {@link Component Components} of the specified type.
      *
-     * @param type {@inheritDoc}
-     * @return {@link List} {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * @param type type of the {@link Component Components} to be requested
+     * @return {@link List} of {@link Component Components} of the specified type
+     * @param <T> type of the {@link Component Components} to be requested
      */
     @Override
     public <T> List<T> getComponents(TypeRef<T> type) {
@@ -223,15 +238,18 @@ public class InjectorImpl implements Injector {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns {@link Component Components} of the specified type. If any of the Components have
+     * {@link InstantiationPolicy#PER_INSTANCE} and depend on {@link InstantiationDetails}, the {@code requesting}
+     * parameter will be used for {@link InstantiationDetails}. If the {@link Class} has type parameters, use
+     * {@link #getComponent(TypeRef)} instead. Otherwise, an exception is thrown.
      *
-     * @param type {@inheritDoc}
-     * @param requesting {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
-     * @param <R> {@inheritDoc}
+     * @param type type of the {@link Component Components} to be requested
+     * @param requesting type of the object requesting the {@link Component Components}
+     * @return {@link List} of {@link Component Components} of the specified type
+     * @param <T> type of the {@link Component Components} to be requested
+     * @param <R> type of the object requesting the {@link Component Components}
      *
-     * @throws ParameterCountMismatchException {@inheritDoc}
+     * @throws ParameterCountMismatchException if the type or requesting {@link Class} has type parameters
      */
     @Override
     public <T,R> List<T> getComponents(Class<T> type, Class<R> requesting) {
@@ -243,13 +261,15 @@ public class InjectorImpl implements Injector {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns {@link Component Components} of the specified type. If any of the components have
+     * {@link InstantiationPolicy#PER_INSTANCE} and depend on {@link InstantiationDetails}, the {@code requesting}
+     * parameter will be used for {@link InstantiationDetails}.
      *
-     * @param type {@inheritDoc}
-     * @param requesting {@inheritDoc}
-     * @return {@inheritDoc}
-     * @param <T> {@inheritDoc}
-     * @param <R> {@inheritDoc}
+     * @param type type of the {@link Component Components} to be requested
+     * @param requesting type of the object requesting the {@link Component Components}
+     * @return {@link List} of {@link Component Components} of the specified type
+     * @param <T> type of the {@link Component Components} to be requested
+     * @param <R> type of the object requesting the {@link Component Components}
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -258,10 +278,11 @@ public class InjectorImpl implements Injector {
     }
 
     /**
-     * {@inheritDoc}
+     * Calls all {@link EventHandler EventHandlers} with the specified event that can accept its type as a parameter.
+     * If the event has type parameters, it must implement {@link ParametricEvent}.
      *
-     * @param event {@inheritDoc}
-     * @param <T> {@inheritDoc}
+     * @param event event to be invoked
+     * @param <T> type of the event
      */
     @Override
     public <T> void invokeEvent(T event) {
@@ -274,9 +295,10 @@ public class InjectorImpl implements Injector {
     }
 
     /**
-     * {@inheritDoc}
+     * Calls all {@link EventHandler EventHandlers} with the specified events that can accept their types as parameters.
+     * If an event has type parameters, it must implement {@link ParametricEvent}.
      *
-     * @param events {@inheritDoc}
+     * @param events events to be invoked
      */
     @Override
     public void invokeEvents(Collection<?> events) {
@@ -541,9 +563,26 @@ public class InjectorImpl implements Injector {
         }
     }
 
+    /**
+     * Modes for naming a {@link Logger} when requested as a dependency.
+     */
     public enum LoggerType {
+        /**
+         * Uses the base {@link Class} of the {@link Component} requesting the {@link Logger} as a dependency with no
+         * type parameters.
+         */
         CLASSIC,
+
+        /**
+         * Uses the signature of the {@link Component} requesting the {@link Logger} as a dependency with simple names
+         * (no package names) for type parameters.
+         */
         PARAMETERS,
+
+        /**
+         * Uses the signature of the {@link Component} requesting the {@link Logger} as a dependency with type
+         * parameters, including package names.
+         */
         FULL_PARAMETERS
     }
 }

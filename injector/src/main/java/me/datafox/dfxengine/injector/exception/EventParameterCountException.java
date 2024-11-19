@@ -8,6 +8,11 @@ import me.datafox.dfxengine.injector.api.annotation.EventHandler;
  * @author datafox
  */
 public class EventParameterCountException extends RuntimeException {
+    /**
+     * Public constructor for {@link EventParameterCountException}.
+     *
+     * @param message details for this exception
+     */
     public EventParameterCountException(String message) {
         super(message);
     }

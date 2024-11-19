@@ -10,10 +10,13 @@ import java.util.List;
 /**
  * A reference to a {@link Component} used internally by this module.
  *
+ * @param <T> type of the referenced {@link Component}
+ *
  * @author datafox
  */
 @Builder
 @Data
+@SuppressWarnings("MissingJavadoc")
 public class ComponentData<T> {
     private final ClassReference<T> reference;
 

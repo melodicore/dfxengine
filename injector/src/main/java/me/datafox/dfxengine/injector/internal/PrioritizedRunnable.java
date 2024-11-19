@@ -10,6 +10,7 @@ import lombok.Data;
  */
 @Builder
 @Data
+@SuppressWarnings("MissingJavadoc")
 public class PrioritizedRunnable implements Runnable, Comparable<PrioritizedRunnable> {
     private final int priority;
 
