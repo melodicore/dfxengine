@@ -1,5 +1,5 @@
 /**
- * Interfaces for an immutable number type with automatic type promotion and math operations for it.
+ * Interfaces for an immutable number type with automatic type promotion.
  *
  * @author datafox
  */
