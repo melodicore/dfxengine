@@ -1,8 +1,8 @@
 package me.datafox.dfxengine.text.test;
 
+import me.datafox.dfxengine.configuration.ConfigurationImpl;
+import me.datafox.dfxengine.configuration.api.Configuration;
 import me.datafox.dfxengine.text.api.NumberFormatter;
-import me.datafox.dfxengine.text.api.TextConfiguration;
-import me.datafox.dfxengine.text.utils.TextConfigurationImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -13,13 +13,13 @@ import java.math.BigDecimal;
  */
 public class AbstractFormatterTest extends AbstractTest {
     protected NumberFormatter formatter;
-    protected TextConfiguration configuration;
+    protected Configuration configuration;
 
     @BeforeEach
     @Override
     public void beforeEach() {
         super.beforeEach();
-        configuration = new TextConfigurationImpl(factory);
+        configuration = new ConfigurationImpl();
     }
 
     @AfterEach

@@ -1,5 +1,7 @@
 package me.datafox.dfxengine.text.api;
 
+import me.datafox.dfxengine.configuration.api.ConfigurationManager;
+import me.datafox.dfxengine.configuration.api.Configuration;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleManager;
 
@@ -8,7 +10,7 @@ import java.util.List;
 /**
  * A singleton class that generates {@link String Strings} from {@link Text} objects. It manages {@link Name Names},
  * {@link NameConverter NameConverters}, {@link NumberFormatter NumberFormatters},
- * {@link NumberSuffixFormatter NumberSuffixFacctories}, {@link TextConfiguration} and the {@link PluralConverter}.
+ * {@link NumberSuffixFormatter NumberSuffixFacctories}, {@link Configuration} and the {@link PluralConverter}.
  *
  * @author datafox
  */
@@ -28,6 +30,13 @@ public interface TextFactory {
      * @return {@link String} representation of the texts
      */
     String build(List<Text> texts);
+
+    /**
+     * Returns the {@link ConfigurationManager} used by this factory.
+     *
+     * @return {@link ConfigurationManager} used by this factory
+     */
+    ConfigurationManager getConfigurationManager();
 
     /**
      * Returns the {@link HandleManager} used by this factory.
@@ -125,12 +134,12 @@ public interface TextFactory {
     NumberFormatter getNumberFormatter(Handle handle);
 
     /**
-     * Returns the {@link NumberFormatter} associated with the specified {@link TextConfiguration}.
+     * Returns the {@link NumberFormatter} associated with the specified {@link Configuration}.
      *
-     * @param configuration {@link TextConfiguration} to be used
-     * @return {@link NumberFormatter} configured in the {@link TextConfiguration} or {@code null} if none is present
+     * @param configuration {@link Configuration} to be used
+     * @return {@link NumberFormatter} configured in the {@link Configuration} or {@code null} if none is present
      */
-    NumberFormatter getNumberFormatter(TextConfiguration configuration);
+    NumberFormatter getNumberFormatter(Configuration configuration);
 
     /**
      * Registers a {@link NumberSuffixFormatter}. If no default suffix formatter is set and the specified suffix
@@ -150,13 +159,13 @@ public interface TextFactory {
     NumberSuffixFormatter getNumberSuffixFormatter(Handle handle);
 
     /**
-     * Returns the {@link NumberSuffixFormatter} associated with the specified {@link TextConfiguration}.
+     * Returns the {@link NumberSuffixFormatter} associated with the specified {@link Configuration}.
      *
-     * @param configuration {@link TextConfiguration} to be used
-     * @return {@link NumberSuffixFormatter} configured in the {@link TextConfiguration} or {@code null} if none is
+     * @param configuration {@link Configuration} to be used
+     * @return {@link NumberSuffixFormatter} configured in the {@link Configuration} or {@code null} if none is
      * present
      */
-    NumberSuffixFormatter getNumberSuffixFormatter(TextConfiguration configuration);
+    NumberSuffixFormatter getNumberSuffixFormatter(Configuration configuration);
 
     /**
      * Sets the default {@link NumberSuffixFormatter}. The default suffix formatter must be capable of formatting any
@@ -172,21 +181,6 @@ public interface TextFactory {
      * @return default {@link NumberSuffixFormatter} or {@code null} if none is present
      */
     NumberSuffixFormatter getDefaultNumberSuffixFormatter();
-
-    /**
-     * Clears current {@link TextConfiguration} and applies the provided one to it. This method should not overwrite the
-     * current {@link TextConfiguration} instance and only alter its state.
-     *
-     * @param configuration {@link TextConfiguration} to be applied
-     */
-    void setConfiguration(TextConfiguration configuration);
-
-    /**
-     * This method should always return the same {@link TextConfiguration} instance.
-     *
-     * @return current {@link TextConfiguration}
-     */
-    TextConfiguration getConfiguration();
 
     /**
      * Registers the {@link PluralConverter} to be used.

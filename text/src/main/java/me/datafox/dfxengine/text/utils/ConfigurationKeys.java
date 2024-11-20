@@ -1,10 +1,10 @@
 package me.datafox.dfxengine.text.utils;
 
+import me.datafox.dfxengine.configuration.api.ConfigurationKey;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.injector.api.Injector;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
-import me.datafox.dfxengine.text.api.ConfigurationKey;
 import me.datafox.dfxengine.text.api.NumberFormatter;
 import me.datafox.dfxengine.text.api.NumberSuffixFormatter;
 import me.datafox.dfxengine.text.formatter.SimpleNumberFormatter;

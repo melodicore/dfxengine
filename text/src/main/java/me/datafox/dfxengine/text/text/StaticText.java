@@ -1,7 +1,8 @@
 package me.datafox.dfxengine.text.text;
 
-import me.datafox.dfxengine.text.api.*;
-import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
+import me.datafox.dfxengine.configuration.api.Configuration;
+import me.datafox.dfxengine.text.api.Text;
+import me.datafox.dfxengine.text.api.TextFactory;
 
 /**
  * A {@link Text} implementation that returns a predetermined {@link String}. This {@link Text} does not use any
@@ -27,11 +28,9 @@ public class StaticText implements Text {
      * @param factory ignored parameter
      * @param configuration ignored parameter
      * @return associated {@link String}
-     *
-     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
      */
     @Override
-    public String get(TextFactory factory, TextConfiguration configuration) {
+    public String get(TextFactory factory, Configuration configuration) {
         return text;
     }
 }

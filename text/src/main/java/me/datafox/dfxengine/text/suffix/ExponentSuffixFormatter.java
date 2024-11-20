@@ -2,14 +2,14 @@ package me.datafox.dfxengine.text.suffix;
 
 import ch.obermuhlner.math.big.BigDecimalMath;
 import lombok.Getter;
+import me.datafox.dfxengine.configuration.api.ConfigurationKey;
+import me.datafox.dfxengine.configuration.api.Configuration;
+import me.datafox.dfxengine.configuration.api.exception.ConfigurationException;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
-import me.datafox.dfxengine.text.api.ConfigurationKey;
 import me.datafox.dfxengine.text.api.NumberSuffixFormatter;
-import me.datafox.dfxengine.text.api.TextConfiguration;
 import me.datafox.dfxengine.text.api.TextFactory;
-import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
 import me.datafox.dfxengine.text.utils.TextHandles;
 import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import me.datafox.dfxengine.utils.LogUtils;
@@ -63,14 +63,14 @@ public class ExponentSuffixFormatter implements NumberSuffixFormatter {
      *
      * @param number number to format
      * @param factory {@link TextFactory} for formatting
-     * @param configuration {@link TextConfiguration} for formatting
+     * @param configuration {@link Configuration} for formatting
      * @return {@link Output} containing the scaled number and a suffix, or the {@link Output} of
      * {@link TextFactory#getDefaultNumberSuffixFormatter()} if the number cannot be formatted by this formatter
      *
-     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this formatter
+     * @throws ConfigurationException if the {@link Configuration} is not valid for this formatter
      */
     @Override
-    public Output format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
+    public Output format(BigDecimal number, TextFactory factory, Configuration configuration) {
         if(number == null) {
             number = BigDecimal.ZERO;
         }
@@ -111,7 +111,7 @@ public class ExponentSuffixFormatter implements NumberSuffixFormatter {
         if(interval <= 0) {
             throw LogUtils.logExceptionAndGet(logger,
                     TextStrings.esfInvalidInterval(interval),
-                    TextConfigurationException::new);
+                    ConfigurationException::new);
         }
     }
 }

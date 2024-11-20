@@ -1,7 +1,10 @@
 package me.datafox.dfxengine.text.text;
 
-import me.datafox.dfxengine.text.api.*;
-import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
+import me.datafox.dfxengine.configuration.api.ConfigurationKey;
+import me.datafox.dfxengine.configuration.api.Configuration;
+import me.datafox.dfxengine.configuration.api.exception.ConfigurationException;
+import me.datafox.dfxengine.text.api.Text;
+import me.datafox.dfxengine.text.api.TextFactory;
 
 import java.util.function.Function;
 
@@ -20,9 +23,9 @@ public class ConfigurationText<T> extends AbstractText {
      *
      * @param key {@link ConfigurationKey} to be used
      * @param function {@link Function} to convert the configuration value to a {@link String}
-     * @param configuration extra {@link TextConfiguration} to be used by this text
+     * @param configuration extra {@link Configuration} to be used by this text
      */
-    public ConfigurationText(ConfigurationKey<T> key, Function<T,String> function, TextConfiguration configuration) {
+    public ConfigurationText(ConfigurationKey<T> key, Function<T,String> function, Configuration configuration) {
         super(configuration);
         this.key = key;
         this.function = function;
@@ -42,13 +45,13 @@ public class ConfigurationText<T> extends AbstractText {
      * Returns a {@link String}.
      *
      * @param factory {@link TextFactory} for generation
-     * @param configuration {@link TextConfiguration} for generation
+     * @param configuration {@link Configuration} for generation
      * @return generated {@link String}
      *
-     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
+     * @throws ConfigurationException if the {@link Configuration} is not valid for this text
      */
     @Override
-    protected String generate(TextFactory factory, TextConfiguration configuration) {
+    protected String generate(TextFactory factory, Configuration configuration) {
         return function.apply(configuration.get(key));
     }
 }

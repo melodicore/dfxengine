@@ -1,8 +1,8 @@
 package me.datafox.dfxengine.text.test;
 
+import me.datafox.dfxengine.configuration.api.ConfigurationKey;
 import me.datafox.dfxengine.injector.InjectorBuilder;
 import me.datafox.dfxengine.injector.api.Injector;
-import me.datafox.dfxengine.text.api.ConfigurationKey;
 import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.text.formatter.SplittingNumberFormatter;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;

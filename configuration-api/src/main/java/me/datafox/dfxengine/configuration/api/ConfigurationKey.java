@@ -1,10 +1,10 @@
-package me.datafox.dfxengine.text.api;
+package me.datafox.dfxengine.configuration.api;
 
 import lombok.*;
 
 /**
- * Data class that is used as a key for {@link TextConfiguration}. Contains a hidden index to keep the hashcode unique
- * and a default value that is used when the configured value is not set or cannot be obtained.
+ * Data class that is used as a key for {@link Configuration}. Contains a hidden index to keep the hashcode unique and a
+ * default value that is used when the configured value is not set or cannot be obtained.
  *
  * @author datafox
  */

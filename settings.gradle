@@ -1,4 +1,6 @@
 rootProject.name = 'dfxengine'
+include 'configuration-api'
+include 'configuration'
 include 'dependencies'
 include 'entities-api'
 include 'entities'

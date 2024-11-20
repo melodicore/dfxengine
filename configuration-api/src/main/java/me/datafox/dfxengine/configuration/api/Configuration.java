@@ -1,21 +1,13 @@
-package me.datafox.dfxengine.text.api;
+package me.datafox.dfxengine.configuration.api;
 
 import java.util.Map;
 
 /**
- * Configuration used by {@link NumberFormatter NumberFormatters}, {@link NumberSuffixFormatter NumberSuffixFormatters},
- * {@link Text Texts} and the {@link TextFactory}.
+ * A configuration object that may contain any type of value.
  *
  * @author datafox
  */
-public interface TextConfiguration {
-    /**
-     * Returns the {@link TextFactory} associated with this configuration.
-     *
-     * @return {@link TextFactory} associated with this configuration
-     */
-    TextFactory getFactory();
-
+public interface Configuration {
     /**
      * Associates the specified {@link ConfigurationKey} with the specified {@link ConfigurationValue}.
      *
@@ -37,9 +29,9 @@ public interface TextConfiguration {
     /**
      * Applies all entries of the provided configuration to this one, overwriting any existing entries if present.
      *
-     * @param configuration {@link TextConfiguration} to be applied
+     * @param configuration {@link Configuration} to be applied
      */
-    void set(TextConfiguration configuration);
+    void set(Configuration configuration);
 
     /**
      * Returns the value associated with the specified {@link ConfigurationKey}, or its default value if none is
@@ -76,5 +68,5 @@ public interface TextConfiguration {
      *
      * @return unique configuration instance containing all entries of this configuration
      */
-    TextConfiguration copy();
+    Configuration copy();
 }

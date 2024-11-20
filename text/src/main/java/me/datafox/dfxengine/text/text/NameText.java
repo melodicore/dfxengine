@@ -1,7 +1,10 @@
 package me.datafox.dfxengine.text.text;
 
-import me.datafox.dfxengine.text.api.*;
-import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
+import me.datafox.dfxengine.configuration.api.ConfigurationKey;
+import me.datafox.dfxengine.configuration.api.Configuration;
+import me.datafox.dfxengine.configuration.api.exception.ConfigurationException;
+import me.datafox.dfxengine.text.api.Name;
+import me.datafox.dfxengine.text.api.TextFactory;
 
 import java.util.function.Supplier;
 
@@ -24,9 +27,9 @@ public class NameText<T> extends AbstractText {
      * Public constructor for {@link NameText}.
      *
      * @param supplier {@link Supplier} for the {@link T} to be used
-     * @param configuration extra {@link TextConfiguration} to be used by this text
+     * @param configuration extra {@link Configuration} to be used by this text
      */
-    public NameText(Supplier<T> supplier, TextConfiguration configuration) {
+    public NameText(Supplier<T> supplier, Configuration configuration) {
         super(configuration);
         this.supplier = supplier;
     }
@@ -43,10 +46,10 @@ public class NameText<T> extends AbstractText {
     /**
      * Returns a {@link String}.
      *
-     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
+     * @throws ConfigurationException if the {@link Configuration} is not valid for this text
      */
     @Override
-    protected String generate(TextFactory factory, TextConfiguration configuration) {
+    protected String generate(TextFactory factory, Configuration configuration) {
         return factory.getName(supplier.get(), configuration.get(USE_PLURAL));
     }
 }

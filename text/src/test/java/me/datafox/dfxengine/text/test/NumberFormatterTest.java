@@ -1,6 +1,6 @@
 package me.datafox.dfxengine.text.test;
 
-import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
+import me.datafox.dfxengine.configuration.api.exception.ConfigurationException;
 import me.datafox.dfxengine.text.formatter.EvenLengthNumberFormatter;
 import me.datafox.dfxengine.text.formatter.SimpleNumberFormatter;
 import me.datafox.dfxengine.text.formatter.SplittingNumberFormatter;
@@ -41,15 +41,15 @@ public class NumberFormatterTest extends AbstractFormatterTest {
         assertEquals("0.0", format("0.0"));
 
         configuration.set(SimpleNumberFormatter.PRECISION, 3);
-        assertThrows(TextConfigurationException.class, () -> format("0"));
+        assertThrows(ConfigurationException.class, () -> format("0"));
         configuration.set(SimpleNumberFormatter.PRECISION, 7);
 
         configuration.set(SimpleNumberFormatter.MIN_EXPONENT, -1);
-        assertThrows(TextConfigurationException.class, () -> format("0"));
+        assertThrows(ConfigurationException.class, () -> format("0"));
         configuration.set(SimpleNumberFormatter.MIN_EXPONENT, 4);
 
         configuration.set(SimpleNumberFormatter.PRECISION, 0);
-        assertThrows(TextConfigurationException.class, () -> format("0"));
+        assertThrows(ConfigurationException.class, () -> format("0"));
     }
 
     @Test
@@ -80,15 +80,15 @@ public class NumberFormatterTest extends AbstractFormatterTest {
         assertEquals("0", format("0.0"));
 
         configuration.set(EvenLengthNumberFormatter.LENGTH, 3);
-        assertThrows(TextConfigurationException.class, () -> format("0"));
+        assertThrows(ConfigurationException.class, () -> format("0"));
         configuration.set(EvenLengthNumberFormatter.LENGTH, 7);
 
         configuration.set(EvenLengthNumberFormatter.MIN_EXPONENT, -1);
-        assertThrows(TextConfigurationException.class, () -> format("0"));
+        assertThrows(ConfigurationException.class, () -> format("0"));
         configuration.set(EvenLengthNumberFormatter.MIN_EXPONENT, 4);
 
         configuration.set(EvenLengthNumberFormatter.LENGTH, 0);
-        assertThrows(TextConfigurationException.class, () -> format("0"));
+        assertThrows(ConfigurationException.class, () -> format("0"));
     }
 
     @Test
@@ -135,10 +135,10 @@ public class NumberFormatterTest extends AbstractFormatterTest {
                 SplittingNumberFormatter.Split.of(BigDecimal.ONE, "a"),
                 SplittingNumberFormatter.Split.of(BigDecimal.TEN, "b"),
                 SplittingNumberFormatter.Split.of(new BigDecimal("5"), "c")});
-        assertThrows(TextConfigurationException.class, () -> format("42"));
+        assertThrows(ConfigurationException.class, () -> format("42"));
         configuration.set(SplittingNumberFormatter.SPLITS, SplittingNumberFormatter.TIME_SHORT);
 
         configuration.set(SplittingNumberFormatter.FORMATTER, handles.getSplittingNumberFormatter());
-        assertThrows(TextConfigurationException.class, () -> format("42"));
+        assertThrows(ConfigurationException.class, () -> format("42"));
     }
 }

@@ -1,16 +1,16 @@
 package me.datafox.dfxengine.text;
 
 import lombok.Getter;
+import me.datafox.dfxengine.configuration.api.ConfigurationManager;
+import me.datafox.dfxengine.configuration.api.Configuration;
 import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleManager;
 import me.datafox.dfxengine.handles.api.HandleMap;
 import me.datafox.dfxengine.injector.api.Injector;
 import me.datafox.dfxengine.injector.api.annotation.Component;
-import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
 import me.datafox.dfxengine.text.api.*;
-import me.datafox.dfxengine.text.utils.TextConfigurationImpl;
 import me.datafox.dfxengine.text.utils.TextHandles;
 import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import org.slf4j.Logger;
@@ -23,9 +23,8 @@ import static me.datafox.dfxengine.text.utils.ConfigurationKeys.*;
 /**
  * Implementation of {@link TextFactory}, a singleton class that generates {@link String Strings} from {@link Text}
  * objects. It manages {@link Name Names}, {@link NameConverter NameConverters},
- * {@link NumberFormatter NumberFormatters}, {@link NumberSuffixFormatter NumberSuffixFacctories},
- * {@link TextConfiguration} and the {@link PluralConverter}. This class is designed to be used with the
- * {@link Injector}.
+ * {@link NumberFormatter NumberFormatters}, {@link NumberSuffixFormatter NumberSuffixFacctories} and the
+ * {@link PluralConverter}. This class is designed to be used with the {@link Injector}.
  *
  * @author datafox
  */
@@ -33,6 +32,11 @@ import static me.datafox.dfxengine.text.utils.ConfigurationKeys.*;
 public class TextFactoryImpl implements TextFactory {
     private final Logger logger;
 
+    /**
+     * {@link ConfigurationManager} used by this factory.
+     */
+    @Getter
+    private final ConfigurationManager configurationManager;
     /**
      * {@link HandleManager} used by this factory.
      */
@@ -42,7 +46,6 @@ public class TextFactoryImpl implements TextFactory {
     private final Map<Class<?>,NameConverter<?>> nameConverters;
     private final HandleMap<NumberFormatter> numberFormatters;
     private final HandleMap<NumberSuffixFormatter> numberSuffixFormatters;
-    private final TextConfiguration configuration;
     private NumberSuffixFormatter defaultFactory;
     private PluralConverter pluralConverter;
 
@@ -60,6 +63,7 @@ public class TextFactoryImpl implements TextFactory {
      */
     @Inject
     public TextFactoryImpl(Logger logger,
+                           ConfigurationManager configurationManager,
                            HandleManager handleManager,
                            TextHandles handles,
                            List<Name<?>> names,
@@ -68,12 +72,12 @@ public class TextFactoryImpl implements TextFactory {
                            List<NumberSuffixFormatter> numberSuffixFormatters,
                            PluralConverter pluralConverter) {
         this.logger = logger;
+        this.configurationManager = configurationManager;
         this.handleManager = handleManager;
         this.names = new HashMap<>();
         this.nameConverters = new HashMap<>();
         this.numberFormatters = new HashHandleMap<>(handles.getNumberFormatters());
         this.numberSuffixFormatters = new HashHandleMap<>(handles.getNumberSuffixFormatters());
-        this.configuration = new TextConfigurationImpl(this);
         this.pluralConverter = pluralConverter;
 
         names.forEach(this::addName);
@@ -90,7 +94,7 @@ public class TextFactoryImpl implements TextFactory {
      */
     @Override
     public String build(Text text) {
-        return text.get(this, configuration.copy());
+        return text.get(this, configurationManager.getConfiguration().copy());
     }
 
     /**
@@ -101,7 +105,7 @@ public class TextFactoryImpl implements TextFactory {
      */
     @Override
     public String build(List<Text> texts) {
-        TextConfiguration effective = configuration.copy();
+        Configuration effective = configurationManager.getConfiguration().copy();
         String delimiter = effective.get(DELIMITER);
         return texts
                 .stream()
@@ -275,13 +279,13 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * Returns the {@link NumberFormatter} associated with the specified {@link TextConfiguration}.
+     * Returns the {@link NumberFormatter} associated with the specified {@link Configuration}.
      *
-     * @param configuration {@link TextConfiguration} to be used
-     * @return {@link NumberFormatter} configured in the {@link TextConfiguration} or {@code null} if none is present
+     * @param configuration {@link Configuration} to be used
+     * @return {@link NumberFormatter} configured in the {@link Configuration} or {@code null} if none is present
      */
     @Override
-    public NumberFormatter getNumberFormatter(TextConfiguration configuration) {
+    public NumberFormatter getNumberFormatter(Configuration configuration) {
         return numberFormatters.get(configuration.get(NUMBER_FORMATTER));
     }
 
@@ -316,14 +320,14 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * Returns the {@link NumberSuffixFormatter} associated with the specified {@link TextConfiguration}.
+     * Returns the {@link NumberSuffixFormatter} associated with the specified {@link Configuration}.
      *
-     * @param configuration {@link TextConfiguration} to be used
-     * @return {@link NumberSuffixFormatter} configured in the {@link TextConfiguration} or {@code null} if none is
+     * @param configuration {@link Configuration} to be used
+     * @return {@link NumberSuffixFormatter} configured in the {@link Configuration} or {@code null} if none is
      * present
      */
     @Override
-    public NumberSuffixFormatter getNumberSuffixFormatter(TextConfiguration configuration) {
+    public NumberSuffixFormatter getNumberSuffixFormatter(Configuration configuration) {
         return numberSuffixFormatters.getOrDefault(
                 configuration.get(NUMBER_SUFFIX_FORMATTER),
                 getDefaultNumberSuffixFormatter());
@@ -355,28 +359,6 @@ public class TextFactoryImpl implements TextFactory {
     }
 
     /**
-     * Clears current {@link TextConfiguration} and applies the provided one to it. This method should not overwrite the
-     * current {@link TextConfiguration} instance and only alter its state.
-     *
-     * @param configuration {@link TextConfiguration} to be applied
-     */
-    @Override
-    public void setConfiguration(TextConfiguration configuration) {
-        this.configuration.clear();
-        this.configuration.set(configuration);
-    }
-
-    /**
-     * This method should always return the same {@link TextConfiguration} instance.
-     *
-     * @return current {@link TextConfiguration}
-     */
-    @Override
-    public TextConfiguration getConfiguration() {
-        return configuration;
-    }
-
-    /**
      * Registers the {@link PluralConverter} to be used.
      *
      * @param converter {@link PluralConverter} to be registered
@@ -394,15 +376,5 @@ public class TextFactoryImpl implements TextFactory {
     @Override
     public PluralConverter getPluralConverter() {
         return pluralConverter;
-    }
-
-    /**
-     * Registers the specified {@link TextConfiguration TextConfigurations} to this factory.
-     *
-     * @param configurations {@link TextConfiguration TextConfigurations} to be registered
-     */
-    @Initialize
-    public void initialize(List<TextConfiguration> configurations) {
-        configurations.forEach(this::setConfiguration);
     }
 }

@@ -1,7 +1,8 @@
 package me.datafox.dfxengine.text.api;
 
+import me.datafox.dfxengine.configuration.api.Configuration;
 import me.datafox.dfxengine.handles.api.Handled;
-import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
+import me.datafox.dfxengine.configuration.api.exception.ConfigurationException;
 
 import java.math.BigDecimal;
 
@@ -17,10 +18,10 @@ public interface NumberFormatter extends Handled {
      *
      * @param number number to be formatter
      * @param factory {@link TextFactory} for formatting
-     * @param configuration {@link TextConfiguration} for formatting
+     * @param configuration {@link Configuration} for formatting
      * @return {@link String} representation of the number
      *
-     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this formatter
+     * @throws ConfigurationException if the {@link Configuration} is not valid for this formatter
      */
-    String format(BigDecimal number, TextFactory factory, TextConfiguration configuration);
+    String format(BigDecimal number, TextFactory factory, Configuration configuration);
 }

@@ -2,11 +2,15 @@ package me.datafox.dfxengine.text.formatter;
 
 import lombok.Data;
 import lombok.Getter;
+import me.datafox.dfxengine.configuration.api.ConfigurationKey;
+import me.datafox.dfxengine.configuration.api.Configuration;
+import me.datafox.dfxengine.configuration.api.exception.ConfigurationException;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
-import me.datafox.dfxengine.text.api.*;
-import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
+import me.datafox.dfxengine.text.api.NumberFormatter;
+import me.datafox.dfxengine.text.api.PluralConverter;
+import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
 import me.datafox.dfxengine.text.utils.TextHandles;
 import me.datafox.dfxengine.text.utils.TextUtils;
@@ -119,13 +123,13 @@ public class SplittingNumberFormatter implements NumberFormatter {
      *
      * @param number number to be formatter
      * @param factory {@link TextFactory} for formatting
-     * @param configuration {@link TextConfiguration} for formatting
+     * @param configuration {@link Configuration} for formatting
      * @return {@link String} representation of the number
      *
-     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this formatter
+     * @throws ConfigurationException if the {@link Configuration} is not valid for this formatter
      */
     @Override
-    public String format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
+    public String format(BigDecimal number, TextFactory factory, Configuration configuration) {
         if(number == null) {
             number = BigDecimal.ZERO;
         }
@@ -175,7 +179,7 @@ public class SplittingNumberFormatter implements NumberFormatter {
         if(delegate != null && (getHandle().equals(delegate.getHandle()) || delegate instanceof SplittingNumberFormatter)) {
             throw LogUtils.logExceptionAndGet(logger,
                     TextStrings.SPNF_DELEGATE_IS_SPLITTING,
-                    TextConfigurationException::new);
+                    ConfigurationException::new);
         }
         BigDecimal last = null;
         for(Split split : splits) {
@@ -183,7 +187,7 @@ public class SplittingNumberFormatter implements NumberFormatter {
                 if(last.compareTo(split.getMultiplier()) >= 0) {
                     throw LogUtils.logExceptionAndGet(logger,
                             TextStrings.SPNF_SPLITS_NOT_IN_ORDER,
-                            TextConfigurationException::new);
+                            ConfigurationException::new);
                 }
             }
             last = split.getMultiplier();
@@ -240,7 +244,7 @@ public class SplittingNumberFormatter implements NumberFormatter {
 
     private static class DefaultDelegate implements NumberFormatter {
         @Override
-        public String format(BigDecimal number, TextFactory factory, TextConfiguration configuration) {
+        public String format(BigDecimal number, TextFactory factory, Configuration configuration) {
             return number.toString();
         }
 

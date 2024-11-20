@@ -1,7 +1,8 @@
-package me.datafox.dfxengine.text.utils;
+package me.datafox.dfxengine.configuration;
 
-import lombok.Getter;
-import me.datafox.dfxengine.text.api.*;
+import me.datafox.dfxengine.configuration.api.Configuration;
+import me.datafox.dfxengine.configuration.api.ConfigurationKey;
+import me.datafox.dfxengine.configuration.api.ConfigurationValue;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,31 +10,21 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Implementation of {@link TextConfiguration}, used by {@link NumberFormatter NumberFormatters},
- * {@link NumberSuffixFormatter NumberSuffixFormatters}, {@link Text Texts} and the {@link TextFactory}.
+ * Implementation of {@link Configuration}.
  *
  * @author datafox
  */
-public class TextConfigurationImpl implements TextConfiguration {
-    /**
-     * {@link TextFactory} associated with this configuration.
-     */
-    @Getter
-    private final TextFactory factory;
+public class ConfigurationImpl implements Configuration {
     private final Map<ConfigurationKey<?>,ConfigurationValue<?>> configuration;
 
     /**
-     * Public constructor for {@link TextConfigurationImpl}.
-     *
-     * @param factory {@link TextFactory} to be associated with this configuration
+     * Public constructor for {@link ConfigurationImpl}.
      */
-    public TextConfigurationImpl(TextFactory factory) {
-        this.factory = factory;
+    public ConfigurationImpl() {
         configuration = new HashMap<>();
     }
 
-    private TextConfigurationImpl(TextFactory factory, Map<ConfigurationKey<?>,ConfigurationValue<?>> configuration) {
-        this.factory = factory;
+    private ConfigurationImpl(Map<ConfigurationKey<?>,ConfigurationValue<?>> configuration) {
         this.configuration = new HashMap<>(configuration);
     }
 
@@ -58,16 +49,16 @@ public class TextConfigurationImpl implements TextConfiguration {
      */
     @Override
     public <T> void set(ConfigurationKey<T> key, T value) {
-        configuration.put(key, (f, c) -> value);
+        configuration.put(key, (c) -> value);
     }
 
     /**
      * Applies all entries of the provided configuration to this one, overwriting any existing entries if present.
      *
-     * @param configuration {@link TextConfiguration} to be applied
+     * @param configuration {@link Configuration} to be applied
      */
     @Override
-    public void set(TextConfiguration configuration) {
+    public void set(Configuration configuration) {
         this.configuration.putAll(configuration.getAll());
     }
 
@@ -83,7 +74,7 @@ public class TextConfigurationImpl implements TextConfiguration {
     @Override
     public <T> T get(ConfigurationKey<T> key) {
         return Optional.ofNullable(configuration.get(key))
-                .map(v -> v.get(factory, this))
+                .map(v -> v.get(this))
                 .map(v -> (T) v)
                 .orElseGet(key::getDefaultValue);
     }
@@ -123,29 +114,26 @@ public class TextConfigurationImpl implements TextConfiguration {
      * @return unique configuration instance containing all entries of this configuration
      */
     @Override
-    public TextConfiguration copy() {
-        return new TextConfigurationImpl(factory, getAll());
+    public Configuration copy() {
+        return new ConfigurationImpl(getAll());
     }
 
     /**
      * Returns a {@link Builder} for a configuration.
      *
-     * @param factory {@link TextFactory} to be associated with the builder
      * @return {@link Builder} for a configuration
      */
-    public static Builder builder(TextFactory factory) {
-        return new Builder(factory);
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
-     * Builder for {@link TextConfiguration}.
+     * Builder for {@link Configuration}.
      */
     public static class Builder {
-        private final TextFactory factory;
         private final Map<ConfigurationKey<?>,ConfigurationValue<?>> configuration;
 
-        private Builder(TextFactory factory) {
-            this.factory = factory;
+        private Builder() {
             configuration = new HashMap<>();
         }
 
@@ -158,7 +146,7 @@ public class TextConfigurationImpl implements TextConfiguration {
          * @param <T> type of the value
          */
         public <T> Builder key(ConfigurationKey<T> key, T value) {
-            configuration.put(key, (f, c) -> value);
+            configuration.put(key, (c) -> value);
             return this;
         }
 
@@ -186,12 +174,12 @@ public class TextConfigurationImpl implements TextConfiguration {
         }
 
         /**
-         * Builds a {@link TextConfiguration} with the registered values.
+         * Builds a configuration with the registered values.
          *
-         * @return {@link TextConfiguration} with the registered values
+         * @return configuration with the registered values
          */
-        public TextConfigurationImpl build() {
-            return new TextConfigurationImpl(factory, configuration);
+        public ConfigurationImpl build() {
+            return new ConfigurationImpl(configuration);
         }
     }
 }

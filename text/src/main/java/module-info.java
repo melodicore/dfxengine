@@ -9,13 +9,14 @@ module dfxengine.text {
     requires org.slf4j;
     requires ch.obermuhlner.math.big;
 
-    requires dfxengine.handles.api;
     requires dfxengine.injector.api;
     requires dfxengine.text.api;
     requires dfxengine.handles;
-    requires dfxengine.math.api;
-    requires dfxengine.values.api;
     requires dfxengine.utils;
+    requires dfxengine.configuration.api;
+    requires dfxengine.values.api;
+    requires dfxengine.math.api;
+    requires dfxengine.handles.api;
 
     exports me.datafox.dfxengine.text;
     exports me.datafox.dfxengine.text.converter;

@@ -9,6 +9,7 @@ dependencies {
     api project(":math-api")
     api project(":values-api")
     api project(":dependencies")
+    api project(":configuration-api")
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"

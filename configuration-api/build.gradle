@@ -1,0 +1,18 @@
+plugins {
+    id "java-library"
+}
+
+version = "$configurationApiVersion"
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+}
+
+mavenPublishing {
+    coordinates(dfxengineGroup, name, version)
+    pom {
+        name = "DFXEngine Configuration API"
+        description = "API for DFXEngine Configuration"
+    }
+}

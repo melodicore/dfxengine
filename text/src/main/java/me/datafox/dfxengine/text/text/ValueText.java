@@ -1,8 +1,12 @@
 package me.datafox.dfxengine.text.text;
 
+import me.datafox.dfxengine.configuration.api.ConfigurationKey;
+import me.datafox.dfxengine.configuration.api.Configuration;
+import me.datafox.dfxengine.configuration.api.exception.ConfigurationException;
 import me.datafox.dfxengine.math.api.Numeral;
-import me.datafox.dfxengine.text.api.*;
-import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
+import me.datafox.dfxengine.text.api.NumberFormatter;
+import me.datafox.dfxengine.text.api.Text;
+import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
 import me.datafox.dfxengine.text.utils.internal.TextStrings;
 import me.datafox.dfxengine.values.api.Value;
@@ -29,9 +33,9 @@ public class ValueText extends AbstractText {
      * Public constructor for {@link ValueText}.
      *
      * @param supplier {@link Supplier} for the {@link Value} to be used
-     * @param configuration extra {@link TextConfiguration} to be used by this text
+     * @param configuration extra {@link Configuration} to be used by this text
      */
-    public ValueText(Supplier<Value> supplier, TextConfiguration configuration) {
+    public ValueText(Supplier<Value> supplier, Configuration configuration) {
         super(configuration);
         this.supplier = supplier;
     }
@@ -49,13 +53,13 @@ public class ValueText extends AbstractText {
      * Returns a {@link String}.
      *
      * @param factory {@link TextFactory} for generation
-     * @param configuration {@link TextConfiguration} for generation
+     * @param configuration {@link Configuration} for generation
      * @return generated {@link String}
      *
-     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
+     * @throws ConfigurationException if the {@link Configuration} is not valid for this text
      */
     @Override
-    protected String generate(TextFactory factory, TextConfiguration configuration) {
+    protected String generate(TextFactory factory, Configuration configuration) {
         Numeral numeral = configuration.get(USE_MODIFIED) ? supplier.get().getValue() : supplier.get().getBase();
         NumberFormatter formatter = factory.getNumberFormatter(configuration);
         if(formatter == null) {

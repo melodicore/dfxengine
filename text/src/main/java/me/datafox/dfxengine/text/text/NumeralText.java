@@ -1,8 +1,11 @@
 package me.datafox.dfxengine.text.text;
 
+import me.datafox.dfxengine.configuration.api.Configuration;
+import me.datafox.dfxengine.configuration.api.exception.ConfigurationException;
 import me.datafox.dfxengine.math.api.Numeral;
-import me.datafox.dfxengine.text.api.*;
-import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
+import me.datafox.dfxengine.text.api.NumberFormatter;
+import me.datafox.dfxengine.text.api.Text;
+import me.datafox.dfxengine.text.api.TextFactory;
 import me.datafox.dfxengine.text.utils.ConfigurationKeys;
 import me.datafox.dfxengine.text.utils.internal.TextStrings;
 
@@ -21,9 +24,9 @@ public class NumeralText extends AbstractText {
      * Public constructor for {@link NumeralText}.
      *
      * @param supplier {@link Supplier} for the {@link Numeral} to be used
-     * @param configuration extra {@link TextConfiguration} to be used by this text
+     * @param configuration extra {@link Configuration} to be used by this text
      */
-    public NumeralText(Supplier<Numeral> supplier, TextConfiguration configuration) {
+    public NumeralText(Supplier<Numeral> supplier, Configuration configuration) {
         super(configuration);
         this.supplier = supplier;
     }
@@ -41,13 +44,13 @@ public class NumeralText extends AbstractText {
      * Returns a {@link String}.
      *
      * @param factory {@link TextFactory} for generation
-     * @param configuration {@link TextConfiguration} for generation
+     * @param configuration {@link Configuration} for generation
      * @return generated {@link String}
      *
-     * @throws TextConfigurationException if the {@link TextConfiguration} is not valid for this text
+     * @throws ConfigurationException if the {@link Configuration} is not valid for this text
      */
     @Override
-    protected String generate(TextFactory factory, TextConfiguration configuration) {
+    protected String generate(TextFactory factory, Configuration configuration) {
         NumberFormatter formatter = factory.getNumberFormatter(configuration);
         if(formatter == null) {
             logger.warn(TextStrings.INVALID_NUMBER_FORMATTER);

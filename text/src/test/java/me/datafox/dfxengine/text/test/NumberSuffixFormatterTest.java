@@ -1,6 +1,6 @@
 package me.datafox.dfxengine.text.test;
 
-import me.datafox.dfxengine.text.api.exception.TextConfigurationException;
+import me.datafox.dfxengine.configuration.api.exception.ConfigurationException;
 import me.datafox.dfxengine.text.formatter.SimpleNumberFormatter;
 import me.datafox.dfxengine.text.suffix.CharDigitSuffixFormatter;
 import me.datafox.dfxengine.text.suffix.ExponentSuffixFormatter;
@@ -75,11 +75,11 @@ public class NumberSuffixFormatterTest extends AbstractFormatterTest {
         assertEquals("5.2933+xöxööxxz", format("5.2933e9001"));
 
         configuration.set(CharDigitSuffixFormatter.INTERVAL, 0);
-        assertThrows(TextConfigurationException.class, () -> format("0"));
+        assertThrows(ConfigurationException.class, () -> format("0"));
         configuration.set(CharDigitSuffixFormatter.INTERVAL, 1);
 
         configuration.set(CharDigitSuffixFormatter.CHARACTERS, new char[0]);
-        assertThrows(TextConfigurationException.class, () -> format("0"));
+        assertThrows(ConfigurationException.class, () -> format("0"));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class NumberSuffixFormatterTest extends AbstractFormatterTest {
         assertEquals("2.52689e+8", format("2.52689e8"));
 
         configuration.set(ExponentSuffixFormatter.INTERVAL, 0);
-        assertThrows(TextConfigurationException.class, () -> format("0"));
+        assertThrows(ConfigurationException.class, () -> format("0"));
     }
 
     @Test
@@ -147,6 +147,6 @@ public class NumberSuffixFormatterTest extends AbstractFormatterTest {
         assertEquals("2.52689e9", format("2.52689e9"));
 
         configuration.set(NamedSuffixFormatter.INTERVAL, 0);
-        assertThrows(TextConfigurationException.class, () -> format("0"));
+        assertThrows(ConfigurationException.class, () -> format("0"));
     }
 }

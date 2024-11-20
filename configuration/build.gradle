@@ -1,0 +1,31 @@
+plugins {
+    id "java-library"
+}
+
+version = "$configurationVersion"
+
+dependencies {
+    api project(":configuration-api")
+    implementation project(":injector-api")
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    testImplementation project(":injector")
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testImplementation "ch.qos.logback:logback-classic:$logbackVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+mavenPublishing {
+    coordinates(dfxengineGroup, name, version)
+    pom {
+        name = "DFXEngine Configuration"
+        description = "Cascading configurations with arbitrary types"
+    }
+}
