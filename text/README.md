@@ -6,12 +6,11 @@ DFXEngine Text contains tools for generating text from various objects.
 use in generation. Use the `build(Text)` and `build(Text...)` methods for generation. The implementation is annotated as
 a `@Component` for the [Injector](../injector) module and will be automatically instantiated by it.
 
-## [`TextConfiguration`](src/main/java/me/datafox/dfxengine/text/utils/TextConfigurationImpl.java)
+## [`Configuration`](src/main/java/me/datafox/dfxengine/text/utils/TextConfigurationImpl.java)
 
-`TextConfiguration` is a configuration object that is used by all configurable classes of the module. `ConfigurationKey`
-is used to determine the type and default value of a configuration entry, and values to configuration entries may be
-static objects or a `Supplier<T>`. Configuration keys specific to a single class are contained in the class, and generic
-keys are in the `ConfigurationKeys` utility class. These generic keys are:
+The Text module uses the [Configuration](../configuration) module for configuration. Configuration keys specific to a 
+single class are contained in the class, and generic keys are in the `ConfigurationKeys` utility class. These generic 
+keys are:
 
 * `ConfigurationKey<String> DELIMITER` determines the delimiter used in normal concatenation. The default value is ` `
 * `ConfigurationKey<String> LIST_DELIMITER` determines the delimiter used in list concatenation, which is when the last
