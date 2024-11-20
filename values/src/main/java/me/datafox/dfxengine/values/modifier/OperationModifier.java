@@ -27,6 +27,8 @@ public class OperationModifier extends AbstractModifier {
     private final Operation operation;
 
     /**
+     * Public constructor for {@link OperationModifier} that uses {@link SourceOperation}.
+     *
      * @param priority priority for this modifier
      * @param operation {@link SourceOperation} to be used
      */
@@ -35,6 +37,8 @@ public class OperationModifier extends AbstractModifier {
     }
 
     /**
+     * Public constructor for {@link OperationModifier} that uses {@link SingleParameterOperation}.
+     *
      * @param priority priority for this modifier
      * @param operation {@link SingleParameterOperation} to be used
      * @param parameter parameter {@link Value} for the {@link SingleParameterOperation}
@@ -44,6 +48,8 @@ public class OperationModifier extends AbstractModifier {
     }
 
     /**
+     * Public constructor for {@link OperationModifier} that uses {@link DualParameterOperation}.
+     *
      * @param priority priority for this modifier
      * @param operation {@link DualParameterOperation} to be used
      * @param parameter1 first parameter {@link Value} for the {@link DualParameterOperation}
@@ -54,6 +60,8 @@ public class OperationModifier extends AbstractModifier {
     }
 
     /**
+     * Public constructor for {@link OperationModifier} that uses {@link Operation}.
+     *
      * @param priority priority for this modifier
      * @param operation {@link Operation} to be used
      * @param parameters parameter {@link Value Values} for the {@link Operation}
@@ -66,6 +74,8 @@ public class OperationModifier extends AbstractModifier {
     }
 
     /**
+     * Protected constructor for {@link OperationModifier}.
+     *
      * @param logger {@link Logger} for this modifier
      * @param priority priority for this modifier
      * @param operation {@link Operation} to be used
@@ -87,8 +97,10 @@ public class OperationModifier extends AbstractModifier {
     }
 
     /**
-     * @param source source {@link Numeral} for this modifier
-     * @return resulting {@link Numeral} of this modifier
+     * Applies this modifier to a {@link Numeral} and returns the result.
+     *
+     * @param source {@link Numeral} to be modified
+     * @return result of the modifier
      */
     @Override
     public Numeral apply(Numeral source) {

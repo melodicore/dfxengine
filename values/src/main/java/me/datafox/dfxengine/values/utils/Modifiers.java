@@ -21,6 +21,8 @@ import static me.datafox.dfxengine.values.modifier.MappingOperationModifier.sour
  */
 public class Modifiers {
     /**
+     * Returns an {@link OperationModifier} with the specified {@link Operation} and parameters.
+     *
      * @param priority priority for the {@link OperationModifier}
      * @param operation {@link Operation} for the {@link OperationModifier}
      * @param parameters parameter {@link Value Values} for the {@link OperationModifier}
@@ -31,8 +33,10 @@ public class Modifiers {
     }
 
     /**
+     * Returns an {@link OperationModifier} with the specified {@link SourceOperation}.
+     *
      * @param priority priority for the {@link OperationModifier}
-     * @param operation {@link Operation} for the {@link OperationModifier}
+     * @param operation {@link SourceOperation} for the {@link OperationModifier}
      * @return {@link OperationModifier} with the specified parameters
      */
     public static OperationModifier operation(int priority, SourceOperation operation) {
@@ -40,8 +44,10 @@ public class Modifiers {
     }
 
     /**
+     * Returns an {@link OperationModifier} with the specified {@link SingleParameterOperation} and parameter.
+     *
      * @param priority priority for the {@link OperationModifier}
-     * @param operation {@link Operation} for the {@link OperationModifier}
+     * @param operation {@link SingleParameterOperation} for the {@link OperationModifier}
      * @param parameter parameter {@link Value} for the {@link OperationModifier}
      * @return {@link OperationModifier} with the specified parameters
      */
@@ -50,8 +56,10 @@ public class Modifiers {
     }
 
     /**
+     * Returns an {@link OperationModifier} with the specified {@link DualParameterOperation} and parameters.
+     *
      * @param priority priority for the {@link OperationModifier}
-     * @param operation {@link Operation} for the {@link OperationModifier}
+     * @param operation {@link DualParameterOperation} for the {@link OperationModifier}
      * @param parameter1 first parameter {@link Value} for the {@link OperationModifier}
      * @param parameter2 second parameter {@link Value} for the {@link OperationModifier}
      * @return {@link OperationModifier} with the specified parameters
@@ -297,7 +305,7 @@ public class Modifiers {
     }
 
     /**
-     * The formula for the {@link MappingOperationModifier} is {@code [source] * ([percentage] * [multiplier] + 1)}.
+     * Returns a {@link MappingOperationModifier} with the formula {@code [source] * ([percentage] * [multiplier] + 1)}.
      *
      * @param priority priority for the {@link MappingOperationModifier}
      * @param percentage percentage {@link Value} for the {@link MappingOperationModifier}
@@ -317,7 +325,7 @@ public class Modifiers {
     }
 
     /**
-     * The formula for the {@link MappingOperationModifier} is <code>[source] * ([base]<sup>[exponent]</sup>)</code>.
+     * Returns a {@link MappingOperationModifier} with the formula <code>[source] * ([base]<sup>[exponent]</sup>)</code>.
      *
      * @param priority priority for the {@link MappingOperationModifier}
      * @param base base {@link Value} for the {@link MappingOperationModifier}
@@ -333,6 +341,8 @@ public class Modifiers {
     }
 
     /**
+     * Returns a {@link SingleParameterOperation} that reverses the source and parameter of the specified operation.
+     *
      * @param operation {@link SingleParameterOperation} to be reversed
      * @return {@link SingleParameterOperation} with reversed parameters
      */

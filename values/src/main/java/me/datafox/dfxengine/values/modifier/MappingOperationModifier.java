@@ -29,6 +29,8 @@ import static me.datafox.dfxengine.values.utils.internal.ValuesStrings.FUTURE_RE
  */
 public class MappingOperationModifier extends OperationModifier {
     /**
+     * Returns a {@link SpecialValue} that refers to the source {@link Value}.
+     *
      * @return {@link SpecialValue} that refers to the source {@link Value}
      */
     public static SpecialValue sourceValue() {
@@ -36,6 +38,8 @@ public class MappingOperationModifier extends OperationModifier {
     }
 
     /**
+     * Returns a {@link SpecialValue} that refers to the result of the specified {@link Operation}.
+     *
      * @param operationIndex index of the {@link Operation} to refer to
      * @return {@link SpecialValue} that refers to the result of the specified {@link Operation}
      */
@@ -44,6 +48,8 @@ public class MappingOperationModifier extends OperationModifier {
     }
 
     /**
+     * Public constructor for {@link MappingOperationModifier}.
+     *
      * @param priority priority for this modifier
      * @param operation {@link MappingOperationChain} for this modifier
      * @param parameters parameter {@link Value Values} for this modifier
@@ -53,15 +59,17 @@ public class MappingOperationModifier extends OperationModifier {
     }
 
     /**
-     * @param priority priority for this {@link Builder}
-     * @return {@link Builder} instance
+     * Creates a builder for a {@link MappingOperationModifier}.
+     *
+     * @param priority priority for the modifier
+     * @return builder for a {@link MappingOperationModifier}
      */
     public static Builder builder(int priority) {
         return new Builder(priority);
     }
 
     /**
-     * A Builder for {@link MappingOperationModifier}.
+     * A builder for {@link MappingOperationModifier}.
      */
     public static class Builder {
         private final int priority;
@@ -75,6 +83,9 @@ public class MappingOperationModifier extends OperationModifier {
         }
 
         /**
+         * A {@link SourceOperation} for the modifier. If the parameter is a {@link SpecialValue}, a check is done and
+         * an exception is thrown if it refers to future operations.
+         *
          * @param operation {@link SourceOperation} to add to the {@link MappingOperationModifier}
          * @param parameter parameter {@link Value} for the {@link SourceOperation}
          * @return this builder
@@ -87,6 +98,9 @@ public class MappingOperationModifier extends OperationModifier {
         }
 
         /**
+         * A {@link SingleParameterOperation} for the modifier. If either of the parameters is a {@link SpecialValue}, a
+         * check is done and an exception is thrown if it refers to future operations.
+         *
          * @param operation {@link SingleParameterOperation} to add to the {@link MappingOperationModifier}
          * @param parameter1 first parameter {@link Value} for the {@link SingleParameterOperation}
          * @param parameter2 second parameter {@link Value} for the {@link SingleParameterOperation}
@@ -101,6 +115,9 @@ public class MappingOperationModifier extends OperationModifier {
         }
 
         /**
+         * A {@link DualParameterOperation} for the modifier. If any of the parameters is a {@link SpecialValue}, a
+         * check is done and an exception is thrown if it refers to future operations.
+         *
          * @param operation {@link DualParameterOperation} to add to the {@link MappingOperationModifier}
          * @param parameter1 first parameter {@link Value} for the {@link DualParameterOperation}
          * @param parameter2 second parameter {@link Value} for the {@link DualParameterOperation}
@@ -117,6 +134,9 @@ public class MappingOperationModifier extends OperationModifier {
         }
 
         /**
+         * An {@link Operation} for the modifier. If any of the parameters is a {@link SpecialValue}, a  check is done
+         * and an exception is thrown if it refers to future operations.
+         *
          * @param operation {@link SourceOperation} to add to the {@link MappingOperationModifier}
          * @param parameters parameter {@link Value Values} for the {@link SourceOperation}
          * @return this builder
@@ -133,7 +153,7 @@ public class MappingOperationModifier extends OperationModifier {
         }
 
         /**
-         * Clears all {@link Operation Operations} from the {@link MappingOperationModifier}.
+         * Clears all operations from the modifier.
          *
          * @return this builder
          */
@@ -144,7 +164,9 @@ public class MappingOperationModifier extends OperationModifier {
         }
 
         /**
-         * @return {@link MappingOperationModifier} initialized by this builder
+         * Builds the modifier.
+         *
+         * @return modifier initialized by this builder
          */
         public MappingOperationModifier build() {
             return new MappingOperationModifier(priority, operationBuilder.build(),

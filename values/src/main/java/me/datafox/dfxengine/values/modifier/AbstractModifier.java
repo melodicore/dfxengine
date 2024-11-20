@@ -18,13 +18,15 @@ import java.util.function.Predicate;
  */
 public abstract class AbstractModifier extends DependencyDependent implements Modifier {
     /**
-     * Priority for this operation
+     * Priority for this modifier.
      */
     @Getter
     protected final int priority;
     private final Value[] parameters;
 
     /**
+     * Protected constructor for {@link AbstractModifier}.
+     *
      * @param logger {@link Logger} for this modifier
      * @param priority priority for this modifier
      * @param parameters parameter {@link Value Values} for this modifier
@@ -48,6 +50,8 @@ public abstract class AbstractModifier extends DependencyDependent implements Mo
     protected void onInvalidate() {}
 
     /**
+     * Returns the parameter {@link Value} for the specified index.
+     *
      * @param index parameter index
      * @return parameter {@link Value} for the specified index
      *
@@ -58,6 +62,8 @@ public abstract class AbstractModifier extends DependencyDependent implements Mo
     }
 
     /**
+     * Returns the array of parameter {@link Value Values}.
+     *
      * @return array of parameter {@link Value Values}
      */
     protected Value[] getParameters() {

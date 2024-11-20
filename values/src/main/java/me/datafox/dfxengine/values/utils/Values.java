@@ -17,6 +17,8 @@ import java.math.BigInteger;
  */
 public class Values {
     /**
+     * Returns a {@link Value} with the specified {@link Numeral}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param numeral {@link Numeral} to initialize the {@link Value} with
      * @param immutable {@code true} if the {@link Value} should be immutable
@@ -27,6 +29,8 @@ public class Values {
     }
 
     /**
+     * Returns a {@link Value} with a {@link Numeral} backed with the specified {@code int}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param i {@code int} to initialize the {@link Value} with
      * @param immutable {@code true} if the {@link Value} should be immutable
@@ -37,6 +41,8 @@ public class Values {
     }
 
     /**
+     * Returns a {@link Value} with a {@link Numeral} backed with the specified {@code long}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param l {@code long} to initialize the {@link Value} with
      * @param immutable {@code true} if the {@link Value} should be immutable
@@ -47,6 +53,8 @@ public class Values {
     }
 
     /**
+     * Returns a {@link Value} with a {@link Numeral} backed with the specified {@link BigInteger}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param bi {@link BigInteger} to initialize the {@link Value} with
      * @param immutable {@code true} if the {@link Value} should be immutable
@@ -57,6 +65,8 @@ public class Values {
     }
 
     /**
+     * Returns a {@link Value} with a {@link Numeral} backed with the specified {@code float}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param f {@code float} to initialize the {@link Value} with
      * @param immutable {@code true} if the {@link Value} should be immutable
@@ -67,6 +77,8 @@ public class Values {
     }
 
     /**
+     * Returns a {@link Value} with a {@link Numeral} backed with the specified {@code double}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param d {@code double} to initialize the {@link Value} with
      * @param immutable {@code true} if the {@link Value} should be immutable
@@ -77,6 +89,8 @@ public class Values {
     }
 
     /**
+     * Returns a {@link Value} with a {@link Numeral} backed with the specified {@link BigDecimal}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param bd {@link BigDecimal} to initialize the {@link Value} with
      * @param immutable {@code true} if the {@link Value} should be immutable
@@ -87,6 +101,10 @@ public class Values {
     }
 
     /**
+     * Returns a {@link Value} with a {@link Numeral} backed with the specified {@link String}. Uses
+     * {@link Numerals#of(String)} so the resulting numeral will be backed with a {@link BigInteger} or
+     * {@link BigDecimal}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param str {@link String} to initialize the {@link Value} with
      * @param immutable {@code true} if the {@link Value} should be immutable
@@ -99,6 +117,8 @@ public class Values {
     }
 
     /**
+     * Returns a static {@link Value} with the specified {@link Numeral}.
+     *
      * @param numeral {@link Numeral} to initialize the {@link Value} with
      * @return static {@link Value} with the specified value
      */
@@ -107,6 +127,8 @@ public class Values {
     }
 
     /**
+     * Returns a static {@link Value} with a {@link Numeral} backed with the specified {@code int}.
+     *
      * @param i {@code int} to initialize the {@link Value} with
      * @return static {@link Value} with the specified value
      */
@@ -115,6 +137,8 @@ public class Values {
     }
 
     /**
+     * Returns a static {@link Value} with a {@link Numeral} backed with the specified {@code long}.
+     *
      * @param l {@code long} to initialize the {@link Value} with
      * @return static {@link Value} with the specified value
      */
@@ -123,6 +147,8 @@ public class Values {
     }
 
     /**
+     * Returns a static {@link Value} with a {@link Numeral} backed with the specified {@link BigInteger}.
+     *
      * @param bi {@link BigInteger} to initialize the {@link Value} with
      * @return static {@link Value} with the specified value
      */
@@ -131,6 +157,8 @@ public class Values {
     }
 
     /**
+     * Returns a static {@link Value} with a {@link Numeral} backed with the specified {@code float}.
+     *
      * @param f {@code float} to initialize the {@link Value} with
      * @return static {@link Value} with the specified value
      */
@@ -139,6 +167,8 @@ public class Values {
     }
 
     /**
+     * Returns a static {@link Value} with a {@link Numeral} backed with the specified {@code double}.
+     *
      * @param d {@code double} to initialize the {@link Value} with
      * @return static {@link Value} with the specified value
      */
@@ -147,6 +177,8 @@ public class Values {
     }
 
     /**
+     * Returns a static {@link Value} with a {@link Numeral} backed with the specified {@link BigDecimal}.
+     *
      * @param bd {@link BigDecimal} to initialize the {@link Value} with
      * @return static {@link Value} with the specified value
      */
@@ -155,6 +187,10 @@ public class Values {
     }
 
     /**
+     * Returns a static {@link Value} with a {@link Numeral} backed with the specified {@link String}. Uses
+     * {@link Numerals#of(String)} so the resulting numeral will be backed with a {@link BigInteger} or
+     * {@link BigDecimal}.
+     *
      * @param str {@link String} to initialize the {@link Value} with
      * @return static {@link Value} with the specified value
      *
@@ -165,6 +201,8 @@ public class Values {
     }
 
     /**
+     * Returns a mutable {@link Value} with the specified {@link Numeral}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param numeral {@link Numeral} to initialize the {@link Value} with
      * @return mutable {@link Value} with the specified parameters
@@ -174,6 +212,8 @@ public class Values {
     }
 
     /**
+     * Returns a mutable {@link Value} with a {@link Numeral} backed with the specified {@code int}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param i {@code int} to initialize the {@link Value} with
      * @return mutable {@link Value} with the specified parameters
@@ -183,6 +223,8 @@ public class Values {
     }
 
     /**
+     * Returns a mutable {@link Value} with a {@link Numeral} backed with the specified {@code long}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param l {@code long} to initialize the {@link Value} with
      * @return mutable {@link Value} with the specified parameters
@@ -192,6 +234,8 @@ public class Values {
     }
 
     /**
+     * Returns a mutable {@link Value} with a {@link Numeral} backed with the specified {@link BigInteger}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param bi {@link BigInteger} to initialize the {@link Value} with
      * @return mutable {@link Value} with the specified parameters
@@ -201,6 +245,8 @@ public class Values {
     }
 
     /**
+     * Returns a mutable {@link Value} with a {@link Numeral} backed with the specified {@code float}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param f {@code float} to initialize the {@link Value} with
      * @return mutable {@link Value} with the specified parameters
@@ -210,6 +256,8 @@ public class Values {
     }
 
     /**
+     * Returns a mutable {@link Value} with a {@link Numeral} backed with the specified {@code double}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param d {@code double} to initialize the {@link Value} with
      * @return mutable {@link Value} with the specified parameters
@@ -219,6 +267,8 @@ public class Values {
     }
 
     /**
+     * Returns a mutable {@link Value} with a {@link Numeral} backed with the specified {@link BigDecimal}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param bd {@link BigDecimal} to initialize the {@link Value} with
      * @return mutable {@link Value} with the specified parameters
@@ -228,6 +278,10 @@ public class Values {
     }
 
     /**
+     * Returns a mutable {@link Value} with a {@link Numeral} backed with the specified {@link String}. Uses
+     * {@link Numerals#of(String)} so the resulting numeral will be backed with a {@link BigInteger} or
+     * {@link BigDecimal}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param str {@link String} to initialize the {@link Value} with
      * @return mutable {@link Value} with the specified parameters
@@ -239,6 +293,8 @@ public class Values {
     }
 
     /**
+     * Returns an immutable {@link Value} with the specified {@link Numeral}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param numeral {@link Numeral} to initialize the {@link Value} with
      * @return immutable {@link Value} with the specified parameters
@@ -248,6 +304,8 @@ public class Values {
     }
 
     /**
+     * Returns an immutable {@link Value} with a {@link Numeral} backed with the specified {@code int}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param i {@code int} to initialize the {@link Value} with
      * @return immutable {@link Value} with the specified parameters
@@ -257,6 +315,8 @@ public class Values {
     }
 
     /**
+     * Returns an immutable {@link Value} with a {@link Numeral} backed with the specified {@code long}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param l {@code long} to initialize the {@link Value} with
      * @return immutable {@link Value} with the specified parameters
@@ -266,6 +326,8 @@ public class Values {
     }
 
     /**
+     * Returns an immutable {@link Value} with a {@link Numeral} backed with the specified {@link BigInteger}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param bi {@link BigInteger} to initialize the {@link Value} with
      * @return immutable {@link Value} with the specified parameters
@@ -275,6 +337,8 @@ public class Values {
     }
 
     /**
+     * Returns an immutable {@link Value} with a {@link Numeral} backed with the specified {@code float}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param f {@code float} to initialize the {@link Value} with
      * @return immutable {@link Value} with the specified parameters
@@ -284,6 +348,8 @@ public class Values {
     }
 
     /**
+     * Returns an immutable {@link Value} with a {@link Numeral} backed with the specified {@code double}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param d {@code double} to initialize the {@link Value} with
      * @return immutable {@link Value} with the specified parameters
@@ -293,6 +359,8 @@ public class Values {
     }
 
     /**
+     * Returns an immutable {@link Value} with a {@link Numeral} backed with the specified {@link BigDecimal}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param bd {@link BigDecimal} to initialize the {@link Value} with
      * @return immutable {@link Value} with the specified parameters
@@ -302,6 +370,10 @@ public class Values {
     }
 
     /**
+     * Returns an immutable {@link Value} with a {@link Numeral} backed with the specified {@link String}. Uses
+     * {@link Numerals#of(String)} so the resulting numeral will be backed with a {@link BigInteger} or
+     * {@link BigDecimal}.
+     *
      * @param handle {@link Handle} identifier for the {@link Value}
      * @param str {@link String} to initialize the {@link Value} with
      * @return immutable {@link Value} with the specified parameters

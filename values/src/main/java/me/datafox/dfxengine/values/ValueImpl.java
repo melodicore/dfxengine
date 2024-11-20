@@ -46,6 +46,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     private boolean invalidated;
 
     /**
+     * Public constructor for {@link ValueImpl}.
+     *
      * @param handle {@link Handle} identifier for this value
      * @param value {@link Numeral} to initialize this value with
      * @param immutable {@code true} if this value should be immutable
@@ -61,7 +63,9 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
-     * @return {@link Handle} associated with this value
+     * Returns the {@link Handle} associated with this value.
+     *
+     * @return {@link Handle} associated with this value, or {@code null} if this value is static
      */
     @Override
     public Handle getHandle() {
@@ -69,6 +73,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Returns the base {@link Numeral} of this value.
+     *
      * @return base {@link Numeral} of this value
      */
     @Override
@@ -77,6 +83,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Returns the base {@link Numeral} of this value with all {@link Modifier Modifiers} of this value applied to it.
+     *
      * @return base {@link Numeral} of this value with all {@link Modifier Modifiers} of this value applied to it
      */
     @Override
@@ -89,7 +97,7 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
-     * This implementation always returns {@code false}.
+     * Returns {@code true} if this value is static. This implementation always returns {@code false}.
      *
      * @return {@code true} if this value is static
      */
@@ -99,6 +107,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Returns {@code true} if this value is immutable. Static values are always immutable.
+     *
      * @return {@code true} if this value is immutable
      */
     @Override
@@ -107,6 +117,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Returns {@code true} if the base {@link Numeral} of this value can be converted to the specified type.
+     *
      * @param type {@link NumeralType} to be checked for
      * @return {@code true} if the base {@link Numeral} of this value can be converted to the specified type
      *
@@ -120,6 +132,9 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Converts the base {@link Numeral} to the specified type, or throws an exception if the value is outside the
+     * specified type's bounds.
+     *
      * @param type {@link NumeralType} for the base {@link Numeral} of this value to be converted to
      * @return {@code true} if the base {@link Numeral} of this value was changed as a result of this operation
      *
@@ -144,6 +159,9 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Converts the base {@link Numeral} to the specified type, or does nothing if the conversion would throw an
+     * {@link ExtendedArithmeticException}.
+     *
      * @param type {@link NumeralType} for the base {@link Numeral} of this value to be converted to
      * @return {@code true} if the base {@link Numeral} of this value was changed as a result of this operation
      *
@@ -166,8 +184,9 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
-     * If the base {@link Numeral} does not represent an integer value ({@link NumeralType#isInteger()} is {@code false}
-     * for {@link Numeral#getType()}), converts it to the smallest integer type that hold the represented value.
+     * Converts the base {@link Numeral} to an integer value. If the base {@link Numeral} does not represent an integer
+     * value ({@link NumeralType#isInteger()} is {@code false} for {@link Numeral#getType()}), converts it to the
+     * smallest integer type that hold the represented value.
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
      *
@@ -191,8 +210,9 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
-     * If the base {@link Numeral} does not represent a decimal value ({@link NumeralType#isDecimal()} is {@code false}
-     * for {@link Numeral#getType()}), converts it to the smallest decimal type that hold the represented value.
+     * Converts the base {@link Numeral} to a decimal value. If the base {@link Numeral} does not represent a decimal
+     * value ({@link NumeralType#isDecimal()} is {@code false} for {@link Numeral#getType()}), converts it to the
+     * smallest decimal type that hold the represented value.
      *
      * @return {@code true} if the base {@link Numeral} was changed as a result of this operation
      *
@@ -236,6 +256,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Sets the base {@link Numeral} to the specified value.
+     *
      * @param value value to replace the current base {@link Numeral}
      *
      * @throws UnsupportedOperationException if this value is immutable
@@ -253,6 +275,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Applies a {@link SourceOperation} to the base {@link Numeral} of this value.
+     *
      * @param operation {@link SourceOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      *
@@ -267,6 +291,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Applies a {@link SingleParameterOperation} to the base {@link Numeral} of this value.
+     *
      * @param operation {@link SingleParameterOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      * @param parameter parameter for the operation
@@ -282,12 +308,14 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Applies a {@link DualParameterOperation} to the base {@link Numeral} of this value.
+     *
      * @param operation {@link DualParameterOperation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      * @param parameter1 first parameter for the operation
      * @param parameter2 second parameter for the operation
      *
-     * @throws UnsupportedOperationException if this value is immutable
+     * @throws UnsupportedOperationException if this value is static
      */
     @Override
     public void apply(DualParameterOperation operation, MathContext context, Numeral parameter1, Numeral parameter2) {
@@ -298,6 +326,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Applies an {@link Operation} to the base {@link Numeral} of this value.
+     *
      * @param operation {@link Operation} to be applied to the base {@link Numeral}
      * @param context {@link MathContext} for the operation
      * @param parameters parameters for the operation
@@ -315,6 +345,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Compares this value to a {@link Numeral} using the specified {@link Comparison}.
+     *
      * @param comparison {@link Comparison} to be used
      * @param context {@link ComparisonContext} for the comparison
      * @param other {@link Numeral} to be compared with
@@ -326,6 +358,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Returns the {@link Modifier Modifiers} associated with this value.
+     *
      * @return {@link Modifier Modifiers} associated with this value
      */
     @Override
@@ -334,6 +368,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Registers a {@link Modifier} to this value.
+     *
      * @param modifier {@link Modifier} to be added
      * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
      */
@@ -348,6 +384,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Registers {@link Modifier Modifiers} to this value.
+     *
      * @param modifiers {@link Modifier Modifiers} to be added
      * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
      */
@@ -362,6 +400,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Removes a {@link Modifier} from this value.
+     *
      * @param modifier {@link Modifier} to be removed
      * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
      */
@@ -376,6 +416,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Removes {@link Modifier Modifiers} from this value.
+     *
      * @param modifiers {@link Modifier Modifiers} to be removed
      * @return {@code true} if the {@link Modifier Modifiers} of this value changed as a result of this operation
      */
@@ -390,6 +432,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Checks if a {@link Modifier} is present in this value.
+     *
      * @param modifier {@link Modifier} to be checked for
      * @return {@code true} if the specified {@link Modifier} is associated with this value
      */
@@ -399,6 +443,8 @@ public class ValueImpl extends DependencyDependent implements Value {
     }
 
     /**
+     * Checks if {@link Modifier Modifiers} are present in this value.
+     *
      * @param modifiers {@link Modifier Modifiers} to be checked for
      * @return {@code true} if all of the specified {@link Modifier Modifiers} are associated with this value
      */
@@ -407,12 +453,17 @@ public class ValueImpl extends DependencyDependent implements Value {
         return this.modifiers.containsAll(modifiers);
     }
 
+    /**
+     * Invalidates this value.
+     */
     @Override
     protected void onInvalidate() {
         invalidated = true;
     }
 
     /**
+     * Returns a {@link String} representation of this value in format <i>Value(base,value,[mutable/immutable])</i>.
+     *
      * @return {@link String} representation of this value in format <i>Value(base,value,[mutable/immutable])</i>
      */
     @Override

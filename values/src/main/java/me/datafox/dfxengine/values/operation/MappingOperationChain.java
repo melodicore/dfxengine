@@ -36,6 +36,8 @@ import static me.datafox.dfxengine.values.utils.internal.ValuesStrings.invalidPa
  */
 public final class MappingOperationChain implements Operation {
     /**
+     * Returns a {@link SpecialNumeral} that refers to the source {@link Numeral}.
+     *
      * @return {@link SpecialNumeral} that refers to the source {@link Numeral}
      */
     public static SpecialNumeral sourceNumeral() {
@@ -43,6 +45,8 @@ public final class MappingOperationChain implements Operation {
     }
 
     /**
+     * Returns a {@link SpecialNumeral} that refers to the result of the specified {@link Operation}.
+     *
      * @param operationIndex index of the {@link Operation} to refer to
      * @return {@link SpecialNumeral} that refers to the result of the specified {@link Operation}
      */
@@ -52,10 +56,15 @@ public final class MappingOperationChain implements Operation {
 
     private final Logger logger;
     private final Operation[] operations;
+    /**
+     * Returns the amount of parameters this operation expects.
+     */
     @Getter
     private final int parameterCount;
 
     /**
+     * Public constructor for {@link MappingOperationChain}.
+     *
      * @param operations {@link Operation Operations} to associate with this operation
      */
     public MappingOperationChain(List<? extends Operation> operations) {
@@ -68,6 +77,8 @@ public final class MappingOperationChain implements Operation {
     }
 
     /**
+     * Applies this operation to the specified source {@link Numeral} with the specified parameters.
+     *
      * @param source source {@link Numeral} for this operation
      * @param parameters parameter {@link Numeral Numerals} for this operation
      * @return resulting {@link Numeral} of this operation
@@ -130,7 +141,9 @@ public final class MappingOperationChain implements Operation {
     }
 
     /**
-     * @return {@link Builder} instance
+     * Creates a builder for a {@link MappingOperationChain}.
+     *
+     * @return builder for a {@link MappingOperationChain}.
      */
     public static Builder builder() {
         return new Builder();
@@ -142,12 +155,14 @@ public final class MappingOperationChain implements Operation {
     public static class Builder {
         private final List<Operation> operations;
 
-        Builder() {
+        private Builder() {
             operations = new ArrayList<>();
         }
 
         /**
-         * @param operation {@link SourceOperation} to add to the {@link MappingOperationChain}
+         * A {@link SourceOperation} for the mapping operation chain.
+         *
+         * @param operation {@link SourceOperation} to add to the mapping operation chain
          * @return this builder
          */
         public Builder operation(SourceOperation operation) {
@@ -156,7 +171,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @param operation {@link SingleParameterOperation} to add to the {@link MappingOperationChain}
+         * A {@link SingleParameterOperation} for the mapping operation chain.
+         *
+         * @param operation {@link SingleParameterOperation} to add to the mapping operation chain
          * @return this builder
          */
         public Builder operation(SingleParameterOperation operation) {
@@ -165,7 +182,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @param operation {@link DualParameterOperation} to add to the {@link MappingOperationChain}
+         * A {@link DualParameterOperation} for the mapping operation chain.
+         *
+         * @param operation {@link DualParameterOperation} to add to the mapping operation chain
          * @return this builder
          */
         public Builder operation(DualParameterOperation operation) {
@@ -174,7 +193,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @param operation {@link Operation} to add to the {@link MappingOperationChain}
+         * An {@link Operation} for the mapping operation chain.
+         *
+         * @param operation {@link Operation} to add to the mapping operation chain
          * @return this builder
          */
         public Builder operation(Operation operation) {
@@ -183,7 +204,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @param operations {@link Operation Operations} to add to the {@link MappingOperationChain}
+         * {@link Operation Operations} for the mapping operation chain.
+         *
+         * @param operations {@link Operation Operations} to add to the mapping operation chain
          * @return this builder
          */
         public Builder operations(Collection<? extends Operation> operations) {
@@ -195,7 +218,7 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * Clears all {@link Operation Operations} from the {@link MappingOperationChain}.
+         * Clears all {@link Operation Operations} from the mapping operation chain.
          *
          * @return this builder
          */
@@ -205,7 +228,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @return {@link MappingOperationChain} initialized by this builder
+         * Builds the mapping operation chain.
+         *
+         * @return mapping operation chain initialized by this builder
          */
         public MappingOperationChain build() {
             return new MappingOperationChain(operations);
@@ -221,6 +246,8 @@ public final class MappingOperationChain implements Operation {
         private final int id;
 
         /**
+         * Public constructor for {@link SpecialNumeral}.
+         *
          * @param id index of the {@link Operation} whose result is being referred to, or -1 if referring to the source
          * {@link Numeral} instead
          */
@@ -229,6 +256,9 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
+         * Returns the index of the {@link Operation} whose result is being referred to, or -1 if referring to the
+         * source {@link Numeral} instead.
+         *
          * @return index of the {@link Operation} whose result is being referred to, or -1 if referring to the source
          * {@link Numeral} instead
          */
@@ -397,8 +427,10 @@ public final class MappingOperationChain implements Operation {
         }
 
         /**
-         * @return {@link String} representation of this numeral ("Source Value" for id -1, "Operation [id] Result"
-         * otherwise)
+         * Returns the {@link String} representation of this numeral. Specifically, returns {@code Source Value} for id
+         * {@code -1} and {@code Operation [id] Result} otherwise.
+         *
+         * @return {@link String} representation of this numeral
          */
         @Override
         public String toString() {

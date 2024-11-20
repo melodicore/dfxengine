@@ -32,6 +32,8 @@ public final class OperationChain implements Operation {
     private final int parameterCount;
 
     /**
+     * Public constructor for {@link OperationChain}.
+     *
      * @param operations {@link Operation Operations} for this operation
      */
     public OperationChain(List<? extends Operation> operations) {
@@ -41,6 +43,8 @@ public final class OperationChain implements Operation {
     }
 
     /**
+     * Applies this operation to the specified source {@link Numeral} with the specified parameters.
+     *
      * @param source source {@link Numeral} for this operation
      * @param parameters parameter {@link Numeral Numerals} for this operation
      * @return resulting {@link Numeral} of this operation
@@ -64,7 +68,9 @@ public final class OperationChain implements Operation {
     }
 
     /**
-     * @return {@link Builder} instance
+     * Creates a builder for an {@link OperationChain}.
+     *
+     * @return builder for an {@link OperationChain}
      */
     public static Builder builder() {
         return new Builder();
@@ -76,12 +82,14 @@ public final class OperationChain implements Operation {
     public static class Builder {
         private final List<Operation> operations;
 
-        Builder() {
+        private Builder() {
             operations = new ArrayList<>();
         }
 
         /**
-         * @param operation {@link SourceOperation} to add to the {@link OperationChain}
+         * A {@link SourceOperation} for the operation chain.
+         *
+         * @param operation {@link SourceOperation} to add to the operation chain
          * @return this builder
          */
         public Builder operation(SourceOperation operation) {
@@ -90,7 +98,9 @@ public final class OperationChain implements Operation {
         }
 
         /**
-         * @param operation {@link SingleParameterOperation} to add to the {@link OperationChain}
+         * A {@link SingleParameterOperation} for the operation chain.
+         *
+         * @param operation {@link SingleParameterOperation} to add to the operation chain
          * @return this builder
          */
         public Builder operation(SingleParameterOperation operation) {
@@ -99,7 +109,9 @@ public final class OperationChain implements Operation {
         }
 
         /**
-         * @param operation {@link DualParameterOperation} to add to the {@link OperationChain}
+         * A {@link DualParameterOperation} for the operation chain.
+         *
+         * @param operation {@link DualParameterOperation} to add to the operation chain
          * @return this builder
          */
         public Builder operation(DualParameterOperation operation) {
@@ -108,7 +120,9 @@ public final class OperationChain implements Operation {
         }
 
         /**
-         * @param operation {@link Operation} to add to the {@link OperationChain}
+         * An {@link Operation} for the operation chain.
+         *
+         * @param operation {@link Operation} to add to the operation chain
          * @return this builder
          */
         public Builder operation(Operation operation) {
@@ -117,7 +131,9 @@ public final class OperationChain implements Operation {
         }
 
         /**
-         * @param operations {@link Operation Operations} to add to the {@link OperationChain}
+         * {@link Operation Operations} for the operation chain.
+         *
+         * @param operations {@link Operation Operations} to add to the operation chain
          * @return this builder
          */
         public Builder operations(Collection<? extends Operation> operations) {
@@ -129,7 +145,7 @@ public final class OperationChain implements Operation {
         }
 
         /**
-         * Clears all {@link Operation Operations} from the {@link OperationChain}.
+         * Clears all {@link Operation Operations} from the operation chain.
          *
          * @return this builder
          */
@@ -139,7 +155,9 @@ public final class OperationChain implements Operation {
         }
 
         /**
-         * @return {@link OperationChain} initialized by this builder
+         * Builds the operation chain.
+         *
+         * @return operation chain initialized by this builder
          */
         public OperationChain build() {
             return new OperationChain(operations);

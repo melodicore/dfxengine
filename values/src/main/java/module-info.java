@@ -1,4 +1,6 @@
 /**
+ * Mutable number values and a dynamic modifier system.
+ *
  * @author datafox
  */
 module dfxengine.values {

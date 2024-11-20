@@ -3,6 +3,7 @@ package me.datafox.dfxengine.values;
 import me.datafox.dfxengine.handles.HashHandleMap;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleMap;
+import me.datafox.dfxengine.handles.api.Handled;
 import me.datafox.dfxengine.handles.api.Space;
 import me.datafox.dfxengine.math.api.Numeral;
 import me.datafox.dfxengine.math.api.NumeralType;
@@ -41,6 +42,8 @@ public class DelegatedValueMap implements ValueMap {
     private NumeralMap valueNumeralMap;
 
     /**
+     * Public constructor for {@link DelegatedValueMap}.
+     *
      * @param map {@link HandleMap} to back this map with
      * @param immutable {@code true} if this map should contain immutable {@link Value Values}
      * @param logger {@link Logger} for this map
@@ -65,6 +68,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Returns {@code true} if this map is for immutable {@link Value Values}.
+     *
      * @return {@code true} if this map is for immutable {@link Value Values}
      */
     @Override
@@ -73,6 +78,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Converts all {@link Value Values} in this map to the specified type.
+     *
      * @param type {@link NumeralType} for the {@link Value Values} to be converted to
      *
      * @throws ExtendedArithmeticException if any of the {@link Value Values} in this map cannot be converted to the
@@ -94,7 +101,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Converts all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified type.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param handles {@link Handle Handles} of the {@link Value Values} to be converted
      * @param type {@link NumeralType} for the {@link Value Values} to be converted to
@@ -118,7 +126,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Converts all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified types.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param types map of {@link Handle Handles} and {@link NumeralType NumeralTypes} for the {@link Value Values}
      * represented by those Handles to be converted to.
@@ -142,9 +151,9 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Converts all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified type.
      * Only converts {@link Value Values} of this map that can be converted to the specified type. In other words, calls
-     * {@link Numeral#convertIfAllowed(NumeralType)} on every Value of this map. If this map is for immutable Values,
-     * this method does nothing.
+     * {@link Numeral#convertIfAllowed(NumeralType)} on every Value of this map.
      *
      * @param type {@link NumeralType} for the {@link Value Values} to be converted to
      *
@@ -162,6 +171,7 @@ public class DelegatedValueMap implements ValueMap {
     /**
      * Converts all {@link Value Values} to the smallest integer type that can hold its represented value. Values that
      * are already integers are not converted.
+     *
      * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
@@ -173,6 +183,7 @@ public class DelegatedValueMap implements ValueMap {
     /**
      * Converts all {@link Value Values} to the smallest decimal type that can hold its represented value. Values that
      * are already decimals are not converted.
+     *
      * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
      */
     @Override
@@ -183,7 +194,7 @@ public class DelegatedValueMap implements ValueMap {
 
     /**
      * Converts all {@link Value Values} to the smallest type that can hold its represented value. Will not convert
-     * between integer and decimal representations. If this map is for immutable Values, this method does nothing.
+     * between integer and decimal representations.
      */
     @Override
     public void toSmallestType() {
@@ -195,7 +206,7 @@ public class DelegatedValueMap implements ValueMap {
     /**
      * Converts specified {@link Value Values} to the smallest type that can hold its represented value. Will not
      * convert between integer and decimal representations. {@link Handle Handles} that are not a part of this map's
-     * associated {@link Space} are ignored. If this map is for immutable Values, this method does nothing.
+     * associated {@link Space} are ignored.
      *
      * @param handles {@link Handle Handles} of the values to be converted
      */
@@ -207,6 +218,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Sets all {@link Value Values} of this map to the specified value.
+     *
      * @param value {@link Numeral} for all {@link Value Values} of this map to be set to
      *
      * @throws UnsupportedOperationException if this map is for immutable {@link Value Values}
@@ -218,7 +231,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Sets all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified value.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param context {@link MapMathContext} for this operation
      * @param handles {@link Handle Handles} of the values to be changed
@@ -232,7 +246,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Sets all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified values.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param context {@link MapMathContext} for this operation
      * @param values map of {@link Handle Handles} to be changed and {@link Numeral Numerals} for the specified
@@ -246,6 +261,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Applies a {@link SourceOperation} to all {@link Value Values} of this map.
+     *
      * @param operation {@link SourceOperation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
      *
@@ -257,7 +274,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies a {@link SourceOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link SourceOperation} to be applied to specified {@link Value Values} of this map
      * @param context {@link MapMathContext} for the operation
@@ -271,6 +289,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Applies a {@link SingleParameterOperation} to all {@link Value Values} of this map.
+     *
      * @param operation {@link SingleParameterOperation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
      * @param parameter parameter for the operation
@@ -283,7 +303,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies a {@link SingleParameterOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link SingleParameterOperation} to be applied to specified {@link Value Values} of this map
      * @param context {@link MapMathContext} for the operation
@@ -299,7 +320,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies a {@link SingleParameterOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link SingleParameterOperation} to be applied to specified {@link Value Values} of this map
      * @param context {@link MapMathContext} for the operation
@@ -314,6 +336,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Applies a {@link DualParameterOperation} to all {@link Value Values} of this map.
+     *
      * @param operation {@link DualParameterOperation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
      * @param parameter1 first parameter for the operation
@@ -327,7 +351,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies a {@link DualParameterOperation} to all {@link Value Values} of this map with the specified
+     * {@link Handle Handles}. Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link DualParameterOperation} to be applied to specified {@link Value Values} of this map
      * @param context {@link MapMathContext} for the operation
@@ -344,6 +369,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Applies an {@link Operation} to all {@link Value Values} of this map.
+     *
      * @param operation {@link Operation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
      * @param parameters parameters for the operation
@@ -358,7 +385,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies an {@link Operation} to all {@link Value Values} of this map with the specified {@link Handle Handles}.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link Operation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
@@ -375,7 +403,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Handle Handles} that are not a part of this map's associated {@link Space} are ignored.
+     * Applies an {@link Operation} to all {@link Value Values} of this map with the specified {@link Handle Handles}.
+     * Handles that are not a part of this map's associated {@link Space} are ignored.
      *
      * @param operation {@link Operation} to be applied to all {@link Value Values} of this map
      * @param context {@link MathContext} for the operation
@@ -403,6 +432,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Compares all {@link Value Values} in this map to a {@link Numeral} using the specified {@link Comparison}.
+     *
      * @param comparison {@link Comparison} to be used
      * @param context {@link ComparisonContext} for the comparison
      * @param other {@link Numeral} to be compared to
@@ -414,6 +445,9 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Compares all {@link Value Values} in this map with the specified {@link Handle Handles} to a {@link Numeral}
+     * using the specified {@link Comparison}.
+     *
      * @param comparison {@link Comparison} to be used
      * @param context {@link MapComparisonContext} for the comparison
      * @param handles {@link Handle Handles} of the {@link Value Values} to be compared
@@ -429,6 +463,9 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Compares all {@link Value Values} in this map with the specified {@link Handle Handles} to the specified
+     * {@link Numeral Numerals} using the specified {@link Comparison}.
+     *
      * @param comparison {@link Comparison} to be used
      * @param context {@link MapComparisonContext} for the comparison
      * @param others map of {@link Handle Handles} of the {@link Value Values} to be compared and
@@ -443,8 +480,11 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Returns a {@link Map} containing all entries of this map, but with the return value of {@link Value#getBase()} as
+     * the map values. The returned map does not have any state and instead provides a view to this map.
+     *
      * @return {@link Map} containing all entries of this map, but with the return value of {@link Value#getBase()} as
-     * the map values. The returned map does not have any state and instead provides a view to this map
+     * the map values.
      */
     @Override
     public Map<Handle,Numeral> getBaseNumeralMap() {
@@ -455,8 +495,11 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Returns a {@link Map} containing all entries of this map, but with the return value of {@link Value#getValue()}
+     * as the map values. The returned map does not have any state and instead provides a view to this map.
+     *
      * @return {@link Map} containing all entries of this map, but with the return value of {@link Value#getValue()} as
-     * the map values. The returned map does not have any state and instead provides a view to this map
+     * the map values.
      */
     @Override
     public Map<Handle,Numeral> getValueNumeralMap() {
@@ -467,6 +510,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Returns the {@link Modifier Modifiers} associated with this map.
+     *
      * @return {@link Modifier Modifiers} associated with this map
      */
     @Override
@@ -475,9 +520,9 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Modifier Modifiers} added to this map will be added to all {@link Value Values} of this map, including
-     * ones that are added to this map after this operation. To add a modifier to a single value, use
-     * {@link Value#addModifier(Modifier)} instead.
+     * Registers a {@link Modifier} to this map. Modifiers added to this map will be added to all {@link Value Values}
+     * of this map, including ones that are added to this map after this operation. To add a modifier to a single value,
+     * use {@link Value#addModifier(Modifier)} instead.
      *
      * @param modifier {@link Modifier} to be added
      * @return {@code true} if the {@link Modifier Modifiers} of this map changed as a result of this operation
@@ -492,9 +537,9 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@link Modifier Modifiers} added to this map will be added to all {@link Value Values} of this map, including
-     * ones that are added to this map after this operation. To add modifiers to a single value, use
-     * {@link Value#addModifiers(Collection)}} instead.
+     * Registers {@link Modifier Modifiers} to this map. Modifiers added to this map will be added to all
+     * {@link Value Values} of this map, including ones that are added to this map after this operation. To add
+     * modifiers to a single value, use {@link Value#addModifiers(Collection)}} instead.
      *
      * @param modifiers {@link Modifier Modifiers} to be added
      * @return {@code true} if the {@link Modifier Modifiers} of this map changed as a result of this operation
@@ -509,6 +554,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Removes a {@link Modifier} from this map.
+     *
      * @param modifier {@link Modifier} to be removed
      * @return {@code true} if the {@link Modifier Modifiers} of this map changed as a result of this operation
      */
@@ -522,6 +569,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Removes {@link Modifier Modifiers} from this map.
+     *
      * @param modifiers {@link Modifier Modifiers} to be removed
      * @return {@code true} if the {@link Modifier Modifiers} of this map changed as a result of this operation
      */
@@ -535,6 +584,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Checks if a {@link Modifier} is present in this map.
+     *
      * @param modifier {@link Modifier} to be checked for
      * @return {@code true} if the specified {@link Modifier} is associated with this map
      */
@@ -544,6 +595,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Checks if {@link Modifier Modifiers} are present in this map.
+     *
      * @param modifiers {@link Modifier Modifiers} to be checked for
      * @return {@code true} if all of the specified {@link Modifier Modifiers} are associated with this map
      */
@@ -569,7 +622,7 @@ public class DelegatedValueMap implements ValueMap {
      *
      * @param keys {@link Handle} keys or their {@link String} ids whose presence in this map is to be tested
      * @return {@code true} if this map contains a mapping for all the specified keys
-     * @throws ClassCastException   if any of the keys are of an inappropriate type for this map
+     * @throws ClassCastException if any of the keys are of an inappropriate type for this map
      * @throws NullPointerException if any of the keys is {@code null}
      */
     @Override
@@ -578,15 +631,17 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * Associates a {@link Value} in this map. If the map previously contained a mapping for the {@link Handle}, the old
-     * Value is replaced.
+     * Associates a {@link Handled} value with its associated {@link Handle}. If the map previously contained a mapping
+     * for the key, the old value is replaced by the specified value. The {@link Handle} key must be present in this
+     * map's associated {@link Space}.
      *
-     * @param value {@link Value} to be associated in this map with its associated {@link Handle} as a key
-     * @return the previously associated {@link Value} in this map, or {@code null} if there was no previous association
-     *
-     * @throws IllegalArgumentException if the {@link Value} is static, if {@link Value#isImmutable()} is not the same
-     * as {@link #isImmutable()} or if the associated {@link Handle} is not contained in the {@link Space} associated
-     * with this map
+     * @param value {@link Handled} value to be associated with its associated {@link Handle} key
+     * @return the previous value associated with the key, or {@code null} if none was present
+     * @throws UnsupportedOperationException if the {@code put} operation is not supported by this map
+     * @throws ClassCastException if the value does not implement {@link Handled}
+     * @throws NullPointerException if the specified value is {@code null}
+     * @throws IllegalArgumentException if the value's associated {@link Handle} is not present in this map's associated
+     * {@link Space}
      */
     @Override
     public Value putHandled(Value value) {
@@ -623,8 +678,8 @@ public class DelegatedValueMap implements ValueMap {
      *
      * @param tag tag {@link Handle} or its {@link String} id
      * @return all values mapped to keys containing the specified tag
-     * @throws ClassCastException       if the tag is not a {@link Handle} or a {@link String}
-     * @throws NullPointerException     if the tag is {@code null}
+     * @throws ClassCastException if the tag is not a {@link Handle} or a {@link String}
+     * @throws NullPointerException if the tag is {@code null}
      * @throws IllegalArgumentException if the {@link Handle} is not a tag
      */
     @Override
@@ -633,13 +688,13 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * Returns all values mapped to keys containing the specified tag. The tags may be {@link Handle Handles} or their
+     * Returns all values mapped to keys containing the specified tags. The tags may be {@link Handle Handles} or their
      * {@link String} ids.
      *
      * @param tags tag {@link Handle Handles} or their {@link String} ids
      * @return all values mapped to keys containing the specified tags
-     * @throws ClassCastException       if any of the tags are not {@link Handle Handles} or a {@link String Strings}
-     * @throws NullPointerException     if any of the tags is {@code null}
+     * @throws ClassCastException if any of the tags are not {@link Handle Handles} or a {@link String Strings}
+     * @throws NullPointerException if any of the tags is {@code null}
      * @throws IllegalArgumentException if any of the {@link Handle Handles} is not a tag
      */
     @Override
@@ -648,6 +703,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Returns the number of {@link Value Values} in this map.
+     *
      * @return number of {@link Value Values} in this map
      */
     @Override
@@ -656,6 +713,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Returns {@code true} if this map contains no {@link Value Values}.
+     *
      * @return {@code true} if this map contains no {@link Value Values}
      */
     @Override
@@ -664,8 +723,13 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * @param key key whose presence in this map is to be tested
+     * Returns {@code true} if this map contains a mapping for the specified key. The key may either be a {@link Handle}
+     * or its {@link String} id.
+     *
+     * @param key {@link Handle} key or its {@link String} id whose presence in this map is to be tested
      * @return {@code true} if this map contains a mapping for the specified key
+     * @throws ClassCastException if the key is of an inappropriate type for this map
+     * @throws NullPointerException if the specified key is {@code null}
      */
     @Override
     public boolean containsKey(Object key) {
@@ -673,6 +737,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Returns {@code true} if this map contains the specified value.
+     *
      * @param value value whose presence in this map is to be tested
      * @return {@code true} if this map maps one or more keys to the specified value
      */
@@ -682,9 +748,13 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * @param key the key whose associated value is to be returned
-     * @return {@link Value} to which the specified key is mapped, or {@code null} if this map contains no mapping for
-     * the key
+     * Returns the {@link Value} to which the specified key is mapped, or {@code null} if none is present. The key may
+     * either be a {@link Handle} or its {@link String} id.
+     *
+     * @param key {@link Handle} key or its {@link String} id whose associated value is to be returned
+     * @return the value to which the specified key is mapped, or {@code null} if none is present
+     * @throws ClassCastException if the key is of not a {@link Handle} or a {@link String}
+     * @throws NullPointerException if the specified key is {@code null}
      */
     @Override
     public Value get(Object key) {
@@ -692,15 +762,16 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * This method ignores the key parameter, it is recommended to use {@link #putHandled(Value)} instead.
+     * Associates the specified {@link Value} with the specified key in this map. If the map previously contained a
+     * mapping for the key, the old value is replaced by the specified value. The {@link Handle} key must be present in
+     * this map's associated {@link Space}.
      *
-     * @param key ignored parameter
-     * @param value {@link Value} to be associated with this map
-     * @return previously associated {@link Value} in this map, or {@code null} if there was no previous association
-     *
-     * @throws IllegalArgumentException if the {@link Value} is static, if {@link Value#isImmutable()} is not the same
-     * as {@link #isImmutable()} or if the associated {@link Handle} is not contained in the {@link Space} associated
-     * with this map
+     * @param key {@link Handle} key with which the specified value is to be associated with
+     * @param value value to be associated with the specified key
+     * @return the previous value associated with the key, or {@code null} if none was present
+     * @throws UnsupportedOperationException if the {@code put} operation is not supported by this map
+     * @throws NullPointerException if the specified key or value is {@code null}
+     * @throws IllegalArgumentException if the {@link Handle} key is not present in this map's associated {@link Space}
      */
     @Override
     public Value put(Handle key, Value value) {
@@ -709,8 +780,15 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * @param key key whose mapping is to be removed from the map
-     * @return previous {@link Value} associated with the key, or {@code null} if there was no mapping
+     * Removes the mapping for a key from this map if it is present. Returns the value to which this map previously
+     * associated the key, or {@code null} if the map contained no mapping for the key. The key may either be a
+     * {@link Handle} or its {@link String} id.
+     *
+     * @param key {@link Handle} key or its {@link String} id whose mapping is to be removed from this map
+     * @return the previous value associated with {@code key}, or {@code null} if none was present
+     * @throws UnsupportedOperationException if the {@code remove} operation is not supported by this map
+     * @throws ClassCastException if the key is of not a {@link Handle} or a {@link String}
+     * @throws NullPointerException if the specified key is {@code null}
      */
     @Override
     public Value remove(Object key) {
@@ -720,7 +798,15 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Copies all mappings from the specified map to this map. The effect of this call is equivalent to that of calling
+     * {@link #put(Handle, Value)} on this map once for each mapping from key to {@link Value} in the specified map. All
+     * {@link Handle} keys must be present in this map's associated {@link Space}.
+     *
      * @param m mappings to be stored in this map
+     * @throws UnsupportedOperationException if the {@code putAll} operation is not supported by this map
+     * @throws NullPointerException if the specified map is {@code null} or contains {@code null} keys or values
+     * @throws IllegalArgumentException if the specified map contains a {@link Handle} key that is not present in this
+     * map's associated {@link Space}
      */
     @Override
     public void putAll(Map<? extends Handle, ? extends Value> m) {
@@ -728,14 +814,14 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * Returns {@code true} if this map contains a mapping for the specified key, or the specified default value if none
-     * is present. The key may either be a {@link Handle} or its {@link String} id.
+     * Returns {@code true} if this map contains a mapping for the specified key, or the specified default {@link Value}
+     * if none is present. The key may either be a {@link Handle} or its {@link String} id.
      *
-     * @param key          {@link Handle} key or its {@link String} id whose associated value is to be returned
+     * @param key {@link Handle} key or its {@link String} id whose associated value is to be returned
      * @param defaultValue the default mapping of the key
      * @return the value to which the specified key is mapped, or the specified default value if this map contains no
      * mapping for the key
-     * @throws ClassCastException   if the key is of an inappropriate type for this map
+     * @throws ClassCastException if the key is of not a {@link Handle} or a {@link String}
      * @throws NullPointerException if the specified key is {@code null}
      */
     @Override
@@ -744,16 +830,15 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * Associates the specified key with the specified value and returns {@code null} if the specified key is not
-     * already associated with a value, otherwise returns the current value.
+     * Associates the specified key with the specified {@link Value} and returns {@code null} if the specified key is
+     * not already associated with a value, otherwise returns the current value.
      *
-     * @param key   {@link Handle} key with which the specified value is to be associated with
+     * @param key {@link Handle} key with which the specified value is to be associated with
      * @param value value to be associated with the specified key
      * @return the previous value associated with the specified key, or {@code null} if there was no mapping for the key
      * @throws UnsupportedOperationException if the {@code put} operation is not supported by this map
-     * @throws ClassCastException            if the key or value is of an inappropriate type for this map
-     * @throws NullPointerException          if the specified key or value is {@code null}
-     * @throws IllegalArgumentException      if the {@link Handle} key is not present in this map's associated {@link Space}
+     * @throws NullPointerException if the specified key or value is {@code null}
+     * @throws IllegalArgumentException if the {@link Handle} key is not present in this map's associated {@link Space}
      */
     @Override
     public Value putIfAbsent(Handle key, Value value) {
@@ -761,15 +846,15 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * Removes the entry for the specified key only if it is currently mapped to the specified value. The key may either
-     * be a {@link Handle} or its {@link String} id.
+     * Removes the entry for the specified key only if it is currently mapped to the specified {@link Value}. The key
+     * may either be a {@link Handle} or its {@link String} id.
      *
-     * @param key   {@link Handle} key or its {@link String} id with which the specified value is associated
+     * @param key {@link Handle} key or its {@link String} id with which the specified value is associated
      * @param value value expected to be associated with the specified key
      * @return {@code true} if the value was removed
      * @throws UnsupportedOperationException if the {@code remove} operation is not supported by this map
-     * @throws ClassCastException            if the key or value is of an inappropriate type for this map
-     * @throws NullPointerException          if the specified key or value is {@code null}
+     * @throws ClassCastException if the key is of not a {@link Handle} or a {@link String}
+     * @throws NullPointerException if the specified key or value is {@code null}
      */
     @Override
     public boolean remove(Object key, Object value) {
@@ -786,6 +871,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Returns the {@link Handle Handles} of the {@link Value Values} associated with this map.
+     *
      * @return {@link Handle Handles} of the {@link Value Values} associated with this map
      */
     @Override
@@ -794,6 +881,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Returns the {@link Value Values} associated with this map.
+     *
      * @return {@link Value Values} associated with this map
      */
     @Override
@@ -802,6 +891,8 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
+     * Returns the {@link Handle Handles} and {@link Value Values} associated with this map.
+     *
      * @return {@link Handle Handles} and {@link Value Values} associated with this map
      */
     @Override
@@ -810,7 +901,9 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * @return a string representation of this map
+     * Returns a {@link String} representation of this map.
+     *
+     * @return {@link String} representation of this map
      */
     @Override
     public String toString() {
@@ -818,9 +911,9 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the hash code for this map.
      *
-     * @return {@inheritDoc}
+     * @return hash code for this map
      */
     @Override
     public int hashCode() {
@@ -828,9 +921,9 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns {@code true} if this map is equal to the specified object.
      *
-     * @return {@inheritDoc}
+     * @return {@code true} if this map is equal to the specified object
      */
     @Override
     public boolean equals(Object obj) {
@@ -940,13 +1033,20 @@ public class DelegatedValueMap implements ValueMap {
 
         private final boolean modified;
 
+        /**
+         * Package-private constructor for {@link NumeralMap}.
+         *
+         * @param modified {@code true} if this map should reflect {@link Value Values} with modifiers attached
+         */
         NumeralMap(boolean modified) {
             this.map = DelegatedValueMap.this;
             this.modified = modified;
         }
 
         /**
-         * @return the number of {@link Numeral Numerals} in this map
+         * Returns the number of {@link Numeral Numerals} in this map.
+         *
+         * @return number of {@link Numeral Numerals} in this map
          */
         @Override
         public int size() {
@@ -954,6 +1054,8 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
+         * Returns {@code true} if this map contains no {@link Numeral Numerals}.
+         *
          * @return {@code true} if this map contains no {@link Numeral Numerals}
          */
         @Override
@@ -962,6 +1064,8 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
+         * Returns {@code true} if this map contains a mapping for the specified key.
+         *
          * @param key key whose presence in this map is to be tested
          * @return {@code true} if this map contains a mapping for the specified key
          */
@@ -971,6 +1075,8 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
+         * Returns {@code true} if this map maps one or more keys to the specified value.
+         *
          * @param value value whose presence in this map is to be tested
          * @return {@code true} if this map maps one or more keys to the specified value
          */
@@ -980,6 +1086,9 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
+         * Returns the {@link Numeral} to which the specified key is mapped, or {@code null} if this map contains no
+         * mapping for the key.
+         *
          * @param key the key whose associated value is to be returned
          * @return {@link Numeral} to which the specified key is mapped, or {@code null} if this map contains no mapping
          * for the key
@@ -1031,6 +1140,8 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
+         * Returns the {@link Handle Handles} of the {@link Numeral Numerals} associated with this map.
+         *
          * @return {@link Handle Handles} of the {@link Numeral Numerals} associated with this map
          */
         @Override
@@ -1039,6 +1150,8 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
+         * Returns the {@link Numeral Numerals} associated with this map.
+         *
          * @return {@link Numeral Numerals} associated with this map
          */
         @Override
@@ -1047,6 +1160,8 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
+         * Returns the {@link Handle Handles} and {@link Numeral Numerals} associated with this map.
+         *
          * @return {@link Handle Handles} and {@link Numeral Numerals} associated with this map
          */
         @Override
@@ -1055,7 +1170,9 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * @return a string representation of this map
+         * Returns a {@link String} representation of this map.
+         *
+         * @return {@link String} representation of this map
          */
         @Override
         public String toString() {
@@ -1063,9 +1180,9 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * {@inheritDoc}
+         * Returns the hash code for this map.
          *
-         * @return {@inheritDoc}
+         * @return hash code for this map
          */
         @Override
         public int hashCode() {
@@ -1073,9 +1190,9 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * {@inheritDoc}
+         * Returns {@code true} if this map is equal to the specified object.
          *
-         * @return {@inheritDoc}
+         * @return {@code true} if this map is equal to the specified object
          */
         @Override
         public boolean equals(Object obj) {
@@ -1102,8 +1219,10 @@ public class DelegatedValueMap implements ValueMap {
     }
 
     /**
-     * @param space {@link Space} to be associated with the {@link Builder}
-     * @return {@link Builder} with the specified {@link Space}
+     * Creates a builder for a {@link DelegatedValueMap}.
+     *
+     * @param space {@link Space} to be associated with the map
+     * @return builder with the specified {@link Space}
      */
     public static Builder builder(Space space) {
         return new Builder(space);
@@ -1134,6 +1253,9 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
+         * A {@link BiFunction} that accepts a {@link Space} and a {@link Logger} to create a {@link HandleMap} of
+         * {@link Value Values} for the map.
+         *
          * @param map {@link BiFunction} to initialize the backing {@link HandleMap}
          * @return this builder
          */
@@ -1143,7 +1265,9 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * @param logger {@link Logger} for this map
+         * A {@link Logger} for the map.
+         *
+         * @param logger {@link Logger} for the map
          * @return this builder
          */
         public Builder logger(Logger logger) {
@@ -1152,6 +1276,8 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
+         * {@code true} if the map should contain immutable {@link Value Values}.
+         *
          * @param immutable {@code true} if the map should contain immutable {@link Value Values}
          * @return this builder
          *
@@ -1168,7 +1294,11 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * @param value {@link Value} to be associated with the {@link ValueMap}
+         * A {@link Value} to be associated with the map. All values must be of the same immutability, and an
+         * {@link UnsupportedOperationException} is thrown if the mutability does not match. Immutability can also be
+         * set explicitly with {@link #immutable(boolean)}.
+         *
+         * @param value {@link Value} to be associated with the map
          * @return this builder
          *
          * @throws UnsupportedOperationException if this builder already contains {@link Value Values} or has its
@@ -1185,7 +1315,11 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * @param values {@link Value Values} to be associated with the {@link ValueMap}
+         * {@link Value Values} to be associated with the map. All values must be of the same immutability, and an
+         * {@link UnsupportedOperationException} is thrown if the mutability does not match. Immutability can also be
+         * set explicitly with {@link #immutable(boolean)}.
+         *
+         * @param values {@link Value Values} to be associated with the map
          * @return this builder
          *
          * @throws UnsupportedOperationException if this builder already contains {@link Value Values} or has its
@@ -1197,7 +1331,7 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * Removes all of the {@link Value Values} from the {@link ValueMap}.
+         * Removes all {@link Value Values} from the map.
          *
          * @return this builder
          */
@@ -1208,7 +1342,9 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * @param modifier {@link Modifier} to be associated with the {@link ValueMap}
+         * A {@link Modifier} to be associated with the map.
+         *
+         * @param modifier {@link Modifier} to be associated with the map
          * @return this builder
          */
         public Builder modifier(Modifier modifier) {
@@ -1217,7 +1353,9 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * @param modifiers {@link Modifier Modifiers} to be associated with the {@link ValueMap}
+         * {@link Modifier Modifiers} to be associated with the map.
+         *
+         * @param modifiers {@link Modifier Modifiers} to be associated with the map
          * @return this builder
          */
         public Builder modifiers(Collection<? extends Modifier> modifiers) {
@@ -1226,7 +1364,7 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * Removes all of the {@link Modifier Modifiers} from the {@link ValueMap}.
+         * Removes all {@link Modifier Modifiers} from the map.
          *
          * @return this builder
          */
@@ -1236,7 +1374,9 @@ public class DelegatedValueMap implements ValueMap {
         }
 
         /**
-         * @return {@link ValueMap} initialized by this builder
+         * Builds the map.
+         *
+         * @return map initialized by this builder
          */
         public ValueMap build() {
             ValueMap map = new DelegatedValueMap(this.map.apply(space, logger), immutable, logger);
