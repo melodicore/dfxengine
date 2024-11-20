@@ -23,13 +23,13 @@ public class ConfigurationKeys {
     public static final ConfigurationKey<String> DELIMITER = ConfigurationKey.of(" ");
 
     /**
-     * Delimiter used for lists before the second to last element. The default value is {@code , }.
+     * Delimiter used for lists before the second to last element. The default value is <code>,&nbsp;</code>.
      */
     public static final ConfigurationKey<String> LIST_DELIMITER = ConfigurationKey.of(", ");
 
     /**
      * Delimiter used for lists between the second to last and the last element. The default value is
-     * <code>&nbsp;and </code>.
+     * <code>&nbsp;and&nbsp;</code>.
      */
     public static final ConfigurationKey<String> LIST_LAST_DELIMITER = ConfigurationKey.of(" and ");
 
