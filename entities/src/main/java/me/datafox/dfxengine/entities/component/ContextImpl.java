@@ -2,6 +2,7 @@ package me.datafox.dfxengine.entities.component;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.datafox.dfxengine.configuration.api.ConfigurationManager;
 import me.datafox.dfxengine.entities.api.component.*;
 import me.datafox.dfxengine.entities.api.entity.Entity;
 import me.datafox.dfxengine.entities.api.entity.EntityComponent;
@@ -24,6 +25,8 @@ public class ContextImpl implements Context {
     private Injector injector;
 
     private Logger logger;
+
+    private ConfigurationManager configurationManager;
 
     private HandleManager handleManager;
 
@@ -60,6 +63,7 @@ public class ContextImpl implements Context {
     @Initialize
     public void initialize(Injector injector,
                            Logger logger,
+                           ConfigurationManager configurationManager,
                            HandleManager handleManager,
                            EntityHandles handles,
                            Engine engine,
@@ -69,6 +73,7 @@ public class ContextImpl implements Context {
                            SerializationHandler<?,?> serializer) {
         this.injector = injector;
         this.logger = logger;
+        this.configurationManager = configurationManager;
         this.handleManager = handleManager;
         this.handles = handles;
         this.engine = engine;

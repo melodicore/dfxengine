@@ -12,6 +12,7 @@ dependencies {
     api project(":values-api")
     api project(":injector-api")
     api project(":text-api")
+    api project(":configuration-api")
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"

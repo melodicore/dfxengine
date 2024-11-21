@@ -1,5 +1,6 @@
 package me.datafox.dfxengine.entities.api.component;
 
+import me.datafox.dfxengine.configuration.api.ConfigurationManager;
 import me.datafox.dfxengine.entities.api.entity.Entity;
 import me.datafox.dfxengine.entities.api.entity.EntityComponent;
 import me.datafox.dfxengine.entities.api.entity.EntitySystem;
@@ -18,6 +19,8 @@ import java.util.Collection;
  */
 public interface Context {
     Injector getInjector();
+
+    ConfigurationManager getConfigurationManager();
 
     HandleManager getHandleManager();
 

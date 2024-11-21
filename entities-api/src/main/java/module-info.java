@@ -2,7 +2,6 @@
  * @author datafox
  */
 open module dfxengine.entities.api {
-    requires static lombok;
 
     requires org.slf4j;
 
@@ -11,6 +10,7 @@ open module dfxengine.entities.api {
     requires dfxengine.values.api;
     requires dfxengine.injector.api;
     requires dfxengine.dependencies;
+    requires dfxengine.configuration.api;
 
     exports me.datafox.dfxengine.entities.api.component;
     exports me.datafox.dfxengine.entities.api.condition;
@@ -20,4 +20,5 @@ open module dfxengine.entities.api {
     exports me.datafox.dfxengine.entities.api.event;
     exports me.datafox.dfxengine.entities.api.node;
     exports me.datafox.dfxengine.entities.api.reference;
+    exports me.datafox.dfxengine.entities.api.state;
 }

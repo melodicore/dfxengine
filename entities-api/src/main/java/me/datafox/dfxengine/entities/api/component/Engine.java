@@ -2,6 +2,7 @@ package me.datafox.dfxengine.entities.api.component;
 
 import me.datafox.dfxengine.entities.api.definition.PackageDefinition;
 import me.datafox.dfxengine.entities.api.entity.Entity;
+import me.datafox.dfxengine.entities.api.state.EngineState;
 import me.datafox.dfxengine.handles.api.Handle;
 import me.datafox.dfxengine.handles.api.HandleMap;
 import me.datafox.dfxengine.math.api.Numeral;
@@ -32,6 +33,14 @@ public interface Engine {
     boolean addPackage(PackageDefinition definition);
 
     void loadPackages(boolean keepState);
+
+    EngineState getState();
+
+    void setState(EngineState state);
+
+    String saveState();
+
+    void loadState(String state);
 
     Numeral getDelta();
 

@@ -10,5 +10,7 @@ public interface EntityData<T> extends Handled {
 
     T getData();
 
+    boolean isStateful();
+
     NodeData<T> toNodeData();
 }

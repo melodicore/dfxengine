@@ -23,7 +23,7 @@ public class EntityComponentImpl implements EntityComponent {
 
     private final Entity entity;
 
-    private final Map<DataType<?>, HandleMap<?>> data;
+    private final Map<DataType<?>, HandleMap<EntityData<?>>> data;
 
     private final List<NodeTree> trees;
 
@@ -51,10 +51,10 @@ public class EntityComponentImpl implements EntityComponent {
     public <T> void putData(EntityData<T> datum) {
         HandleMap<EntityData<T>> map;
         if(data.containsKey(datum.getType())) {
-            map = (HandleMap<EntityData<T>>) data.get(datum.getType());
+            map = (HandleMap<EntityData<T>>) (HandleMap<?>) data.get(datum.getType());
         } else {
             map = new HashHandleMap<>(context.getHandles().getDataSpace());
-            data.put(datum.getType(), map);
+            data.put(datum.getType(), (HandleMap<EntityData<?>>) (HandleMap<?>) map);
         }
         map.putHandled(datum);
     }
@@ -62,7 +62,7 @@ public class EntityComponentImpl implements EntityComponent {
     @SuppressWarnings("unchecked")
     @Override
     public <T> HandleMap<EntityData<T>> getData(DataType<T> type) {
-        return (HandleMap<EntityData<T>>) data.get(type);
+        return (HandleMap<EntityData<T>>) (HandleMap<?>) data.get(type);
     }
 
     public void clearData() {

@@ -24,14 +24,17 @@ public class ComponentDataConsumerNode<T> implements ConsumerNode {
 
     private final Handle handle;
 
-    public ComponentDataConsumerNode(NodeTree tree, DataType<T> type, String handle, Context context) {
+    private final boolean stateful;
+
+    public ComponentDataConsumerNode(NodeTree tree, DataType<T> type, String handle, boolean stateful, Context context) {
         this.tree = tree;
         inputs = List.of(new NodeInputImpl<>(this, type));
         this.handle = context.getHandles().getDataHandle(handle);
+        this.stateful = stateful;
     }
 
     @Override
     public void consume(List<NodeData<?>> inputs, Context context) {
-        ((EntityComponent) tree.getOwner()).putData(inputs.get(0).toEntityData(handle));
+        ((EntityComponent) tree.getOwner()).putData(inputs.get(0).toEntityData(handle, stateful));
     }
 }

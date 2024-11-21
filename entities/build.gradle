@@ -12,6 +12,7 @@ dependencies {
     implementation project(":math")
     implementation project(":values")
     implementation project(":utils")
+    implementation project(":configuration")
     implementation project(":injector-api")
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
     implementation "io.vacco.jsonbeans:jsonbeans:$jsonBeansVersion"

@@ -10,5 +10,5 @@ public interface NodeData<T> {
 
     T getData();
 
-    EntityData<T> toEntityData(Handle handle);
+    EntityData<T> toEntityData(Handle handle, boolean stateful);
 }

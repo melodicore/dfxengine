@@ -2,7 +2,6 @@
  * @author datafox
  */
 module dfxengine.entities {
-    requires static lombok;
 
     requires jsonbeans;
     requires org.slf4j;
@@ -18,6 +17,8 @@ module dfxengine.entities {
     requires dfxengine.values.api;
     requires dfxengine.values;
     requires dfxengine.utils;
+    requires dfxengine.configuration.api;
+    requires static lombok;
 
     exports me.datafox.dfxengine.entities.component;
     exports me.datafox.dfxengine.entities.data;

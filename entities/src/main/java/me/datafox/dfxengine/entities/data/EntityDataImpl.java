@@ -17,6 +17,8 @@ public class EntityDataImpl<T> implements EntityData<T> {
 
     private final T data;
 
+    private final boolean stateful;
+
     @Override
     public NodeData<T> toNodeData() {
         return new NodeDataImpl<>(type, data);

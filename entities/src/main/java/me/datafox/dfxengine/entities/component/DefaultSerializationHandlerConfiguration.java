@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author datafox
  */
-@Component
+@Component(order = Integer.MIN_VALUE)
 public class DefaultSerializationHandlerConfiguration implements SerializationHandlerConfiguration<Json, Json, DefaultSerializationHandler> {
     private final List<ClassTag> names;
 

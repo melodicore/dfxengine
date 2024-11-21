@@ -31,9 +31,11 @@ public class ComponentDataConsumerNodeDefinition<T> implements NodeDefinition<Co
 
     public String handle;
 
+    public boolean stateful;
+
     @Override
     public ComponentDataConsumerNode<T> build(NodeTree tree, Context context) {
-        return new ComponentDataConsumerNode<>(tree, type, handle, context);
+        return new ComponentDataConsumerNode<>(tree, type, handle, stateful, context);
     }
 
     @Component
