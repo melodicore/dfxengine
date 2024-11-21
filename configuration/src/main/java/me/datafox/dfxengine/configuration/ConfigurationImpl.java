@@ -24,7 +24,10 @@ public class ConfigurationImpl implements Configuration {
         configuration = new HashMap<>();
     }
 
-    private ConfigurationImpl(Map<ConfigurationKey<?>,ConfigurationValue<?>> configuration) {
+    /**
+     * Protected constructor for {@link ConfigurationImpl}.
+     */
+    protected ConfigurationImpl(Map<ConfigurationKey<?>,ConfigurationValue<?>> configuration) {
         this.configuration = new HashMap<>(configuration);
     }
 
@@ -34,10 +37,12 @@ public class ConfigurationImpl implements Configuration {
      * @param key {@link ConfigurationKey} to be used
      * @param value {@link ConfigurationValue} to be used
      * @param <T> type of the object returned by the {@link ConfigurationValue}
+     * @return this configuration
      */
     @Override
-    public <T> void set(ConfigurationKey<T> key, ConfigurationValue<T> value) {
+    public <T> ConfigurationImpl set(ConfigurationKey<T> key, ConfigurationValue<T> value) {
         configuration.put(key, value);
+        return this;
     }
 
     /**
@@ -46,20 +51,24 @@ public class ConfigurationImpl implements Configuration {
      * @param key {@link ConfigurationKey} to be used
      * @param value object to be used
      * @param <T> type of the object
+     * @return this configuration
      */
     @Override
-    public <T> void set(ConfigurationKey<T> key, T value) {
+    public <T> ConfigurationImpl set(ConfigurationKey<T> key, T value) {
         configuration.put(key, (c) -> value);
+        return this;
     }
 
     /**
      * Applies all entries of the provided configuration to this one, overwriting any existing entries if present.
      *
      * @param configuration {@link Configuration} to be applied
+     * @return this configuration
      */
     @Override
-    public void set(Configuration configuration) {
+    public ConfigurationImpl set(Configuration configuration) {
         this.configuration.putAll(configuration.getAll());
+        return this;
     }
 
     /**
@@ -67,8 +76,8 @@ public class ConfigurationImpl implements Configuration {
      * present.
      *
      * @param key {@link ConfigurationKey} to be used
-     * @return object associated with the key, or the default value if none is present
      * @param <T> type of the object
+     * @return object associated with the key, or the default value if none is present
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -94,18 +103,23 @@ public class ConfigurationImpl implements Configuration {
      *
      * @param key {@link ConfigurationKey} associated with the value to be cleared
      * @param <T> type of the value
+     * @return this configuration
      */
     @Override
-    public <T> void clear(ConfigurationKey<T> key) {
+    public <T> ConfigurationImpl clear(ConfigurationKey<T> key) {
         configuration.remove(key);
+        return this;
     }
 
     /**
      * Clears all entries from this configuration.
+     *
+     * @return this configuration
      */
     @Override
-    public void clear() {
+    public ConfigurationImpl clear() {
         configuration.clear();
+        return this;
     }
 
     /**
@@ -114,72 +128,7 @@ public class ConfigurationImpl implements Configuration {
      * @return unique configuration instance containing all entries of this configuration
      */
     @Override
-    public Configuration copy() {
+    public ConfigurationImpl copy() {
         return new ConfigurationImpl(getAll());
-    }
-
-    /**
-     * Returns a {@link Builder} for a configuration.
-     *
-     * @return {@link Builder} for a configuration
-     */
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    /**
-     * Builder for {@link Configuration}.
-     */
-    public static class Builder {
-        private final Map<ConfigurationKey<?>,ConfigurationValue<?>> configuration;
-
-        private Builder() {
-            configuration = new HashMap<>();
-        }
-
-        /**
-         * Registers a {@link ConfigurationKey} and a value to this builder.
-         *
-         * @param key {@link ConfigurationKey} to be registered to the configuration
-         * @param value static value to be associated with the key
-         * @return this builder
-         * @param <T> type of the value
-         */
-        public <T> Builder key(ConfigurationKey<T> key, T value) {
-            configuration.put(key, (c) -> value);
-            return this;
-        }
-
-        /**
-         * Registers a {@link ConfigurationKey} and a {@link ConfigurationValue} to this builder.
-         *
-         * @param key {@link ConfigurationKey} to be registered to the configuration
-         * @param value {@link ConfigurationValue} to be associated with the key
-         * @return this builder
-         * @param <T> type of the value
-         */
-        public <T> Builder key(ConfigurationKey<T> key, ConfigurationValue<T> value) {
-            configuration.put(key, value);
-            return this;
-        }
-
-        /**
-         * Clears all values registered to the configuration.
-         *
-         * @return this builder
-         */
-        public Builder clear() {
-            configuration.clear();
-            return this;
-        }
-
-        /**
-         * Builds a configuration with the registered values.
-         *
-         * @return configuration with the registered values
-         */
-        public ConfigurationImpl build() {
-            return new ConfigurationImpl(configuration);
-        }
     }
 }

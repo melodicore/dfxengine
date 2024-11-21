@@ -14,8 +14,9 @@ public interface Configuration {
      * @param key {@link ConfigurationKey} to be used
      * @param value {@link ConfigurationValue} to be used
      * @param <T> type of the object returned by the {@link ConfigurationValue}
+     * @return this configuration
      */
-    <T> void set(ConfigurationKey<T> key, ConfigurationValue<T> value);
+    <T> Configuration set(ConfigurationKey<T> key, ConfigurationValue<T> value);
 
     /**
      * Associates the specified {@link ConfigurationKey} with the specified value.
@@ -23,23 +24,25 @@ public interface Configuration {
      * @param key {@link ConfigurationKey} to be used
      * @param value object to be used
      * @param <T> type of the object
+     * @return this configuration
      */
-    <T> void set(ConfigurationKey<T> key, T value);
+    <T> Configuration set(ConfigurationKey<T> key, T value);
 
     /**
      * Applies all entries of the provided configuration to this one, overwriting any existing entries if present.
      *
      * @param configuration {@link Configuration} to be applied
+     * @return this configuration
      */
-    void set(Configuration configuration);
+    Configuration set(Configuration configuration);
 
     /**
      * Returns the value associated with the specified {@link ConfigurationKey}, or its default value if none is
      * present.
      *
      * @param key {@link ConfigurationKey} to be used
-     * @return object associated with the key, or the default value if none is present
      * @param <T> type of the object
+     * @return object associated with the key, or the default value if none is present
      */
     <T> T get(ConfigurationKey<T> key);
 
@@ -55,13 +58,16 @@ public interface Configuration {
      *
      * @param key {@link ConfigurationKey} associated with the value to be cleared
      * @param <T> type of the value
+     * @return this configuration
      */
-    <T> void clear(ConfigurationKey<T> key);
+    <T> Configuration clear(ConfigurationKey<T> key);
 
     /**
      * Clears all entries from this configuration.
+     *
+     * @return this configuration
      */
-    void clear();
+    Configuration clear();
 
     /**
      * Returns a unique configuration instance containing all entries of this configuration.
