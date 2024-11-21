@@ -151,7 +151,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
      *
      * @param configurations {@link Configuration Configurations} to be applied
      */
-    @Initialize
+    @Initialize(Integer.MIN_VALUE)
     public void initialize(List<Configuration> configurations) {
         configurations.forEach(this::applyConfiguration);
     }
