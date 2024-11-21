@@ -4,6 +4,7 @@ import me.datafox.dfxengine.configuration.api.Configuration;
 import me.datafox.dfxengine.configuration.api.ConfigurationKey;
 import me.datafox.dfxengine.configuration.api.ConfigurationManager;
 import me.datafox.dfxengine.configuration.api.ConfigurationValue;
+import me.datafox.dfxengine.injector.api.Injector;
 import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.injector.api.annotation.Initialize;
 import me.datafox.dfxengine.injector.api.annotation.Inject;
@@ -12,7 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Implementation of {@link ConfigurationManager}.
+ * Implementation of {@link ConfigurationManager}. This class is designed to be used with the {@link Injector}. All
+ * {@link Configuration} instances marked as {@link Component Components} are applied to the configuration of this
+ * class. Normal configurations are applied at initialization stage, after all components have been instantiated, but if
+ * a component requires configuration at instantiation time, {@link InitialConfiguration} can be used as a component to
+ * achieve that.
  *
  * @author datafox
  */
