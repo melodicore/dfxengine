@@ -37,7 +37,7 @@ Here are the currently existing and planned modules:
 | [Entities](entities)                   | Under construction       | Data-oriented entity system                         |
 | [Collections](collections)             | Deprecated (1.0.2)       | Collections for other modules and general usage     |
 
-1: These modules will get more features as they are required by other modules
+1: These modules will get more features as they are required by other modules\
 2: This module has been changed since last Maven release
 
 There are five possible statuses for modules.
