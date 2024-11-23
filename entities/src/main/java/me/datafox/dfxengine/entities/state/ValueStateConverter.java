@@ -18,8 +18,6 @@ public class ValueStateConverter implements StateConverter<Value, ValueState> {
 
     @Override
     public ValueState createState(EntityData<Value> data) {
-        return new ValueState(data.getHandle().getId(),
-                data.getData().getBase().getType(),
-                data.getData().getBase().getNumber().toString());
+        return new ValueState(data.getData());
     }
 }

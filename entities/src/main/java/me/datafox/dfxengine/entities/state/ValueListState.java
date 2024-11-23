@@ -7,7 +7,9 @@ import lombok.Singular;
 import me.datafox.dfxengine.entities.api.data.ListDataType;
 import me.datafox.dfxengine.entities.api.state.DataState;
 import me.datafox.dfxengine.entities.data.ListDataTypeImpl;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
 import me.datafox.dfxengine.entities.utils.HandleUtils;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 import me.datafox.dfxengine.values.api.Value;
 
 import java.util.ArrayList;
@@ -44,5 +46,10 @@ public class ValueListState implements DataState<List<Value>> {
         values.forEach(state -> Optional
                 .ofNullable(dataMap.get(state.getHandle()))
                 .ifPresent(state::setState));
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("valueListState", ValueListState.class);
     }
 }

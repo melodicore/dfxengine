@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Singular;
 import me.datafox.dfxengine.entities.api.state.ComponentState;
 import me.datafox.dfxengine.entities.api.state.EntityState;
+import me.datafox.dfxengine.entities.serialization.ClassTag;
+import me.datafox.dfxengine.entities.serialization.DefaultElement;
+import me.datafox.dfxengine.injector.api.annotation.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,5 +30,15 @@ public class EntityStateImpl implements EntityState {
         this.handle = handle;
         this.index = index;
         this.components = new ArrayList<>(components);
+    }
+
+    @Component
+    public static ClassTag getTag() {
+        return new ClassTag("entityState", EntityStateImpl.class);
+    }
+
+    @Component
+    public static DefaultElement getDefaultElement() {
+        return new DefaultElement(EntityStateImpl.class, "components", ComponentStateImpl.class);
     }
 }
